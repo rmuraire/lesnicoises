@@ -8,18 +8,12 @@
 <link rel="canonical" href="https://lesnicoises.com/en/">
 <link rel="alternate" hreflang="fr" href="https://lesnicoises.com/">
 <link rel="alternate" hreflang="en" href="https://lesnicoises.com/en/">
-<meta property="og:title" content="Les Niçoises | Riviera Insiders">
-<meta property="og:description" content="Plages, restaurants, hôtels, culture et escapades sur la Côte d’Azur.">
+<meta property="og:title" content="Les Niçoises | French Riviera Guide">
+<meta property="og:description" content="Les Niçoises selects beaches, restaurants, hotels, culture and day trips across the French Riviera, from Nice to Saint-Tropez.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lesnicoises.com/en/">
 <style>
-:root{
-  --cream:#f4ecdf;
-  --navy:#12213d;
-  --gold:#b9903f;
-  --ink:#3e485d;
-  --line:rgba(18,33,61,.2);
-}
+:root{--cream:#f4ecdf;--navy:#12213d;--ink:#3e485d}
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--cream);color:var(--navy);font-family:Arial,Helvetica,sans-serif}
 a{color:inherit;text-decoration:none}
@@ -27,87 +21,49 @@ a{color:inherit;text-decoration:none}
   position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
   overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important
 }
-.home-shell{width:100%;overflow:hidden;background:var(--cream)}
-.hero-art{
-  position:relative;
-  width:100%;
-  aspect-ratio:1536/950;
-  overflow:hidden;
-  background:#88c7e6;
+.hero{position:relative;width:100%;overflow:hidden;background:#79cbe8}
+.hero img{display:block;width:100%;height:auto}
+.menu-hotspots{
+  position:absolute;left:0;right:0;bottom:0;height:8.9%;
+  display:grid;grid-template-columns:repeat(6,1fr);z-index:5
 }
-.hero-art img{
-  display:block;
-  width:100%;
-  height:auto;
-}
-.lang{
-  position:absolute;right:2.2vw;top:1.8vw;z-index:3;
-  display:flex;gap:9px;align-items:center;
-  font-size:11px;letter-spacing:.12em;font-weight:700;color:var(--navy);
-  background:rgba(244,236,223,.88);padding:8px 10px;
-}
-.lang .muted{opacity:.45}
-.category-nav{
-  height:74px;background:var(--cream);display:grid;grid-template-columns:repeat(6,1fr);
-  align-items:center;border-top:1px solid rgba(18,33,61,.08);
-}
-.category-nav a{
-  height:100%;display:flex;align-items:center;justify-content:center;
-  padding:0 12px;text-align:center;font-size:12px;line-height:1.2;font-weight:800;
-  letter-spacing:.075em;text-transform:uppercase;position:relative;transition:background .18s ease;
-}
-.category-nav a:not(:last-child):after{
-  content:"";position:absolute;right:0;top:25%;height:50%;width:1px;background:rgba(18,33,61,.35)
-}
-.category-nav a:hover{background:#eadfce}
-.intro{max-width:1000px;margin:0 auto;padding:68px 28px 82px;text-align:center}
-.intro p{margin:0 auto 30px;max-width:760px;font-family:Georgia,serif;font-size:22px;line-height:1.55;color:var(--ink)}
+.menu-hotspots a{display:block}
+.menu-hotspots a:focus-visible{outline:3px solid #132341;outline-offset:-4px}
+.lang-hotspots{position:absolute;right:2.4%;top:4.5%;width:6.9%;height:4.2%;z-index:6;display:grid;grid-template-columns:1fr 1fr}
+.lang-hotspots a{display:block}
+.lang-hotspots a:focus-visible{outline:2px solid #132341;outline-offset:-2px}
+.intro{max-width:1000px;margin:0 auto;padding:62px 28px 76px;text-align:center}
+.intro p{margin:0 auto 28px;max-width:780px;font-family:Georgia,serif;font-size:22px;line-height:1.55;color:var(--ink)}
 .intro-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
-.intro-links a{
-  border:1px solid var(--navy);padding:12px 18px;font-size:11px;letter-spacing:.11em;
-  font-weight:800;text-transform:uppercase
-}
+.intro-links a{border:1px solid var(--navy);padding:12px 18px;font-size:11px;letter-spacing:.11em;font-weight:800;text-transform:uppercase}
 .intro-links a:hover{background:var(--navy);color:var(--cream)}
-.mobile-title{display:none}
+.mobile-nav{display:none}
 @media(max-width:760px){
-  .hero-art{aspect-ratio:auto;height:auto}
-  .hero-art img{width:100%;height:auto}
-  .lang{top:10px;right:10px;font-size:10px}
-  .category-nav{
-    height:auto;grid-template-columns:1fr 1fr;
-  }
-  .category-nav a{min-height:52px;border-bottom:1px solid var(--line);font-size:10px}
-  .category-nav a:nth-child(odd):after{content:"";position:absolute;right:0;top:20%;height:60%;width:1px;background:var(--line)}
-  .category-nav a:nth-child(even):after{display:none}
-  .intro{padding:46px 22px 60px}
+  .intro{padding:42px 22px 58px}
   .intro p{font-size:19px}
+  .menu-hotspots{height:9.8%}
 }
 </style>
 </head>
 <body>
-<main class="home-shell">
+<main>
   <h1 class="visually-hidden">Les Niçoises</h1>
   <p class="visually-hidden">They know the Riviera.</p>
 
-  <section class="hero-art" aria-label="Les Niçoises, Riviera Insiders">
-    <img src="/assets/hero-les-nicoises.jpg"
+  <section class="hero" aria-label="Les Niçoises, Riviera Insiders">
+    <img src="/assets/hero-les-nicoises-final.png"
+         width="1672" height="941"
          alt="Cinq Niçoises âgées, très bronzées, assises de face sur les chaises bleues de Nice devant la Méditerranée">
-    <div class="lang" aria-label="Langues">
-      <a class="muted" href="/">FR</a><span>|</span><a href="/en/" aria-current="page">EN</a>
+    <nav class="menu-hotspots" aria-label="Rubriques principales">
+      <a href="/en/restaurants/" aria-label="Restaurants"><span class="visually-hidden">Restaurants</span></a><a href="/en/beaches/" aria-label="Beaches"><span class="visually-hidden">Beaches</span></a><a href="/en/good-finds/" aria-label="Good finds"><span class="visually-hidden">Good finds</span></a><a href="/en/culture/" aria-label="Art & Culture"><span class="visually-hidden">Art & Culture</span></a><a href="/en/hotels/" aria-label="Hotels"><span class="visually-hidden">Hotels</span></a><a href="/en/day-trips/" aria-label="Day trips"><span class="visually-hidden">Day trips</span></a>
+    </nav>
+    <div class="lang-hotspots" aria-label="Langues">
+      <a class="lang-fr" href="/" aria-label="Français"></a><a class="lang-en" href="/en/" aria-label="English"></a>
     </div>
   </section>
 
-  <nav class="category-nav" aria-label="Rubriques principales">
-    <a href="/en/restaurants/">Restaurants</a>
-    <a href="/en/beaches/">Beaches</a>
-    <a href="/en/good-finds/">Good finds</a>
-    <a href="/en/culture/">Art &amp; Culture</a>
-    <a href="/en/hotels/">Hotels</a>
-    <a href="/en/day-trips/">Day trips</a>
-  </nav>
-
   <section class="intro">
-    <p>Les Niçoises selects beaches, restaurants, hotels, culture and day trips across the Riviera. Not everything. Only what is worth leaving the chair for.</p>
+    <p>Les Niçoises selects beaches, restaurants, hotels, culture and day trips across the Riviera. Not everything. We have lives too.</p>
     <div class="intro-links">
       <a href="/en/riviera-guide/">Riviera Guide</a>
       <a href="/en/about/">Who are these ladies?</a>
