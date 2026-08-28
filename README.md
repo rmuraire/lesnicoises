@@ -11,3 +11,13 @@ Cette version repart de la V8.1 éditoriale complète et vérifiée.
 - Le ton éditorial nissart / caustique de la V8.1 est conservé.
 
 Upload GitHub : déposer le CONTENU de ce dossier à la racine du dépôt et remplacer les fichiers existants.
+
+
+V15 culture batch: 10 culture venue pages in FR/EN, culture hub redesigned with image cards, reusable Wikimedia Commons visuals with attribution, official sources checked August 2026.
+
+
+## V16 restaurants + SEO
+- 20 restaurant addresses across 7 Riviera city guides, FR + EN.
+- Structured data ItemList on restaurant city pages.
+- Sitewide SEO pass: robots meta, Open Graph fallback, Twitter cards, x-default hreflang, WebPage/Breadcrumb JSON-LD, sitemap lastmod.
+- No meta keywords: intentionally omitted.
