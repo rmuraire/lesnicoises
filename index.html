@@ -23,29 +23,31 @@ a{color:inherit;text-decoration:none}
 }
 .hero{position:relative;width:100%;overflow:hidden;background:#79cbe8}
 .hero img{display:block;width:100%;height:auto}
+/* Only visible overlay on the frozen hero: the translated baseline.
+   The photo, title and baked navigation remain pixel-for-pixel untouched. */
 .hero-tagline{
-  position:absolute;left:50%;top:20.4%;transform:translateX(-50%);z-index:7;
-  width:min(73%,1080px);padding:.55% 2.2% .65%;text-align:center;
-  background:linear-gradient(90deg,rgba(84,179,224,0),rgba(84,179,224,.84) 12%,rgba(84,179,224,.84) 88%,rgba(84,179,224,0));
-  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
-  color:#fff;font-family:Georgia,'Times New Roman',serif;font-size:clamp(16px,2.15vw,36px);
-  line-height:1.08;font-weight:600;white-space:nowrap;text-shadow:0 1px 8px rgba(0,0,0,.18)
+  position:absolute;left:50%;top:23.25%;transform:translateX(-50%);z-index:7;
+  width:min(77%,1210px);padding:.48% 2.2% .58%;text-align:center;
+  background:linear-gradient(90deg,rgba(75,177,224,0),rgba(75,177,224,.98) 8%,rgba(75,177,224,.98) 92%,rgba(75,177,224,0));
+  color:#fff;font-family:Georgia,'Times New Roman',serif;font-size:clamp(15px,1.92vw,32px);
+  line-height:1.05;font-weight:600;white-space:nowrap;text-shadow:0 1px 5px rgba(0,0,0,.12)
 }
+/* Invisible clickable zones placed over the menu already baked into the image. */
 .menu-display{
   position:absolute;left:0;right:0;bottom:0;height:8.9%;z-index:8;
-  display:grid;grid-template-columns:repeat(6,1fr);align-items:center;
-  background:#e8d7c6;color:#10245a
+  display:grid;grid-template-columns:repeat(6,1fr);background:transparent
 }
-.menu-display a{height:100%;display:flex;align-items:center;justify-content:center;position:relative;
-  font-size:clamp(9px,1.05vw,18px);font-weight:800;letter-spacing:.015em;text-transform:uppercase}
-.menu-display a:not(:last-child)::after{content:'';position:absolute;right:0;top:24%;height:52%;width:1px;background:rgba(16,36,90,.34)}
+.menu-display a{display:block;height:100%;font-size:0;color:transparent;background:transparent}
 .menu-display a:focus-visible{outline:3px solid #132341;outline-offset:-4px}
-.lang-display{position:absolute;right:2.55%;top:3.25%;z-index:9;display:flex;align-items:center;gap:.48em;
-  padding:.45em .65em;background:rgba(239,242,238,.82);font-size:clamp(10px,1.15vw,18px);font-weight:600}
+/* Opaque HTML language switch exactly covers the baked one, so only one switch is visible. */
+.lang-display{
+  position:absolute;right:2.55%;top:3.20%;z-index:9;display:flex;align-items:center;gap:.48em;
+  padding:.43em .62em;background:#eef0ec;font-size:clamp(10px,1.15vw,18px);font-weight:600;
+  box-shadow:0 0 0 1px rgba(18,33,61,.08)
+}
 .lang-display a{color:#12213d}.lang-display a.active{color:#1679ad}.lang-display .sep{opacity:.6}
 @media(max-width:760px){
-  .hero-tagline{top:20.8%;width:82%;font-size:clamp(11px,2.45vw,18px);padding:.7% 2%}
-  .menu-display a{font-size:clamp(7px,1.55vw,11px)}
+  .hero-tagline{top:23.15%;width:84%;font-size:clamp(10px,2.25vw,17px);padding:.62% 2% .7%}
   .lang-display{right:2.2%;top:3%;font-size:clamp(8px,1.8vw,12px)}
 }
 .intro{max-width:1000px;margin:0 auto;padding:62px 28px 76px;text-align:center}
