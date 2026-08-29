@@ -139,3 +139,16 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
 .hotel-filter-note{font-family:var(--serif);font-size:20px;line-height:1.55;color:var(--navy-soft);max-width:760px}
 @media(max-width:900px){.hotel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:620px){.hotel-grid{grid-template-columns:1fr}}
+
+/* V17.2 — hotel verdict: explicit readable text */
+.hotel-detail .verdict p{
+  color:#F7F2E7 !important;
+  font-family:var(--serif);
+  font-size:23px;
+  line-height:1.45;
+  margin:0;
+  opacity:1 !important;
+}
+@media(max-width:650px){
+  .hotel-detail .verdict p{font-size:21px}
+}
