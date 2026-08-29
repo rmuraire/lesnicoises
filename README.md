@@ -1,3 +1,7 @@
+# Les Niçoises V17 - Hotels Batch 01
+
+18 new affiliate hotel pages in FR + EN, based on user-supplied Expedia property images and affiliate links. Main hotel hub, Nice, Cannes and Cap d'Antibes hubs updated. Sitemap rebuilt.
+
 # Les Niçoises V13 — site complet cohérent FR / EN
 
 Cette version repart de la V8.1 éditoriale complète et vérifiée.
