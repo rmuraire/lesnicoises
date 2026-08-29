@@ -1,0 +1,14 @@
+LES NIÇOISES — V18 LIVE / SEPTEMBER 2026
+
+Update-only package — 9 site files + this note.
+
+What changes:
+- Homepage FR + EN: new “En ce moment / Right now” module, updated 29 Aug 2026.
+- New September 2026 live page FR + EN.
+- Bons plans / Good finds index: current September card added.
+- Fondation Maeght FR + EN: current Ellsworth Kelly and Peter Knapp exhibitions + exceptional closure 5–7 Sept.
+- sitemap.xml: two new URLs.
+
+No hotel files and no global CSS are included, so V17.2 hotel verdict fix is untouched.
+
+Upload the CONTENTS of this package at the repository root.
