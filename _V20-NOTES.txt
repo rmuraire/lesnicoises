@@ -1,0 +1,14 @@
+LES NIÇOISES V20 — VISUELS ÉDITORIAUX
+30 août 2026
+
+Intégration ciblée de visuels fournis par le propriétaire du site.
+- 8 fichiers JPEG optimisés web (1600×900)
+- Escapades : Lérins, Cap-Ferrat, Corniche d'Or
+- Plages : Nice, autour de Nice
+- Restaurants : Menton, Monaco, Saint-Tropez
+- Cartes Menton et Monaco de la page Restaurants remplacées par les visuels locaux
+- FR + EN
+- Aucun changement CSS
+- Aucun fichier hôtel modifié
+
+Les originaux Adobe Stock et preuves de licence doivent être conservés par le titulaire du compte Adobe.
