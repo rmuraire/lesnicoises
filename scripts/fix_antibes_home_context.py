@@ -24,8 +24,8 @@ replacements = {
     ],
     "fr/index.html": [
         (
-            '<div class="stay-intro"><p class="eyebrow">Où dormir</p><h2>Un bel hôtel peut quand même être le mauvais hôtel.</h2><p>Nos fiches commencent par l\'usage et se terminent par le vrai compromis. Les prix changent ; la géographie, beaucoup moins.</p><a class="button secondary" href="/fr/dormir/nice/">Choisir votre hôtel à Nice</a></div>',
-            '<div class="stay-intro"><p class="eyebrow">Où dormir à Nice</p><h2>Un bel hôtel peut quand même être le mauvais hôtel.</h2><p>Pour un premier séjour, Nice reste notre base par défaut. Nos fiches commencent par l\'usage et se terminent par le vrai compromis. Les prix changent ; la géographie, beaucoup moins.</p><a class="button secondary" href="/fr/dormir/nice/">Choisir votre hôtel à Nice</a></div>'
+            '<div class="stay-intro"><p class="eyebrow">Où dormir</p><h2>Un bel hôtel peut rester le mauvais hôtel.</h2><p>Nos cartes commencent par l’usage et se terminent par le compromis. Les prix changent ; la géographie et les inconvénients sont souvent plus fiables.</p><a class="button secondary" href="/fr/dormir/nice/">Choisir son hôtel à Nice</a></div>',
+            '<div class="stay-intro"><p class="eyebrow">Où dormir à Nice</p><h2>Un bel hôtel peut rester le mauvais hôtel.</h2><p>Pour un premier séjour, Nice reste notre base par défaut. Nos cartes commencent par l’usage et se terminent par le compromis. Les prix changent ; la géographie et les inconvénients sont souvent plus fiables.</p><a class="button secondary" href="/fr/dormir/nice/">Choisir son hôtel à Nice</a></div>'
         ),
     ],
 }
