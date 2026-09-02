@@ -1,0 +1,43 @@
+name: Mametas one-time pending page sync
+
+on:
+  push:
+    branches:
+      - mametas-v3
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.actor != 'actions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Mark pending public pages
+        run: python scripts/sync_pending_public_pages.py
+
+      - name: Validate site
+        run: python scripts/validate_mametas.py
+
+      - name: Commit public sync markers
+        run: |
+          if git diff --quiet; then
+            echo "No pending public pages to sync."
+            exit 0
+          fi
+          git config user.name "mametas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html fr/index.html en/riviera-guide/antibes/index.html riviera-guide/antibes/index.html
+          git commit -m "Deploy pending Antibes and homepage corrections"
+          git push origin HEAD:mametas-v3
