@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
-"""Deploy only changed public Mametas files to OVH over SFTP.
+"""Deploy Mametas public files to OVH over SFTP.
 
-The script is intentionally conservative:
+Default behaviour is intentionally conservative:
 - validates required OVH secrets before connecting;
-- uploads added/modified public files only;
+- uploads only added/modified public files;
 - never deletes remote files automatically;
 - excludes repository-only material (docs, scripts, data, workflows, archives).
+
+For controlled maintenance jobs, MAMETAS_FORCE_FILES can contain a semicolon-separated
+list of public paths to upload regardless of the current git diff.
 """
 
 from __future__ import annotations
@@ -89,6 +92,24 @@ def changed_files() -> tuple[list[str], list[str]]:
     return sorted(set(uploads)), sorted(set(deletions))
 
 
+def files_to_upload() -> tuple[list[str], list[str]]:
+    forced = os.environ.get("MAMETAS_FORCE_FILES", "").strip()
+    if not forced:
+        return changed_files()
+
+    uploads = []
+    for raw in forced.split(";"):
+        rel = raw.strip().lstrip("./")
+        if not rel:
+            continue
+        if not is_public(rel):
+            raise RuntimeError(f"Forced path is not an allowed public file: {rel}")
+        if not (ROOT / rel).is_file():
+            raise RuntimeError(f"Forced public file does not exist: {rel}")
+        uploads.append(rel)
+    return sorted(set(uploads)), []
+
+
 def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_dir: str) -> None:
     sftp.chdir(home)
     parts = [p for p in PurePosixPath(remote_root.strip("/")).parts if p not in {"", "."}]
@@ -102,7 +123,7 @@ def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_
 
 
 def main() -> int:
-    uploads, deletions = changed_files()
+    uploads, deletions = files_to_upload()
     print(f"Public files to upload: {len(uploads)}")
     for path in uploads:
         print(f"  + {path}")
@@ -151,8 +172,6 @@ def main() -> int:
             print("Connected to OVH over SFTP.")
             for rel in uploads:
                 local = ROOT / rel
-                if not local.is_file():
-                    raise RuntimeError(f"Changed path is not a file: {rel}")
                 remote_dir = posixpath.dirname(rel)
                 ensure_dir(sftp, home, required["OVH_FTP_ROOT"], remote_dir)
                 remote_name = posixpath.basename(rel)
