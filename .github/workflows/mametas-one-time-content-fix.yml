@@ -1,0 +1,42 @@
+name: Mametas one-time Antibes context fix
+
+on:
+  push:
+    branches:
+      - mametas-v3
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fix Antibes and homepage context
+        run: python scripts/fix_antibes_home_context.py
+
+      - name: Validate repaired site
+        run: python scripts/validate_mametas.py
+
+      - name: Commit fixes if needed
+        run: |
+          if git diff --quiet; then
+            echo "No fixes needed."
+            exit 0
+          fi
+          git config user.name "mametas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add en/riviera-guide/antibes/index.html riviera-guide/antibes/index.html index.html fr/index.html
+          git commit -m "Fix Antibes hotel context and clarify Nice homepage stays"
+          git push origin HEAD:mametas-v3
