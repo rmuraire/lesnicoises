@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deploy only changed public Mametas files to OVH over explicit FTPS.
+"""Deploy only changed public Mametas files to OVH over SFTP.
 
 The script is intentionally conservative:
 - validates required OVH secrets before connecting;
@@ -12,11 +12,11 @@ from __future__ import annotations
 
 import os
 import posixpath
-import ssl
 import subprocess
 import sys
-from ftplib import FTP_TLS, error_perm
 from pathlib import Path, PurePosixPath
+
+import paramiko
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -89,16 +89,16 @@ def changed_files() -> tuple[list[str], list[str]]:
     return sorted(set(uploads)), sorted(set(deletions))
 
 
-def ensure_dir(ftp: FTP_TLS, remote_root: str, relative_dir: str) -> None:
-    ftp.cwd("/")
+def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_dir: str) -> None:
+    sftp.chdir(home)
     parts = [p for p in PurePosixPath(remote_root.strip("/")).parts if p not in {"", "."}]
     parts.extend(p for p in PurePosixPath(relative_dir).parts if p not in {"", "."})
     for part in parts:
         try:
-            ftp.cwd(part)
-        except error_perm:
-            ftp.mkd(part)
-            ftp.cwd(part)
+            sftp.chdir(part)
+        except OSError:
+            sftp.mkdir(part)
+            sftp.chdir(part)
 
 
 def main() -> int:
@@ -129,31 +129,41 @@ def main() -> int:
         )
         return 0
 
-    context = ssl.create_default_context()
-    ftp = FTP_TLS(context=context, timeout=45)
-    ftp.connect(required["OVH_FTP_SERVER"], 21)
-    ftp.login(required["OVH_FTP_USERNAME"], required["OVH_FTP_PASSWORD"])
-    ftp.prot_p()
-    ftp.set_pasv(True)
+    client = paramiko.SSHClient()
+    client.load_system_host_keys()
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    client.connect(
+        hostname=required["OVH_FTP_SERVER"],
+        port=22,
+        username=required["OVH_FTP_USERNAME"],
+        password=required["OVH_FTP_PASSWORD"],
+        timeout=45,
+        banner_timeout=45,
+        auth_timeout=45,
+        look_for_keys=False,
+        allow_agent=False,
+    )
 
     try:
-        for rel in uploads:
-            local = ROOT / rel
-            if not local.is_file():
-                raise RuntimeError(f"Changed path is not a file: {rel}")
-            remote_dir = posixpath.dirname(rel)
-            ensure_dir(ftp, required["OVH_FTP_ROOT"], remote_dir)
-            remote_name = posixpath.basename(rel)
-            with local.open("rb") as handle:
-                ftp.storbinary(f"STOR {remote_name}", handle)
-            print(f"Uploaded {rel}")
-    finally:
+        sftp = client.open_sftp()
         try:
-            ftp.quit()
-        except Exception:
-            ftp.close()
+            home = sftp.normalize(".")
+            print("Connected to OVH over SFTP.")
+            for rel in uploads:
+                local = ROOT / rel
+                if not local.is_file():
+                    raise RuntimeError(f"Changed path is not a file: {rel}")
+                remote_dir = posixpath.dirname(rel)
+                ensure_dir(sftp, home, required["OVH_FTP_ROOT"], remote_dir)
+                remote_name = posixpath.basename(rel)
+                sftp.put(str(local), remote_name)
+                print(f"Uploaded {rel}")
+        finally:
+            sftp.close()
+    finally:
+        client.close()
 
-    print("Mametas FTPS deployment completed successfully.")
+    print("Mametas SFTP deployment completed successfully.")
     return 0
 
 
