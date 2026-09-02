@@ -34,6 +34,20 @@
 })();
 
 (function () {
+  var isFrench = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
+  var target = isFrench ? "/explore/" : "/en/explore/";
+  var label = isFrench ? "Explorer" : "Explore";
+
+  document.querySelectorAll(".v3-nav a, .mobile-menu nav a").forEach(function (link) {
+    var href = link.getAttribute("href");
+    if (href === "/restaurants/" || href === "/en/restaurants/") {
+      link.setAttribute("href", target);
+      link.textContent = label;
+    }
+  });
+})();
+
+(function () {
   document.querySelectorAll("[data-affiliate-network][data-affiliate-hotel]").forEach(function (link) {
     link.addEventListener("click", function () {
       var detail = {
