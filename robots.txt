@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 Sitemap: https://www.mametas.com/sitemap.xml
 Sitemap: https://www.mametas.com/sitemap-hotels-batch2.xml
+# Mametas deployment pipeline check
