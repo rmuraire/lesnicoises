@@ -79,12 +79,11 @@ button { color: inherit; font: inherit; }
 }
 .v3-brand { display: inline-flex; flex-direction: column; flex: 0 0 auto; }
 .v3-brand-name {
-  font-family: var(--condensed);
-  font-size: clamp(25px, 2.8vw, 36px);
-  font-weight: 900;
-  letter-spacing: -0.025em;
+  font-family: var(--serif);
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 600;
+  letter-spacing: -0.05em;
   line-height: 0.9;
-  text-transform: uppercase;
 }
 .v3-brand-line {
   margin-top: 8px;
@@ -143,12 +142,11 @@ button { color: inherit; font: inherit; }
 .home-hero h1 {
   max-width: 100%;
   margin: 0;
-  font-family: var(--condensed);
+  font-family: var(--serif);
   font-size: clamp(68px, 7.4vw, 116px);
-  font-weight: 900;
+  font-weight: 600;
   letter-spacing: -0.055em;
   line-height: 0.76;
-  text-transform: uppercase;
 }
 .home-hero h1 em {
   display: block;
@@ -339,6 +337,26 @@ button { color: inherit; font: inherit; }
 
 /* Footer */
 .v3-footer { padding: 70px 0 34px; background: #0b1730; color: var(--white); }
+.privacy-links { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; font-size: 12px; }
+.privacy-links a, .consent-settings { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.consent-settings { appearance: none; border: 0; background: none; padding: 0; font: inherit; cursor: pointer; }
+.consent-banner { position: fixed; z-index: 1000; right: 18px; bottom: 18px; left: 18px; display: flex; align-items: center; justify-content: space-between; gap: 28px; max-width: 1120px; margin: 0 auto; padding: 20px 22px; background: #fffaf0; color: #0b1730; border: 1px solid rgba(11,23,48,.22); box-shadow: 0 16px 50px rgba(11,23,48,.18); }
+.consent-copy { max-width: 720px; }
+.consent-copy strong { display: block; margin-bottom: 6px; font: 600 21px/1.1 Fraunces, Georgia, serif; }
+.consent-copy p { margin: 0; font-size: 14px; line-height: 1.5; }
+.consent-copy a { color: inherit; text-underline-offset: 3px; }
+.consent-actions { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
+.consent-actions button { padding: 11px 14px; border: 1px solid #0b1730; font: 700 12px/1 Inter, Arial, sans-serif; cursor: pointer; }
+.consent-reject { background: transparent; color: #0b1730; }
+.consent-accept { background: #0b1730; color: #fff; }
+@media (max-width: 760px) { .consent-banner { align-items: stretch; flex-direction: column; gap: 14px; } .consent-actions { align-items: stretch; flex-direction: column-reverse; } .consent-actions button { width: 100%; min-height: 44px; } }
+.policy-shell { padding: 88px 24px 110px; background: var(--cream); }
+.policy-copy { max-width: 780px; margin: 0 auto; }
+.policy-copy h1 { margin: 10px 0 34px; font: 600 clamp(48px, 8vw, 92px)/.94 Fraunces, Georgia, serif; letter-spacing: -.04em; }
+.policy-copy h2 { margin: 44px 0 12px; font: 600 30px/1.1 Fraunces, Georgia, serif; }
+.policy-copy p { max-width: 70ch; font-size: 16px; line-height: 1.75; }
+.policy-copy a { color: inherit; text-underline-offset: 3px; }
+.policy-lead { margin-bottom: 52px; font: 500 22px/1.55 Fraunces, Georgia, serif !important; }
 .footer-grid { display: grid; grid-template-columns: 1.2fr .8fr .8fr; gap: 42px; }
 .footer-brand .v3-brand-name { font-size: clamp(46px, 7vw, 92px); }
 .footer-brand p { max-width: 480px; margin: 22px 0 0; color: rgba(255,255,255,.66); font-family: var(--serif); font-size: 18px; line-height: 1.6; }

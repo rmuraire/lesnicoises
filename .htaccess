@@ -1,0 +1,21 @@
+DirectoryIndex index.html
+RewriteEngine On
+
+# Preserve the language of the two former homepages during the domain move.
+RewriteCond %{HTTP_HOST} ^(www\.)?lesnicoises\.com$ [NC]
+RewriteRule ^$ https://www.mametas.com/fr/ [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^(www\.)?lesnicoises\.com$ [NC]
+RewriteRule ^en/?$ https://www.mametas.com/ [R=301,L]
+
+# Every other historical URL keeps its path on the new domain.
+RewriteCond %{HTTP_HOST} ^(www\.)?lesnicoises\.com$ [NC]
+RewriteRule ^(.*)$ https://www.mametas.com/$1 [R=301,L,NE]
+
+# Use www.mametas.com as the only production hostname.
+RewriteCond %{HTTP_HOST} ^mametas\.com$ [NC]
+RewriteRule ^(.*)$ https://www.mametas.com/$1 [R=301,L,NE]
+
+# The former English homepage is now the production root.
+RewriteCond %{HTTP_HOST} ^www\.mametas\.com$ [NC]
+RewriteRule ^en/?$ / [R=301,L]
