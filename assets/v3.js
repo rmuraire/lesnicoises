@@ -32,3 +32,27 @@
     if (event.key === "Escape" && menu.classList.contains("open")) hideMenu();
   });
 })();
+
+(function () {
+  document.querySelectorAll("[data-affiliate-network][data-affiliate-hotel]").forEach(function (link) {
+    link.addEventListener("click", function () {
+      var detail = {
+        network: link.getAttribute("data-affiliate-network"),
+        hotel: link.getAttribute("data-affiliate-hotel"),
+        language: document.documentElement.lang || "",
+        path: window.location.pathname
+      };
+
+      window.dispatchEvent(new CustomEvent("mametas:affiliate-click", { detail: detail }));
+
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "affiliate_click", {
+          affiliate_network: detail.network,
+          hotel_id: detail.hotel,
+          page_language: detail.language,
+          page_path: detail.path
+        });
+      }
+    });
+  });
+})();

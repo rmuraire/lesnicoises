@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "city": "Nice",
+  "lastEditorialReview": "2026-09-02",
+  "coverage": {
+    "published": 7,
+    "target": 13,
+    "priorityGaps": [
+      "quiet mid-range",
+      "central value",
+      "station-friendly",
+      "small character hotel"
+    ]
+  },
+  "hotels": [
+    {
+      "id": "apollinaire-nice",
+      "name": "Hôtel Apollinaire Nice",
+      "neighborhood": "Dubouchage / centre",
+      "priceBand": "upper-mid-to-high",
+      "styles": ["practical", "active"],
+      "tripLengths": [3, 5, 7],
+      "carFree": true,
+      "image": "/assets/hotels/apollinaire-nice/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/apollinaire-nice/",
+        "fr": "/hotels/nice/apollinaire-nice/"
+      },
+      "bestFor": {
+        "en": "Central logistics, day trips and a sensible four-star base.",
+        "fr": "La logistique centrale, les excursions et une base quatre étoiles rationnelle."
+      },
+      "catch": {
+        "en": "No pool and no sea-view theatre.",
+        "fr": "Pas de piscine ni de grand numéro face à la mer."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active-needs-link-check",
+          "url": "https://expedia.com/affiliates/nice-hotels-hotel-ellington-nice-centre.d5Jbcub"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "hotel-du-couvent",
+      "name": "Hôtel du Couvent",
+      "neighborhood": "Old Nice",
+      "priceBand": "very-high",
+      "styles": ["active", "quiet", "chic"],
+      "tripLengths": [3, 5, 7],
+      "carFree": true,
+      "image": "/assets/hotels/hotel-du-couvent/exterieur.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/hotel-du-couvent/",
+        "fr": "/hotels/nice/hotel-du-couvent/"
+      },
+      "bestFor": {
+        "en": "Old Nice atmosphere with calm once you are inside.",
+        "fr": "L'atmosphère du Vieux-Nice et le calme une fois à l'intérieur."
+      },
+      "catch": {
+        "en": "Very expensive, with slopes that matter when luggage arrives.",
+        "fr": "Très cher, avec des pentes qui comptent au moment des valises."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "la-perouse",
+      "name": "Hôtel La Pérouse",
+      "neighborhood": "Rauba Capeu / Old Nice edge",
+      "priceBand": "high",
+      "styles": ["quiet", "chic"],
+      "tripLengths": [3, 5, 7],
+      "carFree": true,
+      "image": "/assets/hotels/la-perouse/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/la-perouse/",
+        "fr": "/hotels/nice/la-perouse/"
+      },
+      "bestFor": {
+        "en": "A more intimate sea-view stay beside Old Nice.",
+        "fr": "Un séjour plus intime face à la mer, à côté du Vieux-Nice."
+      },
+      "catch": {
+        "en": "The main station is not close and room category changes the view.",
+        "fr": "La gare est éloignée et la catégorie de chambre change réellement la vue."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-hotel-la-perouse-nice.iaOhaln"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "anantara-plaza-nice",
+      "name": "Anantara Plaza Nice Hotel",
+      "neighborhood": "Albert 1er / Masséna",
+      "priceBand": "very-high",
+      "styles": ["practical", "active", "chic"],
+      "tripLengths": [3, 5],
+      "carFree": true,
+      "image": "/assets/hotels/anantara-plaza-nice/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/anantara-plaza-nice/",
+        "fr": "/hotels/nice/anantara-plaza-nice/"
+      },
+      "bestFor": {
+        "en": "Five-star polish in a brutally efficient central location.",
+        "fr": "Un cinq-étoiles très soigné dans un emplacement central redoutablement efficace."
+      },
+      "catch": {
+        "en": "You pay for facilities that make sense only if you use them.",
+        "fr": "Vous payez des équipements qui n'ont de sens que si vous les utilisez."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-anantara-plaza-nice-hotel.lFYjaXh"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "le-negresco",
+      "name": "Le Negresco",
+      "neighborhood": "Promenade des Anglais",
+      "priceBand": "very-high",
+      "styles": ["chic"],
+      "tripLengths": [3, 5, 7],
+      "carFree": true,
+      "image": "/assets/hotels/le-negresco/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/le-negresco/",
+        "fr": "/hotels/nice/le-negresco/"
+      },
+      "bestFor": {
+        "en": "An iconic, art-filled Promenade stay with a strong personality.",
+        "fr": "Une icône de la Promenade, pleine d'art et de personnalité."
+      },
+      "catch": {
+        "en": "Neither discreet nor a calm conversation with the budget.",
+        "fr": "Ni discret, ni propice à une conversation calme avec le budget."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-hotel-le-negresco.eKZCOYE"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "palais-de-la-mediterranee",
+      "name": "Hôtel Palais de la Méditerranée",
+      "neighborhood": "Promenade des Anglais",
+      "priceBand": "very-high",
+      "styles": ["practical", "chic"],
+      "tripLengths": [3, 5, 7],
+      "carFree": true,
+      "image": "/assets/hotels/palais-de-la-mediterranee/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/palais-de-la-mediterranee/",
+        "fr": "/hotels/nice/palais-de-la-mediterranee/"
+      },
+      "bestFor": {
+        "en": "Promenade convenience with a pool that works beyond peak summer.",
+        "fr": "La facilité de la Promenade avec une piscine utile au-delà du plein été."
+      },
+      "catch": {
+        "en": "A large hotel, not an intimate Niçois hideaway.",
+        "fr": "Un grand hôtel, pas une petite cachette niçoise."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-hyatt-regency-nice-palais-de-la-mediterranee.Z6jygmO"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    },
+    {
+      "id": "maison-albar-le-victoria",
+      "name": "Maison Albar - Le Victoria",
+      "neighborhood": "Masséna / Promenade",
+      "priceBand": "very-high",
+      "styles": ["active", "chic"],
+      "tripLengths": [3, 5],
+      "carFree": true,
+      "image": "/assets/hotels/maison-albar-le-victoria/hero.jpg",
+      "paths": {
+        "en": "/en/hotels/nice/maison-albar-le-victoria/",
+        "fr": "/hotels/nice/maison-albar-le-victoria/"
+      },
+      "bestFor": {
+        "en": "Contemporary luxury, rooftop time and a central short stay.",
+        "fr": "Le luxe contemporain, le rooftop et un court séjour très central."
+      },
+      "catch": {
+        "en": "Poor value if you spend every waking hour outside.",
+        "fr": "Un mauvais calcul si vous passez toutes vos journées dehors."
+      },
+      "affiliate": {
+        "expedia": {
+          "status": "active",
+          "url": "https://expedia.com/affiliates/nice-hotels-maison-albar-victoria.LHpLzt3"
+        },
+        "booking": {"status": "not-configured", "url": null}
+      }
+    }
+  ]
+}
