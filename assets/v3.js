@@ -67,6 +67,34 @@
 })();
 
 (function () {
+  var isFrench = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
+  var path = window.location.pathname;
+  var isNiceChooser = path === "/stay/nice/" || path === "/fr/dormir/nice/";
+  if (!isNiceChooser) return;
+
+  var section = document.getElementById(isFrench ? "pratique" : "practical");
+  var copy = section && section.querySelector(".hotel-style-heading > p");
+  if (copy && !copy.querySelector(".journey-link")) {
+    var link = document.createElement("a");
+    link.className = "text-link journey-link";
+    link.href = isFrench ? "/fr/planifier/cinq-jours-nice-sans-voiture/" : "/plan/five-days-nice-no-car/";
+    link.textContent = isFrench ? "Voir comment notre parcours de 5 jours utilise le train →" : "See how our 5-day no-car plan uses the train →";
+    copy.appendChild(document.createElement("br"));
+    copy.appendChild(link);
+  }
+
+  var intro = document.querySelector(".chooser-intro > p");
+  if (intro && !intro.querySelector(".base-link")) {
+    var baseLink = document.createElement("a");
+    baseLink.className = "text-link base-link";
+    baseLink.href = isFrench ? "/riviera-guide/" : "/en/riviera-guide/";
+    baseLink.textContent = isFrench ? "Pas encore sûr de dormir à Nice ? Comparez d’abord les bases →" : "Not sure Nice should be your base? Compare the bases first →";
+    intro.appendChild(document.createElement("br"));
+    intro.appendChild(baseLink);
+  }
+})();
+
+(function () {
   var menu = document.querySelector("[data-v3-menu]");
   var open = document.querySelector("[data-v3-menu-open]");
   var close = document.querySelector("[data-v3-menu-close]");
