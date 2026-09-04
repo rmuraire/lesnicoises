@@ -19,3 +19,9 @@ RewriteRule ^(.*)$ https://www.mametas.com/$1 [R=301,L,NE]
 # The former English homepage is now the production root.
 RewriteCond %{HTTP_HOST} ^www\.mametas\.com$ [NC]
 RewriteRule ^en/?$ / [R=301,L]
+
+# One canonical Nice hotel chooser per language. Individual hotel pages keep their URLs.
+RewriteRule ^en/hotels/nice/?$ /stay/nice/ [R=301,L]
+RewriteRule ^en/hotels/nice/index\.html$ /stay/nice/ [R=301,L]
+RewriteRule ^hotels/nice/?$ /fr/dormir/nice/ [R=301,L]
+RewriteRule ^hotels/nice/index\.html$ /fr/dormir/nice/ [R=301,L]
