@@ -2,7 +2,7 @@
   "use strict";
 
   var STORAGE_KEY = "mametas_analytics_consent";
-  var ANALYTICS_ID = "G-8B7JENJ1MD";
+  var ANALYTICS_ID = "G-9FXW5HMLWG";
   var language = (document.documentElement.lang || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
   var analyticsLoaded = false;
 
