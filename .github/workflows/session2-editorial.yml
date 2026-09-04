@@ -1,0 +1,35 @@
+name: Mametas session 2 editorial pass
+
+on:
+  push:
+    branches: [mametas-v3]
+    paths:
+      - 'scripts/session2_editorial.py'
+      - '.github/workflows/session2-editorial.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: mametas-v3
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply editorial transformations
+        run: python scripts/session2_editorial.py
+      - name: Validate
+        run: python scripts/validate_mametas.py
+      - name: Commit editorial pass
+        run: |
+          git config user.name 'mametas-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html fr/index.html plan/five-days-nice-no-car/index.html fr/planifier/cinq-jours-nice-sans-voiture/index.html
+          git commit -m 'Strengthen Mametas decision paths and homepage voice'
+          git push origin HEAD:mametas-v3
