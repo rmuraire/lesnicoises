@@ -1,0 +1,43 @@
+name: Mametas one-time voice recalibration
+
+on:
+  push:
+    branches:
+      - mametas-v3
+
+permissions:
+  contents: write
+
+jobs:
+  recalibrate:
+    if: github.actor != 'actions'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Recalibrate voice and navigation
+        run: python scripts/voice_recalage_sep5.py
+
+      - name: Validate site
+        run: python scripts/validate_mametas.py
+
+      - name: Commit recalibration
+        run: |
+          if git diff --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "mametas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add en/riviera-guide/nice/index.html riviera-guide/nice/index.html en/riviera-guide/nice-or-cannes/index.html riviera-guide/nice-ou-cannes/index.html
+          git commit -m "Recalibrate Mametas voice and canonical navigation"
+          git push origin HEAD:mametas-v3
