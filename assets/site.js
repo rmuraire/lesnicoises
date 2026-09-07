@@ -4,13 +4,13 @@
   var items=isFrench?[
     {label:'Planifier',href:'/fr/#planifier'},
     {label:'Lieux',href:'/riviera-guide/'},
-    {label:'Dormir',href:'/fr/dormir/nice/'},
+    {label:'Dormir',href:'/hotels/'},
     {label:'Explorer',href:'/explore/'},
     {label:'Maintenant',href:'/bons-plans/'}
   ]:[
     {label:'Plan',href:'/#plan'},
     {label:'Places',href:'/en/riviera-guide/'},
-    {label:'Stay',href:'/stay/nice/'},
+    {label:'Stay',href:'/en/hotels/'},
     {label:'Explore',href:'/en/explore/'},
     {label:'Now',href:'/en/good-finds/'}
   ];
