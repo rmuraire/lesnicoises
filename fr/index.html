@@ -21,7 +21,17 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="/assets/editorial/mametas-five-women-hero.webp" type="image/webp">
-<link rel="stylesheet" href="/assets/v3.css?v=0.4">
+<link rel="stylesheet" href="/assets/v3.css?v=0.5">
+<style>
+@media (max-width:760px){
+  .stay-card{display:block;min-height:0;overflow:hidden;background:var(--white);}
+  .stay-card img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;}
+  .stay-card-copy{position:relative;padding:20px 20px 18px;background:var(--white);}
+  .stay-card h3{margin:9px 0 8px;font-size:30px;line-height:1.06;}
+  .stay-card p{margin:0 0 12px;color:var(--ink-soft);font-size:13px;line-height:1.6;}
+  .stay-card .catch{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);}
+}
+</style>
 <link href="/favicon.svg" rel="icon" type="image/svg+xml">
 <script defer src="/assets/consent.js?v=1.0"></script>
 </head>
