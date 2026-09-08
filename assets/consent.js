@@ -107,8 +107,18 @@
     links.appendChild(button);
   }
 
+  function loadEditorialLayer() {
+    if (document.querySelector('script[data-mametas-editorial-layer]')) return;
+    var script = document.createElement("script");
+    script.src = "/assets/editorial-layer.js?v=1.0";
+    script.defer = true;
+    script.setAttribute("data-mametas-editorial-layer", "true");
+    document.head.appendChild(script);
+  }
+
   function initialise() {
     addSettingsControl();
+    loadEditorialLayer();
     var choice = readChoice();
     if (choice === "granted") loadAnalytics();
     if (choice !== "granted" && choice !== "denied") showBanner();
