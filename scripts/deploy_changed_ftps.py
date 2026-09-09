@@ -1,16 +1,9 @@
 #!/usr/bin/env python3
 """Deploy Mametas public files to OVH over SFTP.
 
-Default behaviour is intentionally conservative:
-- validates required OVH secrets before connecting;
-- uploads only added/modified public files;
-- never deletes remote files automatically;
-- excludes repository-only material (docs, scripts, data, workflows, archives).
-
-For controlled maintenance jobs, MAMETAS_FORCE_FILES can contain a semicolon-separated
-list of public paths to upload regardless of the current git diff.
+Uploads public files changed by the commit plus public files modified/generated in the
+working tree by the pre-deploy materialization step. Remote deletions remain disabled.
 """
-
 from __future__ import annotations
 
 import os
@@ -22,26 +15,13 @@ from pathlib import Path, PurePosixPath
 import paramiko
 
 ROOT = Path(__file__).resolve().parents[1]
-
 EXCLUDED_PREFIXES = (
-    ".git/",
-    ".github/",
-    "docs/",
-    "scripts/",
-    "data/",
-    "lesnicoises-v8-no-mercy-update/",
-    "lesnicoises-v8-no-mercy-update 2/",
+    ".git/", ".github/", "docs/", "scripts/", "data/",
+    "lesnicoises-v8-no-mercy-update/", "lesnicoises-v8-no-mercy-update 2/",
 )
 EXCLUDED_NAMES = {
-    "deploy-canary.txt",
-    "README.md",
-    "README-V22.txt",
-    "README-V22.1.txt",
-    "README-V22.3.txt",
-    "README-V22_2.txt",
-    "_V18-NOTES.txt",
-    "_V19-NOTES.txt",
-    "_V20-NOTES.txt",
+    "deploy-canary.txt", "README.md", "README-V22.txt", "README-V22.1.txt",
+    "README-V22.3.txt", "README-V22_2.txt", "_V18-NOTES.txt", "_V19-NOTES.txt", "_V20-NOTES.txt",
 }
 EXCLUDED_SUFFIXES = (".zip",)
 
@@ -57,21 +37,18 @@ def is_public(path: str) -> bool:
     return True
 
 
-def changed_files() -> tuple[list[str], list[str]]:
+def committed_changes() -> tuple[set[str], set[str]]:
     after = os.environ.get("GITHUB_SHA", "").strip()
     before = os.environ.get("BEFORE_SHA", "").strip()
     if not after:
         raise RuntimeError("GITHUB_SHA is missing")
     if not before or set(before) == {"0"}:
         before = f"{after}^"
-
     output = subprocess.check_output(
-        ["git", "diff", "--name-status", "--find-renames", before, after],
-        cwd=ROOT,
-        text=True,
+        ["git", "diff", "--name-status", "--find-renames", before, after], cwd=ROOT, text=True
     )
-    uploads: list[str] = []
-    deletions: list[str] = []
+    uploads: set[str] = set()
+    deletions: set[str] = set()
     for raw in output.splitlines():
         if not raw.strip():
             continue
@@ -79,35 +56,43 @@ def changed_files() -> tuple[list[str], list[str]]:
         status = fields[0]
         if status.startswith("R") and len(fields) >= 3:
             old, new = fields[1], fields[2]
-            if is_public(old):
-                deletions.append(old)
-            if is_public(new):
-                uploads.append(new)
+            if is_public(old): deletions.add(old)
+            if is_public(new): uploads.add(new)
         elif status.startswith("D") and len(fields) >= 2:
-            if is_public(fields[1]):
-                deletions.append(fields[1])
+            if is_public(fields[1]): deletions.add(fields[1])
         elif len(fields) >= 2 and status[0] in {"A", "M", "C", "T"}:
-            if is_public(fields[-1]):
-                uploads.append(fields[-1])
-    return sorted(set(uploads)), sorted(set(deletions))
+            path = fields[-1]
+            if is_public(path): uploads.add(path)
+    return uploads, deletions
+
+
+def materialized_changes() -> set[str]:
+    """Public tracked/untracked files changed after checkout, e.g. generated static HTML."""
+    changed = subprocess.check_output(["git", "diff", "--name-only"], cwd=ROOT, text=True).splitlines()
+    untracked = subprocess.check_output(
+        ["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True
+    ).splitlines()
+    return {p.strip() for p in changed + untracked if p.strip() and is_public(p.strip()) and (ROOT / p.strip()).is_file()}
 
 
 def files_to_upload() -> tuple[list[str], list[str]]:
     forced = os.environ.get("MAMETAS_FORCE_FILES", "").strip()
-    if not forced:
-        return changed_files()
+    if forced:
+        uploads = []
+        for raw in forced.split(";"):
+            rel = raw.strip().lstrip("./")
+            if not rel:
+                continue
+            if not is_public(rel):
+                raise RuntimeError(f"Forced path is not an allowed public file: {rel}")
+            if not (ROOT / rel).is_file():
+                raise RuntimeError(f"Forced public file does not exist: {rel}")
+            uploads.append(rel)
+        return sorted(set(uploads)), []
 
-    uploads = []
-    for raw in forced.split(";"):
-        rel = raw.strip().lstrip("./")
-        if not rel:
-            continue
-        if not is_public(rel):
-            raise RuntimeError(f"Forced path is not an allowed public file: {rel}")
-        if not (ROOT / rel).is_file():
-            raise RuntimeError(f"Forced public file does not exist: {rel}")
-        uploads.append(rel)
-    return sorted(set(uploads)), []
+    uploads, deletions = committed_changes()
+    uploads.update(materialized_changes())
+    return sorted(uploads), sorted(deletions)
 
 
 def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_dir: str) -> None:
@@ -131,7 +116,6 @@ def main() -> int:
         print("Remote deletions intentionally skipped for safety:")
         for path in deletions:
             print(f"  - {path}")
-
     if not uploads:
         print("No public file changed; nothing to deploy.")
         return 0
@@ -144,27 +128,17 @@ def main() -> int:
     }
     missing = [name for name, value in required.items() if not value]
     if missing:
-        print(
-            "DEPLOYMENT SKIPPED: missing GitHub Actions secrets: " + ", ".join(missing),
-            file=sys.stderr,
-        )
+        print("DEPLOYMENT SKIPPED: missing GitHub Actions secrets: " + ", ".join(missing), file=sys.stderr)
         return 0
 
     client = paramiko.SSHClient()
     client.load_system_host_keys()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     client.connect(
-        hostname=required["OVH_FTP_SERVER"],
-        port=22,
-        username=required["OVH_FTP_USERNAME"],
-        password=required["OVH_FTP_PASSWORD"],
-        timeout=45,
-        banner_timeout=45,
-        auth_timeout=45,
-        look_for_keys=False,
-        allow_agent=False,
+        hostname=required["OVH_FTP_SERVER"], port=22, username=required["OVH_FTP_USERNAME"],
+        password=required["OVH_FTP_PASSWORD"], timeout=45, banner_timeout=45, auth_timeout=45,
+        look_for_keys=False, allow_agent=False,
     )
-
     try:
         sftp = client.open_sftp()
         try:
@@ -172,16 +146,13 @@ def main() -> int:
             print("Connected to OVH over SFTP.")
             for rel in uploads:
                 local = ROOT / rel
-                remote_dir = posixpath.dirname(rel)
-                ensure_dir(sftp, home, required["OVH_FTP_ROOT"], remote_dir)
-                remote_name = posixpath.basename(rel)
-                sftp.put(str(local), remote_name)
+                ensure_dir(sftp, home, required["OVH_FTP_ROOT"], posixpath.dirname(rel))
+                sftp.put(str(local), posixpath.basename(rel))
                 print(f"Uploaded {rel}")
         finally:
             sftp.close()
     finally:
         client.close()
-
     print("Mametas SFTP deployment completed successfully.")
     return 0
 
