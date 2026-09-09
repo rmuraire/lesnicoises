@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Deploy Mametas public files to OVH over SFTP.
 
-Uploads public files changed by the commit plus public files modified/generated in the
-working tree by the pre-deploy materialization step. Remote deletions remain disabled.
+Uploads public files changed by the commit plus core public files modified/generated in
+the working tree by the pre-deploy materialization step. Remote deletions remain disabled.
 """
 from __future__ import annotations
 
@@ -24,6 +24,28 @@ EXCLUDED_NAMES = {
     "README-V22.3.txt", "README-V22_2.txt", "_V18-NOTES.txt", "_V19-NOTES.txt", "_V20-NOTES.txt",
 }
 EXCLUDED_SUFFIXES = (".zip",)
+
+# These pages are intentionally rebuilt on every deployment. Other changed pages are
+# still materialized before upload when they are part of the commit itself, because
+# committed_changes() selects their path and SFTP uploads the post-materialization file.
+CORE_MATERIALIZED_OUTPUTS = {
+    "index.html",
+    "fr/index.html",
+    "plan/five-days-nice-no-car/index.html",
+    "fr/planifier/cinq-jours-nice-sans-voiture/index.html",
+    "stay/nice/index.html",
+    "sitemap.xml",
+    "en/riviera-guide/nice/index.html",
+    "riviera-guide/nice/index.html",
+    "en/riviera-guide/villefranche-cap-ferrat/index.html",
+    "riviera-guide/villefranche-cap-ferrat/index.html",
+    "en/riviera-guide/antibes/index.html",
+    "riviera-guide/antibes/index.html",
+    "en/riviera-guide/monaco/index.html",
+    "riviera-guide/monaco/index.html",
+    "en/riviera-guide/menton/index.html",
+    "riviera-guide/menton/index.html",
+}
 
 
 def is_public(path: str) -> bool:
@@ -67,12 +89,16 @@ def committed_changes() -> tuple[set[str], set[str]]:
 
 
 def materialized_changes() -> set[str]:
-    """Public tracked/untracked files changed after checkout, e.g. generated static HTML."""
+    """Core generated outputs changed after checkout by the materialization step."""
     changed = subprocess.check_output(["git", "diff", "--name-only"], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(
         ["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True
     ).splitlines()
-    return {p.strip() for p in changed + untracked if p.strip() and is_public(p.strip()) and (ROOT / p.strip()).is_file()}
+    paths = {p.strip() for p in changed + untracked if p.strip()}
+    return {
+        p for p in paths
+        if p in CORE_MATERIALIZED_OUTPUTS and is_public(p) and (ROOT / p).is_file()
+    }
 
 
 def files_to_upload() -> tuple[list[str], list[str]]:
