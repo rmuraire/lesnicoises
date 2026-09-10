@@ -27,11 +27,13 @@ V21 — Adobe Stock standard licences — files supplied by site owner, 30 Aug 2
 Explore / culture image provenance — checked 9 Sep 2026
 - Fondation Maeght — Waterborough / Wikimedia Commons — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:08_Fondation_Maeght.JPG — web file: fondation-maeght-waterborough.webp — resized/compressed for web display.
 - Villa Ephrussi de Rothschild — Idarvol / Wikimedia Commons — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Villa_Ephrussi_de_Rothschild.jpg — Explore uses the original Wikimedia-hosted image.
-- Musée Matisse de Nice — Alyona Nagel / Pexels — owner-supplied Pexels image — web file: musee-matisse-alyona-nagel-pexels.webp — resized/compressed for web display.
-- Musée Picasso d’Antibes — Clemensfranz / Wikimedia Commons — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Antibes_Museum_Picasso.jpg — web file: musee-picasso-antibes-clemensfranz.webp — resized/compressed for web display.
 - Îles de Lérins / Saint-Honorat fortress — Bruno Attuyt / Pixabay — owner-supplied Pixabay image — web file: iles-de-lerins-bruno-attuyt.webp — resized/compressed for web display.
 
-Culture batch — Côte d’Azur France media library, supplied 10 Sep 2026
+Culture batch — owner-supplied files, 10 Sep 2026
+- Musée Matisse de Nice — © Succession H. Matisse pour les œuvres de l’artiste — web file: culture-musee-matisse.webp.
+- Musée Picasso d’Antibes — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-musee-picasso-antibes.webp.
+- Villa Kérylos — Côte d’Azur France Tourisme / Camille MOIRENC — web file: culture-villa-kerylos.webp.
+- Musée Bonnard — Côte d’Azur France Tourisme — web file: culture-musee-bonnard.webp.
 - Musée Renoir — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-musee-renoir.webp.
 - Villa Arson — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-villa-arson.webp.
 - Palais Lascaris — Côte d’Azur France Tourisme / Anaïs BROCHIERO — web file: culture-palais-lascaris.webp.
