@@ -1,5 +1,6 @@
 (function () {
   "use strict";
+  // Consent model v2: Analytics and Travelpayouts Drive are opt-in.
   var STORAGE_KEY = "mametas_optional_consent_v2";
   var LEGACY_STORAGE_KEY = "mametas_analytics_consent";
   var ANALYTICS_ID = "G-9FXW5HMLWG";
