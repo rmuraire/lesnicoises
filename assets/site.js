@@ -180,6 +180,26 @@
   if(anchor){copy.insertBefore(facts,anchor);copy.insertBefore(note,anchor);}else{copy.appendChild(facts);copy.appendChild(note);}
 })();
 
+/* Affiliate CTA cleanup: conversion copy in the box, one transparency line below. */
+(function(){
+  var isFrench=(document.documentElement.lang||'').toLowerCase().indexOf('fr')===0;
+  document.querySelectorAll('.affiliate-cta').forEach(function(cta){
+    var copy=cta.querySelector('p');
+    if(copy){
+      copy.textContent=isFrench
+        ? 'Consultez les disponibilités et les tarifs sur Expedia.'
+        : 'Check current availability and rates on Expedia.';
+    }
+    var parent=cta.parentElement;
+    var disclosure=parent&&parent.querySelector('.disclosure');
+    if(disclosure){
+      disclosure.textContent=isFrench
+        ? 'Transparence : ce lien est affilié. Mametas peut percevoir une commission si vous réservez, sans que cela influence notre sélection.'
+        : 'Transparency: this is an affiliate link. Mametas may earn a commission if you book, without influencing our selection.';
+    }
+  });
+})();
+
 (function(){
   var nav=document.querySelector('[data-mobile-nav]');
   var open=document.querySelector('[data-menu-open]');
