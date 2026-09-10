@@ -30,3 +30,11 @@ Explore / culture image provenance — checked 9 Sep 2026
 - Musée Matisse de Nice — Alyona Nagel / Pexels — owner-supplied Pexels image — web file: musee-matisse-alyona-nagel-pexels.webp — resized/compressed for web display.
 - Musée Picasso d’Antibes — Clemensfranz / Wikimedia Commons — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Antibes_Museum_Picasso.jpg — web file: musee-picasso-antibes-clemensfranz.webp — resized/compressed for web display.
 - Îles de Lérins / Saint-Honorat fortress — Bruno Attuyt / Pixabay — owner-supplied Pixabay image — web file: iles-de-lerins-bruno-attuyt.webp — resized/compressed for web display.
+
+Culture batch — Côte d’Azur France media library, supplied 10 Sep 2026
+- Musée Renoir — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-musee-renoir.webp.
+- Villa Arson — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-villa-arson.webp.
+- Palais Lascaris — Côte d’Azur France Tourisme / Anaïs BROCHIERO — web file: culture-palais-lascaris.webp.
+- Chapelle du Rosaire de Matisse — © Succession H. Matisse pour les œuvres de l’artiste — web file: culture-chapelle-rosaire-matisse.webp.
+- Chapelle Saint-Pierre / Cocteau — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-chapelle-cocteau.webp.
+- Musée des Arts Asiatiques — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-musee-arts-asiatiques.webp.
