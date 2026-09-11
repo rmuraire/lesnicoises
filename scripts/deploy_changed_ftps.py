@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """Deploy Mametas public files to OVH over SFTP.
 
-Uploads public files changed by the commit plus core public files modified/generated in
-the working tree by the pre-deploy materialization step. Remote deletions remain disabled.
+Uploads changed public assets plus every HTML page on each successful deployment.
+This keeps OVH aligned with the current branch even when several quick commits or
+cancelled workflow runs would otherwise leave older HTML behind. Remote deletions
+remain disabled.
 """
 from __future__ import annotations
 
@@ -101,6 +103,20 @@ def materialized_changes() -> set[str]:
     }
 
 
+def all_html_outputs() -> set[str]:
+    """Return every public HTML file so production cannot drift behind the branch."""
+    outputs: set[str] = set()
+    for path in ROOT.rglob("*.html"):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(ROOT).as_posix()
+        if is_public(rel):
+            outputs.add(rel)
+    if (ROOT / "sitemap.xml").is_file():
+        outputs.add("sitemap.xml")
+    return outputs
+
+
 def files_to_upload() -> tuple[list[str], list[str]]:
     forced = os.environ.get("MAMETAS_FORCE_FILES", "").strip()
     if forced:
@@ -118,6 +134,7 @@ def files_to_upload() -> tuple[list[str], list[str]]:
 
     uploads, deletions = committed_changes()
     uploads.update(materialized_changes())
+    uploads.update(all_html_outputs())
     return sorted(uploads), sorted(deletions)
 
 
