@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Deploy Mametas public files to OVH over SFTP.
 
-Uploads changed public assets plus every HTML page on each successful deployment.
-This keeps OVH aligned with the current branch even when several quick commits or
-cancelled workflow runs would otherwise leave older HTML behind. Remote deletions
-remain disabled.
+Uploads changed public files plus generated outputs that changed during the build.
+A small set of hotel hub assets/pages is always included so a previously interrupted
+hotel deployment can recover cleanly. A full HTML resync is available only when
+MAMETAS_FULL_SYNC=1. Remote deletions remain disabled.
 """
 from __future__ import annotations
 
@@ -27,26 +27,31 @@ EXCLUDED_NAMES = {
 }
 EXCLUDED_SUFFIXES = (".zip",)
 
-# These pages are intentionally rebuilt on every deployment. Other changed pages are
-# still materialized before upload when they are part of the commit itself, because
-# committed_changes() selects their path and SFTP uploads the post-materialization file.
-CORE_MATERIALIZED_OUTPUTS = {
-    "index.html",
-    "fr/index.html",
-    "plan/five-days-nice-no-car/index.html",
-    "fr/planifier/cinq-jours-nice-sans-voiture/index.html",
-    "stay/nice/index.html",
-    "sitemap.xml",
-    "en/riviera-guide/nice/index.html",
-    "riviera-guide/nice/index.html",
-    "en/riviera-guide/villefranche-cap-ferrat/index.html",
-    "riviera-guide/villefranche-cap-ferrat/index.html",
-    "en/riviera-guide/antibes/index.html",
-    "riviera-guide/antibes/index.html",
-    "en/riviera-guide/monaco/index.html",
-    "riviera-guide/monaco/index.html",
-    "en/riviera-guide/menton/index.html",
-    "riviera-guide/menton/index.html",
+HOTEL_RECOVERY_OUTPUTS = {
+    "assets/hotel-batch.css",
+    "assets/hotels/batch-sprite.svg",
+    "robots.txt",
+    "sitemap-hotels-batch3.xml",
+    "hotels/index.html",
+    "hotels/antibes/index.html",
+    "hotels/beaulieu-sur-mer/index.html",
+    "hotels/cannes/index.html",
+    "hotels/menton/index.html",
+    "hotels/monaco/index.html",
+    "hotels/mougins/index.html",
+    "hotels/saint-paul-de-vence/index.html",
+    "hotels/saint-tropez/index.html",
+    "hotels/villefranche-sur-mer/index.html",
+    "en/hotels/index.html",
+    "en/hotels/antibes/index.html",
+    "en/hotels/beaulieu-sur-mer/index.html",
+    "en/hotels/cannes/index.html",
+    "en/hotels/menton/index.html",
+    "en/hotels/monaco/index.html",
+    "en/hotels/mougins/index.html",
+    "en/hotels/saint-paul-de-vence/index.html",
+    "en/hotels/saint-tropez/index.html",
+    "en/hotels/villefranche-sur-mer/index.html",
 }
 
 
@@ -80,18 +85,22 @@ def committed_changes() -> tuple[set[str], set[str]]:
         status = fields[0]
         if status.startswith("R") and len(fields) >= 3:
             old, new = fields[1], fields[2]
-            if is_public(old): deletions.add(old)
-            if is_public(new): uploads.add(new)
+            if is_public(old):
+                deletions.add(old)
+            if is_public(new):
+                uploads.add(new)
         elif status.startswith("D") and len(fields) >= 2:
-            if is_public(fields[1]): deletions.add(fields[1])
+            if is_public(fields[1]):
+                deletions.add(fields[1])
         elif len(fields) >= 2 and status[0] in {"A", "M", "C", "T"}:
             path = fields[-1]
-            if is_public(path): uploads.add(path)
+            if is_public(path):
+                uploads.add(path)
     return uploads, deletions
 
 
 def materialized_changes() -> set[str]:
-    """Core generated outputs changed after checkout by the materialization step."""
+    """Return any public output changed or created by materialization steps."""
     changed = subprocess.check_output(["git", "diff", "--name-only"], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(
         ["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True
@@ -99,12 +108,19 @@ def materialized_changes() -> set[str]:
     paths = {p.strip() for p in changed + untracked if p.strip()}
     return {
         p for p in paths
-        if p in CORE_MATERIALIZED_OUTPUTS and is_public(p) and (ROOT / p).is_file()
+        if is_public(p) and (ROOT / p).is_file()
+    }
+
+
+def hotel_recovery_outputs() -> set[str]:
+    return {
+        p for p in HOTEL_RECOVERY_OUTPUTS
+        if is_public(p) and (ROOT / p).is_file()
     }
 
 
 def all_html_outputs() -> set[str]:
-    """Return every public HTML file so production cannot drift behind the branch."""
+    """Return every public HTML file for explicit full-sync maintenance runs."""
     outputs: set[str] = set()
     for path in ROOT.rglob("*.html"):
         if not path.is_file():
@@ -134,7 +150,9 @@ def files_to_upload() -> tuple[list[str], list[str]]:
 
     uploads, deletions = committed_changes()
     uploads.update(materialized_changes())
-    uploads.update(all_html_outputs())
+    uploads.update(hotel_recovery_outputs())
+    if os.environ.get("MAMETAS_FULL_SYNC", "").strip() == "1":
+        uploads.update(all_html_outputs())
     return sorted(uploads), sorted(deletions)
 
 
