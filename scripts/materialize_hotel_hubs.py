@@ -7,11 +7,30 @@ ROOT = Path(__file__).resolve().parents[1]
 PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 
+
 def safe_member(name: str) -> bool:
     p = PurePosixPath(name)
     if p.is_absolute() or '..' in p.parts:
         return False
     return any(name.startswith(prefix) for prefix in ALLOWED)
+
+
+def normalize_html(data: bytes, name: str) -> bytes:
+    """Keep one complete HTML document and repair known legacy hotel paths."""
+    text = data.decode('utf-8')
+    end = text.lower().find('</html>')
+    if end >= 0:
+        text = text[: end + len('</html>')]
+    text = text.replace(
+        'href="/hotels/hotel-de-paris-monte-carlo/"',
+        'href="/hotels/monaco/hotel-de-paris-monte-carlo/"',
+    )
+    if text.lower().count('<title>') != 1:
+        raise RuntimeError(f'{name}: expected one title after normalization')
+    if text.lower().count('<h1') != 1:
+        raise RuntimeError(f'{name}: expected one h1 after normalization')
+    return text.encode('utf-8')
+
 
 def main() -> int:
     part_files = sorted(PARTS.glob('hotel-hubs-2026-09-12.tgz.b64.part*'))
@@ -30,10 +49,14 @@ def main() -> int:
             source = archive.extractfile(member)
             if source is None:
                 raise RuntimeError(f'Cannot read payload member: {member.name}')
-            target.write_bytes(source.read())
+            data = source.read()
+            if member.name.endswith('.html'):
+                data = normalize_html(data, member.name)
+            target.write_bytes(data)
             print(f'Materialized {member.name}')
     print(f'Materialized {len(members)} hotel hub pages')
     return 0
+
 
 if __name__ == '__main__':
     raise SystemExit(main())
