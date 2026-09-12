@@ -8,7 +8,6 @@ PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
 HOTEL_CSS = '/assets/hotel-batch.css?v=1.7'
-THUMB_BUNDLE = PARTS / 'hotel-thumbs-2026-09-12.tgz.b64'
 
 HUB_LABEL_TO_SLUG = {
     'Hôtel Belles Rives': 'hotel-belles-rives',
@@ -25,63 +24,6 @@ def safe_member(name: str) -> bool:
     if p.is_absolute() or '..' in p.parts:
         return False
     return any(name.startswith(prefix) for prefix in ALLOWED)
-
-
-def safe_thumb_member(name: str) -> tuple[bool, str | None]:
-    p = PurePosixPath(name)
-    if p.is_absolute() or '..' in p.parts or len(p.parts) != 2:
-        return False, None
-    slug, filename = p.parts
-    if filename != 'batch-thumb.svg' or not re.fullmatch(r'[a-z0-9-]+', slug):
-        return False, None
-    return True, slug
-
-
-def decode_bundle_text(text: str) -> bytes:
-    """Decode the versioned thumbnail bundle even if it contains wrapping artifacts.
-
-    Older connector writes may have introduced harmless separators around an otherwise
-    valid base64 payload. Strip anything outside the standard/url-safe alphabets, then
-    try standard base64 first and url-safe base64 as a fallback.
-    """
-    compact = re.sub(r'[^A-Za-z0-9+/=_-]', '', text)
-    compact += '=' * (-len(compact) % 4)
-    errors: list[Exception] = []
-    for decoder in (base64.b64decode, base64.urlsafe_b64decode):
-        try:
-            raw = decoder(compact)
-            if raw.startswith(b'\x1f\x8b'):
-                return raw
-        except Exception as exc:
-            errors.append(exc)
-    raise RuntimeError('Hotel thumbnail bundle is not valid base64/gzip') from (errors[-1] if errors else None)
-
-
-def materialize_thumbnails() -> int:
-    if not THUMB_BUNDLE.is_file():
-        raise RuntimeError('Hotel thumbnail bundle is missing from the repository')
-    raw = decode_bundle_text(THUMB_BUNDLE.read_text(encoding='ascii'))
-    count = 0
-    with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as archive:
-        members = [m for m in archive.getmembers() if m.isfile()]
-        if len(members) != 30:
-            raise RuntimeError(f'Expected 30 hotel thumbnails, found {len(members)}')
-        for member in members:
-            ok, slug = safe_thumb_member(member.name)
-            if not ok or slug is None:
-                raise RuntimeError(f'Unexpected thumbnail path: {member.name}')
-            source = archive.extractfile(member)
-            if source is None:
-                raise RuntimeError(f'Cannot read thumbnail: {member.name}')
-            data = source.read()
-            if b'<svg' not in data[:200] or b'data:image/webp;base64,' not in data:
-                raise RuntimeError(f'Invalid hotel thumbnail SVG: {member.name}')
-            target = ROOT / 'assets' / 'hotels' / slug / 'batch-thumb.svg'
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(data)
-            count += 1
-    print(f'Materialized {count} individual hotel thumbnails')
-    return count
 
 
 def normalize_html(data: bytes, name: str) -> bytes:
@@ -150,14 +92,12 @@ def normalize_html(data: bytes, name: str) -> bytes:
     for slug in re.findall(r'src="/assets/hotels/([^/]+)/batch-thumb\.svg"', text):
         target = ROOT / 'assets' / 'hotels' / slug / 'batch-thumb.svg'
         if not target.is_file():
-            raise RuntimeError(f'{name}: missing thumbnail asset for {slug}')
+            raise RuntimeError(f'{name}: missing committed thumbnail asset for {slug}')
 
     return text.encode('utf-8')
 
 
 def main() -> int:
-    materialize_thumbnails()
-
     part_files = sorted(PARTS.glob('hotel-hubs-2026-09-12.tgz.b64.part*'))
     if not part_files:
         raise RuntimeError('Hotel hub payload parts not found')
@@ -179,7 +119,7 @@ def main() -> int:
                 data = normalize_html(data, member.name)
             target.write_bytes(data)
             print(f'Materialized {member.name}')
-    print(f'Materialized {len(members)} hotel hub pages')
+    print(f'Materialized {len(members)} hotel hub pages with committed thumbnails')
     return 0
 
 
