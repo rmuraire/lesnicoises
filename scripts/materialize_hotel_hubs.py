@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import base64, io, tarfile
+import base64, io, re, tarfile
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
+HUBS = {'hotels/index.html', 'en/hotels/index.html'}
+HOTEL_CSS = '/assets/hotel-batch.css?v=1.1'
 
 
 def safe_member(name: str) -> bool:
@@ -16,7 +18,7 @@ def safe_member(name: str) -> bool:
 
 
 def normalize_html(data: bytes, name: str) -> bytes:
-    """Keep one complete HTML document and repair known legacy hotel paths."""
+    """Keep one complete document, repair known paths and apply hotel-batch presentation fixes."""
     text = data.decode('utf-8')
     lower = text.lower()
 
@@ -36,6 +38,57 @@ def normalize_html(data: bytes, name: str) -> bytes:
         'href="/hotels/hotel-de-paris-monte-carlo/"',
         'href="/hotels/monaco/hotel-de-paris-monte-carlo/"',
     )
+
+    # Always load the hotel-specific presentation layer and bump its cache key.
+    if '/assets/hotel-batch.css' in text:
+        text = re.sub(
+            r'/assets/hotel-batch\.css\?v=[^"\']+',
+            HOTEL_CSS,
+            text,
+        )
+    else:
+        text = text.replace(
+            '</head>',
+            f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>',
+            1,
+        )
+
+    # Render the shared hotel sprite as an actual image instead of a CSS SVG background.
+    # OVH/browser combinations proved unreliable with the nested SVG-as-background route.
+    sprite_pattern = re.compile(
+        r'<span class="batch-thumb" role="img" aria-label="([^"]*)" style="background-position:\s*(\d+)%\s+(\d+)%"></span>'
+    )
+
+    def sprite_replacement(match: re.Match[str]) -> str:
+        label, x_raw, y_raw = match.groups()
+        x = int(x_raw)
+        y = int(y_raw)
+        if x not in {0, 20, 40, 60, 80, 100} or y not in {0, 25, 50, 75, 100}:
+            raise RuntimeError(f'{name}: unexpected hotel sprite position {x}% {y}%')
+        left = -(x // 20) * 100
+        top = -(y // 25) * 100
+        return (
+            f'<span class="batch-thumb" role="img" aria-label="{label}">'
+            f'<img src="/assets/hotels/batch-sprite.svg?v=1.1" alt="" loading="lazy" '
+            f'style="left:{left}%;top:{top}%"></span>'
+        )
+
+    text = sprite_pattern.sub(sprite_replacement, text)
+
+    # On the Stay landing page, the editorial intro belongs above the ten-base grid.
+    # That gives five bases per row on desktop instead of forcing a third row.
+    if name in HUBS and 'practical-title-above' not in text:
+        pattern = re.compile(
+            r'<div class="practical-grid">\s*<div class="practical-title">(.*?)</div>(?=<a class="practical-link")',
+            re.S,
+        )
+        text, replaced = pattern.subn(
+            r'<div class="practical-title practical-title-above">\1</div><div class="practical-grid practical-grid-ten">',
+            text,
+            count=1,
+        )
+        if replaced != 1:
+            raise RuntimeError(f'{name}: could not move practical title above ten-base grid')
 
     normalized = text.lower()
     if normalized.count('<title>') != 1:
