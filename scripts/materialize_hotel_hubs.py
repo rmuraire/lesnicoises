@@ -37,11 +37,30 @@ def safe_thumb_member(name: str) -> tuple[bool, str | None]:
     return True, slug
 
 
+def decode_bundle_text(text: str) -> bytes:
+    """Decode the versioned thumbnail bundle even if it contains wrapping artifacts.
+
+    Older connector writes may have introduced harmless separators around an otherwise
+    valid base64 payload. Strip anything outside the standard/url-safe alphabets, then
+    try standard base64 first and url-safe base64 as a fallback.
+    """
+    compact = re.sub(r'[^A-Za-z0-9+/=_-]', '', text)
+    compact += '=' * (-len(compact) % 4)
+    errors: list[Exception] = []
+    for decoder in (base64.b64decode, base64.urlsafe_b64decode):
+        try:
+            raw = decoder(compact)
+            if raw.startswith(b'\x1f\x8b'):
+                return raw
+        except Exception as exc:
+            errors.append(exc)
+    raise RuntimeError('Hotel thumbnail bundle is not valid base64/gzip') from (errors[-1] if errors else None)
+
+
 def materialize_thumbnails() -> int:
     if not THUMB_BUNDLE.is_file():
         raise RuntimeError('Hotel thumbnail bundle is missing from the repository')
-    encoded = ''.join(THUMB_BUNDLE.read_text(encoding='ascii').split())
-    raw = base64.b64decode(encoded, validate=True)
+    raw = decode_bundle_text(THUMB_BUNDLE.read_text(encoding='ascii'))
     count = 0
     with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as archive:
         members = [m for m in archive.getmembers() if m.isfile()]
@@ -89,8 +108,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
     else:
         text = text.replace('</head>', f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>', 1)
 
-    # Hub feature cards were the only places using a sprite span. Replace those
-    # with the same individual SVG thumbnails used on destination pages.
     hub_pattern = re.compile(
         r'<span class="batch-thumb" role="img" aria-label="([^"]*)"(?: style="[^"]*")?></span>'
     )
