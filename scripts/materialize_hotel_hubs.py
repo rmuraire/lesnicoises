@@ -19,11 +19,17 @@ def materialize_sprite_jpg() -> None:
     start = text.find(marker)
     if start < 0:
         raise RuntimeError('Embedded hotel sprite JPEG marker not found in SVG wrapper')
-    start += len(marker)
-    end = text.find('"', start)
-    if end < 0:
-        raise RuntimeError('Embedded hotel sprite JPEG is not terminated in SVG wrapper')
-    encoded = text[start:end].strip()
+    tail = text[start + len(marker):]
+    alphabet = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
+    chars = []
+    for char in tail:
+        if char in alphabet:
+            chars.append(char)
+        else:
+            break
+    encoded = ''.join(chars)
+    if not encoded:
+        raise RuntimeError('Embedded hotel sprite JPEG payload is empty')
     data = base64.b64decode(encoded, validate=True)
     if not (data.startswith(b'\xff\xd8') and data.endswith(b'\xff\xd9')):
         raise RuntimeError('Decoded hotel sprite is not a valid JPEG stream')
@@ -44,8 +50,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
     text = data.decode('utf-8')
     lower = text.lower()
 
-    # A duplicated Beaulieu payload fragment damaged the first </html> marker.
-    # When more than one document is present, keep the first complete body only.
     if lower.count('<title>') > 1:
         body_end = lower.find('</body>')
         if body_end < 0:
@@ -61,7 +65,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
         'href="/hotels/monaco/hotel-de-paris-monte-carlo/"',
     )
 
-    # Always load the hotel-specific presentation layer and bump its cache key.
     if '/assets/hotel-batch.css' in text:
         text = re.sub(
             r'/assets/hotel-batch\.css\?v=[^"\']+',
@@ -75,8 +78,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
             1,
         )
 
-    # Render the shared hotel sprite as a real JPEG image. The JPG is generated
-    # at build time from the embedded JPEG currently stored in the legacy SVG.
     sprite_pattern = re.compile(
         r'<span class="batch-thumb" role="img" aria-label="([^"]*)" style="background-position:\s*(\d+)%\s+(\d+)%"></span>'
     )
@@ -97,8 +98,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
 
     text = sprite_pattern.sub(sprite_replacement, text)
 
-    # On the Stay landing page, the editorial intro belongs above the ten-base grid.
-    # That gives five bases per row on desktop instead of forcing a third row.
     if name in HUBS and 'practical-title-above' not in text:
         pattern = re.compile(
             r'<div class="practical-grid">\s*<div class="practical-title">(.*?)</div>(?=<a class="practical-link")',
