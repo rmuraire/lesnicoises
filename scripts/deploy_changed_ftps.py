@@ -31,6 +31,7 @@ EXCLUDED_SUFFIXES = (".zip",)
 HOTEL_RECOVERY_OUTPUTS = {
     "assets/hotel-batch.css",
     "assets/hotels/batch-sprite.svg",
+    "assets/hotels/batch-sprite.jpg",
     "robots.txt",
     "sitemap-hotels-batch3.xml",
     "hotels/index.html",
