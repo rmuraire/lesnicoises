@@ -7,41 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
-HOTEL_CSS = '/assets/hotel-batch.css?v=1.6'
-
-# 6 columns x 5 rows. Coordinates were verified against the 30 source thumbnails.
-SPRITE_POSITIONS = {
-    'domaine-du-mas-de-pierre': (0, 0),
-    'five-seas-cannes': (1, 0),
-    'grand-hotel-du-cap-ferrat': (2, 0),
-    'hotel-belles-rives': (3, 0),
-    'hotel-comte-de-nice-beaulieu': (4, 0),
-    'hotel-de-letoile-antibes': (5, 0),
-    'hotel-de-provence-cannes': (0, 1),
-    'hotel-frisia': (1, 1),
-    'hotel-hermitage-monte-carlo': (2, 1),
-    'hotel-juana': (3, 1),
-    'hotel-le-sud': (4, 1),
-    'hotel-les-messugues': (5, 1),
-    'hotel-verlaine-cannes': (0, 2),
-    'hotel-victoria-roquebrune': (1, 2),
-    'ibis-roquebrune-cap-martin': (2, 2),
-    'ibis-styles-beaulieu': (3, 2),
-    'kube-saint-tropez': (4, 2),
-    'la-ferme-daugustin': (5, 2),
-    'la-grande-bastide': (0, 3),
-    'la-ponche-saint-tropez': (1, 3),
-    'la-romarine': (2, 3),
-    'le-mas-candille': (3, 3),
-    'le-saint-paul': (4, 3),
-    'les-bastides-saint-paul': (5, 3),
-    'les-palmiers-sainte-maxime': (0, 4),
-    'monte-carlo-bay': (1, 4),
-    'sezz-saint-tropez': (2, 4),
-    'toile-blanche': (3, 4),
-    'villa-marie-saint-tropez': (4, 4),
-    'villa-sophia-mougins': (5, 4),
-}
+HOTEL_CSS = '/assets/hotel-batch.css?v=1.7'
+THUMB_BUNDLE = PARTS / 'hotel-thumbs-2026-09-12.tgz.b64'
 
 HUB_LABEL_TO_SLUG = {
     'Hôtel Belles Rives': 'hotel-belles-rives',
@@ -60,30 +27,42 @@ def safe_member(name: str) -> bool:
     return any(name.startswith(prefix) for prefix in ALLOWED)
 
 
-def ensure_real_jpeg(sprite: Path) -> None:
-    data = sprite.read_bytes()
-    if data.startswith(b'\xff\xd8\xff'):
-        return
-    try:
-        raw = base64.b64decode(b''.join(data.split()), validate=True)
-    except Exception as exc:
-        raise RuntimeError('Hotel sprite is neither JPEG bytes nor valid base64 text') from exc
-    if not raw.startswith(b'\xff\xd8\xff') or not raw.endswith(b'\xff\xd9'):
-        raise RuntimeError('Decoded hotel sprite is not a valid JPEG stream')
-    sprite.write_bytes(raw)
-    print(f'Decoded hotel sprite to binary JPEG ({len(raw)} bytes)')
+def safe_thumb_member(name: str) -> tuple[bool, str | None]:
+    p = PurePosixPath(name)
+    if p.is_absolute() or '..' in p.parts or len(p.parts) != 2:
+        return False, None
+    slug, filename = p.parts
+    if filename != 'batch-thumb.svg' or not re.fullmatch(r'[a-z0-9-]+', slug):
+        return False, None
+    return True, slug
 
 
-def sprite_markup(slug: str, label: str) -> str:
-    if slug not in SPRITE_POSITIONS:
-        raise RuntimeError(f'Unknown hotel sprite slug: {slug}')
-    col, row = SPRITE_POSITIONS[slug]
-    x = col * 20
-    y = row * 25
-    return (
-        f'<span class="batch-thumb" role="img" aria-label="{label}" '
-        f'style="background-position:{x}% {y}%"></span>'
-    )
+def materialize_thumbnails() -> int:
+    if not THUMB_BUNDLE.is_file():
+        raise RuntimeError('Hotel thumbnail bundle is missing from the repository')
+    encoded = ''.join(THUMB_BUNDLE.read_text(encoding='ascii').split())
+    raw = base64.b64decode(encoded, validate=True)
+    count = 0
+    with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as archive:
+        members = [m for m in archive.getmembers() if m.isfile()]
+        if len(members) != 30:
+            raise RuntimeError(f'Expected 30 hotel thumbnails, found {len(members)}')
+        for member in members:
+            ok, slug = safe_thumb_member(member.name)
+            if not ok or slug is None:
+                raise RuntimeError(f'Unexpected thumbnail path: {member.name}')
+            source = archive.extractfile(member)
+            if source is None:
+                raise RuntimeError(f'Cannot read thumbnail: {member.name}')
+            data = source.read()
+            if b'<svg' not in data[:200] or b'data:image/webp;base64,' not in data:
+                raise RuntimeError(f'Invalid hotel thumbnail SVG: {member.name}')
+            target = ROOT / 'assets' / 'hotels' / slug / 'batch-thumb.svg'
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+            count += 1
+    print(f'Materialized {count} individual hotel thumbnails')
+    return count
 
 
 def normalize_html(data: bytes, name: str) -> bytes:
@@ -110,16 +89,8 @@ def normalize_html(data: bytes, name: str) -> bytes:
     else:
         text = text.replace('</head>', f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>', 1)
 
-    thumb_pattern = re.compile(
-        r'<img\s+alt="([^"]*)"\s+loading="lazy"\s+src="/assets/hotels/([^/]+)/batch-thumb\.svg"\s*/?>'
-    )
-
-    def thumb_replacement(match: re.Match[str]) -> str:
-        label, slug = match.groups()
-        return sprite_markup(slug, label)
-
-    text = thumb_pattern.sub(thumb_replacement, text)
-
+    # Hub feature cards were the only places using a sprite span. Replace those
+    # with the same individual SVG thumbnails used on destination pages.
     hub_pattern = re.compile(
         r'<span class="batch-thumb" role="img" aria-label="([^"]*)"(?: style="[^"]*")?></span>'
     )
@@ -128,8 +99,11 @@ def normalize_html(data: bytes, name: str) -> bytes:
         label = match.group(1)
         slug = HUB_LABEL_TO_SLUG.get(label)
         if slug is None:
-            return match.group(0)
-        return sprite_markup(slug, label)
+            raise RuntimeError(f'{name}: unknown hotel hub thumbnail label: {label}')
+        return (
+            f'<img alt="{label}" loading="lazy" '
+            f'src="/assets/hotels/{slug}/batch-thumb.svg">'
+        )
 
     text = hub_pattern.sub(hub_replacement, text)
 
@@ -153,18 +127,19 @@ def normalize_html(data: bytes, name: str) -> bytes:
         raise RuntimeError(f'{name}: expected one h1 after normalization')
     if normalized.count('rel="canonical"') != 1:
         raise RuntimeError(f'{name}: expected one canonical after normalization')
-    if 'batch-thumb.svg' in normalized:
-        raise RuntimeError(f'{name}: legacy batch thumbnail reference still present')
-    if 'batch-thumb>img' in normalized:
-        raise RuntimeError(f'{name}: obsolete inline sprite image markup still present')
+    if '<span class="batch-thumb"' in normalized:
+        raise RuntimeError(f'{name}: obsolete sprite span still present')
+
+    for slug in re.findall(r'src="/assets/hotels/([^/]+)/batch-thumb\.svg"', text):
+        target = ROOT / 'assets' / 'hotels' / slug / 'batch-thumb.svg'
+        if not target.is_file():
+            raise RuntimeError(f'{name}: missing thumbnail asset for {slug}')
+
     return text.encode('utf-8')
 
 
 def main() -> int:
-    sprite = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
-    if not sprite.is_file():
-        raise RuntimeError('Hotel sprite JPG is missing from the repository')
-    ensure_real_jpeg(sprite)
+    materialize_thumbnails()
 
     part_files = sorted(PARTS.glob('hotel-hubs-2026-09-12.tgz.b64.part*'))
     if not part_files:
