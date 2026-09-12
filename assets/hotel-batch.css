@@ -1,5 +1,6 @@
-/* Hotel batch: layout + typography + sprite, 12 Sep 2026 */
-.batch-thumb{display:block;width:100%;height:100%;background-color:var(--ink);background-image:url('/assets/hotels/batch-sprite.jpg?v=1.6');background-repeat:no-repeat;background-size:600% 500%;}
+/* Hotel batch: layout + typography + HD sprite, 12 Sep 2026 */
+.batch-thumb{display:block;width:100%;height:100%;background-color:var(--ink);background-image:url('/assets/hotels/batch-sprite.jpg?v=2.0');background-repeat:no-repeat;background-size:600% 500%;transition:transform 320ms ease,filter 180ms ease;}
+.hotel-choice-card:hover .batch-thumb{transform:scale(1.025);filter:brightness(.96);}
 
 /* Stay hub: intro above the grid, then ten bases on two compact rows. */
 .practical-title-above{min-height:0;padding:0 0 30px;border:0;max-width:760px;}
