@@ -15,10 +15,16 @@ SPRITE_JPG = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
 def materialize_sprite_jpg() -> None:
     """Extract the embedded JPEG from the legacy SVG wrapper into a real JPG asset."""
     text = SPRITE_SVG.read_text(encoding='utf-8')
-    match = re.search(r'href="data:image/jpeg;base64,([^"]+)"', text)
-    if not match:
-        raise RuntimeError('Embedded hotel sprite JPEG not found in SVG wrapper')
-    data = base64.b64decode(match.group(1), validate=True)
+    marker = 'data:image/jpeg;base64,'
+    start = text.find(marker)
+    if start < 0:
+        raise RuntimeError('Embedded hotel sprite JPEG marker not found in SVG wrapper')
+    start += len(marker)
+    end = text.find('"', start)
+    if end < 0:
+        raise RuntimeError('Embedded hotel sprite JPEG is not terminated in SVG wrapper')
+    encoded = text[start:end].strip()
+    data = base64.b64decode(encoded, validate=True)
     if not (data.startswith(b'\xff\xd8') and data.endswith(b'\xff\xd9')):
         raise RuntimeError('Decoded hotel sprite is not a valid JPEG stream')
     SPRITE_JPG.parent.mkdir(parents=True, exist_ok=True)
