@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: mametas-production
+  group: mametas-production-v2
   cancel-in-progress: true
 
 jobs:
