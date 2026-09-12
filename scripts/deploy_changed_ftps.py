@@ -4,7 +4,8 @@
 Uploads changed public files plus generated outputs that changed during the build.
 A small set of hotel hub assets/pages is always included so a previously interrupted
 hotel deployment can recover cleanly. A full HTML resync is available only when
-MAMETAS_FULL_SYNC=1. Remote deletions remain disabled.
+MAMETAS_FULL_SYNC=1. Remote deletions remain disabled except for explicitly listed
+stale deployment artifacts that must never live in the public webroot.
 """
 from __future__ import annotations
 
@@ -54,9 +55,20 @@ HOTEL_RECOVERY_OUTPUTS = {
     "en/hotels/villefranche-sur-mer/index.html",
 }
 
+STALE_REMOTE_FILES = (
+    ".github/workflows/mametas-production.yml",
+)
+
+
+def normalize_rel(path: str) -> str:
+    clean = path.strip()
+    while clean.startswith("./"):
+        clean = clean[2:]
+    return clean.lstrip("/")
+
 
 def is_public(path: str) -> bool:
-    clean = path.lstrip("./")
+    clean = normalize_rel(path)
     if not clean or clean in EXCLUDED_NAMES:
         return False
     if clean.startswith(EXCLUDED_PREFIXES):
@@ -86,16 +98,16 @@ def committed_changes() -> tuple[set[str], set[str]]:
         if status.startswith("R") and len(fields) >= 3:
             old, new = fields[1], fields[2]
             if is_public(old):
-                deletions.add(old)
+                deletions.add(normalize_rel(old))
             if is_public(new):
-                uploads.add(new)
+                uploads.add(normalize_rel(new))
         elif status.startswith("D") and len(fields) >= 2:
             if is_public(fields[1]):
-                deletions.add(fields[1])
+                deletions.add(normalize_rel(fields[1]))
         elif len(fields) >= 2 and status[0] in {"A", "M", "C", "T"}:
             path = fields[-1]
             if is_public(path):
-                uploads.add(path)
+                uploads.add(normalize_rel(path))
     return uploads, deletions
 
 
@@ -105,7 +117,7 @@ def materialized_changes() -> set[str]:
     untracked = subprocess.check_output(
         ["git", "ls-files", "--others", "--exclude-standard"], cwd=ROOT, text=True
     ).splitlines()
-    paths = {p.strip() for p in changed + untracked if p.strip()}
+    paths = {normalize_rel(p) for p in changed + untracked if p.strip()}
     return {
         p for p in paths
         if is_public(p) and (ROOT / p).is_file()
@@ -138,7 +150,7 @@ def files_to_upload() -> tuple[list[str], list[str]]:
     if forced:
         uploads = []
         for raw in forced.split(";"):
-            rel = raw.strip().lstrip("./")
+            rel = normalize_rel(raw)
             if not rel:
                 continue
             if not is_public(rel):
@@ -156,6 +168,12 @@ def files_to_upload() -> tuple[list[str], list[str]]:
     return sorted(uploads), sorted(deletions)
 
 
+def chdir_remote_root(sftp: paramiko.SFTPClient, home: str, remote_root: str) -> None:
+    sftp.chdir(home)
+    for part in [p for p in PurePosixPath(remote_root.strip("/")).parts if p not in {"", "."}]:
+        sftp.chdir(part)
+
+
 def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_dir: str) -> None:
     sftp.chdir(home)
     parts = [p for p in PurePosixPath(remote_root.strip("/")).parts if p not in {"", "."}]
@@ -168,6 +186,22 @@ def ensure_dir(sftp: paramiko.SFTPClient, home: str, remote_root: str, relative_
             sftp.chdir(part)
 
 
+def remove_stale_remote_files(sftp: paramiko.SFTPClient, home: str, remote_root: str) -> None:
+    chdir_remote_root(sftp, home, remote_root)
+    for rel in STALE_REMOTE_FILES:
+        try:
+            sftp.remove(rel)
+            print(f"Removed stale remote artifact {rel}")
+        except OSError:
+            print(f"Stale remote artifact already absent: {rel}")
+    for rel_dir in (".github/workflows", ".github"):
+        try:
+            sftp.rmdir(rel_dir)
+            print(f"Removed empty stale remote directory {rel_dir}")
+        except OSError:
+            pass
+
+
 def main() -> int:
     uploads, deletions = files_to_upload()
     print(f"Public files to upload: {len(uploads)}")
@@ -177,9 +211,6 @@ def main() -> int:
         print("Remote deletions intentionally skipped for safety:")
         for path in deletions:
             print(f"  - {path}")
-    if not uploads:
-        print("No public file changed; nothing to deploy.")
-        return 0
 
     required = {
         "OVH_FTP_SERVER": os.environ.get("OVH_FTP_SERVER", "").strip(),
@@ -205,6 +236,7 @@ def main() -> int:
         try:
             home = sftp.normalize(".")
             print("Connected to OVH over SFTP.")
+            remove_stale_remote_files(sftp, home, required["OVH_FTP_ROOT"])
             for rel in uploads:
                 local = ROOT / rel
                 ensure_dir(sftp, home, required["OVH_FTP_ROOT"], posixpath.dirname(rel))
