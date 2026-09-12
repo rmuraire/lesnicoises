@@ -18,17 +18,32 @@ def safe_member(name: str) -> bool:
 def normalize_html(data: bytes, name: str) -> bytes:
     """Keep one complete HTML document and repair known legacy hotel paths."""
     text = data.decode('utf-8')
-    end = text.lower().find('</html>')
-    if end >= 0:
-        text = text[: end + len('</html>')]
+    lower = text.lower()
+
+    # A duplicated Beaulieu payload fragment damaged the first </html> marker.
+    # When more than one document is present, keep the first complete body only.
+    if lower.count('<title>') > 1:
+        body_end = lower.find('</body>')
+        if body_end < 0:
+            raise RuntimeError(f'{name}: duplicated document without closing body')
+        text = text[: body_end + len('</body>')] + '</html>'
+    else:
+        end = lower.find('</html>')
+        if end >= 0:
+            text = text[: end + len('</html>')]
+
     text = text.replace(
         'href="/hotels/hotel-de-paris-monte-carlo/"',
         'href="/hotels/monaco/hotel-de-paris-monte-carlo/"',
     )
-    if text.lower().count('<title>') != 1:
+
+    normalized = text.lower()
+    if normalized.count('<title>') != 1:
         raise RuntimeError(f'{name}: expected one title after normalization')
-    if text.lower().count('<h1') != 1:
+    if normalized.count('<h1') != 1:
         raise RuntimeError(f'{name}: expected one h1 after normalization')
+    if normalized.count('rel="canonical"') != 1:
+        raise RuntimeError(f'{name}: expected one canonical after normalization')
     return text.encode('utf-8')
 
 
