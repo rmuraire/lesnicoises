@@ -25,6 +25,8 @@ def materialize_sprite_jpg() -> None:
     for char in tail:
         if char in alphabet:
             chars.append(char)
+        elif char.isspace():
+            continue
         else:
             break
     encoded = ''.join(chars)
