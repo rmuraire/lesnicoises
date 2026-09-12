@@ -1,1 +1,32 @@
-.batch-thumb{display:block;width:100%;height:100%;background-image:url('/assets/hotels/batch-sprite.svg');background-repeat:no-repeat;background-size:600% 500%;}
+/* Hotel batch: layout + typography + sprite, 12 Sep 2026 */
+.batch-thumb{display:block;position:relative;overflow:hidden;width:100%;height:100%;background:var(--ink);}
+.batch-thumb>img{position:absolute;width:600%;height:500%;max-width:none;object-fit:fill;pointer-events:none;}
+
+/* Stay hub: intro above the grid, then ten bases on two compact rows. */
+.practical-title-above{min-height:0;padding:0 0 30px;border:0;max-width:760px;}
+.practical-title-above h2{max-width:16ch;margin:0;font-size:clamp(34px,3.8vw,52px);line-height:1.02;}
+.practical-title-above p{max-width:620px;margin:14px 0 0;color:rgba(255,255,255,.82);font-size:14px;line-height:1.6;}
+@media (min-width:981px){
+  .practical-grid-ten{grid-template-columns:repeat(5,minmax(0,1fr));}
+  .practical-grid-ten .practical-link{min-height:180px;padding:22px;}
+  .practical-grid-ten .practical-link h3{font-size:22px;}
+}
+
+/* Destination pages: editorial hierarchy without a second oversized hero. */
+.v3-section.hotel-chooser{padding-top:clamp(52px,5.5vw,76px);padding-bottom:clamp(46px,5vw,68px);}
+.chooser-intro{margin-bottom:32px;}
+.chooser-intro h2{max-width:22ch;font-size:clamp(29px,3vw,42px);line-height:1.08;letter-spacing:-.035em;}
+.style-nav a{min-height:150px;}
+.style-nav strong{font-size:24px;}
+.hotel-style-section{padding:clamp(52px,6vw,78px) 0;}
+.hotel-style-heading{margin-bottom:34px;}
+.hotel-style-heading h2{max-width:21ch;font-size:clamp(28px,3vw,42px);line-height:1.08;letter-spacing:-.035em;}
+
+@media (max-width:980px){
+  .practical-title-above{padding-bottom:24px;max-width:680px;}
+}
+@media (max-width:760px){
+  .practical-title-above h2{font-size:34px;}
+  .practical-grid-ten .practical-link{min-height:150px;}
+  .chooser-intro h2,.hotel-style-heading h2{font-size:32px;}
+}
