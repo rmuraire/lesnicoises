@@ -8,7 +8,7 @@ PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
 HOTEL_CSS = '/assets/hotel-batch.css?v=1.4'
-SPRITE_URL = '/assets/hotels/batch-sprite.jpg?v=1.4'
+SPRITE_URL = '/assets/hotels/batch-sprite.jpg?v=1.5'
 
 # 5 columns x 6 rows, in the exact order of the September hotel batch sprite.
 SPRITE_POSITIONS = {
@@ -61,6 +61,21 @@ def safe_member(name: str) -> bool:
     return any(name.startswith(prefix) for prefix in ALLOWED)
 
 
+def ensure_real_jpeg(sprite: Path) -> None:
+    """The repository currently stores this asset as base64 text; decode it for production."""
+    data = sprite.read_bytes()
+    if data.startswith(b'\xff\xd8\xff'):
+        return
+    try:
+        raw = base64.b64decode(b''.join(data.split()), validate=True)
+    except Exception as exc:
+        raise RuntimeError('Hotel sprite is neither JPEG bytes nor valid base64 text') from exc
+    if not raw.startswith(b'\xff\xd8\xff') or not raw.endswith(b'\xff\xd9'):
+        raise RuntimeError('Decoded hotel sprite is not a valid JPEG stream')
+    sprite.write_bytes(raw)
+    print(f'Decoded hotel sprite to binary JPEG ({len(raw)} bytes)')
+
+
 def sprite_markup(slug: str, label: str) -> str:
     if slug not in SPRITE_POSITIONS:
         raise RuntimeError(f'Unknown hotel sprite slug: {slug}')
@@ -99,8 +114,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
     else:
         text = text.replace('</head>', f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>', 1)
 
-    # Destination pages in the payload still reference 30 tiny SVG files that are no longer deployed.
-    # Rewrite them to the single production JPG sprite instead.
     thumb_pattern = re.compile(
         r'<img\s+alt="([^"]*)"\s+loading="lazy"\s+src="/assets/hotels/([^/]+)/batch-thumb\.svg"\s*/?>'
     )
@@ -111,7 +124,6 @@ def normalize_html(data: bytes, name: str) -> bytes:
 
     text = thumb_pattern.sub(thumb_replacement, text)
 
-    # Hub cards were created with an older 6x5 coordinate system. Rebuild those six from labels.
     hub_pattern = re.compile(
         r'<span class="batch-thumb" role="img" aria-label="([^"]*)"(?: style="[^"]*")?></span>'
     )
@@ -154,6 +166,7 @@ def main() -> int:
     sprite = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
     if not sprite.is_file():
         raise RuntimeError('Hotel sprite JPG is missing from the repository')
+    ensure_real_jpeg(sprite)
 
     part_files = sorted(PARTS.glob('hotel-hubs-2026-09-12.tgz.b64.part*'))
     if not part_files:
