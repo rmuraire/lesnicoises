@@ -7,8 +7,51 @@ ROOT = Path(__file__).resolve().parents[1]
 PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
-HOTEL_CSS = '/assets/hotel-batch.css?v=1.2'
-SPRITE_URL = '/assets/hotels/batch-sprite.jpg?v=1.3'
+HOTEL_CSS = '/assets/hotel-batch.css?v=1.4'
+SPRITE_URL = '/assets/hotels/batch-sprite.jpg?v=1.4'
+
+# 5 columns x 6 rows, in the exact order of the September hotel batch sprite.
+SPRITE_POSITIONS = {
+    'le-saint-paul': (0, 0),
+    'domaine-du-mas-de-pierre': (1, 0),
+    'toile-blanche': (2, 0),
+    'la-grande-bastide': (3, 0),
+    'hotel-les-messugues': (4, 0),
+    'les-bastides-saint-paul': (0, 1),
+    'hotel-comte-de-nice-beaulieu': (1, 1),
+    'ibis-styles-beaulieu': (2, 1),
+    'hotel-frisia': (3, 1),
+    'grand-hotel-du-cap-ferrat': (4, 1),
+    'hotel-hermitage-monte-carlo': (0, 2),
+    'monte-carlo-bay': (1, 2),
+    'hotel-victoria-roquebrune': (2, 2),
+    'ibis-roquebrune-cap-martin': (3, 2),
+    'hotel-belles-rives': (4, 2),
+    'hotel-juana': (0, 3),
+    'hotel-le-sud': (1, 3),
+    'hotel-de-letoile-antibes': (2, 3),
+    'five-seas-cannes': (3, 3),
+    'hotel-verlaine-cannes': (4, 3),
+    'hotel-de-provence-cannes': (0, 4),
+    'le-mas-candille': (1, 4),
+    'villa-sophia-mougins': (2, 4),
+    'kube-saint-tropez': (3, 4),
+    'villa-marie-saint-tropez': (4, 4),
+    'sezz-saint-tropez': (0, 5),
+    'la-ponche-saint-tropez': (1, 5),
+    'les-palmiers-sainte-maxime': (2, 5),
+    'la-romarine': (3, 5),
+    'la-ferme-daugustin': (4, 5),
+}
+
+HUB_LABEL_TO_SLUG = {
+    'Hôtel Belles Rives': 'hotel-belles-rives',
+    'Five Seas Hotel Cannes': 'five-seas-cannes',
+    'Grand-Hôtel du Cap-Ferrat, A Four Seasons Hotel': 'grand-hotel-du-cap-ferrat',
+    'Hôtel Hermitage Monte-Carlo': 'hotel-hermitage-monte-carlo',
+    'Le Domaine du Mas de Pierre': 'domaine-du-mas-de-pierre',
+    'Hôtel La Ponche': 'la-ponche-saint-tropez',
+}
 
 
 def safe_member(name: str) -> bool:
@@ -18,8 +61,21 @@ def safe_member(name: str) -> bool:
     return any(name.startswith(prefix) for prefix in ALLOWED)
 
 
+def sprite_markup(slug: str, label: str) -> str:
+    if slug not in SPRITE_POSITIONS:
+        raise RuntimeError(f'Unknown hotel sprite slug: {slug}')
+    col, row = SPRITE_POSITIONS[slug]
+    left = -col * 100
+    top = -row * 100
+    return (
+        f'<span class="batch-thumb" role="img" aria-label="{label}">'
+        f'<img src="{SPRITE_URL}" alt="" loading="lazy" '
+        f'style="left:{left}%;top:{top}%"></span>'
+    )
+
+
 def normalize_html(data: bytes, name: str) -> bytes:
-    """Keep one complete document, repair known paths and apply hotel-batch presentation fixes."""
+    """Keep one complete document, repair paths and normalize hotel batch presentation."""
     text = data.decode('utf-8')
     lower = text.lower()
 
@@ -39,37 +95,35 @@ def normalize_html(data: bytes, name: str) -> bytes:
     )
 
     if '/assets/hotel-batch.css' in text:
-        text = re.sub(
-            r'/assets/hotel-batch\.css\?v=[^"\']+',
-            HOTEL_CSS,
-            text,
-        )
+        text = re.sub(r'/assets/hotel-batch\.css\?v=[^"\']+', HOTEL_CSS, text)
     else:
-        text = text.replace(
-            '</head>',
-            f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>',
-            1,
-        )
+        text = text.replace('</head>', f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>', 1)
 
-    sprite_pattern = re.compile(
-        r'<span class="batch-thumb" role="img" aria-label="([^"]*)" style="background-position:\s*(\d+)%\s+(\d+)%"></span>'
+    # Destination pages in the payload still reference 30 tiny SVG files that are no longer deployed.
+    # Rewrite them to the single production JPG sprite instead.
+    thumb_pattern = re.compile(
+        r'<img\s+alt="([^"]*)"\s+loading="lazy"\s+src="/assets/hotels/([^/]+)/batch-thumb\.svg"\s*/?>'
     )
 
-    def sprite_replacement(match: re.Match[str]) -> str:
-        label, x_raw, y_raw = match.groups()
-        x = int(x_raw)
-        y = int(y_raw)
-        if x not in {0, 20, 40, 60, 80, 100} or y not in {0, 25, 50, 75, 100}:
-            raise RuntimeError(f'{name}: unexpected hotel sprite position {x}% {y}%')
-        left = -(x // 20) * 100
-        top = -(y // 25) * 100
-        return (
-            f'<span class="batch-thumb" role="img" aria-label="{label}">'
-            f'<img src="{SPRITE_URL}" alt="" loading="lazy" '
-            f'style="left:{left}%;top:{top}%"></span>'
-        )
+    def thumb_replacement(match: re.Match[str]) -> str:
+        label, slug = match.groups()
+        return sprite_markup(slug, label)
 
-    text = sprite_pattern.sub(sprite_replacement, text)
+    text = thumb_pattern.sub(thumb_replacement, text)
+
+    # Hub cards were created with an older 6x5 coordinate system. Rebuild those six from labels.
+    hub_pattern = re.compile(
+        r'<span class="batch-thumb" role="img" aria-label="([^"]*)"(?: style="[^"]*")?></span>'
+    )
+
+    def hub_replacement(match: re.Match[str]) -> str:
+        label = match.group(1)
+        slug = HUB_LABEL_TO_SLUG.get(label)
+        if slug is None:
+            return match.group(0)
+        return sprite_markup(slug, label)
+
+    text = hub_pattern.sub(hub_replacement, text)
 
     if name in HUBS and 'practical-title-above' not in text:
         pattern = re.compile(
@@ -91,6 +145,8 @@ def normalize_html(data: bytes, name: str) -> bytes:
         raise RuntimeError(f'{name}: expected one h1 after normalization')
     if normalized.count('rel="canonical"') != 1:
         raise RuntimeError(f'{name}: expected one canonical after normalization')
+    if 'batch-thumb.svg' in normalized:
+        raise RuntimeError(f'{name}: legacy batch thumbnail reference still present')
     return text.encode('utf-8')
 
 
