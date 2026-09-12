@@ -126,10 +126,20 @@ def materialized_changes() -> set[str]:
 
 
 def hotel_recovery_outputs() -> set[str]:
-    return {
+    outputs = {
         p for p in HOTEL_RECOVERY_OUTPUTS
         if is_public(p) and (ROOT / p).is_file()
     }
+    # Hotel hub thumbnails are generated from the versioned thumbnail bundle.
+    # Always include them so an interrupted prior deployment can recover cleanly.
+    hotel_assets = ROOT / "assets" / "hotels"
+    if hotel_assets.is_dir():
+        for path in hotel_assets.glob("*/batch-thumb.svg"):
+            if path.is_file():
+                rel = path.relative_to(ROOT).as_posix()
+                if is_public(rel):
+                    outputs.add(rel)
+    return outputs
 
 
 def all_html_outputs() -> set[str]:
