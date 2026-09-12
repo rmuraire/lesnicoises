@@ -58,7 +58,10 @@ def normalized_label(value: str) -> str:
     value = ''.join(ch for ch in value if not unicodedata.combining(ch))
     value = value.lower().replace('&', ' and ')
     value = re.sub(r'[^a-z0-9]+', ' ', value)
-    return ' '.join(value.split())
+    tokens = value.split()
+    if tokens and tokens[0] == 'hotel':
+        tokens = tokens[1:]
+    return ' '.join(tokens)
 
 
 NORMALIZED_LABEL_TO_SLUG = {
