@@ -8,36 +8,7 @@ PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
 HOTEL_CSS = '/assets/hotel-batch.css?v=1.2'
-SPRITE_SVG = ROOT / 'assets' / 'hotels' / 'batch-sprite.svg'
-SPRITE_JPG = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
-
-
-def materialize_sprite_jpg() -> None:
-    """Extract the embedded JPEG from the legacy SVG wrapper into a real JPG asset."""
-    text = SPRITE_SVG.read_text(encoding='utf-8')
-    marker = 'data:image/jpeg;base64,'
-    start = text.find(marker)
-    if start < 0:
-        raise RuntimeError('Embedded hotel sprite JPEG marker not found in SVG wrapper')
-    tail = text[start + len(marker):]
-    alphabet = set('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=')
-    chars = []
-    for char in tail:
-        if char in alphabet:
-            chars.append(char)
-        elif char.isspace():
-            continue
-        else:
-            break
-    encoded = ''.join(chars)
-    if not encoded:
-        raise RuntimeError('Embedded hotel sprite JPEG payload is empty')
-    data = base64.b64decode(encoded, validate=True)
-    if not (data.startswith(b'\xff\xd8') and data.endswith(b'\xff\xd9')):
-        raise RuntimeError('Decoded hotel sprite is not a valid JPEG stream')
-    SPRITE_JPG.parent.mkdir(parents=True, exist_ok=True)
-    SPRITE_JPG.write_bytes(data)
-    print(f'Materialized {SPRITE_JPG.relative_to(ROOT).as_posix()} ({len(data)} bytes)')
+SPRITE_URL = '/assets/hotels/batch-sprite.jpg?v=1.3'
 
 
 def safe_member(name: str) -> bool:
@@ -94,7 +65,7 @@ def normalize_html(data: bytes, name: str) -> bytes:
         top = -(y // 25) * 100
         return (
             f'<span class="batch-thumb" role="img" aria-label="{label}">'
-            f'<img src="/assets/hotels/batch-sprite.jpg?v=1.2" alt="" loading="lazy" '
+            f'<img src="{SPRITE_URL}" alt="" loading="lazy" '
             f'style="left:{left}%;top:{top}%"></span>'
         )
 
@@ -124,7 +95,10 @@ def normalize_html(data: bytes, name: str) -> bytes:
 
 
 def main() -> int:
-    materialize_sprite_jpg()
+    sprite = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
+    if not sprite.is_file():
+        raise RuntimeError('Hotel sprite JPG is missing from the repository')
+
     part_files = sorted(PARTS.glob('hotel-hubs-2026-09-12.tgz.b64.part*'))
     if not part_files:
         raise RuntimeError('Hotel hub payload parts not found')
