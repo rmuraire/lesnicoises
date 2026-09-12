@@ -34,6 +34,9 @@ jobs:
       - name: Materialize editorial HTML
         run: python scripts/materialize_editorial_html.py
 
+      - name: Materialize hotel hubs
+        run: python scripts/materialize_hotel_hubs.py
+
       - name: Validate production site
         run: python scripts/validate_mametas.py
 

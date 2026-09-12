@@ -6,5 +6,6 @@ Allow: /
 
 Sitemap: https://www.mametas.com/sitemap.xml
 Sitemap: https://www.mametas.com/sitemap-hotels-batch2.xml
+Sitemap: https://www.mametas.com/sitemap-hotels-batch3.xml
 Sitemap: https://www.mametas.com/sitemap-editorial.xml
 # Mametas SFTP deployment pipeline check
