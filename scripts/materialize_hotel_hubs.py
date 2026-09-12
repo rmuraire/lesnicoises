@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import base64, io, re, tarfile
+import base64, io, re, tarfile, unicodedata
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -53,6 +53,19 @@ HUB_LABEL_TO_SLUG = {
 }
 
 
+def normalized_label(value: str) -> str:
+    value = unicodedata.normalize('NFKD', value)
+    value = ''.join(ch for ch in value if not unicodedata.combining(ch))
+    value = value.lower().replace('&', ' and ')
+    value = re.sub(r'[^a-z0-9]+', ' ', value)
+    return ' '.join(value.split())
+
+
+NORMALIZED_LABEL_TO_SLUG = {
+    normalized_label(label): slug for label, slug in HUB_LABEL_TO_SLUG.items()
+}
+
+
 def safe_member(name: str) -> bool:
     p = PurePosixPath(name)
     if p.is_absolute() or '..' in p.parts:
@@ -91,6 +104,8 @@ def normalize_html(data: bytes, name: str) -> bytes:
     def hub_replacement(match: re.Match[str]) -> str:
         label = match.group(1)
         slug = HUB_LABEL_TO_SLUG.get(label)
+        if slug is None:
+            slug = NORMALIZED_LABEL_TO_SLUG.get(normalized_label(label))
         if slug is None:
             raise RuntimeError(f'{name}: unknown hotel hub thumbnail label: {label}')
         return (
