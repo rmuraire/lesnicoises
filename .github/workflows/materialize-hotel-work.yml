@@ -27,20 +27,19 @@ jobs:
       - name: Materialize hotel hubs
         run: python scripts/materialize_hotel_hubs.py
 
-      - name: Add September 13 hotels
-        run: python scripts/augment_hotels_2026_09_13.py
+      - name: Run hotel augmentation and capture diagnostics
+        run: |
+          set +e
+          python scripts/augment_hotels_2026_09_13.py > hotel-augment.log 2>&1
+          status=$?
+          echo "$status" > hotel-augment.status
+          cat hotel-augment.log
+          exit 0
 
-      - name: Validate site
-        run: python scripts/validate_mametas.py
-
-      - name: Commit materialized hotel HTML
+      - name: Commit diagnostics
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add hotels en/hotels fr/dormir/nice stay/nice
-          if git diff --cached --quiet; then
-            echo "No materialized hotel changes to commit"
-            exit 0
-          fi
-          git commit -m "Materialize September 13 hotel expansion [skip ci]"
+          git add hotel-augment.log hotel-augment.status
+          git commit -m "Capture hotel augmentation diagnostics [skip ci]"
           git push
