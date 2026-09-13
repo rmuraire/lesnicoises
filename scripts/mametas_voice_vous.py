@@ -26,6 +26,10 @@ def main() -> int:
             "Si tu construis ton séjour, pars d’abord de ta base. Les plages viennent ensuite — et ça évite parfois une heure de route pour vingt minutes de sable.",
             "Si vous construisez votre séjour, partez d’abord de votre base. Les plages viennent ensuite. Et ça évite parfois une heure de route pour vingt minutes de sable.",
         ),
+        (
+            "Si tu construis ton séjour, pars d’abord de ta base. Les plages viennent ensuite, et ça évite parfois une heure de route pour vingt minutes de sable.",
+            "Si vous construisez votre séjour, partez d’abord de votre base. Les plages viennent ensuite. Et ça évite parfois une heure de route pour vingt minutes de sable.",
+        ),
     ])
 
     update("culture/index.html", [
