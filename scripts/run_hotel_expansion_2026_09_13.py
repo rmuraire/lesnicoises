@@ -6,7 +6,7 @@ import re
 import augment_hotels_2026_09_13 as hotels
 
 _original_update_page_copy = hotels.update_page_copy
-HOTEL_CSS = '/assets/hotel-batch.css?v=1.9'
+HOTEL_CSS = '/assets/hotel-batch.css?v=2.0'
 
 
 def update_page_copy(text: str, base: str, lang: str) -> str:
