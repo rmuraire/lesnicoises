@@ -1,0 +1,58 @@
+name: Test stronger Mametas voice
+
+on:
+  push:
+    branches:
+      - mametas-voice-pass-2026-09-13
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-voice:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Materialize editorial HTML
+        run: python scripts/materialize_editorial_html.py
+      - name: Materialize hotel hubs
+        run: python scripts/materialize_hotel_hubs.py
+      - name: Add September 13 hotels
+        run: python scripts/run_hotel_expansion_2026_09_13.py
+      - name: Apply existing Mametas voice
+        run: |
+          python scripts/mametas_voice_pass.py
+          python scripts/mametas_voice_hubs.py
+      - name: Push Plan and Places voice further
+        run: python scripts/mametas_voice_plan_places.py
+      - name: Check French address consistency
+        run: |
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          root = Path('.')
+          pronouns = re.compile(r"(?i)(?<![\w’'-])(?:tu|toi|ton|ta|tes)(?![\w’'-])")
+          hits=[]
+          for p in root.rglob('*.html'):
+              text=p.read_text(encoding='utf-8',errors='ignore')
+              if 'lang="fr"' not in text and "lang='fr'" not in text:
+                  continue
+              visible=re.sub(r'<script.*?</script>|<style.*?</style>', ' ', text, flags=re.S|re.I)
+              visible=re.sub(r'<[^>]+>', ' ', visible)
+              m=pronouns.search(visible)
+              if m:
+                  snippet=re.sub(r'\s+',' ',visible[max(0,m.start()-80):m.end()+120]).strip()
+                  hits.append((str(p),snippet))
+          if hits:
+              print('Tutoiement found:')
+              for p,s in hits:
+                  print(f'{p}: {s}')
+              raise SystemExit(1)
+          print('No tu/toi/ton/ta/tes found in French visible copy.')
+          PY
+      - name: Validate site
+        run: python scripts/validate_mametas.py
