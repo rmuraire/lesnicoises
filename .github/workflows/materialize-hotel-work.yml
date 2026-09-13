@@ -6,6 +6,10 @@ on:
       - mametas-hotels-13-sep-work
   workflow_dispatch:
 
+concurrency:
+  group: mametas-hotel-work
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -25,20 +29,27 @@ jobs:
       - name: Materialize hotel hubs
         run: python scripts/materialize_hotel_hubs.py
 
-      - name: Run hotel augmentation and capture diagnostics
-        run: |
-          set +e
-          python scripts/augment_hotels_2026_09_13.py > hotel-augment.log 2>&1
-          status=$?
-          echo "$status" > hotel-augment.status
-          cat hotel-augment.log
-          exit 0
+      - name: Add September 13 hotels
+        run: python scripts/run_hotel_expansion_2026_09_13.py
 
-      - name: Upload diagnostics
+      - name: Validate site
+        run: python scripts/validate_mametas.py
+
+      - name: Build inspection bundle
+        run: |
+          mkdir -p hotel-preview/fr hotel-preview/en
+          cp fr/dormir/nice/index.html hotel-preview/fr/nice.html
+          cp stay/nice/index.html hotel-preview/en/nice.html
+          cp hotels/cannes/index.html hotel-preview/fr/cannes.html
+          cp en/hotels/cannes/index.html hotel-preview/en/cannes.html
+          cp hotels/saint-tropez/index.html hotel-preview/fr/saint-tropez.html
+          cp en/hotels/saint-tropez/index.html hotel-preview/en/saint-tropez.html
+          cp hotels/index.html hotel-preview/fr/hub.html
+          cp en/hotels/index.html hotel-preview/en/hub.html
+
+      - name: Upload inspection bundle
         uses: actions/upload-artifact@v4
         with:
-          name: hotel-augment-diagnostics
-          path: |
-            hotel-augment.log
-            hotel-augment.status
+          name: hotel-expansion-preview
+          path: hotel-preview
           retention-days: 1
