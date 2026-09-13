@@ -6,6 +6,7 @@ import re
 import augment_hotels_2026_09_13 as hotels
 
 _original_update_page_copy = hotels.update_page_copy
+HOTEL_CSS = '/assets/hotel-batch.css?v=1.9'
 
 
 def update_page_copy(text: str, base: str, lang: str) -> str:
@@ -20,7 +21,21 @@ def update_page_copy(text: str, base: str, lang: str) -> str:
     return text
 
 
+def ensure_hotel_css_on_nice_pages() -> None:
+    for rel in ("fr/dormir/nice/index.html", "stay/nice/index.html"):
+        path = hotels.ROOT / rel
+        text = path.read_text(encoding="utf-8")
+        if '/assets/hotel-batch.css' in text:
+            text = re.sub(r'/assets/hotel-batch\.css\?v=[^"\']+', HOTEL_CSS, text)
+        else:
+            text = text.replace('</head>', f'<link href="{HOTEL_CSS}" rel="stylesheet"></head>', 1)
+        path.write_text(text, encoding="utf-8")
+        print(f"Ensured hotel sprite CSS on {rel}")
+
+
 hotels.update_page_copy = update_page_copy
 
 if __name__ == "__main__":
-    raise SystemExit(hotels.main())
+    status = hotels.main()
+    ensure_hotel_css_on_nice_pages()
+    raise SystemExit(status)
