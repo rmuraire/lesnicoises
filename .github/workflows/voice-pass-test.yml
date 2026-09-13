@@ -29,13 +29,18 @@ jobs:
           python scripts/mametas_voice_hubs.py
       - name: Push Plan and Places voice further
         run: python scripts/mametas_voice_plan_places.py
+      - name: Standardize French address to vous
+        run: python scripts/mametas_voice_vous.py
       - name: Check French address consistency
         run: |
           python - <<'PY'
           import re
           from pathlib import Path
           root = Path('.')
-          pronouns = re.compile(r"(?i)(?<![\w’'-])(?:tu|toi|ton|ta|tes)(?![\w’'-])")
+          patterns = [
+              re.compile(r"(?i)(?<![\w’'-])(?:tu|toi|ta|tes)(?![\w’'-])"),
+              re.compile(r"(?i)(?<![\w])t[’'](?:as|es|appelle|épargner|aider|emmener|éviter|inviter|obliger)"),
+          ]
           hits=[]
           for p in root.rglob('*.html'):
               text=p.read_text(encoding='utf-8',errors='ignore')
@@ -43,7 +48,11 @@ jobs:
                   continue
               visible=re.sub(r'<script.*?</script>|<style.*?</style>', ' ', text, flags=re.S|re.I)
               visible=re.sub(r'<[^>]+>', ' ', visible)
-              m=pronouns.search(visible)
+              m=None
+              for pattern in patterns:
+                  m=pattern.search(visible)
+                  if m:
+                      break
               if m:
                   snippet=re.sub(r'\s+',' ',visible[max(0,m.start()-80):m.end()+120]).strip()
                   hits.append((str(p),snippet))
@@ -52,7 +61,7 @@ jobs:
               for p,s in hits:
                   print(f'{p}: {s}')
               raise SystemExit(1)
-          print('No tu/toi/ton/ta/tes found in French visible copy.')
+          print('No French tutoiement found in visible copy.')
           PY
       - name: Validate site
         run: python scripts/validate_mametas.py
