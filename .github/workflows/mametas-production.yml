@@ -44,6 +44,7 @@ jobs:
         run: |
           python scripts/mametas_voice_pass.py
           python scripts/mametas_voice_hubs.py
+          python scripts/mametas_voice_second_pass.py
 
       - name: Validate production site
         run: python scripts/validate_mametas.py
