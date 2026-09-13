@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PARTS = ROOT / 'data' / 'hotels'
 ALLOWED = ('hotels/', 'en/hotels/')
 HUBS = {'hotels/index.html', 'en/hotels/index.html'}
-HOTEL_CSS = '/assets/hotel-batch.css?v=1.8'
+HOTEL_CSS = '/assets/hotel-batch.css?v=2.0'
 SPRITE_PATH = ROOT / 'assets' / 'hotels' / 'batch-sprite.jpg'
 
 HUB_LABEL_TO_SLUG = {
