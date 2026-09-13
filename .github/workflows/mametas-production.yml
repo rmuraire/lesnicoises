@@ -52,6 +52,15 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
+      - name: Re-sync hotel sprites and CSS
+        env:
+          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
       - name: Check public homepage
         run: |
           python - <<'PY'
