@@ -1,4 +1,4 @@
-name: Materialize hotel work branch
+name: Finalize hotel expansion work branch
 
 on:
   push:
@@ -7,49 +7,35 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: mametas-hotel-work
+  group: mametas-hotel-finalize
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  materialize:
+  finalize:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Check out work branch
         uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          fetch-depth: 0
 
-      - name: Materialize hotel hubs
-        run: python scripts/materialize_hotel_hubs.py
-
-      - name: Add September 13 hotels
-        run: python scripts/run_hotel_expansion_2026_09_13.py
-
-      - name: Validate site
-        run: python scripts/validate_mametas.py
-
-      - name: Build inspection bundle
+      - name: Restore generated hotel HTML to production source state
         run: |
-          mkdir -p hotel-preview/fr hotel-preview/en
-          cp fr/dormir/nice/index.html hotel-preview/fr/nice.html
-          cp stay/nice/index.html hotel-preview/en/nice.html
-          cp hotels/cannes/index.html hotel-preview/fr/cannes.html
-          cp en/hotels/cannes/index.html hotel-preview/en/cannes.html
-          cp hotels/saint-tropez/index.html hotel-preview/fr/saint-tropez.html
-          cp en/hotels/saint-tropez/index.html hotel-preview/en/saint-tropez.html
-          cp hotels/index.html hotel-preview/fr/hub.html
-          cp en/hotels/index.html hotel-preview/en/hub.html
+          git fetch origin mametas-v3
+          git rm -r --ignore-unmatch hotels en/hotels
+          git checkout origin/mametas-v3 -- hotels en/hotels
 
-      - name: Upload inspection bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: hotel-expansion-preview
-          path: hotel-preview
-          retention-days: 1
+      - name: Remove temporary work workflow
+        run: git rm .github/workflows/materialize-hotel-work.yml
+
+      - name: Commit clean production-ready diff
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Prepare September 13 hotel expansion [skip ci]"
+          git push
