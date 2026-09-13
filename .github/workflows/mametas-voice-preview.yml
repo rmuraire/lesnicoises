@@ -1,0 +1,56 @@
+name: Mametas voice preview
+
+on:
+  push:
+    branches:
+      - mametas-voice-pass-2026-09-13
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mametas-voice-preview
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out voice branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Materialize editorial HTML
+        run: python scripts/materialize_editorial_html.py
+
+      - name: Materialize hotel hubs
+        run: python scripts/materialize_hotel_hubs.py
+
+      - name: Add September 13 hotels
+        run: python scripts/run_hotel_expansion_2026_09_13.py
+
+      - name: Apply Mametas voice
+        run: python scripts/mametas_voice_pass.py
+
+      - name: Validate site
+        run: python scripts/validate_mametas.py
+
+      - name: Commit preview HTML
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html fr/index.html en/index.html a-propos en/about riviera-guide en/riviera-guide restaurants en/restaurants culture en/culture plages en/beaches escapades en/day-trips explore en/explore hotels en/hotels fr/dormir stay
+          if git diff --cached --quiet; then
+            echo "No voice preview changes"
+            exit 0
+          fi
+          git commit -m "Materialize Mametas voice preview [skip ci]"
+          git push
