@@ -40,6 +40,11 @@ jobs:
       - name: Add September 13 hotels
         run: python scripts/run_hotel_expansion_2026_09_13.py
 
+      - name: Apply Mametas editorial voice
+        run: |
+          python scripts/mametas_voice_pass.py
+          python scripts/mametas_voice_hubs.py
+
       - name: Validate production site
         run: python scripts/validate_mametas.py
 
