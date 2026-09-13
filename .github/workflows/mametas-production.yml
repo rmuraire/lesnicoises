@@ -37,6 +37,9 @@ jobs:
       - name: Materialize hotel hubs
         run: python scripts/materialize_hotel_hubs.py
 
+      - name: Add September 13 hotels
+        run: python scripts/run_hotel_expansion_2026_09_13.py
+
       - name: Validate production site
         run: python scripts/validate_mametas.py
 
