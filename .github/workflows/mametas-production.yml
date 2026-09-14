@@ -40,6 +40,9 @@ jobs:
       - name: Add September 13 hotels
         run: python scripts/run_hotel_expansion_2026_09_13.py
 
+      - name: Strengthen Nice hotel mid-range merchandising
+        run: python scripts/nice_hotel_merchandising_2026_09_14.py
+
       - name: Apply Mametas editorial voice
         run: |
           python scripts/mametas_voice_pass.py
