@@ -6,9 +6,11 @@ for rel in EN_HUBS:
     p=ROOT/rel
     s=p.read_text(encoding="utf-8").replace('href="/en/privacy/"','href="/privacy/"')
     p.write_text(s,encoding="utf-8")
+
 p=ROOT/"hotels/sans-voiture/index.html"
 s=p.read_text(encoding="utf-8").replace('href="/hotels/la-perouse/"','href="/fr/dormir/nice/#paisible"')
 p.write_text(s,encoding="utf-8")
+
 p=ROOT/"en/hotels/without-a-car/index.html"
 s=p.read_text(encoding="utf-8")
 if '<h2>Central Cannes</h2>' not in s:
@@ -28,4 +30,19 @@ def add_mobile(rel,lang):
     p.write_text(s,encoding="utf-8")
 add_mobile('riviera-guide/cannes/index.html','fr')
 add_mobile('en/riviera-guide/cannes/index.html','en')
-print("Audit hotfix applied: privacy, no-car decisions and Cannes mobile navigation.")
+
+# The existing hotel directories for Èze are detail pages, not hubs. Point the new
+# destination guide to the real bilingual hotel detail instead of creating a dead-end.
+p=ROOT/'riviera-guide/eze/index.html'
+s=p.read_text(encoding='utf-8')
+s=s.replace('href="/hotels/la-chevre-d-or/"','href="/hotels/eze/la-chevre-d-or/"')
+s=s.replace('Si vous voulez dormir sur place, commencez par <a href="/hotels/eze/">la sélection d’hôtels à Èze</a>.','Si vous voulez dormir sur place, voyez notre fiche de <a href="/hotels/eze/la-chevre-d-or/">La Chèvre d’Or</a>.')
+p.write_text(s,encoding='utf-8')
+
+p=ROOT/'en/riviera-guide/eze/index.html'
+s=p.read_text(encoding='utf-8')
+s=s.replace('use the <a href="/en/hotels/eze/">short Èze hotel selection</a> if staying overnight.','see our <a href="/en/hotels/eze/la-chevre-d-or/">La Chèvre d’Or hotel page</a> if staying overnight.')
+s=s.replace('start with the <a href="/en/hotels/eze/">short Èze hotel selection</a>.','start with our <a href="/en/hotels/eze/la-chevre-d-or/">La Chèvre d’Or hotel page</a>.')
+p.write_text(s,encoding='utf-8')
+
+print("Audit hotfix applied: privacy, no-car decisions, Cannes mobile navigation and live Èze hotel links.")
