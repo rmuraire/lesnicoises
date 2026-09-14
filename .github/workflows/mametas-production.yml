@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  issues: write
 
 concurrency:
   group: mametas-production-v2
@@ -53,23 +52,7 @@ jobs:
           python scripts/audit_hotfix_2026_09_14.py
 
       - name: Validate Claude audit corrections
-        id: audit_validate
-        continue-on-error: true
-        run: python scripts/validate_claude_audit_2026_09_13.py > /tmp/mametas-audit-validation.log 2>&1
-
-      - name: Report audit validation failure
-        if: steps.audit_validate.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          printf 'Audit validation failed on `%s`:\n\n```text\n' "${GITHUB_SHA}" > /tmp/mametas-audit-comment.md
-          cat /tmp/mametas-audit-validation.log >> /tmp/mametas-audit-comment.md
-          printf '\n```\n' >> /tmp/mametas-audit-comment.md
-          gh issue comment 1 --repo "${GITHUB_REPOSITORY}" --body-file /tmp/mametas-audit-comment.md
-
-      - name: Stop before deploy on audit failure
-        if: steps.audit_validate.outcome == 'failure'
-        run: exit 1
+        run: python scripts/validate_claude_audit_2026_09_13.py
 
       - name: Validate production site
         run: python scripts/validate_mametas.py
