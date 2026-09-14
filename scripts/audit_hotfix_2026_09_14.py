@@ -43,6 +43,7 @@ p=ROOT/'en/riviera-guide/eze/index.html'
 s=p.read_text(encoding='utf-8')
 s=s.replace('use the <a href="/en/hotels/eze/">short Èze hotel selection</a> if staying overnight.','see our <a href="/en/hotels/eze/la-chevre-d-or/">La Chèvre d’Or hotel page</a> if staying overnight.')
 s=s.replace('start with the <a href="/en/hotels/eze/">short Èze hotel selection</a>.','start with our <a href="/en/hotels/eze/la-chevre-d-or/">La Chèvre d’Or hotel page</a>.')
+s=s.replace('href="/en/privacy/"','href="/privacy/"')
 p.write_text(s,encoding='utf-8')
 
-print("Audit hotfix applied: privacy, no-car decisions, Cannes mobile navigation and live Èze hotel links.")
+print("Audit hotfix applied: privacy, no-car decisions, Cannes mobile navigation and live Èze links.")
