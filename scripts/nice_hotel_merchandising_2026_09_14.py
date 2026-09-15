@@ -72,13 +72,21 @@ def patch_page(lang: str, path: Path) -> None:
         text = text[:pos] + compass(lang) + text[pos:]
     for section_id, wanted in ORDER[lang].items():
         text = reorder_section(text, section_id, wanted)
-    count = len(re.findall(r'<article class="hotel-choice-card"', text))
-    if count != 20:
-        raise RuntimeError(f"{path.relative_to(ROOT)}: expected 20 hotel cards, found {count}")
-    required = ["Hotel 64 Nice","Hotel Florence Nice","Hôtel Le Grimaldi by Happyculture","Hotel Amour Nice","Hotel Beau Rivage","Boscolo Nice Hôtel & Spa"]
-    missing = [name for name in required if name not in text]
+    cards = re.findall(r'<article class="hotel-choice-card".*?</article>', text, flags=re.S)
+    if len(cards) != 20:
+        raise RuntimeError(f"{path.relative_to(ROOT)}: expected 20 hotel cards, found {len(cards)}")
+    keys = {card_key(card) for card in cards}
+    required_keys = {
+        "hotel-64-nice",
+        "hotel-florence-nice",
+        "hotel-le-grimaldi-by-happyculture",
+        "hotel-amour-nice",
+        "hotel-beau-rivage",
+        "boscolo-nice-hotel-and-spa",
+    }
+    missing = sorted(required_keys - keys)
     if missing:
-        raise RuntimeError(f"{path.relative_to(ROOT)}: missing expected hotels {missing}")
+        raise RuntimeError(f"{path.relative_to(ROOT)}: missing expected hotel keys {missing}")
     path.write_text(text, encoding="utf-8")
     print(f"Merchandised {path.relative_to(ROOT)}: 20 hotels")
 
