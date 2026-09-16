@@ -30,12 +30,16 @@ def remove_legacy_trip_length(text: str) -> str:
     )
 
 
+def replace_between(text: str, start_id: str, end_pattern: str, replacement: str, label: str) -> str:
+    pattern = rf'<h2 id="{re.escape(start_id)}">.*?(?={end_pattern})'
+    text, count = re.subn(pattern, replacement + '\n        ', text, count=1, flags=re.S)
+    if count != 1:
+        raise SystemExit(f'Could not replace {label}')
+    return text
+
+
 def fix_nice_next_decision(rel: str, fr: bool = False) -> None:
     path, text = read(rel)
-
-    # The English source contains the audit pilot fork. Remove that source-level copy
-    # after the legacy static-decision block has been materialized, then place the fork at
-    # the actual end of the editorial journey.
     if not fr:
         manual = (
             '<div class="verdict"><span class="label">YOUR NEXT DECISION</span>'
@@ -80,15 +84,25 @@ def fix_nice_next_decision(rel: str, fr: bool = False) -> None:
 def fix_english_plan() -> None:
     path, text = read('plan/five-days-nice-no-car/index.html')
     text = remove_legacy_trip_length(text)
+    booking = '''<h2 id="book-ahead">Book ahead: the short checklist</h2>
+          <p>Reserve the things whose absence would genuinely damage the trip. For this route, that means the hotel first and only the timed experience you actually care about.</p>
+          <h3>Two practical hotel fits</h3>
+          <div class="itinerary-stay-prompt">
+            <a href="https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e" rel="sponsored nofollow noopener" target="_blank"><span>Practical pick</span><strong>Hotel 66 Nice</strong><small>Station-friendly and built for easy departures.</small></a>
+            <a href="https://expedia.com/affiliates/nice-hotels-hotel-nice-cote-dazur.sQEIXGB" rel="sponsored nofollow noopener" target="_blank"><span>Compact &amp; central</span><strong>Boutique Hôtel Nice Côte d’Azur</strong><small>Good geography with less hotel theatre.</small></a>
+          </div>
+          <div class="verdict-box"><span>4–8 weeks before</span><p><strong>Hotel:</strong> lock in the base you actually want. <strong>Signature dinners:</strong> reserve one or two only if missing them would annoy you. Do not turn the rest of the week into an appointment calendar.</p></div>
+          <div class="verdict-box"><span>1–2 weeks before</span><p>If the Oceanographic Museum defines your Monaco day, <a href="https://billetterie-oceano.tickeasy.com/en-GB/products" rel="nofollow noopener" target="_blank">check official museum tickets →</a> Recheck opening days for any other timed visit that genuinely anchors a day.</p></div>
+          <div class="verdict-box"><span>24–48 hours before</span><p>Check official rail and bus planners, weather and disruption. Ordinary coastal train journeys belong to the flexible layer.</p></div>
+          <div class="verdict-box"><span>Keep spontaneous</span><p>Most lunches, one half-day, the exact order of weather-sensitive days and the decision to stop for a swim instead of collecting another landmark.</p></div>'''
+    text = replace_between(
+        text,
+        'book-ahead',
+        r'<h2 id="make-it-three">',
+        booking,
+        'English booking section',
+    )
     write(path, text)
-
-
-def replace_between(text: str, start_id: str, end_pattern: str, replacement: str, label: str) -> str:
-    pattern = rf'<h2 id="{re.escape(start_id)}">.*?(?={end_pattern})'
-    text, count = re.subn(pattern, replacement + '\n        ', text, count=1, flags=re.S)
-    if count != 1:
-        raise SystemExit(f'Could not replace {label}')
-    return text
 
 
 def fix_french_plan() -> None:
@@ -110,16 +124,17 @@ def fix_french_plan() -> None:
         )
         text = text.replace('<div class="day-card" id="jour-un">', five + '<div class="day-card" id="jour-un">', 1)
 
-    booking = '''<h2 id="reservations">Réservez ce que vous regretteriez. Laissez le reste tranquille.</h2>
-        <h3>Hôtel : deux choix pratiques pour ce parcours</h3>
-        <p>Si ces cinq jours correspondent au séjour que vous voulez, choisissez d’abord une base simple près de la gare avant d’optimiser chaque journée.</p>
+    booking = '''<h2 id="reservations">Réserver à l’avance : la check-list courte</h2>
+        <p>Bloquez ce dont l’absence gâcherait vraiment le séjour. Pour ce parcours, l’hôtel d’abord, puis seulement les expériences à créneau qui comptent réellement.</p>
+        <h3>Deux hôtels pratiques pour ce parcours</h3>
         <div class="itinerary-stay-prompt">
           <a href="https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e" rel="sponsored nofollow noopener" target="_blank"><span>Choix pratique</span><strong>Hotel 66 Nice</strong><small>Près de la gare et pensé pour des départs faciles.</small></a>
           <a href="https://expedia.com/affiliates/nice-hotels-hotel-nice-cote-dazur.sQEIXGB" rel="sponsored nofollow noopener" target="_blank"><span>Compact &amp; central</span><strong>Boutique Hôtel Nice Côte d’Azur</strong><small>Bonne géographie, moins de théâtre hôtelier.</small></a>
         </div>
-        <h3>Une grande visite à caler</h3>
-        <p>Si le Musée océanographique est le point fort de votre journée à Monaco, prenez le billet avant de partir. <a class="inline-decision-link" href="https://billetterie-oceano.tickeasy.com/fr-FR/produits" rel="nofollow noopener" target="_blank">Voir la billetterie officielle →</a> Le reste du parcours peut rester beaucoup plus flexible.</p>
-        <h3>À garder flexible</h3><p>La plupart des déjeuners, l’ordre des journées sensibles à la météo et au moins une demi-journée. Un tableur parfait peut tout de même produire des vacances étrangement sans joie.</p>'''
+        <div class="verdict-box"><span>4 à 8 semaines avant</span><p><strong>Hôtel :</strong> bloquez la base que vous voulez réellement. <strong>Dîners signature :</strong> réservez-en un ou deux seulement si vous regretteriez vraiment de les manquer. Le reste du séjour n’a pas besoin de devenir un calendrier de rendez-vous.</p></div>
+        <div class="verdict-box"><span>1 à 2 semaines avant</span><p>Si le Musée océanographique définit votre journée à Monaco, <a href="https://billetterie-oceano.tickeasy.com/fr-FR/produits" rel="nofollow noopener" target="_blank">voir la billetterie officielle →</a> Revérifiez aussi les jours d’ouverture des autres visites à créneau qui structurent réellement une journée.</p></div>
+        <div class="verdict-box"><span>24 à 48 h avant</span><p>Vérifiez les calculateurs officiels train/bus, la météo et les perturbations. Les trajets côtiers ordinaires restent dans la couche flexible.</p></div>
+        <div class="verdict-box"><span>À garder spontané</span><p>La plupart des déjeuners, une demi-journée, l’ordre exact des journées sensibles à la météo et le droit de choisir une baignade plutôt qu’un monument supplémentaire.</p></div>'''
     text = replace_between(
         text,
         'reservations',
