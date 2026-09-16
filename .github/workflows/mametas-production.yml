@@ -43,6 +43,9 @@ jobs:
       - name: Strengthen Nice hotel mid-range merchandising
         run: python scripts/nice_hotel_merchandising_2026_09_14.py
 
+      - name: Add global hotel finder entry points
+        run: python scripts/hotel_finder_hub_pass.py
+
       - name: Apply Mametas editorial voice
         run: |
           python scripts/mametas_voice_pass.py
