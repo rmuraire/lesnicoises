@@ -60,6 +60,9 @@ jobs:
       - name: Apply Astra decision paths
         run: python scripts/astra_ux_2026_09_16.py
 
+      - name: Keep Places decision blocks inside editorial column
+        run: python scripts/places_layout_hotfix_2026_09_16.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
@@ -75,9 +78,9 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
-      - name: Re-sync hotel sprites and CSS
+      - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg
+          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/fondation-maeght-waterborough.webp
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
