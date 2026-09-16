@@ -36,6 +36,14 @@ def ensure_hotel_css_on_nice_pages() -> None:
 hotels.update_page_copy = update_page_copy
 
 if __name__ == "__main__":
-    status = hotels.main()
+    # Nice now has a data-driven decision engine fed by data/hotels/nice.json.
+    # The legacy expansion pass expects static hotel grids there, so protect the
+    # new chooser while continuing to materialize all other destination hubs.
+    original_bases = hotels.BASES
+    hotels.BASES = {k: v for k, v in original_bases.items() if k != "nice"}
+    try:
+        status = hotels.main()
+    finally:
+        hotels.BASES = original_bases
     ensure_hotel_css_on_nice_pages()
     raise SystemExit(status)
