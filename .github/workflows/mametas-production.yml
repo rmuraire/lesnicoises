@@ -63,8 +63,8 @@ jobs:
       - name: Keep Places decision blocks inside editorial column
         run: python scripts/places_layout_hotfix_2026_09_16.py
 
-      - name: Cache-bust repaired Fondation Maeght image
-        run: python scripts/maeght_image_hotfix_2026_09_16.py
+      - name: Repair editorial card images
+        run: python scripts/editorial_image_hotfix_2026_09_16.py
 
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
@@ -83,7 +83,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/fondation-maeght-waterborough.webp
+          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
