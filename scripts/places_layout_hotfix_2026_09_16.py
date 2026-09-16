@@ -22,8 +22,8 @@ PAGES = (
     "en/riviera-guide/antibes/index.html",
 )
 
-START = "<!--MAMETAS_STATIC_DECISIONS_START-->"
-END = "<!--MAMETAS_STATIC_DECISIONS_END-->"
+START = "<!-- MAMETAS_STATIC_DECISIONS_START -->"
+END = "<!-- MAMETAS_STATIC_DECISIONS_END -->"
 V3_CLOSE = "</div></div></section>"
 
 
