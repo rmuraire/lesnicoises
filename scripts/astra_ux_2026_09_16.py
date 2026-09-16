@@ -33,7 +33,7 @@ def remove_legacy_trip_length(text: str) -> str:
 def fix_nice_next_decision(rel: str, fr: bool = False) -> None:
     path, text = read(rel)
 
-    # The English source now contains the audit pilot fork. Remove that source-level copy
+    # The English source contains the audit pilot fork. Remove that source-level copy
     # after the legacy static-decision block has been materialized, then place the fork at
     # the actual end of the editorial journey.
     if not fr:
@@ -83,6 +83,14 @@ def fix_english_plan() -> None:
     write(path, text)
 
 
+def replace_between(text: str, start_id: str, end_pattern: str, replacement: str, label: str) -> str:
+    pattern = rf'<h2 id="{re.escape(start_id)}">.*?(?={end_pattern})'
+    text, count = re.subn(pattern, replacement + '\n        ', text, count=1, flags=re.S)
+    if count != 1:
+        raise SystemExit(f'Could not replace {label}')
+    return text
+
+
 def fix_french_plan() -> None:
     path, text = read('fr/planifier/cinq-jours-nice-sans-voiture/index.html')
     text = remove_legacy_trip_length(text)
@@ -112,15 +120,13 @@ def fix_french_plan() -> None:
         <h3>Une grande visite à caler</h3>
         <p>Si le Musée océanographique est le point fort de votre journée à Monaco, prenez le billet avant de partir. <a class="inline-decision-link" href="https://billetterie-oceano.tickeasy.com/fr-FR/produits" rel="nofollow noopener" target="_blank">Voir la billetterie officielle →</a> Le reste du parcours peut rester beaucoup plus flexible.</p>
         <h3>À garder flexible</h3><p>La plupart des déjeuners, l’ordre des journées sensibles à la météo et au moins une demi-journée. Un tableur parfait peut tout de même produire des vacances étrangement sans joie.</p>'''
-    text, count = re.subn(
-        r'<h2 id="reservations">.*?<h3>À garder flexible</h3><p>.*?</p>',
-        booking,
+    text = replace_between(
         text,
-        count=1,
-        flags=re.S,
+        'reservations',
+        r'<h2 id="version-trois">',
+        booking,
+        'French booking section',
     )
-    if count != 1:
-        raise SystemExit('Could not replace French booking section')
 
     three = '''<h2 id="version-trois">Trois jours. Voilà ce qui reste.</h2>
         <p>Coupez, ne compressez pas. Gardez Nice, choisissez une seule journée à l’est, puis Antibes comme contrepoint à l’ouest. Vous perdez de l’étendue, pas la logique du voyage.</p>
@@ -129,30 +135,26 @@ def fix_french_plan() -> None:
         <div class="day-card"><span class="day">Jour 3</span><h3>Antibes</h3><p>Vieille ville, remparts et changement d’ambiance à l’ouest sans passer la journée dans les transports.</p><p><a class="inline-decision-link" href="/riviera-guide/antibes/">Utiliser le guide d’Antibes →</a></p></div>
         <p><strong>Le compromis :</strong> Èze et la deuxième journée à l’est disparaissent. C’est volontaire. Trois jours doivent sembler édités, pas pressés.</p>
         <p><a class="inline-decision-link" href="/fr/dormir/nice/#pratique">Choisir un hôtel pour ces trois jours →</a></p>'''
-    text, count = re.subn(
-        r'<h2 id="version-trois">.*?</h2><p>.*?</p>',
-        three,
+    text = replace_between(
         text,
-        count=1,
-        flags=re.S,
+        'version-trois',
+        r'<h2 id="version-sept">',
+        three,
+        'French 3-day section',
     )
-    if count != 1:
-        raise SystemExit('Could not replace French 3-day section')
 
     seven = '''<h2 id="version-sept">Sept jours. Ajoutez de l’air, pas des cases.</h2>
         <p>Gardez les cinq journées complètes. Les deux jours supplémentaires servent à ralentir et à ajouter une seule direction vraiment différente, pas à doubler le nombre d’épingles sur la carte.</p>
         <div class="day-card"><span class="day">Jour 6</span><h3>Nice sans objectif</h3><p>Musée, marché, plage, quartier laissé de côté et dîner sans tableau des départs.</p><p><a class="inline-decision-link" href="/riviera-guide/nice/">Revenir à Nice sans checklist →</a></p></div>
         <div class="day-card"><span class="day">Jour 7</span><h3>Choisissez une direction supplémentaire</h3><p><a href="/riviera-guide/cannes/">Cannes</a> pour la Croisette, les palaces et un TER très simple ; <a href="/riviera-guide/saint-paul-de-vence/">Saint-Paul-de-Vence</a> pour un contraste intérieur. Une seule suffit.</p></div>
         <p><strong>Le compromis :</strong> sept jours donnent de la respiration. Une deuxième base devient possible, mais Nice fonctionne toujours ; ne créez pas un problème de valise simplement parce que le calendrier s’allonge.</p>'''
-    text, count = re.subn(
-        r'<h2 id="version-sept">.*?</h2><p>.*?</p>',
-        seven,
+    text = replace_between(
         text,
-        count=1,
-        flags=re.S,
+        'version-sept',
+        r'<div class="source-box"><strong>Vérifications officielles',
+        seven,
+        'French 7-day section',
     )
-    if count != 1:
-        raise SystemExit('Could not replace French 7-day section')
 
     if 'data-astra-hotel-fork="true"' not in text:
         fork = (
@@ -161,7 +163,10 @@ def fix_french_plan() -> None:
             '<p><a class="inline-decision-link" href="/fr/dormir/nice/#pratique">Pas encore — voir la sélection pratique à Nice →</a><br>'
             '<a class="inline-decision-link" href="#reservations">Déjà réservé — vérifier ce qui mérite vraiment une réservation →</a></p></div>\n\n'
         )
-        text = text.replace('<div class="source-box"><strong>Vérifications officielles', fork + '<div class="source-box"><strong>Vérifications officielles', 1)
+        marker = '<div class="source-box"><strong>Vérifications officielles'
+        if marker not in text:
+            raise SystemExit('Could not place French hotel fork')
+        text = text.replace(marker, fork + marker, 1)
 
     write(path, text)
 
