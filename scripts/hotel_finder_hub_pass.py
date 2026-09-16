@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS = '/assets/hotel-engine.css?v=4'
+CSS = '/assets/hotel-engine.css?v=5'
 
 ENTRY_FR = '''<section class="v3-section hotel-finder-entry" data-hotel-finder-entry="true"><div class="wrap"><div class="finder-entry-inner"><div><p class="eyebrow">1 · Vous préférez qu’on tranche ?</p><h2>Trouver votre hôtel</h2><p>Choisissez votre base — ou laissez-la ouverte — puis dites-nous ce qui compte vraiment. Mametas réduit la sélection à trois ou quatre adresses, avec la raison et le compromis.</p></div><a class="button" href="/hotels/finder/">Lancer l’outil hôtel</a></div></div></section>'''
 
