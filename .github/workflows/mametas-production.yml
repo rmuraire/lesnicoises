@@ -63,6 +63,9 @@ jobs:
       - name: Keep Places decision blocks inside editorial column
         run: python scripts/places_layout_hotfix_2026_09_16.py
 
+      - name: Cache-bust repaired Fondation Maeght image
+        run: python scripts/maeght_image_hotfix_2026_09_16.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
