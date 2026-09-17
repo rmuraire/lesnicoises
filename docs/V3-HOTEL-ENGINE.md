@@ -31,27 +31,33 @@ Le moteur du prochain lot doit s'appuyer sur les champs structurés, dans cet or
 6. **Niveau de gamme** : `mid`, `upper-mid`, `high`, `very-high`. Positionnement relatif à Nice, jamais tarif live.
 7. **Durée** : 3 / 5 / 7 jours quand elle aide réellement le classement.
 
+## PRIORITÉ — prochaine mise à jour du finder
+
+**Ajouter la notion de prix / budget au finder est la priorité du prochain lot. Ne pas la perdre dans les optimisations secondaires.** Les données `priceBand` sont déjà présentes et doivent servir de base. L'interface et les libellés exacts (bandes relatives et/ou repères en euros) seront décidés dans ce lot ; ne pas inventer de tarif live.
+
 ### Sortie attendue
 
-- 3 à 5 recommandations maximum.
+- Si l'utilisateur choisit uniquement une ville : afficher toutes les adresses Mametas disponibles pour cette ville.
+- Dès qu'un critère supplémentaire est choisi : revenir à une shortlist de 3 à 5 recommandations maximum.
 - Pour chaque résultat : **Best for**, **The catch**, logique de quartier, niveau de gamme relatif et CTA principal.
-- Le CTA mène vers la fiche Mametas ou directement vers Expedia quand la fiche n'ajoute pas de décision supplémentaire.
+- Le CTA mène vers la fiche Mametas ou directement vers le partenaire de réservation quand la fiche n'ajoute pas de décision supplémentaire.
 - Ne jamais classer uniquement par commission ou par prix supposé.
 
 ## Règles de données
 
 - `data/hotels/nice.json` est la source canonique du moteur Nice.
 - Les nouveaux hôtels doivent être ajoutés à cette source avant d'être proposés par le moteur.
-- `priceBand` est qualitatif et relatif au marché niçois ; aucune valeur en euros ne doit être déduite de ce champ.
+- `priceBand` est qualitatif et relatif au marché niçois ; aucune valeur en euros ne doit être déduite de ce champ sans décision éditoriale explicite.
 - `stationFriendly`, `seaAccess`, `oldTownAccess`, `quiet` décrivent la logique de localisation, pas une garantie de chambre ou de service.
-- Les liens Expedia sont conservés tels qu'ils ont été fournis et doivent être contrôlés avant toute modification.
+- Les liens partenaires sont conservés tels qu'ils ont été fournis et doivent être contrôlés avant toute modification.
 
-## Expedia
+## Affiliation hôtels
 
-- Conserver les liens existants ; ne pas les régénérer sans nécessité.
-- Le lien Apollinaire contient encore l'ancien nom Ellington dans son URL : statut `active-needs-link-check`, à contrôler sans le remplacer arbitrairement.
+- Booking.com via CJ est désormais le canal principal quand un lien Booking validé a été fourni.
+- Les liens Expedia existants peuvent rester en secours pour les hôtels sans lien Booking validé.
 - Sur une carte : un seul CTA principal `Check rates` / `Voir les tarifs`.
-- Sur une fiche détaillée : Expedia peut rester le CTA transactionnel principal sans transformer Mametas en comparateur.
+- Sur une fiche détaillée : le partenaire transactionnel peut rester le CTA principal sans transformer Mametas en comparateur.
+- Un hôtel sans lien affilié valide ne doit jamais disparaître d'une recommandation éditoriale : le CTA revient alors vers la fiche Mametas.
 
 ## Mesure
 
@@ -59,4 +65,4 @@ Les liens partenaires doivent porter `data-affiliate-network` et `data-affiliate
 
 ## Hors périmètre du lot de consolidation
 
-La logique interactive / scoring du moteur est le lot suivant. La consolidation du 15 septembre prépare les données et ferme le sourcing ; elle ne doit pas déclencher une refonte visuelle ou une migration d'URL.
+La consolidation du 15 septembre prépare les données et ferme le sourcing ; elle ne doit pas déclencher une refonte visuelle ou une migration d'URL. Le prochain changement fonctionnel prioritaire est le filtre prix / budget du finder.
