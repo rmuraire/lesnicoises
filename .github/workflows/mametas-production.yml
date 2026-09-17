@@ -75,6 +75,9 @@ jobs:
       - name: Materialize hotel finder inventory
         run: python scripts/materialize_hotel_finder_inventory.py
 
+      - name: Apply hotel finder logic hotfix
+        run: python scripts/hotel_finder_logic_hotfix.py
+
       - name: Route hotel affiliate links to Booking via CJ
         run: python scripts/booking_cj_affiliate_pass.py
 
