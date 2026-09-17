@@ -1,3 +1,4 @@
+// Finder V3.1: city-only selections show the full city inventory; filtered searches remain shortlists.
 (function () {
   var root = document.querySelector('[data-hotel-engine]');
   if (!root) return;
