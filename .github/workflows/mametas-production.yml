@@ -75,6 +75,9 @@ jobs:
       - name: Route hotel affiliate links to Booking via CJ
         run: python scripts/booking_cj_affiliate_pass.py
 
+      - name: Open external links in new tabs
+        run: python scripts/external_links_new_tab.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
