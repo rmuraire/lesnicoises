@@ -12,7 +12,7 @@
   var unsafeAffiliateIds = { 'apollinaire-nice': true };
 
   var bases = fr ? [
-    { id:'nice', label:'Nice', path:'/fr/dormir/nice/' },
+    { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/assets/hotel-finder-nice.json?v=1' },
     { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/hotels/antibes/' },
     { id:'cannes', label:'Cannes', path:'/hotels/cannes/' },
     { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/hotels/villefranche-sur-mer/' },
@@ -23,7 +23,7 @@
     { id:'mougins', label:'Mougins', path:'/hotels/mougins/' },
     { id:'saint-tropez', label:'Saint-Tropez', path:'/hotels/saint-tropez/' }
   ] : [
-    { id:'nice', label:'Nice', path:'/stay/nice/' },
+    { id:'nice', label:'Nice', path:'/stay/nice/', dataPath:'/assets/hotel-finder-nice.json?v=1' },
     { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/en/hotels/antibes/' },
     { id:'cannes', label:'Cannes', path:'/en/hotels/cannes/' },
     { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/en/hotels/villefranche-sur-mer/' },
@@ -39,22 +39,24 @@
     loading:'On regarde la sélection Mametas…',
     choose:'Choisissez au moins un critère avant de lancer la recherche.',
     changed:'Vos choix ont changé. Relancez la sélection quand vous avez fini.',
-    none:'Pas assez de correspondances nettes avec un lien tarifaire vérifiable. Élargissez un critère.',
+    none:'Pas assez de correspondances nettes. Élargissez un critère.',
     count:function(n){ return n + (n > 1 ? ' adresses ressortent' : ' adresse ressort') + ' de vos choix.'; },
     why:'Pourquoi elle ressort',
     catch:'Le compromis',
     rates:'Voir les tarifs',
-    disclosure:'Transparence : les liens Expedia sont affiliés. Mametas peut percevoir une commission si vous réservez, sans que cela influence la sélection.'
+    details:'Voir la fiche Mametas',
+    disclosure:'Transparence : certains liens de réservation sont affiliés. Mametas peut percevoir une commission si vous réservez, sans que cela influence la sélection.'
   } : {
     loading:'Checking the Mametas selection…',
     choose:'Pick at least one criterion before running the finder.',
     changed:'Your choices changed. Run the shortlist again when you are done.',
-    none:'Not enough clean matches with a verifiable rate link. Widen one criterion.',
+    none:'Not enough clean matches. Widen one criterion.',
     count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
     why:'Why it made the cut',
     catch:'The catch',
     rates:'Check rates',
-    disclosure:'Transparency: Expedia links are affiliate links. Mametas may earn a commission if you book, without influencing the selection.'
+    details:'See the Mametas review',
+    disclosure:'Transparency: some booking links are affiliate links. Mametas may earn a commission if you book, without influencing the selection.'
   };
 
   function normalise(value) {
@@ -75,6 +77,20 @@
     var active = oldtown || hasAny(text, ['vivant','lively','restaurants','bars','evening','soir','centre']);
     var chic = hasAny(text, ['chic','luxe','luxury','palace','riviera','resort','grand hotel','five star','5 star','spa','iconic','mythique']);
     return { station:station, sea:sea, oldtown:oldtown, quiet:quiet, practical:practical, active:active, chic:chic, text:text };
+  }
+
+  function structuredSignals(item) {
+    var styles = item.styles || [];
+    return {
+      station: !!item.stationFriendly,
+      sea: !!item.seaAccess,
+      oldtown: !!item.oldTownAccess,
+      quiet: !!item.quiet,
+      practical: styles.indexOf('practical') >= 0,
+      active: styles.indexOf('active') >= 0,
+      chic: styles.indexOf('chic') >= 0,
+      text: normalise([item.name, item.neighborhood, styles.join(' ')].join(' '))
+    };
   }
 
   function classifyStyle(sig, style) {
@@ -120,10 +136,24 @@
     return parts.length ? parts[parts.length - 1] : '';
   }
 
+  function affiliateAnchor(scope) {
+    if (!scope) return null;
+    var sponsored = Array.prototype.find.call(scope.querySelectorAll('a[rel~="sponsored"]'), function(a){
+      var href = a.getAttribute('href') || '';
+      return /^https?:\/\//i.test(href);
+    });
+    if (sponsored) return sponsored;
+    return scope.querySelector(
+      'a[href*="expedia.com/affiliates/"],' +
+      'a[href*="kqzyfj.com/"],a[href*="jdoqocy.com/"],a[href*="anrdoezrs.net/"],' +
+      'a[href*="tkqlhce.com/"],a[href*="dpbolvw.net/"],a[href*="booking.com/"]'
+    );
+  }
+
   function parseHotels(htmlText, base) {
     var doc = new DOMParser().parseFromString(htmlText, 'text/html');
     var hotels = [];
-    doc.querySelectorAll('.hotel-choice-card').forEach(function(card){
+    doc.querySelectorAll('.hotel-choice-card').forEach(function(card, index){
       var heading = card.querySelector('h3');
       if (!heading) return;
       var name = heading.textContent.trim();
@@ -138,7 +168,7 @@
         });
         internal = internalLink ? internalLink.getAttribute('href') : '';
       }
-      var directAffiliate = card.querySelector('a[href*="expedia.com/affiliates/"]');
+      var directAffiliate = affiliateAnchor(card);
       var section = card.closest('section');
       var sectionHeading = section ? section.querySelector('.hotel-style-heading') : null;
       var tag = card.querySelector('.hotel-choice-tags span');
@@ -154,7 +184,8 @@
         tag:tag ? tag.textContent.trim() : '',
         copy:copy ? copy.textContent.trim() : '',
         detailPath:internal,
-        affiliate:directAffiliate ? directAffiliate.getAttribute('href') : ''
+        affiliate:directAffiliate ? (directAffiliate.getAttribute('href') || '') : '',
+        _order:index
       };
       hotel.signals = signals(hotel);
       hotels.push(hotel);
@@ -168,30 +199,63 @@
     });
   }
 
+  function parseStructuredHotels(payload, base) {
+    var items = payload && Array.isArray(payload.hotels) ? payload.hotels : [];
+    return items.map(function(item, index){
+      var paths = item.paths || {};
+      var affiliate = item.affiliate || {};
+      var styleText = (item.styles || []).join(' · ');
+      var hotel = {
+        id:item.id || normalise(item.name).replace(/ /g, '-'),
+        name:item.name || '',
+        base:base.id,
+        baseLabel:base.label,
+        section:styleText,
+        sectionHeading:styleText,
+        tag:item.neighborhood || '',
+        copy:item.neighborhood ? ((fr ? 'Quartier : ' : 'Area: ') + item.neighborhood) : '',
+        detailPath:fr ? (paths.fr || '') : (paths.en || ''),
+        affiliate:affiliate.url || '',
+        priceBand:item.priceBand || '',
+        _order:index
+      };
+      hotel.signals = structuredSignals(item);
+      return hotel;
+    }).filter(function(h){ return !!h.name; });
+  }
+
   function loadBase(base) {
     if (!cache[base.id]) {
-      cache[base.id] = fetch(base.path, { credentials:'same-origin', cache:'no-store' })
-        .then(function(response){ if (!response.ok) throw new Error(base.id); return response.text(); })
-        .then(function(text){ return parseHotels(text, base); });
+      if (base.dataPath) {
+        cache[base.id] = fetch(base.dataPath, { credentials:'same-origin', cache:'no-store' })
+          .then(function(response){ if (!response.ok) throw new Error(base.id); return response.json(); })
+          .then(function(payload){ return parseStructuredHotels(payload, base); });
+      } else {
+        cache[base.id] = fetch(base.path, { credentials:'same-origin', cache:'no-store' })
+          .then(function(response){ if (!response.ok) throw new Error(base.id); return response.text(); })
+          .then(function(text){ return parseHotels(text, base); });
+      }
     }
     return cache[base.id];
   }
 
   function resolveAffiliate(hotel) {
-    if (unsafeAffiliateIds[hotel.id]) return Promise.resolve(null);
-    if (hotel.affiliate && hotel.affiliate.indexOf('expedia.com/affiliates/') >= 0) return Promise.resolve(hotel);
-    if (!hotel.detailPath) return Promise.resolve(null);
+    if (unsafeAffiliateIds[hotel.id]) {
+      hotel.affiliate = '';
+      return Promise.resolve(hotel);
+    }
+    if (hotel.affiliate) return Promise.resolve(hotel);
+    if (!hotel.detailPath) return Promise.resolve(hotel);
     return fetch(hotel.detailPath, { credentials:'same-origin', cache:'no-store' })
-      .then(function(response){ if (!response.ok) return null; return response.text(); })
+      .then(function(response){ if (!response.ok) return hotel; return response.text(); })
       .then(function(text){
-        if (!text) return null;
+        if (!text) return hotel;
         var doc = new DOMParser().parseFromString(text, 'text/html');
-        var link = doc.querySelector('a[href*="expedia.com/affiliates/"]');
-        if (!link) return null;
-        hotel.affiliate = link.getAttribute('href') || '';
-        return hotel.affiliate ? hotel : null;
+        var link = affiliateAnchor(doc);
+        if (link) hotel.affiliate = link.getAttribute('href') || '';
+        return hotel;
       })
-      .catch(function(){ return null; });
+      .catch(function(){ return hotel; });
   }
 
   function selectDiverse(ranked, limit) {
@@ -237,18 +301,32 @@
     });
   }
 
+  function affiliateNetwork(href) {
+    href = href || '';
+    if (href.indexOf('expedia.com/affiliates/') >= 0) return 'expedia';
+    if (/kqzyfj\.com|jdoqocy\.com|anrdoezrs\.net|tkqlhce\.com|dpbolvw\.net/i.test(href)) return 'booking-cj';
+    if (href.indexOf('booking.com/') >= 0) return 'booking';
+    return 'affiliate';
+  }
+
   function render(shortlist) {
     summary.textContent = labels.count(shortlist.length);
     results.innerHTML = shortlist.map(function(hotel, index){
       var reason = hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
+      var action = '';
+      if (hotel.affiliate) {
+        action = '<a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>';
+      } else if (hotel.detailPath) {
+        action = '<a class="button" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>';
+      }
       return '<article class="hotel-engine-result">' +
-        '<div class="hotel-engine-rank">0' + (index + 1) + '</div>' +
+        '<div class="hotel-engine-rank">' + String(index + 1).padStart(2, '0') + '</div>' +
         '<div class="hotel-engine-copy">' +
           '<p class="eyebrow">' + esc(metaText(hotel)) + '</p>' +
           '<h3>' + esc(hotel.name) + '</h3>' +
           '<p class="engine-result-line"><strong>' + labels.why + '.</strong> ' + esc(reason) + '</p>' +
           '<p class="engine-result-line"><strong>' + labels.catch + '.</strong> ' + esc(catchText(hotel)) + '</p>' +
-          '<div class="hotel-engine-actions"><a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a></div>' +
+          (action ? '<div class="hotel-engine-actions">' + action + '</div>' : '') +
         '</div>' +
       '</article>';
     }).join('');
@@ -264,6 +342,10 @@
     return state.base !== 'any' || state.style !== 'any' || state.geography !== 'any' || state.mobility !== 'any';
   }
 
+  function baseOnly() {
+    return state.base !== 'any' && state.style === 'any' && state.geography === 'any' && state.mobility === 'any';
+  }
+
   function runFinder() {
     clearDisclosure();
     results.innerHTML = '';
@@ -275,18 +357,33 @@
     submit.disabled = true;
     summary.textContent = labels.loading;
     var wantedBases = state.base === 'any' ? bases : bases.filter(function(b){ return b.id === state.base; });
+    var showWholeBase = baseOnly();
+
     Promise.allSettled(wantedBases.map(loadBase)).then(function(groups){
       var inventory = [];
       groups.forEach(function(group){ if (group.status === 'fulfilled') inventory = inventory.concat(group.value); });
-      var ranked = inventory
-        .filter(function(h){ return (state.base === 'any' || h.base === state.base) && qualifies(h); })
+
+      var matching = inventory.filter(function(h){
+        return (state.base === 'any' || h.base === state.base) && qualifies(h);
+      });
+
+      if (showWholeBase) {
+        matching.sort(function(a,b){ return (a._order || 0) - (b._order || 0); });
+        return Promise.all(matching.map(resolveAffiliate)).then(function(resolved){
+          return { hotels:resolved.filter(Boolean), wholeBase:true };
+        });
+      }
+
+      var ranked = matching
         .map(function(h){ h._score = score(h); return h; })
-        .sort(function(a,b){ return b._score - a._score || a.name.localeCompare(b.name); });
+        .sort(function(a,b){ return b._score - a._score || (a._order || 0) - (b._order || 0) || a.name.localeCompare(b.name); });
       var candidates = selectDiverse(ranked, 12);
-      return Promise.all(candidates.map(resolveAffiliate));
-    }).then(function(resolved){
-      var clean = resolved.filter(Boolean);
-      var shortlist = selectDiverse(clean, 4);
+      return Promise.all(candidates.map(resolveAffiliate)).then(function(resolved){
+        return { hotels:resolved.filter(Boolean), wholeBase:false };
+      });
+    }).then(function(payload){
+      var clean = payload.hotels;
+      var shortlist = payload.wholeBase ? clean : selectDiverse(clean, 4);
       if (!shortlist.length) {
         summary.textContent = labels.none;
         results.innerHTML = '';
