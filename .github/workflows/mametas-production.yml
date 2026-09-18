@@ -93,6 +93,9 @@ jobs:
       - name: Apply final recipe polish
         run: python scripts/final_recipe_polish_2026_09_18.py
 
+      - name: Remove AI-copy tells and long dashes
+        run: python scripts/human_copy_seo_pass_2026_09_18.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
