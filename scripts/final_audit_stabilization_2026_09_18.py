@@ -70,6 +70,22 @@ GLOBAL_HTML_REPLACEMENTS = (
     ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.1"></script>'),
 )
 
+
+MENU_ENTRY_PAGES = (
+    "index.html",
+    "fr/index.html",
+    "plan/five-days-nice-no-car/index.html",
+    "fr/planifier/cinq-jours-nice-sans-voiture/index.html",
+    "en/riviera-guide/index.html",
+    "riviera-guide/index.html",
+    "en/hotels/index.html",
+    "hotels/index.html",
+    "en/explore/index.html",
+    "explore/index.html",
+    "en/good-finds/index.html",
+    "bons-plans/index.html",
+)
+
 def patch_file(rel: str, pairs) -> bool:
     path = ROOT / rel
     text = path.read_text(encoding="utf-8")
@@ -87,14 +103,15 @@ def main() -> int:
         if patch_file(rel, pairs):
             changed.append(rel)
 
-    for html_path in ROOT.rglob("*.html"):
+    for rel in MENU_ENTRY_PAGES:
+        html_path = ROOT / rel
         text = html_path.read_text(encoding="utf-8")
         original = text
         for old, new in GLOBAL_HTML_REPLACEMENTS:
             text = text.replace(old, new)
         if text != original:
             html_path.write_text(text, encoding="utf-8")
-            changed.append(str(html_path.relative_to(ROOT)))
+            changed.append(rel)
 
     css = ROOT / "assets/site.css"
     css_text = css.read_text(encoding="utf-8")
