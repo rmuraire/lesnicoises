@@ -13,27 +13,27 @@
   var unsafeAffiliateIds = { 'apollinaire-nice': true };
 
   var bases = fr ? [
-    { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/assets/hotel-finder-nice.json?v=1' },
-    { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/hotels/antibes/' },
-    { id:'cannes', label:'Cannes', path:'/hotels/cannes/' },
-    { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/hotels/villefranche-sur-mer/' },
-    { id:'monaco', label:'Monaco', path:'/hotels/monaco/' },
-    { id:'menton', label:'Menton', path:'/hotels/menton/' },
-    { id:'saint-paul', label:'Saint-Paul-de-Vence', path:'/hotels/saint-paul-de-vence/' },
-    { id:'beaulieu', label:'Beaulieu-sur-Mer', path:'/hotels/beaulieu-sur-mer/' },
-    { id:'mougins', label:'Mougins', path:'/hotels/mougins/' },
-    { id:'saint-tropez', label:'Saint-Tropez', path:'/hotels/saint-tropez/' }
+    { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/data/hotels/nice.json?v=2', stationFriendly:true, noCarFriendly:true },
+    { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/hotels/antibes/', stationFriendly:true, noCarFriendly:true },
+    { id:'cannes', label:'Cannes', path:'/hotels/cannes/', stationFriendly:true, noCarFriendly:true },
+    { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/hotels/villefranche-sur-mer/', stationFriendly:true, noCarFriendly:true },
+    { id:'monaco', label:'Monaco', path:'/hotels/monaco/', stationFriendly:true, noCarFriendly:true },
+    { id:'menton', label:'Menton', path:'/hotels/menton/', stationFriendly:true, noCarFriendly:true },
+    { id:'saint-paul', label:'Saint-Paul-de-Vence', path:'/hotels/saint-paul-de-vence/', stationFriendly:false, noCarFriendly:false },
+    { id:'beaulieu', label:'Beaulieu-sur-Mer', path:'/hotels/beaulieu-sur-mer/', stationFriendly:true, noCarFriendly:true },
+    { id:'mougins', label:'Mougins', path:'/hotels/mougins/', stationFriendly:false, noCarFriendly:false },
+    { id:'saint-tropez', label:'Saint-Tropez', path:'/hotels/saint-tropez/', stationFriendly:false, noCarFriendly:false }
   ] : [
-    { id:'nice', label:'Nice', path:'/stay/nice/', dataPath:'/assets/hotel-finder-nice.json?v=1' },
-    { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/en/hotels/antibes/' },
-    { id:'cannes', label:'Cannes', path:'/en/hotels/cannes/' },
-    { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/en/hotels/villefranche-sur-mer/' },
-    { id:'monaco', label:'Monaco', path:'/en/hotels/monaco/' },
-    { id:'menton', label:'Menton', path:'/en/hotels/menton/' },
-    { id:'saint-paul', label:'Saint-Paul-de-Vence', path:'/en/hotels/saint-paul-de-vence/' },
-    { id:'beaulieu', label:'Beaulieu-sur-Mer', path:'/en/hotels/beaulieu-sur-mer/' },
-    { id:'mougins', label:'Mougins', path:'/en/hotels/mougins/' },
-    { id:'saint-tropez', label:'Saint-Tropez', path:'/en/hotels/saint-tropez/' }
+    { id:'nice', label:'Nice', path:'/stay/nice/', dataPath:'/data/hotels/nice.json?v=2', stationFriendly:true, noCarFriendly:true },
+    { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/en/hotels/antibes/', stationFriendly:true, noCarFriendly:true },
+    { id:'cannes', label:'Cannes', path:'/en/hotels/cannes/', stationFriendly:true, noCarFriendly:true },
+    { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/en/hotels/villefranche-sur-mer/', stationFriendly:true, noCarFriendly:true },
+    { id:'monaco', label:'Monaco', path:'/en/hotels/monaco/', stationFriendly:true, noCarFriendly:true },
+    { id:'menton', label:'Menton', path:'/en/hotels/menton/', stationFriendly:true, noCarFriendly:true },
+    { id:'saint-paul', label:'Saint-Paul-de-Vence', path:'/en/hotels/saint-paul-de-vence/', stationFriendly:false, noCarFriendly:false },
+    { id:'beaulieu', label:'Beaulieu-sur-Mer', path:'/en/hotels/beaulieu-sur-mer/', stationFriendly:true, noCarFriendly:true },
+    { id:'mougins', label:'Mougins', path:'/en/hotels/mougins/', stationFriendly:false, noCarFriendly:false },
+    { id:'saint-tropez', label:'Saint-Tropez', path:'/en/hotels/saint-tropez/', stationFriendly:false, noCarFriendly:false }
   ];
 
   var labels = fr ? {
@@ -77,13 +77,14 @@
     var practical = station || hasAny(text, ['pratique','practical','budget','simple','straightforward','rationnel','rational','easy','value']);
     var active = oldtown || hasAny(text, ['vivant','lively','restaurants','bars','evening','soir','centre']);
     var chic = hasAny(text, ['chic','luxe','luxury','palace','riviera','resort','grand hotel','five star','5 star','spa','iconic','mythique']);
-    return { station:station, sea:sea, oldtown:oldtown, quiet:quiet, practical:practical, active:active, chic:chic, text:text };
+    return { station:station, noCar:false, sea:sea, oldtown:oldtown, quiet:quiet, practical:practical, active:active, chic:chic, text:text };
   }
 
   function structuredSignals(item) {
     var styles = item.styles || [];
     return {
       station: !!item.stationFriendly,
+      noCar: item.carFree === true || item.noCarFriendly === true,
       sea: !!item.seaAccess,
       oldtown: !!item.oldTownAccess,
       quiet: !!item.quiet,
@@ -110,14 +111,14 @@
     return true;
   }
 
-  var priceLevel = { low:1, mid:2, 'upper-mid':3, high:4 };
-  var priceSymbol = { low:'€', mid:'€€', 'upper-mid':'€€€', high:'€€€€' };
+  var priceLevel = { low:1, mid:2, 'upper-mid':3, high:4, 'very-high':4 };
+  var priceSymbol = { low:'€', mid:'€€', 'upper-mid':'€€€', high:'€€€€', 'very-high':'€€€€' };
 
   function qualifies(hotel) {
     var sig = hotel.signals;
     if (state.style !== 'any' && !classifyStyle(sig, state.style)) return false;
     if (state.geography !== 'any' && !classifyGeography(sig, state.geography)) return false;
-    if (state.mobility === 'nocar' && !sig.station && !sig.oldtown) return false;
+    if (state.mobility === 'nocar' && !sig.noCar) return false;
     if (state.budget !== 'any') {
       var ceiling = priceLevel[state.budget] || 4;
       var hotelPrice = priceLevel[hotel.priceBand] || 0;
@@ -132,8 +133,8 @@
     if (state.style !== 'any' && classifyStyle(sig, state.style)) value += 12;
     if (state.geography !== 'any' && classifyGeography(sig, state.geography)) value += 12;
     if (state.mobility === 'nocar') {
-      if (sig.station) value += 9;
-      if (sig.oldtown) value += 4;
+      if (sig.noCar) value += 9;
+      if (sig.station) value += 4;
     }
     if (state.budget !== 'any' && hotel.priceBand) {
       var ceiling = priceLevel[state.budget] || 4;
@@ -204,6 +205,9 @@
         _order:index
       };
       hotel.signals = signals(hotel);
+      /* Transport is explicit: never infer rail/no-car suitability from marketing copy. */
+      hotel.signals.station = !!base.stationFriendly;
+      hotel.signals.noCar = !!base.noCarFriendly;
       hotels.push(hotel);
     });
     var seen = {};
@@ -220,6 +224,7 @@
     return items.map(function(item, index){
       var paths = item.paths || {};
       var affiliate = item.affiliate || {};
+      var affiliateUrl = affiliate.url || (affiliate.expedia && affiliate.expedia.url) || (affiliate.booking && affiliate.booking.url) || '';
       var styleText = (item.styles || []).join(' · ');
       var hotel = {
         id:item.id || normalise(item.name).replace(/ /g, '-'),
@@ -231,7 +236,7 @@
         tag:item.neighborhood || '',
         copy:item.neighborhood ? ((fr ? 'Quartier : ' : 'Area: ') + item.neighborhood) : '',
         detailPath:fr ? (paths.fr || '') : (paths.en || ''),
-        affiliate:affiliate.url || '',
+        affiliate:affiliateUrl,
         priceBand:item.priceBand || '',
         _order:index
       };

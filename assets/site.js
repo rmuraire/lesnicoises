@@ -32,18 +32,68 @@
     return -1;
   }
 
-  var current=activeIndex();
-  document.querySelectorAll('.primary-nav ul, .mobile-nav > ul').forEach(function(list){
-    var links=list.querySelectorAll(':scope > li > a');
-    if(links.length<5) return;
-    items.forEach(function(item,index){
-      var link=links[index];
-      link.textContent=item.label;
-      link.setAttribute('href',item.href);
-      if(index===current) link.setAttribute('aria-current','page');
-      else link.removeAttribute('aria-current');
-    });
-  });
+  function navMarkup(){
+    var current=activeIndex();
+    return items.map(function(item,index){
+      return '<li><a href="'+item.href+'"'+(index===current?' aria-current="page"':'')+'>'+item.label+'</a></li>';
+    }).join('');
+  }
+
+  function alternate(lang){
+    var link=document.querySelector('link[rel~="alternate"][hreflang="'+lang+'"]');
+    if(link&&link.href) return link.href;
+    if(lang==='fr') return isFrench?path:'/fr/';
+    return isFrench?'/':path;
+  }
+
+  function languageMarkup(){
+    return '<a class="'+(isFrench?'active':'muted')+'" href="'+alternate('fr')+'"'+(isFrench?' aria-current="page"':'')+'>FR</a><span>/</span><a class="'+(!isFrench?'active':'muted')+'" href="'+alternate('en')+'"'+(!isFrench?' aria-current="page"':'')+'>EN</a>';
+  }
+
+  var header=document.querySelector('.site-header');
+  var inner=header&&header.querySelector('.header-inner');
+  var desktopNav=inner&&inner.querySelector('.primary-nav');
+  if(desktopNav){
+    var list=desktopNav.querySelector('ul');
+    if(!list){list=document.createElement('ul');desktopNav.appendChild(list);}
+    list.innerHTML=navMarkup();
+  }
+
+  if(inner){
+    var lang=inner.querySelector('.lang-switch');
+    if(!lang){
+      lang=document.createElement('div');
+      lang.className='lang-switch';
+      inner.appendChild(lang);
+    }
+    lang.setAttribute('aria-label',isFrench?'Langue':'Language');
+    lang.innerHTML=languageMarkup();
+
+    var buttons=inner.querySelectorAll('[data-menu-open]');
+    var open=buttons[0];
+    Array.prototype.slice.call(buttons,1).forEach(function(button){button.remove();});
+    if(!open){
+      open=document.createElement('button');
+      open.className='menu-toggle';
+      open.type='button';
+      open.setAttribute('data-menu-open','');
+      open.innerHTML='<span></span><span></span><span></span>';
+      inner.appendChild(open);
+    }
+    open.setAttribute('aria-label',isFrench?'Ouvrir le menu':'Open menu');
+    open.setAttribute('aria-expanded','false');
+  }
+
+  var mobile=document.querySelector('[data-mobile-nav]');
+  if(!mobile&&header){
+    mobile=document.createElement('div');
+    mobile.className='mobile-nav';
+    mobile.setAttribute('data-mobile-nav','');
+    header.insertAdjacentElement('afterend',mobile);
+  }
+  if(mobile){
+    mobile.innerHTML='<div class="mobile-nav-top"><span class="brand-name">Mametas</span><button type="button" aria-label="'+(isFrench?'Fermer':'Close')+'" class="mobile-nav-close" data-menu-close>×</button></div><ul>'+navMarkup()+'</ul><div class="lang-switch" aria-label="'+(isFrench?'Langue':'Language')+'">'+languageMarkup()+'</div>';
+  }
 })();
 
 (function(){
@@ -180,15 +230,21 @@
   if(anchor){copy.insertBefore(facts,anchor);copy.insertBefore(note,anchor);}else{copy.appendChild(facts);copy.appendChild(note);}
 })();
 
-/* Affiliate CTA cleanup: conversion copy in the box, one transparency line below. */
+/* Affiliate CTA cleanup: provider-aware conversion copy plus one transparency line. */
 (function(){
   var isFrench=(document.documentElement.lang||'').toLowerCase().indexOf('fr')===0;
   document.querySelectorAll('.affiliate-cta').forEach(function(cta){
+    var button=cta.querySelector('a[href]');
+    var href=button?(button.getAttribute('href')||''):'';
+    var provider=/expedia\.com\/affiliates\//i.test(href)?'Expedia':(/kqzyfj\.com|jdoqocy\.com|anrdoezrs\.net|tkqlhce\.com|dpbolvw\.net|booking\.com\//i.test(href)?'Booking':'le partenaire');
     var copy=cta.querySelector('p');
     if(copy){
       copy.textContent=isFrench
-        ? 'Consultez les disponibilités et les tarifs sur Expedia.'
-        : 'Check current availability and rates on Expedia.';
+        ? 'Consultez les disponibilités et les tarifs sur '+provider+'.'
+        : 'Check current availability and rates on '+provider+'.';
+    }
+    if(button&&provider!=='le partenaire'){
+      button.textContent=isFrench?'Voir les tarifs sur '+provider:'Check rates on '+provider;
     }
     var parent=cta.parentElement;
     var disclosure=parent&&parent.querySelector('.disclosure');
@@ -204,10 +260,40 @@
   var nav=document.querySelector('[data-mobile-nav]');
   var open=document.querySelector('[data-menu-open]');
   var close=document.querySelector('[data-menu-close]');
-  if(!nav||!open||!close)return;
-  function show(){nav.classList.add('open');document.body.style.overflow='hidden';}
-  function hide(){nav.classList.remove('open');document.body.style.overflow='';}
-  open.addEventListener('click',show);close.addEventListener('click',hide);
-  nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',hide);});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')hide();});
+  if(!nav||!open||!close||open.getAttribute('data-menu-bound')==='true')return;
+  open.setAttribute('data-menu-bound','true');
+
+  function show(){
+    nav.classList.add('open');
+    nav.setAttribute('aria-hidden','false');
+    open.setAttribute('aria-expanded','true');
+    document.body.classList.add('menu-open');
+    close.focus();
+  }
+  function hide(returnFocus){
+    nav.classList.remove('open');
+    nav.setAttribute('aria-hidden','true');
+    open.setAttribute('aria-expanded','false');
+    document.body.classList.remove('menu-open');
+    if(returnFocus!==false)open.focus();
+  }
+  nav.setAttribute('aria-hidden','true');
+  open.addEventListener('click',show);
+  close.addEventListener('click',function(){hide(true);});
+  nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){hide(false);});});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('open'))hide(true);});
+  window.addEventListener('resize',function(){if(window.innerWidth>1080&&nav.classList.contains('open'))hide(false);});
+})();
+
+/* Audit guard: canonical internal anchors. */
+(function(){
+  var fixes={
+    '/fr/dormir/nice/#anime':'/fr/dormir/nice/#vivant',
+    '/fr/dormir/nice/#paisible':'/fr/dormir/nice/#calme',
+    '/fr/planifier/cinq-jours-nice-sans-voiture/#day-three':'/fr/planifier/cinq-jours-nice-sans-voiture/#jour-trois'
+  };
+  document.querySelectorAll('a[href]').forEach(function(link){
+    var href=link.getAttribute('href');
+    if(fixes[href]) link.setAttribute('href',fixes[href]);
+  });
 })();
