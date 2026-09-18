@@ -355,7 +355,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
   justify-content:flex-start;
   gap:30px
 }
-.brand{flex:0 0 auto}
+.brand{display:inline-flex;flex-direction:column;flex:0 0 auto;line-height:normal}
 .brand-name{
   font-size:clamp(28px,3vw,40px);
   font-weight:600;
@@ -367,7 +367,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
   color:#176f83;
   font-size:10px;
   font-weight:400;
-  letter-spacing:.04em
+  letter-spacing:.04em;
+  line-height:normal
 }
 .primary-nav{
   flex:0 1 auto;
