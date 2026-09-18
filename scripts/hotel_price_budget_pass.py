@@ -73,6 +73,15 @@ def nice_bands() -> dict[str, str]:
             out[slug] = band
     return out
 
+def portfolio_name_bands() -> dict[str, str]:
+    data = json.loads((ROOT / "data/hotels/portfolio-2026-09-12.json").read_text(encoding="utf-8"))
+    out = {}
+    for hotel in data.get("hotels", []):
+        band = PORTFOLIO_BANDS.get(hotel.get("slug", ""))
+        if band and hotel.get("name"):
+            out[norm(hotel["name"])] = band
+    return out
+
 def budget_text_to_band(value: str) -> str | None:
     value = norm(html.unescape(re.sub(r"<[^>]+>", " ", value)))
     if any(x in value for x in ("extreme", "tres haut", "very high", "grand luxe", "palace")):
@@ -129,7 +138,7 @@ def annotate_card(card: str, band: str, lang: str) -> str:
         return card[:m.start()] + m.group(1) + badge + m.group(2) + card[m.end():]
     return card.replace("<h3>", badge + "<h3>", 1)
 
-def annotate_page(path: Path, lang: str, expected: int, bands: dict[str, str]) -> None:
+def annotate_page(path: Path, lang: str, expected: int, bands: dict[str, str], name_bands: dict[str, str]) -> None:
     text = path.read_text(encoding="utf-8")
     cards = list(re.finditer(r'<article class="hotel-choice-card".*?</article>', text, flags=re.S))
     if len(cards) != expected:
@@ -138,10 +147,10 @@ def annotate_page(path: Path, lang: str, expected: int, bands: dict[str, str]) -
     for match in cards:
         card = match.group(0)
         slug = slug_from_card(card)
-        band = bands.get(slug) or detail_band(card)
+        m = re.search(r"<h3[^>]*>(.*?)</h3>", card, flags=re.S)
+        title = " ".join(re.sub(r"<[^>]+>", " ", m.group(1) if m else slug).split())
+        band = bands.get(slug) or name_bands.get(norm(html.unescape(title))) or detail_band(card)
         if not band:
-            m = re.search(r"<h3[^>]*>(.*?)</h3>", card, flags=re.S)
-            title = " ".join(re.sub(r"<[^>]+>", " ", m.group(1) if m else slug).split())
             unresolved.append(f"{slug or '?'} ({title})")
             continue
         rebuilt.append(text[cursor:match.start()])
@@ -177,9 +186,10 @@ def main() -> int:
     bands.update(PORTFOLIO_BANDS)
     bands.update(AUGMENTED_BANDS)
     bands.update(nice_bands())
+    name_bands = portfolio_name_bands()
     for _, (fr, en, count) in PAGES.items():
-        annotate_page(ROOT / fr, "fr", count, bands)
-        annotate_page(ROOT / en, "en", count, bands)
+        annotate_page(ROOT / fr, "fr", count, bands, name_bands)
+        annotate_page(ROOT / en, "en", count, bands, name_bands)
     patch_finder(ROOT / "hotels/finder/index.html", "fr")
     patch_finder(ROOT / "en/hotels/finder/index.html", "en")
     return 0
