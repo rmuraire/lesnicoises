@@ -2,13 +2,13 @@
   var isFrench=(document.documentElement.lang||'').toLowerCase().indexOf('fr')===0;
   var path=window.location.pathname;
   var items=isFrench?[
-    {label:'Planifier',href:'/fr/#planifier'},
+    {label:'Planifier',href:'/fr/planifier/cinq-jours-nice-sans-voiture/'},
     {label:'Lieux',href:'/riviera-guide/'},
     {label:'Dormir',href:'/hotels/'},
     {label:'Explorer',href:'/explore/'},
     {label:'Maintenant',href:'/bons-plans/'}
   ]:[
-    {label:'Plan',href:'/#plan'},
+    {label:'Plan',href:'/plan/five-days-nice-no-car/'},
     {label:'Places',href:'/en/riviera-guide/'},
     {label:'Stay',href:'/en/hotels/'},
     {label:'Explore',href:'/en/explore/'},
