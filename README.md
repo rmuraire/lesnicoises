@@ -1,27 +1,38 @@
-# Les Niçoises V17 - Hotels Batch 01
+# Mametas — production notes
 
-18 new affiliate hotel pages in FR + EN, based on user-supplied Expedia property images and affiliate links. Main hotel hub, Nice, Cannes and Cap d'Antibes hubs updated. Sitemap rebuilt.
+Mametas is the editorial decision guide for a first 3–7 day stay on the French Riviera.
 
-# Les Niçoises V13 — site complet cohérent FR / EN
+## V1 product state — September 2026
 
-Cette version repart de la V8.1 éditoriale complète et vérifiée.
+The V1 architecture is considered frozen after the September 18 acquisition / QA pass. New work should favour visibility, indexation fixes, content quality, conversion and verified bug fixes rather than adding navigation layers or redesigning the site.
 
-- FR à la racine du site.
-- EN exclusivement sous `/en/`.
-- Les menus FR pointent vers les pages FR.
-- Les menus EN pointent vers les pages EN.
-- Le sélecteur FR / EN ouvre la page équivalente quand elle existe.
-- La homepage FR et EN utilise exactement le même visuel hero français validé, sans variation d'image.
-- Le ton éditorial nissart / caustique de la V8.1 est conservé.
+Core path: Home → trip length / base → destination → Stay / hotel finder → hotel → affiliate exit, with contextual branches to restaurants, beaches, culture and selected activities.
 
-Upload GitHub : déposer le CONTENU de ce dossier à la racine du dépôt et remplacer les fichiers existants.
+## URL / language policy
 
+Current production URLs are intentionally mixed because the site evolved from an earlier structure:
 
-V15 culture batch: 10 culture venue pages in FR/EN, culture hub redesigned with image cards, reusable Wikimedia Commons visuals with attribution, official sources checked August 2026.
+- French pages are generally at the root, with some newer decision pages under `/fr/`.
+- English pages are generally under `/en/`, with a small number of established English decision URLs outside that pattern.
+- Existing production URLs must not be globally renamed merely to make the structure look cleaner.
+- Canonicals and hreflang must describe the URLs that actually exist in production.
+- Any future FR/EN URL normalisation is a migration project, not a cleanup: first define the complete old→new mapping, then ship server-side permanent redirects, self-referencing canonicals, reciprocal hreflang and sitemap changes together. Validate internal links and Search Console after release.
+- Never delete or move an indexed URL without an explicit redirect destination.
 
+This policy is deliberately conservative: preserving accumulated indexing and inbound signals matters more than cosmetic URL symmetry.
 
-## V16 restaurants + SEO
-- 20 restaurant addresses across 7 Riviera city guides, FR + EN.
-- Structured data ItemList on restaurant city pages.
-- Sitewide SEO pass: robots meta, Open Graph fallback, Twitter cards, x-default hreflang, WebPage/Breadcrumb JSON-LD, sitemap lastmod.
-- No meta keywords: intentionally omitted.
+## Deployment safety
+
+Production is deployed from branch `mametas-v3` through `.github/workflows/mametas-production.yml`. The workflow materialises editorial/hotel layers, runs targeted passes, validates the static site, deploys changed public files to OVH, re-syncs critical assets and checks the public homepage.
+
+`python scripts/validate_mametas.py` is the blocking static validation. It checks, among other things, HTML language, one H1/title, production canonicals, internal file targets, JSON-LD validity, sitemap XML and the production sitemap declaration in robots.txt.
+
+## Editorial rules
+
+Mametas is not an exhaustive directory. Keep selections short and decision-led. Preserve the 5-day no-car plan as the main first-trip spine, clear Mametas verdict / catch / rule framing, transparent affiliate disclosures and no invented live prices, availability or first-hand experience.
+
+Hotel `€ / €€ / €€€ / €€€€` labels, when used, are relative positioning only; they are not live nightly rates.
+
+## Historical note
+
+The repository originated as Les Niçoises and contains old version notes. They are historical artefacts, not current production guidance. The active public brand and canonical domain are Mametas / `https://www.mametas.com/`.
