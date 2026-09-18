@@ -96,6 +96,9 @@ jobs:
       - name: Remove AI-copy tells and long dashes
         run: python scripts/human_copy_seo_pass_2026_09_18.py
 
+      - name: Stabilize final Astra audit fixes
+        run: python scripts/final_audit_stabilization_2026_09_18.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
@@ -116,7 +119,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/site.css;assets/v3.css;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
+          MAMETAS_FORCE_FILES: assets/site.css;assets/site.js;assets/v3.css;assets/v3.js;assets/hotel-engine.js;assets/hotel-finder-nice.json;fr/planifier/cinq-jours-nice-sans-voiture/index.html;riviera-guide/monaco/index.html;riviera-guide/menton/index.html;en/day-trips/index.html;sitemap-hotels-batch2.xml;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
