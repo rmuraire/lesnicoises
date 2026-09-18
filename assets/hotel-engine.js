@@ -13,7 +13,7 @@
   var unsafeAffiliateIds = { 'apollinaire-nice': true };
 
   var bases = fr ? [
-    { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/data/hotels/nice.json?v=2', stationFriendly:true, noCarFriendly:true },
+    { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/assets/hotel-finder-nice.json?v=2', stationFriendly:true, noCarFriendly:true },
     { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/hotels/antibes/', stationFriendly:true, noCarFriendly:true },
     { id:'cannes', label:'Cannes', path:'/hotels/cannes/', stationFriendly:true, noCarFriendly:true },
     { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/hotels/villefranche-sur-mer/', stationFriendly:true, noCarFriendly:true },
@@ -24,7 +24,7 @@
     { id:'mougins', label:'Mougins', path:'/hotels/mougins/', stationFriendly:false, noCarFriendly:false },
     { id:'saint-tropez', label:'Saint-Tropez', path:'/hotels/saint-tropez/', stationFriendly:false, noCarFriendly:false }
   ] : [
-    { id:'nice', label:'Nice', path:'/stay/nice/', dataPath:'/data/hotels/nice.json?v=2', stationFriendly:true, noCarFriendly:true },
+    { id:'nice', label:'Nice', path:'/stay/nice/', dataPath:'/assets/hotel-finder-nice.json?v=2', stationFriendly:true, noCarFriendly:true },
     { id:'antibes', label:'Antibes & Juan-les-Pins', path:'/en/hotels/antibes/', stationFriendly:true, noCarFriendly:true },
     { id:'cannes', label:'Cannes', path:'/en/hotels/cannes/', stationFriendly:true, noCarFriendly:true },
     { id:'villefranche', label:'Villefranche & Cap-Ferrat', path:'/en/hotels/villefranche-sur-mer/', stationFriendly:true, noCarFriendly:true },
