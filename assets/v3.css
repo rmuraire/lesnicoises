@@ -365,7 +365,7 @@ button { color: inherit; font: inherit; }
 .footer-bottom { margin-top: 58px; padding-top: 22px; display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid rgba(255,255,255,.18); color: rgba(255,255,255,.55); font-size: 10px; line-height: 1.6; }
 
 @media (max-width: 1080px) {
-  .v3-nav, .v3-header > .lang-switch { display: none; }
+  .v3-nav, .v3-header-inner > .lang-switch { display: none; }
   .menu-button { display: block; }
   .mobile-menu { position: fixed; inset: 0; z-index: 80; padding: 22px var(--gutter); background: var(--paper); opacity: 0; visibility: hidden; pointer-events: none; transition: 170ms ease; }
   .mobile-menu.open { display: block; opacity: 1; visibility: visible; pointer-events: auto; }
