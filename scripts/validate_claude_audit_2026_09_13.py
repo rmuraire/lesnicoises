@@ -36,7 +36,7 @@ def main():
   if n!=10:raise AssertionError(f'{p}: expected 10 restaurant entries, found {n}')
  has('restaurants/index.html','href="/restaurants/cannes/"','>10 ADRESSES<');has('en/restaurants/index.html','href="/en/restaurants/cannes/"','>10 ADDRESSES<')
  has('riviera-guide/nice/index.html','/bons-plans/nice-quand-il-pleut/','/bons-plans/erreurs-riviera/','FORTE CHALEUR');has('en/riviera-guide/nice/index.html','/en/good-finds/nice-in-the-rain/','/en/good-finds/riviera-mistakes/','VERY HOT DAYS')
- has('plan/five-days-nice-no-car/index.html','/en/good-finds/nice-in-the-rain/','/en/good-finds/riviera-mistakes/','4–8 weeks before','/en/riviera-guide/eze/');has('fr/planifier/cinq-jours-nice-sans-voiture/index.html','/bons-plans/nice-quand-il-pleut/','/bons-plans/erreurs-riviera/','4 à 8 semaines avant','/riviera-guide/eze/')
+ has('plan/five-days-nice-no-car/index.html','/en/good-finds/nice-in-the-rain/','/en/good-finds/riviera-mistakes/','4-8 weeks before','/en/riviera-guide/eze/');has('fr/planifier/cinq-jours-nice-sans-voiture/index.html','/bons-plans/nice-quand-il-pleut/','/bons-plans/erreurs-riviera/','4 à 8 semaines avant','/riviera-guide/eze/')
  has('riviera-guide/monaco/index.html','FORTE CHALEUR');has('en/riviera-guide/monaco/index.html','VERY HOT DAYS')
  for p,comp in [('riviera-guide/cannes/index.html','/riviera-guide/nice-ou-cannes/'),('en/riviera-guide/cannes/index.html','/en/riviera-guide/nice-or-cannes/')]:
   s=txt(p);has(p,comp,'id="suquet"','id="forville"');portion=s[s.find('<h2'):s.find('id="suquet"')]
