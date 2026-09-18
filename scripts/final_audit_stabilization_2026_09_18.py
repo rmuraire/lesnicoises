@@ -4,6 +4,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 EXACT_REPLACEMENTS = {
+    "index.html": (
+        ('href="#explore">Explore</a>', 'href="/en/explore/">Explore</a>'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.6"></script>'),
+    ),
+    "fr/index.html": (
+        ('href="#explorer">Explorer</a>', 'href="/explore/">Explorer</a>'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.6"></script>'),
+    ),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": (
         ("/fr/dormir/nice/#anime", "/fr/dormir/nice/#vivant"),
         ("/fr/dormir/nice/#paisible", "/fr/dormir/nice/#calme"),
@@ -65,6 +73,16 @@ def main() -> int:
             "if (!menu && header)",
             "data-v3-menu-open",
             "data-menu-bound",
+            '{ label: "Explore", href: "/en/explore/" }',
+            '{ label: "Explorer", href: "/explore/" }',
+        ),
+        "index.html": (
+            'href="/en/explore/">Explore</a>',
+            '/assets/v3.js?v=0.6',
+        ),
+        "fr/index.html": (
+            'href="/explore/">Explorer</a>',
+            '/assets/v3.js?v=0.6',
         ),
         "assets/site.css": (
             "@media(max-width:1080px){.primary-nav{display:none}",
@@ -90,6 +108,13 @@ def main() -> int:
         for needle in needles:
             if needle not in text:
                 errors.append(f"{rel}: missing target {needle!r}")
+
+    en_home = (ROOT / "index.html").read_text(encoding="utf-8")
+    fr_home = (ROOT / "fr/index.html").read_text(encoding="utf-8")
+    if 'href="#explore">Explore</a>' in en_home:
+        errors.append("index.html: homepage Explore still points to local anchor")
+    if 'href="#explorer">Explorer</a>' in fr_home:
+        errors.append("fr/index.html: homepage Explorer still points to local anchor")
 
     sitemap = (ROOT / "sitemap-hotels-batch2.xml").read_text(encoding="utf-8")
     if "https://www.mametas.com/explorer/" in sitemap:
