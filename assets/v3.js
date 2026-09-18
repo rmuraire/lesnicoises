@@ -2,37 +2,19 @@
   var isFrench = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
   var path = window.location.pathname;
   var isHome = path === "/" || path === "/fr/";
-  var items;
-
-  if (isFrench) {
-    items = isHome ? [
-      { label: "Planifier", href: "#planifier" },
-      { label: "Lieux", href: "#lieux" },
-      { label: "Dormir", href: "/hotels/" },
-      { label: "Explorer", href: "/explore/" },
-      { label: "Maintenant", href: "#maintenant" }
-    ] : [
-      { label: "Planifier", href: "/fr/#planifier" },
-      { label: "Lieux", href: "/riviera-guide/" },
-      { label: "Dormir", href: "/hotels/" },
-      { label: "Explorer", href: "/explore/" },
-      { label: "Maintenant", href: "/bons-plans/" }
-    ];
-  } else {
-    items = isHome ? [
-      { label: "Plan", href: "#plan" },
-      { label: "Places", href: "#places" },
-      { label: "Stay", href: "/en/hotels/" },
-      { label: "Explore", href: "/en/explore/" },
-      { label: "Now", href: "#now" }
-    ] : [
-      { label: "Plan", href: "/#plan" },
-      { label: "Places", href: "/en/riviera-guide/" },
-      { label: "Stay", href: "/en/hotels/" },
-      { label: "Explore", href: "/en/explore/" },
-      { label: "Now", href: "/en/good-finds/" }
-    ];
-  }
+  var items = isFrench ? [
+    { label: "Planifier", href: "/fr/planifier/cinq-jours-nice-sans-voiture/" },
+    { label: "Lieux", href: "/riviera-guide/" },
+    { label: "Dormir", href: "/hotels/" },
+    { label: "Explorer", href: "/explore/" },
+    { label: "Maintenant", href: "/bons-plans/" }
+  ] : [
+    { label: "Plan", href: "/plan/five-days-nice-no-car/" },
+    { label: "Places", href: "/en/riviera-guide/" },
+    { label: "Stay", href: "/en/hotels/" },
+    { label: "Explore", href: "/en/explore/" },
+    { label: "Now", href: "/en/good-finds/" }
+  ];
 
   function currentSection() {
     if (isHome) return -1;
