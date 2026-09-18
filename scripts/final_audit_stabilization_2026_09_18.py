@@ -22,6 +22,21 @@ EXACT_REPLACEMENTS = {
         ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
         ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
     ),
+    "riviera-guide/index.html": (
+        ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.2'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.2'),
+    ),
+    "bons-plans/index.html": (
+        ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.2'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.2'),
+    ),
+    "en/good-finds/index.html": (
+        ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.2'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.2'),
+    ),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": (
         ("/fr/dormir/nice/#anime", "/fr/dormir/nice/#vivant"),
         ("/fr/dormir/nice/#paisible", "/fr/dormir/nice/#calme"),
@@ -167,6 +182,21 @@ def main() -> int:
             "@media(max-width:1080px){.primary-nav{display:none}",
             "/* Canonical header parity with V3 navigation */",
             "background:rgba(244,239,228,.96)",
+            "padding:14px clamp(20px,4vw,64px)",
+            'content:""',
+            ".header-inner>.lang-switch span{color:rgba(20,33,61,.4)}",
+        ),
+        "riviera-guide/index.html": (
+            "family=Inter:wght@400;500;600;700&amp;display=swap",
+            "/assets/site.css?v=23.2",
+        ),
+        "bons-plans/index.html": (
+            "family=Inter:wght@400;500;600;700&amp;display=swap",
+            "/assets/site.css?v=23.2",
+        ),
+        "en/good-finds/index.html": (
+            "family=Inter:wght@400;500;600;700&amp;display=swap",
+            "/assets/site.css?v=23.2",
         ),
         "assets/v3.css": (
             ".v3-nav, .v3-header-inner > .lang-switch { display: none; }",
