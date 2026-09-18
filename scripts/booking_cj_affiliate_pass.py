@@ -18,6 +18,8 @@ COPY_REPLACEMENTS = (
     ("Check rates on Expedia", "Check rates on Booking.com"),
     ("View rates on Expedia", "View rates on Booking.com"),
     ("lien Expedia affilié", "lien Booking.com affilié"),
+    ("Liens Expedia affiliés signalés", "Liens Booking.com affiliés signalés"),
+    ("Affiliate Expedia links clearly marked", "Booking.com affiliate links clearly marked"),
     ("liens Expedia.", "liens Booking.com."),
     ("Expedia affiliate link", "Booking.com affiliate link"),
     ("Expedia affiliate links", "Booking.com affiliate links"),

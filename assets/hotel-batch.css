@@ -31,3 +31,6 @@
   .practical-grid-ten .practical-link{min-height:150px;}
   .chooser-intro h2,.hotel-style-heading h2{font-size:32px;}
 }
+
+
+.hotel-choice-tags .hotel-price-band{font-weight:800;letter-spacing:.08em;color:#17365f;background:#f4ead8;border:1px solid rgba(23,54,95,.14);border-radius:999px;padding:3px 8px}

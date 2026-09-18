@@ -4,7 +4,7 @@
   if (!root) return;
 
   var fr = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0;
-  var state = { base: 'any', style: 'any', geography: 'any', mobility: 'any' };
+  var state = { base: 'any', style: 'any', geography: 'any', mobility: 'any', budget: 'any' };
   var output = root.querySelector('[data-engine-output]');
   var results = root.querySelector('[data-engine-results]');
   var summary = root.querySelector('[data-engine-summary]');
@@ -110,11 +110,19 @@
     return true;
   }
 
+  var priceLevel = { low:1, mid:2, 'upper-mid':3, high:4 };
+  var priceSymbol = { low:'€', mid:'€€', 'upper-mid':'€€€', high:'€€€€' };
+
   function qualifies(hotel) {
     var sig = hotel.signals;
     if (state.style !== 'any' && !classifyStyle(sig, state.style)) return false;
     if (state.geography !== 'any' && !classifyGeography(sig, state.geography)) return false;
     if (state.mobility === 'nocar' && !sig.station && !sig.oldtown) return false;
+    if (state.budget !== 'any') {
+      var ceiling = priceLevel[state.budget] || 4;
+      var hotelPrice = priceLevel[hotel.priceBand] || 0;
+      if (!hotelPrice || hotelPrice > ceiling) return false;
+    }
     return true;
   }
 
@@ -126,6 +134,12 @@
     if (state.mobility === 'nocar') {
       if (sig.station) value += 9;
       if (sig.oldtown) value += 4;
+    }
+    if (state.budget !== 'any' && hotel.priceBand) {
+      var ceiling = priceLevel[state.budget] || 4;
+      var hotelPrice = priceLevel[hotel.priceBand] || 0;
+      if (hotelPrice === ceiling) value += 7;
+      else if (hotelPrice && hotelPrice < ceiling) value += 4;
     }
     if (hotel.copy) value += 1;
     return value;
@@ -186,6 +200,7 @@
         copy:copy ? copy.textContent.trim() : '',
         detailPath:internal,
         affiliate:directAffiliate ? (directAffiliate.getAttribute('href') || '') : '',
+        priceBand:(card.getAttribute('data-price-band') || '').trim(),
         _order:index
       };
       hotel.signals = signals(hotel);
@@ -325,6 +340,7 @@
         '<div class="hotel-engine-copy">' +
           '<p class="eyebrow">' + esc(metaText(hotel)) + '</p>' +
           '<h3>' + esc(hotel.name) + '</h3>' +
+          (hotel.priceBand ? '<p class="engine-price-band" title="' + (fr ? 'Positionnement prix relatif, pas un tarif en temps réel' : 'Relative price positioning, not a live rate') + '">' + esc(priceSymbol[hotel.priceBand] || '') + '<span>' + (fr ? 'repère budget' : 'budget guide') + '</span></p>' : '') +
           '<p class="engine-result-line"><strong>' + labels.why + '.</strong> ' + esc(reason) + '</p>' +
           '<p class="engine-result-line"><strong>' + labels.catch + '.</strong> ' + esc(catchText(hotel)) + '</p>' +
           (action ? '<div class="hotel-engine-actions">' + action + '</div>' : '') +
@@ -340,11 +356,11 @@
   }
 
   function chosenSomething() {
-    return state.base !== 'any' || state.style !== 'any' || state.geography !== 'any' || state.mobility !== 'any';
+    return state.base !== 'any' || state.style !== 'any' || state.geography !== 'any' || state.mobility !== 'any' || state.budget !== 'any';
   }
 
   function baseOnly() {
-    return state.base !== 'any' && state.style === 'any' && state.geography === 'any' && state.mobility === 'any';
+    return state.base !== 'any' && state.style === 'any' && state.geography === 'any' && state.mobility === 'any' && state.budget === 'any';
   }
 
   function runFinder() {

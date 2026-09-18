@@ -78,6 +78,12 @@ jobs:
       - name: Apply hotel finder logic hotfix
         run: python scripts/hotel_finder_logic_hotfix.py
 
+      - name: Add relative hotel prices and budget filter
+        run: python scripts/hotel_price_budget_pass.py
+
+      - name: Refresh final V1 acquisition copy
+        run: python scripts/v1_release_copy_pass.py
+
       - name: Route hotel affiliate links to Booking via CJ
         run: python scripts/booking_cj_affiliate_pass.py
 
@@ -86,6 +92,9 @@ jobs:
 
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
+
+      - name: Validate V1 release layer
+        run: python scripts/validate_v1_release.py
 
       - name: Validate production site
         run: python scripts/validate_mametas.py
@@ -101,7 +110,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
+          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
