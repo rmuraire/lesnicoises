@@ -5,12 +5,22 @@ ROOT = Path(__file__).resolve().parents[1]
 
 EXACT_REPLACEMENTS = {
     "index.html": (
+        ('href="#plan">Plan</a>', 'href="/plan/five-days-nice-no-car/">Plan</a>'),
+        ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
         ('href="#explore">Explore</a>', 'href="/en/explore/">Explore</a>'),
-        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.6"></script>'),
+        ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
+        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.6'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
     ),
     "fr/index.html": (
+        ('href="#planifier">Planifier</a>', 'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>'),
+        ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
         ('href="#explorer">Explorer</a>', 'href="/explore/">Explorer</a>'),
-        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.6"></script>'),
+        ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
+        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.6'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
     ),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": (
         ("/fr/dormir/nice/#anime", "/fr/dormir/nice/#vivant"),
@@ -34,6 +44,32 @@ EXACT_REPLACEMENTS = {
     ),
 }
 
+
+GLOBAL_HTML_REPLACEMENTS = (
+    ('href="/#plan">Plan</a>', 'href="/plan/five-days-nice-no-car/">Plan</a>'),
+    ('href="#plan">Plan</a>', 'href="/plan/five-days-nice-no-car/">Plan</a>'),
+    ('href="/#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
+    ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
+    ('href="/stay/nice/">Stay</a>', 'href="/en/hotels/">Stay</a>'),
+    ('href="/en/restaurants/">Eat & Do</a>', 'href="/en/explore/">Explore</a>'),
+    ('href="/en/restaurants/">Eat &amp; Do</a>', 'href="/en/explore/">Explore</a>'),
+    ('href="/#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
+    ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
+    ('href="/fr/#planifier">Planifier</a>', 'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>'),
+    ('href="#planifier">Planifier</a>', 'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>'),
+    ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
+    ('href="/fr/dormir/nice/">Dormir</a>', 'href="/hotels/">Dormir</a>'),
+    ('href="/restaurants/">Manger & faire</a>', 'href="/explore/">Explorer</a>'),
+    ('href="/restaurants/">Manger &amp; faire</a>', 'href="/explore/">Explorer</a>'),
+    ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
+    ('/assets/v3.css?v=0.4', '/assets/v3.css?v=0.6'),
+    ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.6'),
+    ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+    ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+    ('/assets/site.css?v=23.0', '/assets/site.css?v=23.1'),
+    ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.1"></script>'),
+)
+
 def patch_file(rel: str, pairs) -> bool:
     path = ROOT / rel
     text = path.read_text(encoding="utf-8")
@@ -50,6 +86,15 @@ def main() -> int:
     for rel, pairs in EXACT_REPLACEMENTS.items():
         if patch_file(rel, pairs):
             changed.append(rel)
+
+    for html_path in ROOT.rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        original = text
+        for old, new in GLOBAL_HTML_REPLACEMENTS:
+            text = text.replace(old, new)
+        if text != original:
+            html_path.write_text(text, encoding="utf-8")
+            changed.append(str(html_path.relative_to(ROOT)))
 
     css = ROOT / "assets/site.css"
     css_text = css.read_text(encoding="utf-8")
@@ -68,24 +113,43 @@ def main() -> int:
             "if(!mobile&&header)",
             "provider=/expedia",
             "data-menu-bound",
+            "{label:'Plan',href:'/plan/five-days-nice-no-car/'}",
+            "{label:'Planifier',href:'/fr/planifier/cinq-jours-nice-sans-voiture/'}",
         ),
         "assets/v3.js": (
             "if (!menu && header)",
             "data-v3-menu-open",
             "data-menu-bound",
+            '{ label: "Plan", href: "/plan/five-days-nice-no-car/" }',
+            '{ label: "Places", href: "/en/riviera-guide/" }',
+            '{ label: "Stay", href: "/en/hotels/" }',
             '{ label: "Explore", href: "/en/explore/" }',
+            '{ label: "Now", href: "/en/good-finds/" }',
+            '{ label: "Planifier", href: "/fr/planifier/cinq-jours-nice-sans-voiture/" }',
             '{ label: "Explorer", href: "/explore/" }',
         ),
         "index.html": (
+            'href="/plan/five-days-nice-no-car/">Plan</a>',
+            'href="/en/riviera-guide/">Places</a>',
+            'href="/en/hotels/">Stay</a>',
             'href="/en/explore/">Explore</a>',
-            '/assets/v3.js?v=0.6',
+            'href="/en/good-finds/">Now</a>',
+            '/assets/v3.css?v=0.6',
+            '/assets/v3.js?v=0.7',
         ),
         "fr/index.html": (
+            'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>',
+            'href="/riviera-guide/">Lieux</a>',
+            'href="/hotels/">Dormir</a>',
             'href="/explore/">Explorer</a>',
-            '/assets/v3.js?v=0.6',
+            'href="/bons-plans/">Maintenant</a>',
+            '/assets/v3.css?v=0.6',
+            '/assets/v3.js?v=0.7',
         ),
         "assets/site.css": (
             "@media(max-width:1080px){.primary-nav{display:none}",
+            "/* Canonical header parity with V3 navigation */",
+            "background:rgba(244,239,228,.96)",
         ),
         "assets/v3.css": (
             ".v3-nav, .v3-header-inner > .lang-switch { display: none; }",
@@ -111,10 +175,24 @@ def main() -> int:
 
     en_home = (ROOT / "index.html").read_text(encoding="utf-8")
     fr_home = (ROOT / "fr/index.html").read_text(encoding="utf-8")
-    if 'href="#explore">Explore</a>' in en_home:
-        errors.append("index.html: homepage Explore still points to local anchor")
-    if 'href="#explorer">Explorer</a>' in fr_home:
-        errors.append("fr/index.html: homepage Explorer still points to local anchor")
+    stale_home_links = (
+        'href="#plan">Plan</a>',
+        'href="#places">Places</a>',
+        'href="#explore">Explore</a>',
+        'href="#now">Now</a>',
+    )
+    for needle in stale_home_links:
+        if needle in en_home:
+            errors.append(f"index.html: stale homepage menu link {needle!r}")
+    stale_fr_home_links = (
+        'href="#planifier">Planifier</a>',
+        'href="#lieux">Lieux</a>',
+        'href="#explorer">Explorer</a>',
+        'href="#maintenant">Maintenant</a>',
+    )
+    for needle in stale_fr_home_links:
+        if needle in fr_home:
+            errors.append(f"fr/index.html: stale homepage menu link {needle!r}")
 
     sitemap = (ROOT / "sitemap-hotels-batch2.xml").read_text(encoding="utf-8")
     if "https://www.mametas.com/explorer/" in sitemap:
