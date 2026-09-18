@@ -1,0 +1,104 @@
+name: Mametas one-off full backup
+
+on:
+  push:
+    branches:
+      - mametas-backup-2026-09-18
+
+permissions:
+  contents: read
+
+jobs:
+  build-backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out final production source
+        uses: actions/checkout@v4
+        with:
+          ref: mametas-v3
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Materialize final production snapshot
+        run: |
+          python scripts/materialize_editorial_html.py
+          python scripts/materialize_hotel_hubs.py
+          python scripts/run_hotel_expansion_2026_09_13.py
+          python scripts/nice_hotel_merchandising_2026_09_14.py
+          python scripts/hotel_finder_hub_pass.py
+          python scripts/mametas_voice_pass.py
+          python scripts/mametas_voice_hubs.py
+          python scripts/mametas_voice_second_pass.py
+          python scripts/apply_claude_audit_2026_09_13.py
+          python scripts/audit_hotfix_2026_09_14.py
+          python scripts/affiliate_and_hotel_exit_pass.py
+          python scripts/astra_ux_2026_09_16.py
+          python scripts/places_layout_hotfix_2026_09_16.py
+          python scripts/editorial_image_hotfix_2026_09_16.py
+          python scripts/getyourguide_affiliate_pass.py
+          python scripts/materialize_hotel_finder_inventory.py
+          python scripts/hotel_finder_logic_hotfix.py
+          python scripts/hotel_price_budget_pass.py
+          python scripts/v1_release_copy_pass.py
+          python scripts/booking_cj_affiliate_pass.py
+          python scripts/external_links_new_tab.py
+          python scripts/final_recipe_polish_2026_09_18.py
+          python scripts/human_copy_seo_pass_2026_09_18.py
+          python scripts/final_audit_stabilization_2026_09_18.py
+          python scripts/validate_claude_audit_2026_09_13.py
+          python scripts/validate_v1_release.py
+          python scripts/validate_mametas.py
+
+      - name: Build recovery ZIP
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          import subprocess, datetime
+
+          root = Path.cwd()
+          out = Path("/tmp/mametas-full-backup-2026-09-18.zip")
+          sha = subprocess.check_output(["git", "rev-parse", "mametas-v3"], text=True).strip()
+
+          files = []
+          for path in root.rglob("*"):
+              if not path.is_file():
+                  continue
+              rel = path.relative_to(root)
+              if rel.parts and rel.parts[0] == ".git":
+                  continue
+              if path.suffix.lower() == ".zip":
+                  continue
+              files.append(path)
+
+          with ZipFile(out, "w", compression=ZIP_DEFLATED, compresslevel=6) as zf:
+              zf.writestr(
+                  "MAMETAS_BACKUP_INFO.txt",
+                  "Mametas full recovery snapshot\n"
+                  f"Production branch: mametas-v3\n"
+                  f"Production commit: {sha}\n"
+                  "Snapshot date: 2026-09-18\n"
+                  "Includes production source, data, scripts, workflows and materialized public outputs.\n"
+                  "Existing historical ZIP archives and .git metadata are intentionally excluded.\n"
+              )
+              for path in sorted(files):
+                  zf.write(path, path.relative_to(root).as_posix())
+
+          print(f"Backup created: {out}")
+          print(f"Size bytes: {out.stat().st_size}")
+          print(f"Files archived: {len(files) + 1}")
+          PY
+
+      - name: Upload recovery ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: mametas-full-backup-2026-09-18
+          path: /tmp/mametas-full-backup-2026-09-18.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 7
