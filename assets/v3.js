@@ -288,3 +288,16 @@
     });
   });
 })();
+
+/* Audit guard: canonical internal anchors. */
+(function(){
+  var fixes={
+    '/fr/dormir/nice/#anime':'/fr/dormir/nice/#vivant',
+    '/fr/dormir/nice/#paisible':'/fr/dormir/nice/#calme',
+    '/fr/planifier/cinq-jours-nice-sans-voiture/#day-three':'/fr/planifier/cinq-jours-nice-sans-voiture/#jour-trois'
+  };
+  document.querySelectorAll('a[href]').forEach(function(link){
+    var href=link.getAttribute('href');
+    if(fixes[href]) link.setAttribute('href',fixes[href]);
+  });
+})();
