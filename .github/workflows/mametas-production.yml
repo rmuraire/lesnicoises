@@ -127,3 +127,38 @@ jobs:
                   raise SystemExit(f"mametas.com returned HTTP {response.status}")
               print("mametas.com is reachable (HTTP 200)")
           PY
+
+      - name: Check public V1 release pages
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha = os.environ.get("GITHUB_SHA", "release")
+          checks = {
+              f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
+                  'data-engine-group="budget"',
+                  '/assets/hotel-engine.js?v=4',
+                  'Cinq décisions. Puis seulement les hôtels.',
+              ),
+              f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
+                  'hotel-price-band',
+                  'data-price-band=',
+                  'Booking.com',
+              ),
+              f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
+                  'data-engine-group="budget"',
+                  '/assets/hotel-engine.js?v=4',
+                  'Five decisions. Then the hotels.',
+              ),
+          }
+          for url, needles in checks.items():
+              req = Request(url, headers={"User-Agent": "MametasDeployCheck/1.0", "Cache-Control": "no-cache"})
+              with urlopen(req, timeout=30) as response:
+                  body = response.read().decode("utf-8", errors="replace")
+                  if response.status != 200:
+                      raise SystemExit(f"{url} returned HTTP {response.status}")
+                  missing = [needle for needle in needles if needle not in body]
+                  if missing:
+                      raise SystemExit(f"{url} is missing release markers: {missing}")
+                  print(f"Public release check passed: {url}")
+          PY
