@@ -63,7 +63,7 @@ def norm(value: str) -> str:
 
 def nice_bands() -> dict[str, str]:
     data = json.loads((ROOT / "data/hotels/nice.json").read_text(encoding="utf-8"))
-    return {h["slug"]: h["priceBand"] for h in data.get("hotels", []) if h.get("priceBand") in VALID}
+    return {(h.get("slug") or h.get("id")): h["priceBand"] for h in data.get("hotels", []) if (h.get("slug") or h.get("id")) and h.get("priceBand") in VALID}
 
 def budget_text_to_band(value: str) -> str | None:
     value = norm(html.unescape(re.sub(r"<[^>]+>", " ", value)))
