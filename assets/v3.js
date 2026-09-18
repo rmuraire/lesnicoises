@@ -52,18 +52,77 @@
     return -1;
   }
 
-  var active = currentSection();
-  document.querySelectorAll(".v3-nav ul, .mobile-menu nav ul").forEach(function (list) {
-    var links = list.querySelectorAll(":scope > li > a");
-    if (links.length < 5) return;
-    items.forEach(function (item, index) {
-      var link = links[index];
-      link.textContent = item.label;
-      link.setAttribute("href", item.href);
-      if (index === active) link.setAttribute("aria-current", "page");
-      else link.removeAttribute("aria-current");
-    });
-  });
+  function navMarkup() {
+    var active = currentSection();
+    return items.map(function (item, index) {
+      return '<li><a href="' + item.href + '"' + (index === active ? ' aria-current="page"' : '') + '>' + item.label + '</a></li>';
+    }).join("");
+  }
+
+  function alternate(lang) {
+    var link = document.querySelector('link[rel~="alternate"][hreflang="' + lang + '"]');
+    if (link && link.href) return link.href;
+    if (lang === "fr") return isFrench ? path : "/fr/";
+    return isFrench ? "/" : path;
+  }
+
+  function languageMarkup() {
+    return '<a href="' + alternate("fr") + '"' + (isFrench ? ' aria-current="page"' : '') + '>FR</a><span>/</span><a href="' + alternate("en") + '"' + (!isFrench ? ' aria-current="page"' : '') + '>EN</a>';
+  }
+
+  var header = document.querySelector(".v3-header");
+  var inner = header && header.querySelector(".v3-header-inner");
+  var desktopNav = inner && inner.querySelector(".v3-nav");
+  if (desktopNav) {
+    var desktopList = desktopNav.querySelector("ul");
+    if (!desktopList) {
+      desktopList = document.createElement("ul");
+      desktopNav.appendChild(desktopList);
+    }
+    desktopList.innerHTML = navMarkup();
+  }
+
+  if (inner) {
+    var desktopLang = inner.querySelector(".lang-switch");
+    if (!desktopLang) {
+      desktopLang = document.createElement("div");
+      desktopLang.className = "lang-switch";
+      desktopLang.setAttribute("aria-label", isFrench ? "Langue" : "Language");
+      inner.appendChild(desktopLang);
+    }
+    desktopLang.innerHTML = languageMarkup();
+
+    var buttons = inner.querySelectorAll("[data-v3-menu-open]");
+    var openButton = buttons[0];
+    Array.prototype.slice.call(buttons, 1).forEach(function (button) { button.remove(); });
+    if (!openButton) {
+      openButton = document.createElement("button");
+      openButton.className = "menu-button";
+      openButton.type = "button";
+      openButton.setAttribute("data-v3-menu-open", "");
+      openButton.innerHTML = "<span></span><span></span><span></span>";
+      inner.appendChild(openButton);
+    }
+    openButton.setAttribute("aria-label", isFrench ? "Ouvrir le menu" : "Open menu");
+    openButton.setAttribute("aria-expanded", "false");
+  }
+
+  var menu = document.querySelector("[data-v3-menu]");
+  if (!menu && header) {
+    menu = document.createElement("div");
+    menu.className = "mobile-menu";
+    menu.setAttribute("data-v3-menu", "");
+    menu.setAttribute("aria-hidden", "true");
+    header.insertAdjacentElement("afterend", menu);
+  }
+  if (menu) {
+    menu.innerHTML =
+      '<div class="mobile-menu-top"><span class="v3-brand-name">Mametas</span><button class="mobile-menu-close" type="button" aria-label="' +
+      (isFrench ? "Fermer le menu" : "Close menu") +
+      '" data-v3-menu-close>×</button></div><nav aria-label="' +
+      (isFrench ? "Navigation mobile" : "Mobile navigation") +
+      '"><ul>' + navMarkup() + '</ul></nav><div class="lang-switch">' + languageMarkup() + "</div>";
+  }
 
   if (isHome) {
     var baseSection = document.getElementById("bases");
@@ -174,33 +233,35 @@
   var open = document.querySelector("[data-v3-menu-open]");
   var close = document.querySelector("[data-v3-menu-close]");
 
-  if (!menu || !open || !close) return;
+  if (!menu || !open || !close || open.getAttribute("data-menu-bound") === "true") return;
+  open.setAttribute("data-menu-bound", "true");
 
   function showMenu() {
     menu.classList.add("open");
     menu.setAttribute("aria-hidden", "false");
+    open.setAttribute("aria-expanded", "true");
     document.body.classList.add("menu-open");
     close.focus();
   }
 
-  function hideMenu() {
+  function hideMenu(returnFocus) {
     menu.classList.remove("open");
     menu.setAttribute("aria-hidden", "true");
+    open.setAttribute("aria-expanded", "false");
     document.body.classList.remove("menu-open");
-    open.focus();
+    if (returnFocus !== false) open.focus();
   }
 
   open.addEventListener("click", showMenu);
-  close.addEventListener("click", hideMenu);
+  close.addEventListener("click", function () { hideMenu(true); });
   menu.querySelectorAll("a").forEach(function (link) {
-    link.addEventListener("click", function () {
-      menu.classList.remove("open");
-      menu.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("menu-open");
-    });
+    link.addEventListener("click", function () { hideMenu(false); });
   });
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && menu.classList.contains("open")) hideMenu();
+    if (event.key === "Escape" && menu.classList.contains("open")) hideMenu(true);
+  });
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 1080 && menu.classList.contains("open")) hideMenu(false);
   });
 })();
 
