@@ -74,13 +74,39 @@ def nice_bands() -> dict[str, str]:
     return out
 
 def portfolio_name_bands() -> dict[str, str]:
-    data = json.loads((ROOT / "data/hotels/portfolio-2026-09-12.json").read_text(encoding="utf-8"))
-    out = {}
-    for hotel in data.get("hotels", []):
-        band = PORTFOLIO_BANDS.get(hotel.get("slug", ""))
-        if band and hotel.get("name"):
-            out[norm(hotel["name"])] = band
-    return out
+    raw = {
+        "Le Saint Paul": "high",
+        "Le Domaine du Mas de Pierre": "high",
+        "Toile Blanche": "upper-mid",
+        "Hôtel La Grande Bastide": "upper-mid",
+        "Hôtel Les Messugues": "mid",
+        "Les Bastides Saint-Paul": "mid",
+        "Hôtel Comté de Nice": "mid",
+        "ibis Styles Beaulieu-sur-Mer": "low",
+        "Hôtel Frisia": "mid",
+        "Grand-Hôtel du Cap-Ferrat, A Four Seasons Hotel": "high",
+        "Hôtel Hermitage Monte-Carlo": "high",
+        "Monte-Carlo Bay Hotel & Resort": "high",
+        "Hôtel Victoria": "upper-mid",
+        "ibis Roquebrune Cap Martin Menton": "low",
+        "Hôtel Belles Rives": "high",
+        "Hôtel Juana": "high",
+        "Hôtel Le Sud": "mid",
+        "Hôtel de l’Étoile": "low",
+        "Five Seas Hotel Cannes": "high",
+        "Hôtel Verlaine": "upper-mid",
+        "Hôtel de Provence": "upper-mid",
+        "Le Mas Candille": "high",
+        "Hôtel Villa Sophia": "mid",
+        "Kube Saint-Tropez": "high",
+        "Hôtel Villa Marie Saint-Tropez": "high",
+        "Sezz Saint-Tropez": "high",
+        "Hôtel La Ponche": "high",
+        "Hôtel Les Palmiers": "mid",
+        "Hôtel La Romarine": "mid",
+        "La Ferme d’Augustin": "upper-mid",
+    }
+    return {norm(name): band for name, band in raw.items()}
 
 def budget_text_to_band(value: str) -> str | None:
     value = norm(html.unescape(re.sub(r"<[^>]+>", " ", value)))
