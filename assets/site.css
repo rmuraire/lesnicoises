@@ -270,3 +270,66 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
   .destination-grid{grid-template-columns:1fr}
   .destination-tile{min-height:230px}
 }
+
+
+/* Final recipe polish 2026-09-18 */
+/* Dark editorial panels: body copy must stay readable on navy. */
+.culture-detail .verdict p,
+.hotel-detail .verdict p,
+.article .verdict p,
+.verdict p{color:#F7F2E7 !important;opacity:1 !important}
+.verdict a{color:#fff !important}
+
+/* Legacy header pages now follow the same right-aligned navigation rhythm as V3. */
+.site-header .header-inner{max-width:1440px;min-height:82px;padding:14px var(--gutter);gap:30px}
+.site-header .primary-nav{margin-left:auto;flex:0 1 auto;justify-content:flex-end}
+.site-header .primary-nav ul{gap:clamp(16px,2.2vw,32px)}
+.site-header .primary-nav a,.site-header .lang-switch a{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em}
+.site-header .brand-name{font-family:var(--serif);font-size:clamp(28px,3vw,40px);font-weight:600;letter-spacing:-.05em}
+.site-header .brand-sub{margin-top:8px;color:var(--med-blue);font-size:10px;letter-spacing:.04em}
+
+/* Seasonal item in NOW: current information must read differently from evergreen advice. */
+.card.seasonal-card{background:var(--navy);border-color:var(--navy);color:var(--cream)}
+.card.seasonal-card:hover{background:#203154}
+.card.seasonal-card h3,.card.seasonal-card p{color:var(--cream)}
+.card.seasonal-card .kicker,.card.seasonal-card .more{color:var(--gold-soft)}
+
+/* Hotel exit links: three real choices, not three words glued together. */
+.next-decisions{margin:54px 0 34px;padding-top:34px;border-top:1px solid var(--line)}
+.next-decisions h2{max-width:760px;margin:0 0 22px;font-family:var(--serif);font-size:clamp(34px,4vw,52px);font-weight:500;line-height:1.08}
+.next-links{display:flex;flex-wrap:wrap;gap:10px 12px}
+.next-links a{display:inline-flex;align-items:center;min-height:42px;padding:10px 14px;border:1px solid var(--line);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.next-links a:hover{background:var(--cream-deep)}
+
+/* V3 footer compatibility on legacy hub pages. */
+.v3-footer{padding:70px 0 34px;background:#0b1730;color:#fff}
+.v3-footer .footer-grid{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:42px}
+.v3-footer .footer-brand .v3-brand-name{font-family:var(--serif);font-size:clamp(46px,7vw,92px);font-weight:600;letter-spacing:-.05em}
+.v3-footer .footer-brand p{max-width:480px;margin:22px 0 0;color:rgba(255,255,255,.66);font-family:var(--serif);font-size:18px;line-height:1.6}
+.v3-footer .footer-col h2{margin:0 0 16px;color:#f7c966;font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase}
+.v3-footer .footer-col a{display:block;margin:10px 0;color:rgba(255,255,255,.78);font-size:13px}
+.v3-footer .footer-bottom{margin-top:58px;padding-top:22px;display:flex;justify-content:space-between;gap:20px;border-top:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.55);font-size:10px;line-height:1.6}
+.v3-footer .privacy-links{color:rgba(255,255,255,.72)}
+
+/* About Mametas: compact, human, explicit. */
+.about-story-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center;margin:8px 0 56px}
+.about-story-media img{width:100%;aspect-ratio:6/5;object-fit:cover}
+.about-story-copy h2{margin-top:0}
+.about-story-copy p,.about-portrait-copy p,.about-closing{font-size:17px;line-height:1.78;color:#30394d}
+.about-portrait-row{display:grid;grid-template-columns:minmax(220px,.62fr) minmax(0,1.38fr);gap:38px;align-items:center;margin:52px 0}
+.about-portrait-row img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.about-portrait-copy .kicker{display:block;margin-bottom:12px;color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.about-portrait-copy h2{margin:0 0 14px}
+.about-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:38px 0}
+.about-principle{padding:22px;border:1px solid var(--line);background:rgba(255,255,255,.18)}
+.about-principle strong{display:block;margin-bottom:8px;font-family:var(--serif);font-size:21px}
+.about-principle p{margin:0;color:var(--ink);font-size:13px;line-height:1.65}
+.about-closing{max-width:720px;margin:38px 0 0}
+@media(max-width:760px){
+  .site-header .primary-nav{display:none}
+  .about-story-grid,.about-portrait-row,.about-principles,.v3-footer .footer-grid{grid-template-columns:1fr}
+  .about-story-grid,.about-portrait-row{gap:24px}
+  .v3-footer .footer-bottom{flex-direction:column}
+  .next-links{display:grid;grid-template-columns:1fr}
+  .next-links a{width:100%}
+}

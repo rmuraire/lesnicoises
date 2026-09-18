@@ -90,6 +90,9 @@ jobs:
       - name: Open external links in new tabs
         run: python scripts/external_links_new_tab.py
 
+      - name: Apply final recipe polish
+        run: python scripts/final_recipe_polish_2026_09_18.py
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
@@ -110,7 +113,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
+          MAMETAS_FORCE_FILES: assets/site.css;assets/v3.css;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -149,6 +152,21 @@ jobs:
                   'data-engine-group="budget"',
                   '/assets/hotel-engine.js?v=4',
                   'Five decisions. Then the hotels.',
+              ),
+              f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
+                  'class="card seasonal-card"',
+                  'About Mametas',
+                  '>NOW<',
+              ),
+              f"https://www.mametas.com/en/about/?deploy={sha}": (
+                  'about-mameta-2026-09-18.webp',
+                  'The character is invented. The recommendation is not.',
+                  'About Mametas',
+              ),
+              f"https://www.mametas.com/stay/nice/?deploy={sha}": (
+                  'About Mametas',
+                  'Navigate',
+                  'Stay',
               ),
           }
           for url, needles in checks.items():
