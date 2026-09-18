@@ -349,7 +349,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
   max-width:none;
   min-height:82px;
   margin:0 auto;
-  padding:14px var(--gutter);
+  padding:14px clamp(20px,4vw,64px);
   display:flex;
   align-items:center;
   justify-content:flex-start;
@@ -391,11 +391,16 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
   text-transform:uppercase
 }
 .primary-nav a:after,.header-inner>.lang-switch a:after{
+  position:absolute;
   right:0;
   bottom:3px;
   left:0;
   height:2px;
-  background:#d96c4e
+  background:#d96c4e;
+  content:"";
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform 160ms ease
 }
 .primary-nav a:hover:after,.primary-nav a:focus-visible:after,.primary-nav a[aria-current="page"]:after,
 .header-inner>.lang-switch a:hover:after,.header-inner>.lang-switch a:focus-visible:after,.header-inner>.lang-switch a[aria-current="page"]:after{
@@ -412,6 +417,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
 }
 .header-inner>.lang-switch .muted{opacity:1}
 .header-inner>.lang-switch .active{border-bottom:0}
+.header-inner>.lang-switch span{color:rgba(20,33,61,.4)}
 .menu-toggle{
   width:42px;
   height:42px;
@@ -421,7 +427,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
 .mobile-nav{
   background:#f4efe4;
   z-index:80;
-  padding:22px var(--gutter)
+  padding:22px clamp(20px,4vw,64px)
 }
 .mobile-nav-close{
   width:44px;
