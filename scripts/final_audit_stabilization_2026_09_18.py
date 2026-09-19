@@ -24,18 +24,18 @@ EXACT_REPLACEMENTS = {
     ),
     "riviera-guide/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.3'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.3'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
     ),
     "bons-plans/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.3'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.3'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
     ),
     "en/good-finds/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.3'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.3'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
     ),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": (
         ("/fr/dormir/nice/#anime", "/fr/dormir/nice/#vivant"),
@@ -81,9 +81,9 @@ GLOBAL_HTML_REPLACEMENTS = (
     ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.6'),
     ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
     ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
-    ('/assets/site.css?v=23.0', '/assets/site.css?v=23.3'),
-    ('/assets/site.css?v=23.1', '/assets/site.css?v=23.3'),
-    ('/assets/site.css?v=23.2', '/assets/site.css?v=23.3'),
+    ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
+    ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
+    ('/assets/site.css?v=23.2', '/assets/site.css?v=23.4'),
     ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.1"></script>'),
 )
 
@@ -228,7 +228,7 @@ def main() -> int:
         ),
         "en/good-finds/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.3",
+            "/assets/site.css?v=23.4",
         ),
         "assets/v3.css": (
             ".v3-nav, .v3-header-inner > .lang-switch { display: none; }",
