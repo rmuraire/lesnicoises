@@ -133,8 +133,36 @@ def main() -> int:
     css = ROOT / "assets/site.css"
     css_text = css.read_text(encoding="utf-8")
     if "\\n" in css_text:
-        css.write_text(css_text.replace("\\n", "\n"), encoding="utf-8")
+        css_text = css_text.replace("\\n", "\n")
+    font_import = '@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap");\\n\\n'
+    if not css_text.startswith("@import"):
+        css_text = font_import + css_text
+    typography_marker = "/* Final typography parity 2026-09-19 */"
+    if typography_marker not in css_text:
+        css_text += """\n\n/* Final typography parity 2026-09-19 */
+.page-hero h1,.article h1,.hotel-detail h1,.culture-detail h1{font-family:var(--serif);font-weight:500;letter-spacing:-.045em;text-transform:none}
+.lead,.article .standfirst,.hotel-detail .standfirst,.culture-detail .standfirst{font-family:var(--serif);font-weight:400}
+@media(max-width:650px){
+  .page-hero h1{font-size:clamp(42px,13vw,62px);line-height:.98}
+  .lead{font-size:clamp(20px,6vw,25px);line-height:1.42}
+  .article .standfirst,.hotel-detail .standfirst,.culture-detail .standfirst{font-size:22px;line-height:1.45}
+}
+"""
+    css.write_text(css_text, encoding="utf-8")
+    if "assets/site.css" not in changed:
         changed.append("assets/site.css")
+
+    # Cache-bust the legacy stylesheet everywhere so the typography pass is visible immediately.
+    for html_path in ROOT.rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        original = text
+        for old in ("23.0", "23.1", "23.2", "23.3"):
+            text = text.replace(f"/assets/site.css?v={old}", "/assets/site.css?v=23.4")
+        if text != original:
+            html_path.write_text(text, encoding="utf-8")
+            rel = str(html_path.relative_to(ROOT))
+            if rel not in changed:
+                changed.append(rel)
 
     checks = {
         "assets/hotel-engine.js": (
@@ -192,11 +220,11 @@ def main() -> int:
         ),
         "riviera-guide/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.3",
+            "/assets/site.css?v=23.4",
         ),
         "bons-plans/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.3",
+            "/assets/site.css?v=23.4",
         ),
         "en/good-finds/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
