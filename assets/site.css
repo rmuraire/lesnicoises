@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap");
+
 :root{
   --cream:#F7F2E7;--cream-deep:#EFE7D6;--navy:#16223D;--navy-soft:#2B3958;
   --ink:#4B5266;--gold:#B9903F;--gold-soft:#D9BD84;--med-blue:#3C7186;
@@ -28,7 +30,7 @@ a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
 .mobile-nav li a{font-family:var(--serif);font-size:30px;display:block;padding:14px 0;border-bottom:1px solid var(--line)}.mobile-nav .lang-switch{margin-top:28px;justify-content:flex-start}.mobile-nav .lang-switch a{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
 .page-hero{padding:clamp(72px,10vw,130px) 0 58px;border-bottom:1px solid var(--line)}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 18px}
-h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Arial Narrow','Helvetica Neue Condensed',Arial,sans-serif;font-weight:800;letter-spacing:-.025em;text-transform:uppercase}h1{font-size:clamp(48px,7vw,86px);line-height:.98;margin:0;max-width:13ch}
+h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(--serif);font-weight:500;letter-spacing:-.045em;text-transform:none}h1{font-size:clamp(48px,7vw,86px);line-height:.98;margin:0;max-width:13ch}
 .lead{font-family:var(--serif);font-size:clamp(20px,2.5vw,29px);line-height:1.4;color:var(--navy-soft);max-width:34ch;margin:28px 0 0}
 .section{padding:64px 0;border-bottom:1px solid var(--line)}
 .section h2{font-size:clamp(32px,4vw,46px);margin:0 0 16px}.section-intro{font-size:17px;line-height:1.75;color:var(--ink);max-width:720px;margin:0 0 34px}
@@ -460,4 +462,15 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:'Ari
 }
 @media(max-width:760px){
   .header-inner{min-height:68px}
+}
+
+
+/* Final typography parity 2026-09-19 */
+/* Editorial display type follows the V3 Fraunces hierarchy; Inter remains functional UI type. */
+.page-hero h1,.article h1,.hotel-detail h1,.culture-detail h1{font-family:var(--serif);font-weight:500;letter-spacing:-.045em;text-transform:none}
+.lead,.article .standfirst,.hotel-detail .standfirst,.culture-detail .standfirst{font-family:var(--serif);font-weight:400}
+@media(max-width:650px){
+  .page-hero h1{font-size:clamp(42px,13vw,62px);line-height:.98}
+  .lead{font-size:clamp(20px,6vw,25px);line-height:1.42}
+  .article .standfirst,.hotel-detail .standfirst,.culture-detail .standfirst{font-size:22px;line-height:1.45}
 }
