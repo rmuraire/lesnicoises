@@ -186,3 +186,14 @@ jobs:
                       raise SystemExit(f"{url} is missing release markers: {missing}")
                   print(f"Public release check passed: {url}")
           PY
+
+      - name: Build V1 backup archive
+        run: |
+          zip -qr Mametas_V1_2026-09-19.zip . -x '.git/*' 'Mametas_V1_2026-09-19.zip'
+
+      - name: Upload V1 backup archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mametas_V1_2026-09-19
+          path: Mametas_V1_2026-09-19.zip
+          retention-days: 30
