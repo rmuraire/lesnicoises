@@ -44,3 +44,7 @@ Culture batch — owner-supplied files, 10 Sep 2026
 Explore category cards — owner-selected source images, 20 Sep 2026
 - Restaurants card — Charles-Albert Clarysse / Unsplash — https://unsplash.com/photos/a-delicious-spread-of-food-ready-for-eating--5B_sfWV2TE — external Unsplash CDN image, used under the Unsplash License.
 - Culture & museums card — RudiHirsch / Pixabay — source located via https://pixabay.com/images/search/alberto%20giacometti/ — external Pixabay CDN image selected by the site owner.
+
+Gay Nice hotel detail pages — 20 Sep 2026
+- Hôtel Le Grimaldi by HappyCulture: user-supplied hotel/Booking imagery; stored under assets/hotels/hotel-le-grimaldi-by-happyculture/.
+- Hotel Beau Rivage and Boscolo Nice Hôtel & Spa: temporary HD crop from Mametas hotel sprite pending replacement by supplied detail imagery.
