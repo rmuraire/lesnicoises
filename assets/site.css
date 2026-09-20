@@ -477,3 +477,9 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 
 /* Small LGBTQ+ editorial marker; visible only where explicitly used. */
 .lgbtq-mark{display:inline-block;width:15px;height:10px;margin-right:7px;border-radius:2px;vertical-align:-1px;background:linear-gradient(to bottom,#e40303 0 16.66%,#ff8c00 16.66% 33.32%,#ffed00 33.32% 49.98%,#008026 49.98% 66.64%,#004dff 66.64% 83.3%,#750787 83.3% 100%);box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+
+
+/* Gay Nice conversion links — 2026-09-20 */
+.affiliate-hotel-link{display:inline-flex;align-items:center;margin-top:7px;padding:10px 13px;border:1px solid var(--navy);background:transparent;color:var(--navy)!important;text-decoration:none!important;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:background 150ms ease,color 150ms ease}
+.affiliate-hotel-link:hover,.affiliate-hotel-link:focus-visible{background:var(--navy);color:var(--cream)!important}
+.affiliate-inline-disclosure{margin:22px 0 28px!important;font-size:11px!important;line-height:1.55!important;color:var(--ink)!important}
