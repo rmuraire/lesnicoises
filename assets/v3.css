@@ -439,3 +439,35 @@ button { color: inherit; font: inherit; }
   .next-links{display:grid;grid-template-columns:1fr}
   .next-links a{width:100%}
 }
+
+
+/* Explore editorial banner + owner-selected category imagery — 2026-09-20 */
+.base-card--restaurant img { object-position: center 47%; }
+.base-card--culture img { object-position: center 38%; }
+.lgbtq-banner {
+  margin-top: 28px; padding: 22px 26px; display: grid;
+  grid-template-columns: minmax(180px,.55fr) minmax(0,1.55fr) auto;
+  gap: 28px; align-items: center; border: 1px solid var(--line);
+  background: rgba(255,253,248,.58);
+  transition: background 160ms ease, transform 160ms ease, border-color 160ms ease;
+}
+.lgbtq-banner:hover,.lgbtq-banner:focus-visible { background: var(--white); border-color: rgba(20,33,61,.28); transform: translateY(-1px); }
+.lgbtq-banner-mark { align-self: stretch; padding-right: 24px; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; border-right: 1px solid var(--line); }
+.lgbtq-flag {
+  width: 34px; height: 21px; display: block; box-shadow: 0 0 0 1px rgba(20,33,61,.08);
+  background: linear-gradient(to bottom,#e40303 0 16.666%,#ff8c00 16.666% 33.333%,#ffed00 33.333% 50%,#008026 50% 66.666%,#24408e 66.666% 83.333%,#732982 83.333% 100%);
+}
+.lgbtq-banner-eyebrow { color: var(--blue-deep); font-size: 9px; font-weight: 700; letter-spacing: .15em; line-height: 1.35; text-transform: uppercase; }
+.lgbtq-banner-copy { display: block; }
+.lgbtq-banner-title { display: block; margin: 0 0 7px; font-family: var(--serif); font-size: clamp(27px,3vw,38px); font-weight: 500; letter-spacing: -.025em; line-height: 1.08; }
+.lgbtq-banner-text { display: block; max-width: 720px; color: var(--ink-soft); font-size: 12px; line-height: 1.6; }
+.lgbtq-banner-cta { align-self: center; padding-bottom: 3px; border-bottom: 1px solid var(--coral); color: var(--ink); font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+@media (max-width: 1080px) {
+  .lgbtq-banner { grid-template-columns: minmax(160px,.5fr) minmax(0,1.5fr); }
+  .lgbtq-banner-cta { grid-column: 2; justify-self: start; }
+}
+@media (max-width: 760px) {
+  .lgbtq-banner { grid-template-columns: 1fr; gap: 17px; padding: 21px; }
+  .lgbtq-banner-mark { align-self: auto; padding: 0 0 16px; flex-direction: row; align-items: center; justify-content: flex-start; border-right: 0; border-bottom: 1px solid var(--line); }
+  .lgbtq-banner-cta { grid-column: auto; justify-self: start; }
+}

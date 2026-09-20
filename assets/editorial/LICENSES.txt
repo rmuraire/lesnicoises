@@ -40,3 +40,7 @@ Culture batch — owner-supplied files, 10 Sep 2026
 - Chapelle du Rosaire de Matisse — © Succession H. Matisse pour les œuvres de l’artiste — web file: culture-chapelle-rosaire-matisse.webp.
 - Chapelle Saint-Pierre / Cocteau — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-chapelle-cocteau.webp.
 - Musée des Arts Asiatiques — Côte d’Azur France Tourisme / Georges VERAN — web file: culture-musee-arts-asiatiques.webp.
+
+Explore category cards — owner-selected source images, 20 Sep 2026
+- Restaurants card — Charles-Albert Clarysse / Unsplash — https://unsplash.com/photos/a-delicious-spread-of-food-ready-for-eating--5B_sfWV2TE — external Unsplash CDN image, used under the Unsplash License.
+- Culture & museums card — RudiHirsch / Pixabay — source located via https://pixabay.com/images/search/alberto%20giacometti/ — external Pixabay CDN image selected by the site owner.
