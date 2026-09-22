@@ -137,12 +137,16 @@ jobs:
                   "mametas-explore-restaurants-salad.webp",
                   "sculpture-4080986_1280.jpg",
                   'class="lgbtq-banner"',
+                  'class="first-trip-grid"',
+                  'class="wrap home-lgbtq-wrap"',
                   "/en/gay-french-riviera/",
               ),
               f"https://www.mametas.com/fr/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
                   "sculpture-4080986_1280.jpg",
                   'class="lgbtq-banner"',
+                  'class="first-trip-grid"',
+                  'class="wrap home-lgbtq-wrap"',
                   "/cote-dazur-gay/",
               ),
               f"https://www.mametas.com/en/gay-nice/?deploy={sha}": (
@@ -167,6 +171,12 @@ jobs:
                   missing = [needle for needle in needles if needle not in body]
                   if missing:
                       raise SystemExit(f"{url} is missing refreshed markers: {missing}")
+                  if "mametas.com/?deploy=" in url or "mametas.com/fr/?deploy=" in url:
+                      base_pos = body.find('id="bases"')
+                      gay_pos = body.find('class="wrap home-lgbtq-wrap"')
+                      first_trip_pos = body.find('id="riviera-first-trip-edit"')
+                      if not (base_pos >= 0 and base_pos < gay_pos < first_trip_pos):
+                          raise SystemExit(f"{url} homepage order is wrong: base={base_pos}, gay={gay_pos}, first-trip={first_trip_pos}")
                   print(f"Refreshed page check passed: {url}")
           PY
 
