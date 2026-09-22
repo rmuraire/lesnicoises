@@ -140,10 +140,10 @@
   <url><loc>https://www.mametas.com/lexique/</loc></url>
   <url><loc>https://www.mametas.com/riviera-guide/menton/</loc><lastmod>2026-09-02</lastmod></url>
   <url><loc>https://www.mametas.com/riviera-guide/monaco/</loc><lastmod>2026-09-02</lastmod></url>
-  <url><loc>https://www.mametas.com/riviera-guide/eze/</loc></url>
+  <url><loc>https://www.mametas.com/riviera-guide/eze/</loc><lastmod>2026-09-22</lastmod></url>
   <url><loc>https://www.mametas.com/riviera-guide/antibes/</loc><lastmod>2026-09-02</lastmod></url>
-  <url><loc>https://www.mametas.com/riviera-guide/cannes/</loc></url>
-  <url><loc>https://www.mametas.com/riviera-guide/saint-tropez/</loc></url>
+  <url><loc>https://www.mametas.com/riviera-guide/cannes/</loc><lastmod>2026-09-22</lastmod></url>
+  <url><loc>https://www.mametas.com/riviera-guide/saint-tropez/</loc><lastmod>2026-09-22</lastmod></url>
   <url><loc>https://www.mametas.com/riviera-guide/villefranche-cap-ferrat/</loc><lastmod>2026-09-02</lastmod></url>
   <url><loc>https://www.mametas.com/fr/</loc><lastmod>2026-09-02</lastmod></url>
   <url><loc>https://www.mametas.com/plan/five-days-nice-no-car/</loc><lastmod>2026-09-02</lastmod></url>
@@ -152,4 +152,10 @@
   <url><loc>https://www.mametas.com/fr/dormir/nice/</loc><lastmod>2026-09-02</lastmod></url>
   <url><loc>https://www.mametas.com/privacy/</loc><lastmod>2026-09-02</lastmod></url>
   <url><loc>https://www.mametas.com/fr/confidentialite/</loc><lastmod>2026-09-02</lastmod></url>
+
+  <url><loc>https://www.mametas.com/en/riviera-guide/cannes/</loc><lastmod>2026-09-22</lastmod></url>
+  <url><loc>https://www.mametas.com/en/riviera-guide/eze/</loc><lastmod>2026-09-22</lastmod></url>
+  <url><loc>https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/</loc><lastmod>2026-09-22</lastmod></url>
+  <url><loc>https://www.mametas.com/en/riviera-guide/saint-tropez/</loc><lastmod>2026-09-22</lastmod></url>
+  <url><loc>https://www.mametas.com/riviera-guide/saint-paul-de-vence/</loc><lastmod>2026-09-22</lastmod></url>
 </urlset>
