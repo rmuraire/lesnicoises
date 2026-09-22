@@ -471,3 +471,63 @@ button { color: inherit; font: inherit; }
   .lgbtq-banner-mark { align-self: auto; padding: 0 0 16px; flex-direction: row; align-items: center; justify-content: flex-start; border-right: 0; border-bottom: 1px solid var(--line); }
   .lgbtq-banner-cta { grid-column: auto; justify-self: start; }
 }
+
+
+/* Compact homepage first-trip grid — 2026-09-22 */
+#riviera-first-trip-edit .first-trip-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  border-top:1px solid var(--line);
+  border-left:1px solid var(--line);
+}
+#riviera-first-trip-edit .first-trip-card{
+  min-height:168px;
+  padding:20px 22px 18px;
+  display:flex;
+  flex-direction:column;
+  border-right:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  background:rgba(255,253,248,.28);
+}
+#riviera-first-trip-edit .first-trip-number{
+  color:var(--coral);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.15em;
+}
+#riviera-first-trip-edit .first-trip-card h3{
+  margin:10px 0 7px;
+  font-family:var(--serif);
+  font-size:24px;
+  font-weight:500;
+  line-height:1.08;
+}
+#riviera-first-trip-edit .first-trip-card p{
+  margin:0;
+  color:var(--ink-soft);
+  font-size:12px;
+  line-height:1.5;
+}
+#riviera-first-trip-edit .first-trip-link{
+  margin-top:auto;
+  padding-top:14px;
+  color:var(--blue-deep);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+#riviera-first-trip-edit .first-trip-card:hover{
+  background:var(--white);
+}
+.home-lgbtq-wrap{
+  margin-top:28px;
+}
+.home-lgbtq-wrap .lgbtq-banner{
+  margin-top:0;
+}
+@media(max-width:760px){
+  #riviera-first-trip-edit .first-trip-grid{grid-template-columns:1fr}
+  #riviera-first-trip-edit .first-trip-card{min-height:145px;padding:18px 19px 16px}
+  #riviera-first-trip-edit .first-trip-card h3{font-size:22px}
+}
