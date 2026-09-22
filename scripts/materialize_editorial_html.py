@@ -132,8 +132,8 @@ def insert_before_sources(text, block):
 
 def regional_block(fr=False):
     items = REGIONAL_FR if fr else REGIONAL_EN
-    cards = ''.join(f'<div class="day-card"><span class="day">{i:02d}</span><h3>{esc(t)}</h3><p>{esc(d)}</p><p><a class="inline-decision-link" href="{href}">{"Décider en détail" if fr else "Make the detailed decision"} →</a></p></div>' for i,(t,d,href) in enumerate(items,1))
-    return f'''<section class="v3-section" id="riviera-first-trip-edit" data-static-editorial="true"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">{'Le premier séjour, vraiment édité' if fr else 'The first trip, properly edited'}</p><h2>{'10 expériences qui structurent vraiment la Côte d’Azur' if fr else '10 experiences that actually shape a first Riviera trip'}</h2></div><p>{'Pas un Top 50. Dix choix qui donnent une colonne vertébrale à trois, cinq ou sept jours.' if fr else 'Not a Top 50. Ten choices that give three, five or seven days a spine.'}</p></div><div class="article-body">{cards}</div></div></section>'''
+    cards = ''.join(f'<article class="first-trip-card"><span class="first-trip-number">{i:02d}</span><h3>{esc(t)}</h3><p>{esc(d)}</p><a class="first-trip-link" href="{href}">{"Décider en détail" if fr else "Make the detailed decision"} →</a></article>' for i,(t,d,href) in enumerate(items,1))
+    return f'''<section class="v3-section" id="riviera-first-trip-edit" data-static-editorial="true"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">{'Le premier séjour, vraiment édité' if fr else 'The first trip, properly edited'}</p><h2>{'10 expériences qui structurent vraiment la Côte d’Azur' if fr else '10 experiences that actually shape a first Riviera trip'}</h2></div><p>{'Pas un Top 50. Dix choix qui donnent une colonne vertébrale à trois, cinq ou sept jours.' if fr else 'Not a Top 50. Ten choices that give three, five or seven days a spine.'}</p></div><div class="first-trip-grid">{cards}</div></div></section>'''
 
 
 def materialize_home(path, fr=False):
