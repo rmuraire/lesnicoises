@@ -488,6 +488,10 @@ button { color: inherit; font: inherit; }
   border-right:1px solid var(--line);
   border-bottom:1px solid var(--line);
   background:rgba(255,253,248,.28);
+  color:inherit;
+  text-decoration:none;
+  cursor:pointer;
+  transition:background 160ms ease,transform 160ms ease;
 }
 #riviera-first-trip-edit .first-trip-number{
   color:var(--coral);
@@ -517,8 +521,14 @@ button { color: inherit; font: inherit; }
   letter-spacing:.1em;
   text-transform:uppercase;
 }
-#riviera-first-trip-edit .first-trip-card:hover{
+#riviera-first-trip-edit .first-trip-card:hover,
+#riviera-first-trip-edit .first-trip-card:focus-visible{
   background:var(--white);
+  transform:translateY(-1px);
+}
+#riviera-first-trip-edit .first-trip-card:focus-visible{
+  outline:2px solid var(--blue-deep);
+  outline-offset:-2px;
 }
 .home-lgbtq-wrap{
   margin-top:28px;
