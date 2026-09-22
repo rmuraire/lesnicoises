@@ -119,7 +119,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: assets/site.css;assets/site.js;assets/v3.css;assets/v3.js;riviera-guide/index.html;bons-plans/index.html;en/good-finds/index.html;assets/hotel-engine.js;assets/hotel-finder-nice.json;fr/planifier/cinq-jours-nice-sans-voiture/index.html;riviera-guide/monaco/index.html;riviera-guide/menton/index.html;en/day-trips/index.html;sitemap-hotels-batch2.xml;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif;index.html;fr/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;assets/editorial/mametas-explore-restaurants-salad.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-1.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-2.webp;assets/hotels/hotel-beau-rivage/hero.webp;assets/hotels/hotel-beau-rivage/gallery-1.webp;assets/hotels/hotel-beau-rivage/gallery-2.webp;assets/hotels/boscolo-nice-hotel-and-spa/hero.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-1.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-2.webp;assets/hotels/le-negresco/hero.jpg
+          MAMETAS_FORCE_FILES: assets/site.css;assets/site.js;assets/v3.css;assets/v3.js;riviera-guide/index.html;bons-plans/index.html;en/good-finds/index.html;assets/hotel-engine.js;assets/hotel-finder-nice.json;fr/planifier/cinq-jours-nice-sans-voiture/index.html;riviera-guide/monaco/index.html;riviera-guide/menton/index.html;en/day-trips/index.html;sitemap-hotels-batch2.xml;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif;index.html;fr/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html;assets/editorial/mametas-explore-restaurants-salad.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-1.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-2.webp;assets/hotels/hotel-beau-rivage/hero.webp;assets/hotels/hotel-beau-rivage/gallery-1.webp;assets/hotels/hotel-beau-rivage/gallery-2.webp;assets/hotels/boscolo-nice-hotel-and-spa/hero.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-1.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-2.webp;assets/hotels/le-negresco/hero.jpg
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -180,6 +180,66 @@ jobs:
                       if not (base_pos >= 0 and base_pos < gay_pos < first_trip_pos):
                           raise SystemExit(f"{url} homepage order is wrong: base={base_pos}, gay={gay_pos}, first-trip={first_trip_pos}")
                   print(f"Refreshed page check passed: {url}")
+          PY
+
+      - name: Check expanded destination authority pages
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha = os.environ.get("GITHUB_SHA", "release")
+          checks = {
+              f"https://www.mametas.com/en/riviera-guide/cannes/?deploy={sha}": (
+                  "Cannes: the polished base that actually works",
+                  "One day in Cannes",
+                  "Cannes without a car",
+              ),
+              f"https://www.mametas.com/riviera-guide/cannes/?deploy={sha}": (
+                  "Cannes : la base chic qui fonctionne vraiment",
+                  "Une journée à Cannes",
+                  "Cannes sans voiture",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/eze/?deploy={sha}": (
+                  "Èze: spectacular, crowded",
+                  "Èze Village and Èze-sur-Mer",
+                  "Nietzsche Trail",
+              ),
+              f"https://www.mametas.com/riviera-guide/eze/?deploy={sha}": (
+                  "Èze : spectaculaire, fréquenté",
+                  "Èze Village et Èze-sur-Mer",
+                  "sentier de Nietzsche",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/?deploy={sha}": (
+                  "How long do you actually need?",
+                  "Saint-Paul-de-Vence or Èze?",
+                  "Fondation Maeght",
+              ),
+              f"https://www.mametas.com/riviera-guide/saint-paul-de-vence/?deploy={sha}": (
+                  "Combien de temps faut-il vraiment",
+                  "Saint-Paul-de-Vence ou Èze",
+                  "Fondation Maeght",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/saint-tropez/?deploy={sha}": (
+                  "Day trip or overnight?",
+                  "Place des Lices",
+                  "Pampelonne",
+              ),
+              f"https://www.mametas.com/riviera-guide/saint-tropez/?deploy={sha}": (
+                  "Excursion à la journée ou une nuit sur place",
+                  "place des Lices",
+                  "Pampelonne",
+              ),
+          }
+          for url, needles in checks.items():
+              req = Request(url, headers={"User-Agent": "MametasDeployCheck/1.0", "Cache-Control": "no-cache"})
+              with urlopen(req, timeout=30) as response:
+                  body = response.read().decode("utf-8", errors="replace")
+                  if response.status != 200:
+                      raise SystemExit(f"{url} returned HTTP {response.status}")
+                  missing = [needle for needle in needles if needle not in body]
+                  if missing:
+                      raise SystemExit(f"{url} is missing destination markers: {missing}")
+                  print(f"Destination authority check passed: {url}")
           PY
 
       - name: Check public homepage
