@@ -1,0 +1,67 @@
+/* Mametas Riviera Chooser V1 */
+.chooser-shell{border:1px solid var(--line);background:rgba(255,253,248,.5);padding:clamp(22px,4vw,44px)}
+.chooser-kicker{display:flex;justify-content:space-between;gap:18px;align-items:center;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.chooser-progress{margin:0;color:var(--blue-deep);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.chooser-reset{border:0;background:transparent;padding:0;color:var(--ink-soft);font:700 9px/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.chooser-stage{min-height:330px}
+.chooser-question{max-width:930px}
+.chooser-question h3{max-width:780px;margin:0 0 10px;font-family:var(--serif);font-size:clamp(32px,5vw,52px);font-weight:500;letter-spacing:-.035em;line-height:1.02}
+.chooser-question>p{max-width:720px;margin:0 0 24px;color:var(--ink-soft);font-size:13px;line-height:1.65}
+.chooser-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.chooser-option{min-height:116px;padding:18px;text-align:left;border:1px solid var(--line);background:rgba(255,255,255,.34);color:var(--ink);cursor:pointer;transition:transform 140ms ease,border-color 140ms ease,background 140ms ease}
+.chooser-option:hover,.chooser-option:focus-visible{transform:translateY(-1px);border-color:rgba(20,33,61,.35);background:var(--white)}
+.chooser-option strong{display:block;margin-bottom:7px;font-family:var(--serif);font-size:23px;font-weight:500;line-height:1.08}
+.chooser-option span{display:block;color:var(--ink-soft);font-size:11px;line-height:1.5}
+.chooser-back{display:inline-flex;margin-top:18px;border:0;background:transparent;padding:0 0 3px;border-bottom:1px solid var(--coral);color:var(--ink);font:700 9px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.chooser-method{max-width:780px;margin:16px 0 0;color:var(--ink-soft);font-size:10px;line-height:1.6}
+.chooser-result{display:grid;gap:26px}
+.chooser-result-head{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(230px,.55fr);gap:34px;align-items:start}
+.chooser-result-label{margin:0 0 8px;color:var(--coral);font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.chooser-result h3{margin:0 0 14px;font-family:var(--serif);font-size:clamp(40px,6vw,68px);font-weight:500;letter-spacing:-.045em;line-height:.98}
+.chooser-result-deck{max-width:760px;margin:0;color:var(--ink-soft);font-family:var(--serif);font-size:clamp(19px,2.5vw,25px);line-height:1.42}
+.chooser-profile{display:flex;flex-wrap:wrap;gap:7px;align-content:flex-start}
+.chooser-profile span{padding:7px 9px;border:1px solid var(--line);background:rgba(255,255,255,.5);font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.chooser-rule{padding:18px 20px;border-left:3px solid var(--coral);background:rgba(255,255,255,.42)}
+.chooser-rule strong{display:block;margin-bottom:5px;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.chooser-rule p{margin:0;color:var(--ink-soft);font-size:13px;line-height:1.6}
+.chooser-subhead{margin:2px 0 12px;font-family:var(--serif);font-size:clamp(27px,4vw,36px);font-weight:500;letter-spacing:-.025em}
+.chooser-priorities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.chooser-priority{display:block;padding:18px 20px;border:1px solid var(--line);background:rgba(255,255,255,.35)}
+.chooser-priority span{display:block;margin-bottom:7px;color:var(--coral);font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.chooser-priority strong{display:block;margin-bottom:7px;font-family:var(--serif);font-size:22px;font-weight:500;line-height:1.12}
+.chooser-priority p{margin:0;color:var(--ink-soft);font-size:11px;line-height:1.55}
+.chooser-hotels{padding-top:2px}
+.chooser-hotel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.chooser-hotel{display:flex;flex-direction:column;min-height:230px;padding:18px 19px;border:1px solid var(--line);background:rgba(255,255,255,.4)}
+.chooser-hotel-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+.chooser-hotel-tier{color:var(--blue-deep);font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.chooser-hotel-price{font-size:12px;font-weight:800;letter-spacing:.05em}
+.chooser-hotel h4{margin:0 0 9px;font-family:var(--serif);font-size:24px;font-weight:500;line-height:1.08}
+.chooser-hotel p{margin:0 0 8px;color:var(--ink-soft);font-size:11px;line-height:1.5}
+.chooser-hotel .chooser-hotel-catch{padding-top:8px;border-top:1px solid var(--line)}
+.chooser-hotel a{margin-top:auto;padding-top:12px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.chooser-hotel-note{margin:11px 0 0;color:var(--ink-soft);font-size:9px;line-height:1.55}
+.chooser-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chooser-actions .button{border:0}
+.chooser-inline-link{display:inline-block;padding-bottom:3px;border-bottom:1px solid var(--coral);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.chooser-escape{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;padding:19px 21px;border:1px solid var(--line);background:rgba(255,253,248,.62)}
+.chooser-escape p{margin:0;color:var(--ink-soft);font-size:12px;line-height:1.55}
+.chooser-escape strong{color:var(--ink)}
+.chooser-escape button{border:0;background:transparent;padding:0 0 3px;border-bottom:1px solid var(--coral);color:var(--ink);font:700 9px/1.3 var(--sans);letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.chooser-share{margin:0;color:var(--ink-soft);font-size:10px;line-height:1.5}
+.chooser-share a{border-bottom:1px solid var(--line)}
+.chooser-page-note{max-width:860px;margin:20px auto 0;padding:0 24px;color:var(--ink-soft);font-size:10px;line-height:1.6}
+@media(max-width:900px){
+  .chooser-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chooser-result-head{grid-template-columns:1fr}
+  .chooser-hotel-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .chooser-shell{padding:20px}
+  .chooser-kicker{align-items:flex-start}
+  .chooser-stage{min-height:0}
+  .chooser-options,.chooser-priorities{grid-template-columns:1fr}
+  .chooser-option{min-height:94px}
+  .chooser-escape{grid-template-columns:1fr}
+  .chooser-result h3{font-size:46px}
+}
