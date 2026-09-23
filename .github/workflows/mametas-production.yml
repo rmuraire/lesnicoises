@@ -102,11 +102,11 @@ jobs:
       - name: Apply Riviera Chooser homepage entry
         run: python scripts/riviera_chooser_home_pass.py
 
-      - name: Validate Riviera Chooser decision engine
-        run: node assets/riviera-chooser.js --self-test
-
       - name: Enforce short-dash house style
         run: python scripts/no_long_dash_pass.py
+
+      - name: Validate Riviera Chooser decision engine
+        run: node assets/riviera-chooser.js --self-test
 
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
