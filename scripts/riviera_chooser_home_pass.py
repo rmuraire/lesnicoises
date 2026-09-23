@@ -36,7 +36,7 @@ def main() -> int:
         "fr/index.html",
         "planifier",
         FR,
-        '<a class="button" href="/fr/planifier/cinq-jours-nice-sans-voiture/">Commencer par le parcours 5 jours</a>',
+        '<a class="button" href="/fr/planifier/cinq-jours-nice-sans-voiture/">Commencer par les 5 jours</a>',
         '<a class="button" href="/riviera-chooser/">Lancer le Riviera Chooser</a>',
     )
     return 0
