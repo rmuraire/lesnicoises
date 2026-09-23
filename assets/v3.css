@@ -571,3 +571,7 @@ button { color: inherit; font: inherit; }
 .mametas-checked small{color:var(--ink-soft);font-size:9px;font-weight:500;letter-spacing:.02em;text-transform:none}
 .mametas-checked:hover,.mametas-checked:focus-visible{background:var(--white);border-color:rgba(20,33,61,.3)}
 @media(max-width:520px){.mametas-checked{align-items:flex-start;flex-wrap:wrap}.mametas-checked small{flex-basis:calc(100% - 29px);margin-left:27px;margin-top:-5px}}
+
+/* Inline dialect glossary */
+.dialect-inline{border-bottom:1px dotted currentColor;text-decoration:none;text-underline-offset:3px}
+.dialect-inline:hover,.dialect-inline:focus-visible{color:var(--blue-deep);border-bottom-style:solid}
