@@ -541,6 +541,63 @@
       });
     }
 
+    function hotelKey(value) {
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    }
+
+    function hydrateHotelMedia(model, out) {
+      if (!model || !model.base || !model.base.hotels || typeof fetch === 'undefined') return;
+      fetch(model.base.hotels, { credentials:'same-origin', cache:'no-store' })
+        .then(function (response) { if (!response.ok) throw new Error('hotel media'); return response.text(); })
+        .then(function (htmlText) {
+          var doc = new DOMParser().parseFromString(htmlText, 'text/html');
+          var mediaByName = {};
+          doc.querySelectorAll('.hotel-choice-card').forEach(function (card) {
+            var heading = card.querySelector('h3');
+            if (!heading) return;
+            var key = hotelKey(heading.textContent);
+            if (!key) return;
+            var img = card.querySelector('.hotel-choice-media img[src]');
+            if (img) {
+              mediaByName[key] = { type:'img', src:img.getAttribute('src') || '', alt:img.getAttribute('alt') || heading.textContent.trim() };
+              return;
+            }
+            var sprite = card.querySelector('.hotel-choice-media .batch-thumb');
+            if (sprite) {
+              var classes = ['batch-thumb'];
+              if (sprite.classList.contains('batch-thumb-13')) classes.push('batch-thumb-13');
+              var style = sprite.getAttribute('style') || '';
+              var pos = (style.match(/background-position\s*:\s*[^;]+/i) || [''])[0];
+              mediaByName[key] = { type:'sprite', classes:classes.join(' '), style:pos };
+            }
+          });
+          out.querySelectorAll('.chooser-hotel-card[data-hotel-name]').forEach(function (target) {
+            if (target.querySelector('.chooser-hotel-media')) return;
+            var media = mediaByName[hotelKey(target.getAttribute('data-hotel-name'))];
+            if (!media) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'chooser-hotel-media';
+            if (media.type === 'img' && media.src) {
+              var img = document.createElement('img');
+              img.src = media.src;
+              img.alt = media.alt || '';
+              img.loading = 'lazy';
+              wrap.appendChild(img);
+            } else if (media.type === 'sprite') {
+              var span = document.createElement('span');
+              span.className = media.classes;
+              if (media.style) span.setAttribute('style', media.style);
+              span.setAttribute('aria-hidden','true');
+              wrap.appendChild(span);
+            } else {
+              return;
+            }
+            target.insertBefore(wrap, target.firstChild);
+          });
+        })
+        .catch(function () { /* text-only cards remain valid */ });
+    }
+
     function render(overrideBase) {
       if (!(state.days && state.mobility && state.mood && state.pace)) return;
       var model = resultModel(state, overrideBase, lang);
@@ -572,7 +629,7 @@
       }
       var hotelCards = model.hotels.map(function (h) {
         var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
-        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
+        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
       }).join('');
       var escape = '';
       if (!model.override && model.escape) {
@@ -588,6 +645,7 @@
         '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'VOTRE HÔTEL':'YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + esc(model.base.hotels) + '">' + labels.allHotels + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
         '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
       out.hidden = false;
+      hydrateHotelMedia(model, out);
       out.scrollIntoView({behavior:'smooth',block:'start'});
     }
 
