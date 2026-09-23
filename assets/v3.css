@@ -575,3 +575,26 @@ button { color: inherit; font: inherit; }
 /* Inline dialect glossary */
 .dialect-inline{border-bottom:1px dotted currentColor;text-decoration:none;text-underline-offset:3px}
 .dialect-inline:hover,.dialect-inline:focus-visible{color:var(--blue-deep);border-bottom-style:solid}
+
+
+/* Layout tightening + hotel imagery — 2026-09-23 */
+.chooser-practical .practical-grid{grid-template-columns:.86fr repeat(3,minmax(0,1fr))}
+.chooser-practical .practical-title,.chooser-practical .practical-link{min-height:190px;padding:24px}
+.chooser-practical .practical-link h3{margin:34px 0 8px}
+#riviera-first-trip-edit{padding-top:clamp(52px,6vw,76px);padding-bottom:clamp(58px,6.5vw,84px)}
+#riviera-first-trip-edit .section-heading{margin-bottom:34px}
+@media(max-width:1080px){
+  .chooser-practical .practical-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chooser-practical .practical-title{grid-column:1/-1}
+}
+@media(max-width:760px){
+  .chooser-practical .practical-grid{grid-template-columns:1fr}
+  .chooser-practical .practical-title{grid-column:auto}
+  .chooser-practical .practical-title,.chooser-practical .practical-link{min-height:0}
+  .chooser-practical .practical-link h3{margin:24px 0 8px}
+}
+
+.chooser-hotel-media{display:block;height:150px;margin:-20px -20px 16px;overflow:hidden;background:var(--paper-deep)}
+.chooser-hotel-media img,.chooser-hotel-media .batch-thumb{display:block;width:100%;height:100%;object-fit:cover}
+.chooser-hotel-card:hover .chooser-hotel-media img{transform:scale(1.02)}
+.chooser-hotel-media img{transition:transform 260ms ease}
