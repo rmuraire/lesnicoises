@@ -1,0 +1,147 @@
+{
+  "source": "Depositphotos selections supplied by Renaud, 2026-09-23",
+  "archive": "MAMETAS_NICE_PRATIQUE_WEB.zip",
+  "note": "Use only files whose Depositphotos licence is compatible with Mametas. Do not publish Editorial Use Only files where the licence excludes commercial/affiliate use.",
+  "assets": [
+    {
+      "file": "nice-castle-hill-bay.webp",
+      "credit": "SveltanaSF / Svetlana Day",
+      "subject": "Castle Hill, Old Nice and Baie des Anges",
+      "status": "use",
+      "placements": [
+        "Nice guide",
+        "5-day Nice itinerary"
+      ]
+    },
+    {
+      "file": "nice-castle-hill-city.webp",
+      "credit": "SveltanaSF / Svetlana Day",
+      "subject": "Castle Hill city/cemetery view",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-castle-hill-waterfall.webp",
+      "credit": "SveltanaSF",
+      "subject": "Castle Hill waterfall",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-sainte-reparate.webp",
+      "credit": "Marco Rubino",
+      "subject": "Cathédrale Sainte-Réparate / Old Nice",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-blue-chairs.webp",
+      "credit": "SveltanaSF",
+      "subject": "Promenade des Anglais blue chairs",
+      "status": "use",
+      "placements": [
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-blue-chair-art.webp",
+      "credit": "SveltanaSF",
+      "subject": "Promenade chair sculpture at dusk",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-port-lympia-day.webp",
+      "credit": "RB Photography",
+      "subject": "Port Lympia from Castle Hill",
+      "status": "use",
+      "placements": [
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-port-lympia-night.webp",
+      "credit": "DmitryRukhlenko",
+      "subject": "Port Lympia at night",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-cimiez-arenas.webp",
+      "credit": "Lindasky76",
+      "subject": "Cimiez arenas and gardens",
+      "status": "use",
+      "placements": [
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-cimiez-monastery.webp",
+      "credit": "Lindasky76",
+      "subject": "Cimiez monastery garden",
+      "status": "reserve"
+    },
+    {
+      "file": "nice-matisse-museum.webp",
+      "credit": "Lindasky76",
+      "subject": "Musée Matisse exterior",
+      "status": "use",
+      "placements": [
+        "Matisse detail page",
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-socca.webp",
+      "credit": "SveltanaSF",
+      "subject": "Socca",
+      "status": "use",
+      "placements": [
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-tram.webp",
+      "credit": "rglinsky",
+      "subject": "Nice tram",
+      "status": "use",
+      "placements": [
+        "Airport transfer"
+      ]
+    },
+    {
+      "file": "nice-sentier-littoral.webp",
+      "credit": "dmiiva1987",
+      "subject": "Nice coastal path",
+      "status": "use",
+      "placements": [
+        "Nice guide"
+      ]
+    },
+    {
+      "file": "nice-mont-boron-cap.webp",
+      "credit": "SveltanaSF",
+      "subject": "Mont Boron and Cap de Nice",
+      "status": "reserve"
+    },
+    {
+      "file": "villefranche-road.webp",
+      "credit": "Balate Dorin",
+      "subject": "Road above Villefranche-sur-Mer",
+      "status": "use",
+      "placements": [
+        "Villefranche / Cap-Ferrat guide"
+      ]
+    },
+    {
+      "file": "cap-ferrat-view.webp",
+      "credit": "Edimur",
+      "subject": "Saint-Jean-Cap-Ferrat view",
+      "status": "use",
+      "placements": [
+        "Villefranche / Cap-Ferrat guide"
+      ]
+    },
+    {
+      "file": "nice-castle-detail.webp",
+      "credit": "unknown",
+      "subject": "Castle Hill detail",
+      "status": "skip"
+    }
+  ]
+}
