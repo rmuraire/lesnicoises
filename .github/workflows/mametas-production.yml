@@ -205,7 +205,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=2",
+                  "/assets/riviera-chooser.js?v=3",
               ),
               f"https://www.mametas.com/riviera-chooser/?deploy={sha}": (
                   "Dites-nous le séjour. On coupe la Riviera.",
@@ -213,7 +213,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=2",
+                  "/assets/riviera-chooser.js?v=3",
               ),
           }
           for url, needles in checks.items():
