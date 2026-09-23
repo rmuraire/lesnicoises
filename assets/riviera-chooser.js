@@ -1,7 +1,13 @@
 (function (rootFactory) {
   var api = rootFactory();
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
-  if (typeof document !== 'undefined') api.mount();
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { api.mount(); }, { once:true });
+    } else {
+      api.mount();
+    }
+  }
   if (typeof process !== 'undefined' && process.argv && process.argv.indexOf('--self-test') >= 0) {
     api.selfTest();
   }
