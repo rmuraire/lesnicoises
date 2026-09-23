@@ -20,6 +20,14 @@ for path in ROOT.rglob("*"):
         .replace(" – ", " - ")
         .replace("—", "-")
         .replace("–", "-")
+        .replace(
+            "Les lieux sont réels. Les cinq matriarches sont fictives. Le point de vue, lui, est bien vivant.",
+            "Guide indépendant créé par un Niçois. Des lieux réels, des choix documentés, et un point de vue bien vivant."
+        )
+        .replace(
+            "The places are real. The five matriarchs are fictional. The point of view is very much alive.",
+            "Independent guide created by a Niçois. Real places, researched choices and a point of view that is very much alive."
+        )
     )
     if updated != text:
         path.write_text(updated, encoding="utf-8")
