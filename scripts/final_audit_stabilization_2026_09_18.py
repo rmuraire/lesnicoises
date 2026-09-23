@@ -211,7 +211,7 @@ def main() -> int:
             'href="/en/hotels/">Stay</a>',
             'href="/en/explore/">Explore</a>',
             'href="/en/good-finds/">Now</a>',
-            '/assets/v3.css?v=0.9',
+            '/assets/v3.css?v=1.0',
             '/assets/v3.js?v=0.9',
         ),
         "fr/index.html": (
@@ -220,7 +220,7 @@ def main() -> int:
             'href="/hotels/">Dormir</a>',
             'href="/explore/">Explorer</a>',
             'href="/bons-plans/">Maintenant</a>',
-            '/assets/v3.css?v=0.9',
+            '/assets/v3.css?v=1.0',
             '/assets/v3.js?v=0.9',
         ),
         "assets/site.css": (
