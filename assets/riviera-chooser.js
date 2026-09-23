@@ -481,6 +481,15 @@
     return content.skips[baseId];
   }
 
+  function reasonForSeason(profile, content, lang) {
+    if (seasonOf(profile) === 'winter' && profile.mood === 'sea') {
+      return lang === 'fr'
+        ? 'Vous avez choisi la mer. En hiver, on traduit cela par littoral, vues, promenades et déjeuners face à l’eau plutôt que par une journée construite autour de la baignade.'
+        : 'You chose the sea. In winter, we translate that into coastline, views, walks and lunches by the water rather than building the day around swimming.';
+    }
+    return content.moodLine[profile.mood];
+  }
+
   function seasonNoteFor(profile, baseId, lang) {
     var season = seasonOf(profile);
     var fr = lang === 'fr';
@@ -533,7 +542,7 @@
       intentional:BASES[baseId].type === 'intentional',
       originalBase:decision.base,
       override:!!overrideBase,
-      reason:content.moodLine[profile.mood],
+      reason:reasonForSeason(profile, content, lang),
       pace:content.pace[profile.pace],
       season:seasonNoteFor(profile, baseId, lang),
       priorities:prioritiesFor(content, baseId, profile),
