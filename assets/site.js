@@ -297,3 +297,51 @@
     if(fixes[href]) link.setAttribute('href',fixes[href]);
   });
 })();
+
+
+/* Mametas dialect: link one first-use term per page to the mini-lexicon. */
+(function(){
+  function addDialectLink(){
+    if(!document.body || document.documentElement.dataset.mametasDialectLink === '1') return;
+    var lang=(document.documentElement.lang || 'en').toLowerCase().indexOf('fr') === 0 ? 'fr' : 'en';
+    if(location.pathname.indexOf('/lexique/') >= 0 || location.pathname.indexOf('/en/lexicon/') >= 0) return;
+    var base=lang === 'fr' ? '/lexique/' : '/en/lexicon/';
+    var terms=[
+      {re:/(mèfi)/i,id:'mefi'},
+      {re:/(pichoun|pitchoun)/i,id:'pichoun'},
+      {re:/(cagade)/i,id:'cagade'},
+      {re:/(dégun)/i,id:'degun'},
+      {re:/(niocou)/i,id:'niocou'},
+      {re:/(paillassou)/i,id:'paillassou'},
+      {re:/(empégué)/i,id:'empegue'},
+      {re:/(ficanas)/i,id:'ficanas'}
+    ];
+    var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    var nodes=[],node;
+    while((node=walker.nextNode())) nodes.push(node);
+    for(var i=0;i<nodes.length;i++){
+      node=nodes[i];
+      var parent=node.parentElement;
+      if(!parent || parent.closest('a,script,style,button,code,pre,noscript,textarea')) continue;
+      for(var j=0;j<terms.length;j++){
+        var match=node.nodeValue.match(terms[j].re);
+        if(!match) continue;
+        var at=match.index, before=node.nodeValue.slice(0,at), after=node.nodeValue.slice(at+match[0].length);
+        var frag=document.createDocumentFragment();
+        if(before) frag.appendChild(document.createTextNode(before));
+        var link=document.createElement('a');
+        link.className='dialect-inline';
+        link.href=base+'#'+terms[j].id;
+        link.title=lang === 'fr' ? 'Voir le petit lexique niçois' : 'See the Niçois mini-lexicon';
+        link.textContent=match[0];
+        frag.appendChild(link);
+        if(after) frag.appendChild(document.createTextNode(after));
+        parent.replaceChild(frag,node);
+        document.documentElement.dataset.mametasDialectLink='1';
+        return;
+      }
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',addDialectLink);
+  else addDialectLink();
+})();
