@@ -23,6 +23,20 @@
   var MOBILITY_HUB = { nocar:1.25, either:1, car:.65 };
   var DURATION_HUB = { '3':1.25, '5':1, '7':.8 };
 
+  // Season is a modifier, not a fifth vote of equal weight.
+  // It adjusts how viable each base is once duration, mobility, mood and pace
+  // have established the shape of the trip.
+  var SEASON_SCORE = {
+    winter: { nice:1.1, cannes:.35, antibes:-.15, villefranche:.1, menton:.9, monaco:.75, sainttropez:-4.5, saintpaul:.45 },
+    spring: { nice:.15, cannes:.2, antibes:.3, villefranche:.35, menton:.25, monaco:.1, sainttropez:-.2, saintpaul:.3 },
+    summer: { nice:0, cannes:.35, antibes:.45, villefranche:.4, menton:-.1, monaco:0, sainttropez:1, saintpaul:-.1 },
+    autumn:{ nice:.35, cannes:.1, antibes:.2, villefranche:.3, menton:.55, monaco:.2, sainttropez:-.8, saintpaul:.35 }
+  };
+
+  function seasonOf(profile) {
+    return profile.season && SEASON_SCORE[profile.season] ? profile.season : 'summer';
+  }
+
 
   var REGIONAL = {
     en:{
@@ -92,6 +106,8 @@
     var base = BASES[id];
     var hubWeight = PACE_HUB[profile.pace] * MOBILITY_HUB[profile.mobility] * DURATION_HUB[profile.days];
     var score = (base.scores[profile.mood] || 0) * 3 + base.hub * hubWeight;
+    var season = seasonOf(profile);
+    score += (SEASON_SCORE[season] && SEASON_SCORE[season][id]) || 0;
     if (profile.days === '3' && id === 'nice') score += .5;
     return score;
   }
@@ -103,8 +119,10 @@
     }
     if ((profile.mood === 'sea' || profile.mood === 'glamour') &&
         profile.days === '7' && profile.mobility !== 'nocar' &&
-        (profile.pace === 'slow' || profile.pace === 'balanced')) {
-      candidates.push({ id:'sainttropez', bonus:3 });
+        (profile.pace === 'slow' || profile.pace === 'balanced') &&
+        seasonOf(profile) !== 'winter') {
+      var saintTropezBonus = seasonOf(profile) === 'summer' ? 3 : (seasonOf(profile) === 'spring' ? 2.4 : 1.6);
+      candidates.push({ id:'sainttropez', bonus:saintTropezBonus });
     }
     if ((profile.mood === 'culture' || profile.mood === 'peace') &&
         profile.days === '7' && profile.mobility !== 'nocar' && profile.pace === 'slow') {
@@ -376,6 +394,31 @@
     }
   };
 
+  function seasonalPriorities(content, base, profile, list) {
+    if (seasonOf(profile) !== 'winter' || profile.mood !== 'sea') return list;
+    var fr = content === CONTENT.fr;
+    var winterSea = fr ? {
+      nice:['Baie des Anges et littoral à pied','Villefranche + Cap-Ferrat au bord de l’eau','Antibes pour la vieille ville et la côte'],
+      cannes:['Croisette + front de mer','Le Suquet','Antibes pour le contraste'],
+      antibes:['Vieil Antibes + bord de mer','Cap d’Antibes à pied','Juan-les-Pins côté promenade'],
+      villefranche:['Rade de Villefranche','Cap-Ferrat à pied','Beaulieu sans programme'],
+      menton:['Front de mer de Menton','Roquebrune-Cap-Martin','Monaco pour le contraste'],
+      monaco:['Monaco côté mer','Port Hercule','Menton pour respirer'],
+      sainttropez:['Village de Saint-Tropez','Sentier côtier de la presqu’île','Ramatuelle'],
+      saintpaul:['Saint-Paul','Fondation Maeght','Une seule journée côte']
+    } : {
+      nice:['Baie des Anges and a coastal walk','Villefranche + Cap-Ferrat by the water','Antibes for old town and coastline'],
+      cannes:['Croisette + seafront','Le Suquet','Antibes for contrast'],
+      antibes:['Old Antibes + seafront','Cap d’Antibes on foot','Juan-les-Pins promenade'],
+      villefranche:['Villefranche bay','Cap-Ferrat on foot','Beaulieu with no agenda'],
+      menton:['Menton seafront','Roquebrune-Cap-Martin','Monaco for contrast'],
+      monaco:['Monaco by the water','Port Hercule','Menton for the exhale'],
+      sainttropez:['Saint-Tropez village','Peninsula coastal path','Ramatuelle'],
+      saintpaul:['Saint-Paul','Fondation Maeght','One coast day']
+    };
+    return winterSea[base] ? winterSea[base].slice(0, list.length || 3) : list;
+  }
+
   function prioritiesFor(content, base, profile) {
     var group = content.priorities[base] || {};
     var list = (group[profile.mood] || group.decide || []).slice(0,3);
@@ -389,6 +432,7 @@
         : ['Matisse / Chagall in Nice','Saint-Paul + Fondation Maeght'];
     }
 
+    list = seasonalPriorities(content, base, profile, list);
     if (profile.pace === 'slow' && list.length >= 3) {
       list[2] = content === CONTENT.fr ? 'Gardez une demi-journée vide. Oui, vraiment.' : 'Keep one half-day empty. Yes, really.';
     }
@@ -437,13 +481,37 @@
     return content.skips[baseId];
   }
 
+  function seasonNoteFor(profile, baseId, lang) {
+    var season = seasonOf(profile);
+    var fr = lang === 'fr';
+    if (season === 'winter') {
+      return fr
+        ? 'Hors saison, la mer reste dans le voyage mais les plages privées et une partie de l’offre saisonnière comptent moins. On privilégie les villes qui restent vivantes, les jardins, les musées, les marchés et les balades littorales.'
+        : 'Out of season, the sea still matters but private beaches and part of the seasonal offer matter less. We favour towns that stay alive, gardens, museums, markets and coastal walks.';
+    }
+    if (season === 'spring') {
+      return fr
+        ? 'Le printemps garde presque toute la logique Riviera avec moins de chaleur et moins de saturation. C’est une saison très facile pour élargir la carte.'
+        : 'Spring keeps almost all of the Riviera logic with less heat and less crowding. It is an easy season for widening the map.';
+    }
+    if (season === 'autumn') {
+      return fr
+        ? 'En septembre et octobre, la mer reste pertinente mais l’activité balnéaire commence à se réduire. On garde le littoral sans dépendre entièrement des établissements saisonniers.'
+        : 'In September and October the sea still matters, but the beach season starts thinning out. We keep the coast without depending entirely on seasonal venues.';
+    }
+    return fr
+      ? 'En plein été, plages, îles et établissements saisonniers comptent davantage. La foule et la chaleur aussi, donc on évite de surcharger les journées.'
+      : 'In high summer, beaches, islands and seasonal venues count more. So do crowds and heat, so we avoid overloading the days.';
+  }
+
   function escapeFor(profile, winner, lang) {
     var fr = lang === 'fr';
     if (profile.mood === 'glamour' && winner !== 'monaco') {
       return {base:'monaco', title:fr?'Vous êtes vraiment venu pour Monte-Carlo ?':'Really here for Monte-Carlo?',
         body:fr?'C’est une autre décision de base, pas un simple upgrade hôtelier.':'That changes the base itself; it is not a hotel upgrade.'};
     }
-    if (profile.mood === 'sea' && profile.days !== '3' && profile.mobility !== 'nocar' && winner !== 'sainttropez') {
+    if (profile.mood === 'sea' && profile.days !== '3' && profile.mobility !== 'nocar' &&
+        winner !== 'sainttropez' && seasonOf(profile) !== 'winter') {
       return {base:'sainttropez', title:fr?'La presqu’île est en réalité le voyage ?':'Is the peninsula actually the trip?',
         body:fr?'Alors assumez Saint-Tropez comme base intentionnelle au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
     }
@@ -467,6 +535,7 @@
       override:!!overrideBase,
       reason:content.moodLine[profile.mood],
       pace:content.pace[profile.pace],
+      season:seasonNoteFor(profile, baseId, lang),
       priorities:prioritiesFor(content, baseId, profile),
       further:regionalFor(profile, baseId, lang),
       skip:skipFor(content, baseId, profile, lang),
@@ -485,12 +554,12 @@
     var root = document.querySelector('[data-riviera-chooser]');
     if (!root) return;
     var lang = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0 ? 'fr' : 'en';
-    var state = { days:'', mobility:'', mood:'', pace:'' };
+    var state = { days:'', season:'', mobility:'', mood:'', pace:'' };
     var params = new URLSearchParams(window.location.search);
     if (['3','5','7'].indexOf(params.get('days')) >= 0) state.days = params.get('days');
 
     var labels = lang === 'fr' ? {
-      incomplete:'Répondez aux quatre questions. Ensuite, Mametas tranche.',
+      incomplete:'Répondez aux cinq questions. Ensuite, Mametas tranche.',
       verdict:'LE VERDICT MAMETAS',
       stay:'Dormez à ',
       do:'Indispensable',
@@ -507,7 +576,7 @@
       intentional:'BASE INTENTIONNELLE',
       reset:'Recommencer'
     } : {
-      incomplete:'Answer all four questions. Then Mametas makes the call.',
+      incomplete:'Answer all five questions. Then Mametas makes the call.',
       verdict:'THE MAMETAS VERDICT',
       stay:'Stay in ',
       do:'The essentials',
@@ -533,7 +602,7 @@
         button.classList.toggle('is-active', active);
         button.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
-      var ready = state.days && state.mobility && state.mood && state.pace;
+      var ready = state.days && state.season && state.mobility && state.mood && state.pace;
       var submit = root.querySelector('[data-chooser-submit]');
       if (submit) submit.disabled = !ready;
       root.querySelectorAll('[data-step]').forEach(function (step) {
@@ -599,20 +668,23 @@
     }
 
     function render(overrideBase) {
-      if (!(state.days && state.mobility && state.mood && state.pace)) return;
+      if (!(state.days && state.season && state.mobility && state.mood && state.pace)) return;
       var model = resultModel(state, overrideBase, lang);
       var out = root.querySelector('[data-chooser-result]');
       var profileLabels = lang === 'fr'
         ? {
+            season:{winter:'novembre à mars',spring:'avril à juin',summer:'juillet et août',autumn:'septembre et octobre'},
             mood:{decide:'Mametas décide',sea:'mer & baignade',food:'restaurants & vie de ville',culture:'art & villages',glamour:'glamour de la Riviera',peace:'calme & beauté'},
             pace:{slow:'tranquille',balanced:'équilibré',ambitious:'ambitieux'}
           }
         : {
+            season:{winter:'November to March',spring:'April to June',summer:'July and August',autumn:'September and October'},
             mood:{decide:'decide for me',sea:'sea & swimming',food:'food & city life',culture:'art & villages',glamour:'Riviera glamour',peace:'peace & beauty'},
             pace:{slow:'slow',balanced:'balanced',ambitious:'ambitious'}
           };
       var profileText = [
         state.days === '7' ? '7+' : state.days,
+        profileLabels.season[state.season] || state.season,
         state.mobility === 'nocar' ? (lang==='fr'?'sans voiture':'no car') : (state.mobility === 'car' ? (lang==='fr'?'voiture':'car') : (lang==='fr'?'mobilité flexible':'flexible mobility')),
         profileLabels.mood[state.mood] || state.mood,
         profileLabels.pace[state.pace] || state.pace
@@ -639,6 +711,7 @@
       }
       out.innerHTML =
         '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
+        '<p class="chooser-season-note"><strong>' + (lang==='fr'?'Saison.':'Season.') + '</strong> ' + esc(model.season) + '</p>' +
         '<div class="chooser-result-grid"><section class="chooser-do"><h3>' + labels.do + '</h3><ol>' + priorities + '</ol></section><section class="chooser-skip"><h3>' + labels.skip + '</h3><p>' + esc(model.skip) + '</p></section></div>' +
         further +
         escape +
@@ -661,7 +734,7 @@
       if (escapeButton) { render(escapeButton.getAttribute('data-chooser-escape')); return; }
       if (event.target.closest('[data-chooser-back]')) { render(null); return; }
       if (event.target.closest('[data-chooser-reset]')) {
-        state = {days:'',mobility:'',mood:'',pace:''};
+        state = {days:'',season:'',mobility:'',mood:'',pace:''};
         history.replaceState(null,'',window.location.pathname);
         root.querySelector('[data-chooser-result]').hidden = true;
         syncButtons();
@@ -675,32 +748,33 @@
   }
 
   function selfTest() {
-    var days=['3','5','7'], mobility=['nocar','car','either'], moods=['decide','sea','food','culture','glamour','peace'], pace=['slow','balanced','ambitious'];
+    var days=['3','5','7'], seasons=['winter','spring','summer','autumn'], mobility=['nocar','car','either'], moods=['decide','sea','food','culture','glamour','peace'], pace=['slow','balanced','ambitious'];
     var count=0, errors=[];
-    days.forEach(function(d){ mobility.forEach(function(m){ moods.forEach(function(md){ pace.forEach(function(p){
-      var profile={days:d,mobility:m,mood:md,pace:p};
+    days.forEach(function(d){ seasons.forEach(function(s){ mobility.forEach(function(m){ moods.forEach(function(md){ pace.forEach(function(p){
+      var profile={days:d,season:s,mobility:m,mood:md,pace:p};
       var result=chooseBase(profile); count++;
       if (!BASES[result.base]) errors.push('unknown base '+JSON.stringify(profile));
       if (d==='3' && BASES[result.base].type==='intentional') errors.push('3-day intentional '+JSON.stringify(profile));
       if (m==='nocar' && (result.base==='sainttropez' || result.base==='saintpaul')) errors.push('no-car friction '+JSON.stringify(profile));
-    }); }); }); });
+      if (s==='winter' && result.base==='sainttropez') errors.push('winter Saint-Tropez should not win '+JSON.stringify(profile));
+    }); }); }); }); });
     var fixtures=[
-      [{days:'5',mobility:'nocar',mood:'glamour',pace:'balanced'},'cannes'],
-      [{days:'7',mobility:'nocar',mood:'glamour',pace:'slow'},'monaco'],
-      [{days:'7',mobility:'car',mood:'sea',pace:'slow'},'sainttropez'],
-      [{days:'7',mobility:'car',mood:'culture',pace:'slow'},'saintpaul'],
-      [{days:'3',mobility:'nocar',mood:'decide',pace:'balanced'},'nice']
+      [{days:'5',season:'summer',mobility:'nocar',mood:'glamour',pace:'balanced'},'cannes'],
+      [{days:'7',season:'summer',mobility:'nocar',mood:'glamour',pace:'slow'},'monaco'],
+      [{days:'7',season:'summer',mobility:'car',mood:'sea',pace:'slow'},'sainttropez'],
+      [{days:'7',season:'summer',mobility:'car',mood:'culture',pace:'slow'},'saintpaul'],
+      [{days:'3',season:'summer',mobility:'nocar',mood:'decide',pace:'balanced'},'nice']
     ];
     fixtures.forEach(function(f){ var got=chooseBase(f[0]).base; if (got!==f[1]) errors.push('fixture '+JSON.stringify(f[0])+' expected '+f[1]+' got '+got); });
-    var balancedSeaCar = resultModel({days:'5',mobility:'car',mood:'sea',pace:'balanced'}, null, 'en');
+    var balancedSeaCar = resultModel({days:'5',season:'summer',mobility:'car',mood:'sea',pace:'balanced'}, null, 'en');
     var balancedLabels = balancedSeaCar.further.map(function(x){ return x.label; });
     if (balancedSeaCar.baseId !== 'antibes') errors.push('5-day car sea balanced should stay Antibes');
     if (balancedLabels.indexOf('Nice properly') < 0 || balancedLabels.indexOf('Villefranche + Cap-Ferrat') < 0) errors.push('balanced sea/car must include Nice and Cap-Ferrat');
-    var ambitiousSeaCar = resultModel({days:'5',mobility:'car',mood:'sea',pace:'ambitious'}, null, 'en');
+    var ambitiousSeaCar = resultModel({days:'5',season:'summer',mobility:'car',mood:'sea',pace:'ambitious'}, null, 'en');
     var ambitiousLabels = ambitiousSeaCar.further.map(function(x){ return x.label; });
     if (ambitiousLabels.indexOf('Saint-Paul-de-Vence') < 0) errors.push('ambitious sea/car must add Saint-Paul-de-Vence');
 
-    var cultureAmbitious3Car = resultModel({days:'3',mobility:'car',mood:'culture',pace:'ambitious'}, null, 'en');
+    var cultureAmbitious3Car = resultModel({days:'3',season:'summer',mobility:'car',mood:'culture',pace:'ambitious'}, null, 'en');
     var cultureAmbitiousLabels = cultureAmbitious3Car.further.map(function(x){ return x.label; });
     if (cultureAmbitious3Car.baseId !== 'nice') errors.push('3-day car culture ambitious should stay Nice');
     if (cultureAmbitious3Car.priorities.length !== 2 ||
@@ -713,6 +787,11 @@
         cultureAmbitiousLabels.indexOf('Saint-Paul-de-Vence') >= 0) {
       errors.push('3-day car culture ambitious further must be Èze + Antibes/Picasso, without Villefranche or duplicate Saint-Paul');
     }
+    var winterCalmCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'peace',pace:'slow'}, null, 'en');
+    if (winterCalmCar.baseId === 'sainttropez') errors.push('winter calm/car must not choose Saint-Tropez');
+    var winterSeaCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'sea',pace:'slow'}, null, 'en');
+    if (winterSeaCar.escape && winterSeaCar.escape.base === 'sainttropez') errors.push('winter sea profile must not offer Saint-Tropez escape');
+
     ['en','fr'].forEach(function(lang){
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
