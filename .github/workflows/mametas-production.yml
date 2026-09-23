@@ -16,7 +16,7 @@ concurrency:
 jobs:
   validate-and-deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - name: Check out Mametas
         uses: actions/checkout@v4
@@ -99,6 +99,12 @@ jobs:
       - name: Stabilize final Astra audit fixes
         run: python scripts/final_audit_stabilization_2026_09_18.py
 
+      - name: Apply Riviera Chooser homepage entry
+        run: python scripts/riviera_chooser_home_pass.py
+
+      - name: Validate Riviera Chooser decision engine
+        run: node assets/riviera-chooser.js --self-test
+
       - name: Validate Claude audit corrections
         run: python scripts/validate_claude_audit_2026_09_13.py
 
@@ -141,6 +147,7 @@ jobs:
                   '<a class="first-trip-card" href=',
                   'class="wrap home-lgbtq-wrap"',
                   "/en/gay-french-riviera/",
+                  'href="/en/riviera-chooser/?days=5"',
               ),
               f"https://www.mametas.com/fr/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
@@ -150,6 +157,7 @@ jobs:
                   '<a class="first-trip-card" href=',
                   'class="wrap home-lgbtq-wrap"',
                   "/cote-dazur-gay/",
+                  'href="/riviera-chooser/?days=5"',
               ),
               f"https://www.mametas.com/en/gay-nice/?deploy={sha}": (
                   'class="place gay-hotel-card"',
@@ -180,6 +188,42 @@ jobs:
                       if not (base_pos >= 0 and base_pos < gay_pos < first_trip_pos):
                           raise SystemExit(f"{url} homepage order is wrong: base={base_pos}, gay={gay_pos}, first-trip={first_trip_pos}")
                   print(f"Refreshed page check passed: {url}")
+          PY
+
+      - name: Check Riviera Chooser production
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha = os.environ.get("GITHUB_SHA", "release")
+          checks = {
+              f"https://www.mametas.com/en/riviera-chooser/?deploy={sha}": (
+                  "Tell us the trip. We’ll cut the Riviera.",
+                  'data-group="days"',
+                  'data-group="mobility"',
+                  'data-group="mood"',
+                  'data-group="pace"',
+                  "/assets/riviera-chooser.js?v=1",
+              ),
+              f"https://www.mametas.com/riviera-chooser/?deploy={sha}": (
+                  "Dites-nous le séjour. On coupe la Riviera.",
+                  'data-group="days"',
+                  'data-group="mobility"',
+                  'data-group="mood"',
+                  'data-group="pace"',
+                  "/assets/riviera-chooser.js?v=1",
+              ),
+          }
+          for url, needles in checks.items():
+              req = Request(url, headers={"User-Agent": "MametasDeployCheck/1.0", "Cache-Control": "no-cache"})
+              with urlopen(req, timeout=30) as response:
+                  body = response.read().decode("utf-8", errors="replace")
+                  if response.status != 200:
+                      raise SystemExit(f"{url} returned HTTP {response.status}")
+                  missing = [needle for needle in needles if needle not in body]
+                  if missing:
+                      raise SystemExit(f"{url} is missing Chooser markers: {missing}")
+                  print(f"Riviera Chooser production check passed: {url}")
           PY
 
       - name: Check expanded destination authority pages
