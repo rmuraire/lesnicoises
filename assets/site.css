@@ -525,3 +525,23 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .beach-fact b{display:block;margin-bottom:5px;color:var(--navy);font-size:10px;letter-spacing:.12em;text-transform:uppercase}
 .beach-fact span{display:block;color:var(--ink);font-size:12px;line-height:1.55}
 @media(max-width:620px){.beach-facts{grid-template-columns:1fr}}
+
+
+/* Mametas density + practical wayfinding — 2026-09-23 */
+.spot-logistics{margin:12px 0 0!important;padding-top:10px;border-top:1px solid var(--line);color:var(--med-blue)!important;font-size:12.5px!important;line-height:1.55!important}
+.spot-logistics strong{color:var(--navy);font-weight:700}
+.spot-logistics a{color:var(--navy);font-weight:700;text-decoration:none;border-bottom:1px solid rgba(185,144,63,.7)}
+.spot-logistics a:hover{color:var(--med-blue)}
+.place .spot-logistics{margin-top:14px!important}
+@media(min-width:761px){
+  .article{padding-top:58px;padding-bottom:58px}
+  .article .standfirst{margin-top:22px;margin-bottom:34px}
+  .article h2{margin-top:40px}
+  .article h3{margin-top:28px}
+  .route-step{padding-top:20px;padding-bottom:20px}
+  .route-step:before{top:27px}
+  .place{padding-top:23px;padding-bottom:23px}
+  .fact-grid{margin-top:28px;margin-bottom:34px}
+  .verdict{margin-top:34px;margin-bottom:34px}
+  .sources{margin-top:44px}
+}
