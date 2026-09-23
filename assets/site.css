@@ -492,3 +492,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .gay-hotel-card-copy{align-self:center;min-width:0}
 .gay-hotel-card-copy h3{margin-top:0}
 @media(max-width:650px){.gay-hotel-card{grid-template-columns:1fr;gap:18px;padding:24px 0 30px}.gay-hotel-card-media{min-height:0}.gay-hotel-card-media img{min-height:0;aspect-ratio:16/10}.gay-hotel-card-copy{align-self:auto}}
+
+/* Mametas Checked */
+.mametas-checked{display:inline-flex;align-items:center;gap:9px;width:max-content;max-width:100%;margin:2px 0 24px;padding:8px 11px;border:1px solid var(--line);background:rgba(255,255,255,.22);color:var(--navy);font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;text-decoration:none}
+.mametas-checked::before{content:"✓";display:inline-grid;place-items:center;width:18px;height:18px;border:1px solid var(--med-blue);border-radius:50%;color:var(--med-blue);font-size:11px;letter-spacing:0}
+.mametas-checked small{color:var(--ink);font-size:9px;font-weight:500;letter-spacing:.02em;text-transform:none}
+.mametas-checked:hover,.mametas-checked:focus-visible{background:var(--cream-deep);border-color:rgba(22,34,61,.28)}
+@media(max-width:520px){.mametas-checked{align-items:flex-start;flex-wrap:wrap}.mametas-checked small{flex-basis:calc(100% - 29px);margin-left:27px;margin-top:-5px}}
