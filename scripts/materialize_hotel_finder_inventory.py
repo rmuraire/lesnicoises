@@ -15,6 +15,8 @@ def main() -> int:
     for item in source.get("hotels", []):
         expedia = (item.get("affiliate") or {}).get("expedia") or {}
         affiliate_url = expedia.get("url", "") if expedia.get("status") == "active" else ""
+        raw_image = item.get("image", "") or ""
+        image = "" if "batch-sprite" in raw_image else raw_image
         hotels.append({
             "id": item.get("id", ""),
             "name": item.get("name", ""),
@@ -27,6 +29,7 @@ def main() -> int:
             "seaAccess": bool(item.get("seaAccess")),
             "oldTownAccess": bool(item.get("oldTownAccess")),
             "quiet": bool(item.get("quiet")),
+            "image": image,
             "paths": item.get("paths", {}),
             "affiliate": {"url": affiliate_url} if affiliate_url else {},
         })
