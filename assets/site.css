@@ -554,3 +554,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .destination-practical span,.destination-practical a{font-size:12.5px;line-height:1.55;color:var(--ink)}
 .destination-practical a{font-weight:700;border-bottom:1px solid rgba(185,144,63,.7)}
 @media(max-width:700px){.destination-practical{grid-template-columns:1fr}}
+
+
+/* Restaurant map links */
+.place .place-map{margin-left:14px}
+@media(max-width:520px){.place .place-map{margin-left:10px}}
