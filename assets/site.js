@@ -2,13 +2,13 @@
   var isFrench=(document.documentElement.lang||'').toLowerCase().indexOf('fr')===0;
   var path=window.location.pathname;
   var items=isFrench?[
-    {label:'Planifier',href:'/fr/planifier/cinq-jours-nice-sans-voiture/'},
+    {label:'Planifier',href:'/riviera-chooser/'},
     {label:'Lieux',href:'/riviera-guide/'},
     {label:'Dormir',href:'/hotels/'},
     {label:'Explorer',href:'/explore/'},
     {label:'Maintenant',href:'/bons-plans/'}
   ]:[
-    {label:'Plan',href:'/plan/five-days-nice-no-car/'},
+    {label:'Plan',href:'/en/riviera-chooser/'},
     {label:'Places',href:'/en/riviera-guide/'},
     {label:'Stay',href:'/en/hotels/'},
     {label:'Explore',href:'/en/explore/'},
@@ -17,13 +17,13 @@
 
   function activeIndex(){
     if(isFrench){
-      if(path.indexOf('/fr/planifier/')===0) return 0;
+      if(path.indexOf('/riviera-chooser/')===0 || path.indexOf('/fr/planifier/')===0) return 0;
       if(path.indexOf('/riviera-guide/')===0) return 1;
       if(path.indexOf('/fr/dormir/')===0 || path.indexOf('/hotels/')===0) return 2;
       if(path.indexOf('/explore/')===0 || path.indexOf('/culture/')===0 || path.indexOf('/restaurants/')===0 || path.indexOf('/plages/')===0 || path.indexOf('/escapades/')===0) return 3;
       if(path.indexOf('/bons-plans/')===0) return 4;
     }else{
-      if(path.indexOf('/plan/')===0) return 0;
+      if(path.indexOf('/en/riviera-chooser/')===0 || path.indexOf('/plan/')===0) return 0;
       if(path.indexOf('/en/riviera-guide/')===0) return 1;
       if(path.indexOf('/stay/')===0 || path.indexOf('/en/hotels/')===0) return 2;
       if(path.indexOf('/en/explore/')===0 || path.indexOf('/en/culture/')===0 || path.indexOf('/en/restaurants/')===0 || path.indexOf('/en/beaches/')===0 || path.indexOf('/en/day-trips/')===0) return 3;
