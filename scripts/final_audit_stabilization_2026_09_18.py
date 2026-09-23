@@ -27,18 +27,18 @@ EXACT_REPLACEMENTS = {
     ),
     "riviera-guide/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=24.1'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=24.1'),
     ),
     "bons-plans/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=24.1'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=24.1'),
     ),
     "en/good-finds/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
-        ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
-        ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
+        ('/assets/site.css?v=23.0', '/assets/site.css?v=24.1'),
+        ('/assets/site.css?v=23.1', '/assets/site.css?v=24.1'),
     ),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": (
         ("/fr/dormir/nice/#anime", "/fr/dormir/nice/#vivant"),
@@ -84,9 +84,9 @@ GLOBAL_HTML_REPLACEMENTS = (
     ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.9'),
     ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
     ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
-    ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
-    ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
-    ('/assets/site.css?v=23.2', '/assets/site.css?v=23.4'),
+    ('/assets/site.css?v=23.0', '/assets/site.css?v=24.1'),
+    ('/assets/site.css?v=23.1', '/assets/site.css?v=24.1'),
+    ('/assets/site.css?v=23.2', '/assets/site.css?v=24.1'),
     ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.2"></script>'),
 )
 
@@ -172,7 +172,7 @@ def main() -> int:
         text = html_path.read_text(encoding="utf-8")
         original = text
         for old in ("23.0", "23.1", "23.2", "23.3"):
-            text = text.replace(f"/assets/site.css?v={old}", "/assets/site.css?v=23.4")
+            text = text.replace(f"/assets/site.css?v={old}", "/assets/site.css?v=24.1")
         if text != original:
             html_path.write_text(text, encoding="utf-8")
             rel = str(html_path.relative_to(ROOT))
@@ -235,15 +235,15 @@ def main() -> int:
         ),
         "riviera-guide/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.4",
+            "/assets/site.css?v=24.1",
         ),
         "bons-plans/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.4",
+            "/assets/site.css?v=24.1",
         ),
         "en/good-finds/index.html": (
             "family=Inter:wght@400;500;600;700&amp;display=swap",
-            "/assets/site.css?v=23.4",
+            "/assets/site.css?v=24.1",
         ),
         "assets/v3.css": (
             ".v3-nav, .v3-header-inner > .lang-switch { display: none; }",
