@@ -257,7 +257,7 @@
         nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'La base la plus polyvalente de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
         cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera fonctionne mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
         antibes:{name:'Antibes / Juan-les-Pins',guide:'/riviera-guide/antibes/',hotels:'/hotels/antibes/',why:'Vieille ville, sable et gare utile : l’un des rares compromis azuréens qui ne ressemble pas à un compromis.'},
-        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité de hub pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme base pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
         menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'La base plus lente à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
         monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version intentionnelle : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
         sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas une base centrale astucieuse. Vos réponses disent que la presqu’île est le voyage, donc Mametas la laisse gagner.'},
@@ -272,9 +272,9 @@
         peace:'La beauté et le calme comptent plus que la connexion maximale. On accepte volontairement un peu moins d’efficacité.'
       },
       pace:{
-        slow:'Slow signifie que la base doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement tranquille.',
-        balanced:'Balanced : la base compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
-        ambitious:'Ambitious : on élargit franchement la carte. Une direction par jour, et servez-vous de la voiture ou du train pour couvrir davantage de Riviera intelligemment.'
+        slow:'Rythme tranquille : la base doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
+        balanced:'Rythme équilibré : la base compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
+        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, et la voiture ou le train servent à couvrir davantage de Riviera intelligemment.'
       },
       priorities:{
         nice:{
@@ -376,10 +376,20 @@
     }
   };
 
-  function prioritiesFor(content, base, mood, pace) {
+  function prioritiesFor(content, base, profile) {
     var group = content.priorities[base] || {};
-    var list = (group[mood] || group.decide || []).slice(0,3);
-    if (pace === 'slow' && list.length >= 3) {
+    var list = (group[profile.mood] || group.decide || []).slice(0,3);
+
+    // 3 days + car + Art & villages + Ambitious:
+    // widen the geography without diluting the mood or repeating Saint-Paul.
+    if (base === 'nice' && profile.days === '3' && profile.mobility === 'car' &&
+        profile.mood === 'culture' && profile.pace === 'ambitious') {
+      return content === CONTENT.fr
+        ? ['Matisse / Chagall à Nice','Saint-Paul + Fondation Maeght']
+        : ['Matisse / Chagall in Nice','Saint-Paul + Fondation Maeght'];
+    }
+
+    if (profile.pace === 'slow' && list.length >= 3) {
       list[2] = content === CONTENT.fr ? 'Gardez une demi-journée vide. Oui, vraiment.' : 'Keep one half-day empty. Yes, really.';
     }
     return list;
@@ -396,6 +406,17 @@
 
   function regionalFor(profile, baseId, lang) {
     var data = REGIONAL[lang];
+
+    if (baseId === 'nice' && profile.days === '3' && profile.mobility === 'car' &&
+        profile.mood === 'culture' && profile.pace === 'ambitious') {
+      return [
+        data.items.eze,
+        lang === 'fr'
+          ? {label:'Antibes + Picasso',body:'Picasso, vieille ville et contraste côtier : assez de culture pour élargir le séjour, sans transformer trois jours en marathon de musées.',href:'/riviera-guide/antibes/'}
+          : {label:'Antibes + Picasso',body:'Picasso, old town and a coastal contrast: enough culture to widen the trip without turning three days into a museum marathon.',href:'/en/riviera-guide/antibes/'}
+      ];
+    }
+
     var order = (profile.mobility === 'car' ? data.carOrder : data.defaultOrder)[profile.mood] || data.defaultOrder.decide;
     var exclude = REGIONAL_EXCLUDES[baseId] || [];
     var count = regionalCount(profile, baseId);
@@ -410,7 +431,7 @@
   function skipFor(content, baseId, profile, lang) {
     if (profile.pace === 'ambitious') {
       return lang === 'fr'
-        ? 'Ne faites pas les deux extrémités de la côte le même jour. Ambitious veut dire plus de Riviera, pas plus de pare-brise.'
+        ? 'Ne faites pas les deux extrémités de la côte le même jour. Un rythme ambitieux veut dire plus de Riviera, pas plus de pare-brise.'
         : 'Do not do both ends of the coast in the same day. Ambitious means more Riviera, not more windscreen.';
     }
     return content.skips[baseId];
@@ -446,7 +467,7 @@
       override:!!overrideBase,
       reason:content.moodLine[profile.mood],
       pace:content.pace[profile.pace],
-      priorities:prioritiesFor(content, baseId, profile.mood, profile.pace),
+      priorities:prioritiesFor(content, baseId, profile),
       further:regionalFor(profile, baseId, lang),
       skip:skipFor(content, baseId, profile, lang),
       hotels:content.hotels[baseId] || [],
@@ -474,11 +495,11 @@
       stay:'Dormez à ',
       do:'Indispensable',
       further:'Pour aller plus loin',
-      furtherBalanced:'Vous avez choisi balanced : deux détours régionaux valent réellement de quitter votre base.',
-      furtherAmbitious:'Vous avez choisi ambitious : on élargit la carte avec trois essentiels qui justifient le kilométrage.',
+      furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre base.',
+      furtherAmbitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance que vous avez choisie.',
       skip:'Ce qu’on laisserait tomber',
       hotel:'Trois niveaux. Même base.',
-      hotelNote:'Le tier est éditorial ; les € sont des repères relatifs Mametas, jamais un tarif en temps réel.',
+      hotelNote:'La catégorie est éditoriale ; les € sont des repères relatifs Mametas, jamais un tarif en temps réel.',
       allHotels:'Voir toute la sélection hôtels',
       guide:'Voir le guide de la base',
       escape:'Voir cette version',
@@ -491,11 +512,11 @@
       stay:'Stay in ',
       do:'The essentials',
       further:'Go further',
-      furtherBalanced:'You chose balanced: two regional detours are genuinely worth leaving the base for.',
-      furtherAmbitious:'You chose ambitious: widen the map with three Riviera essentials worth the mileage.',
+      furtherBalanced:'Balanced pace: two regional detours are genuinely worth leaving the base for.',
+      furtherAmbitious:'Ambitious pace: widen the map without diluting the mood you chose.',
       skip:'What we would skip',
       hotel:'Three levels. Same base.',
-      hotelNote:'The tier is editorial; € symbols are Mametas relative guides, never a live rate.',
+      hotelNote:'The categories are editorial; € symbols are Mametas relative guides, never a live rate.',
       allHotels:'See the full hotel selection',
       guide:'See the base guide',
       escape:'Show me this version',
@@ -524,11 +545,20 @@
       if (!(state.days && state.mobility && state.mood && state.pace)) return;
       var model = resultModel(state, overrideBase, lang);
       var out = root.querySelector('[data-chooser-result]');
+      var profileLabels = lang === 'fr'
+        ? {
+            mood:{decide:'Mametas décide',sea:'mer & baignade',food:'restaurants & vie de ville',culture:'art & villages',glamour:'glamour de la Riviera',peace:'calme & beauté'},
+            pace:{slow:'tranquille',balanced:'équilibré',ambitious:'ambitieux'}
+          }
+        : {
+            mood:{decide:'decide for me',sea:'sea & swimming',food:'food & city life',culture:'art & villages',glamour:'Riviera glamour',peace:'peace & beauty'},
+            pace:{slow:'slow',balanced:'balanced',ambitious:'ambitious'}
+          };
       var profileText = [
         state.days === '7' ? '7+' : state.days,
         state.mobility === 'nocar' ? (lang==='fr'?'sans voiture':'no car') : (state.mobility === 'car' ? (lang==='fr'?'voiture':'car') : (lang==='fr'?'mobilité flexible':'flexible mobility')),
-        state.mood,
-        state.pace
+        profileLabels.mood[state.mood] || state.mood,
+        profileLabels.pace[state.pace] || state.pace
       ].join(' · ');
       var priorities = model.priorities.map(function (p, i) {
         return '<li><span>0' + (i+1) + '</span><strong>' + esc(p) + '</strong></li>';
@@ -611,6 +641,20 @@
     var ambitiousSeaCar = resultModel({days:'5',mobility:'car',mood:'sea',pace:'ambitious'}, null, 'en');
     var ambitiousLabels = ambitiousSeaCar.further.map(function(x){ return x.label; });
     if (ambitiousLabels.indexOf('Saint-Paul-de-Vence') < 0) errors.push('ambitious sea/car must add Saint-Paul-de-Vence');
+
+    var cultureAmbitious3Car = resultModel({days:'3',mobility:'car',mood:'culture',pace:'ambitious'}, null, 'en');
+    var cultureAmbitiousLabels = cultureAmbitious3Car.further.map(function(x){ return x.label; });
+    if (cultureAmbitious3Car.baseId !== 'nice') errors.push('3-day car culture ambitious should stay Nice');
+    if (cultureAmbitious3Car.priorities.length !== 2 ||
+        cultureAmbitious3Car.priorities.indexOf('Matisse / Chagall in Nice') < 0 ||
+        cultureAmbitious3Car.priorities.indexOf('Saint-Paul + Fondation Maeght') < 0) {
+      errors.push('3-day car culture ambitious essentials must be Nice art + Saint-Paul/Maeght');
+    }
+    if (cultureAmbitiousLabels.indexOf('Èze') < 0 || cultureAmbitiousLabels.indexOf('Antibes + Picasso') < 0 ||
+        cultureAmbitiousLabels.indexOf('Villefranche + Cap-Ferrat') >= 0 ||
+        cultureAmbitiousLabels.indexOf('Saint-Paul-de-Vence') >= 0) {
+      errors.push('3-day car culture ambitious further must be Èze + Antibes/Picasso, without Villefranche or duplicate Saint-Paul');
+    }
     ['en','fr'].forEach(function(lang){
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
