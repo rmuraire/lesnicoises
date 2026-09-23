@@ -564,3 +564,10 @@ button { color: inherit; font: inherit; }
 .chooser-signature-plan a{color:var(--white);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:820px){.chooser-signature{grid-template-columns:1fr;gap:30px}.chooser-signature-lockup{min-height:0}.chooser-signature-copy h3{max-width:13ch}}
 @media(max-width:560px){.chooser-signature-lockup{padding:28px 24px}.chooser-signature-lockup h2{font-size:clamp(54px,18vw,76px)}.chooser-signature-shortcuts{align-items:flex-start;flex-direction:column}}
+
+/* Mametas Checked */
+.mametas-checked{display:inline-flex;align-items:center;gap:9px;width:max-content;max-width:100%;margin-top:18px;padding:8px 11px;border:1px solid var(--line);background:rgba(255,253,248,.42);color:var(--ink);font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;text-decoration:none}
+.mametas-checked::before{content:"✓";display:inline-grid;place-items:center;width:18px;height:18px;border:1px solid var(--blue-deep);border-radius:50%;color:var(--blue-deep);font-size:11px;letter-spacing:0}
+.mametas-checked small{color:var(--ink-soft);font-size:9px;font-weight:500;letter-spacing:.02em;text-transform:none}
+.mametas-checked:hover,.mametas-checked:focus-visible{background:var(--white);border-color:rgba(20,33,61,.3)}
+@media(max-width:520px){.mametas-checked{align-items:flex-start;flex-wrap:wrap}.mametas-checked small{flex-basis:calc(100% - 29px);margin-left:27px;margin-top:-5px}}
