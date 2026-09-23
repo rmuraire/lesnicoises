@@ -190,6 +190,17 @@
       var tag = card.querySelector('.hotel-choice-tags span');
       var copy = card.querySelector('.hotel-choice-copy > p') || card.querySelector('.hotel-choice-copy p');
       var id = card.getAttribute('data-hotel') || slugFromHref(internal) || normalise(name).replace(/ /g, '-');
+      var media = null;
+      var mediaImg = card.querySelector('.hotel-choice-media img[src]');
+      var mediaSprite = card.querySelector('.hotel-choice-media .batch-thumb');
+      if (mediaImg) {
+        media = { type:'img', src:mediaImg.getAttribute('src') || '', alt:mediaImg.getAttribute('alt') || name };
+      } else if (mediaSprite) {
+        var spriteClass = 'batch-thumb' + (mediaSprite.classList.contains('batch-thumb-13') ? ' batch-thumb-13' : '');
+        var spriteStyle = mediaSprite.getAttribute('style') || '';
+        var spritePos = (spriteStyle.match(/background-position\s*:\s*[^;]+/i) || [''])[0];
+        media = { type:'sprite', className:spriteClass, style:spritePos };
+      }
       var hotel = {
         id:id,
         name:name,
@@ -202,6 +213,7 @@
         detailPath:internal,
         affiliate:directAffiliate ? (directAffiliate.getAttribute('href') || '') : '',
         priceBand:(card.getAttribute('data-price-band') || '').trim(),
+        media:media,
         _order:index
       };
       hotel.signals = signals(hotel);
@@ -238,6 +250,7 @@
         detailPath:fr ? (paths.fr || '') : (paths.en || ''),
         affiliate:affiliateUrl,
         priceBand:item.priceBand || '',
+        media:(item.image && item.image.indexOf('batch-sprite') < 0) ? { type:'img', src:item.image, alt:item.name || '' } : null,
         _order:index
       };
       hotel.signals = structuredSignals(item);
@@ -330,6 +343,19 @@
     return 'affiliate';
   }
 
+  function renderHotelMedia(hotel) {
+    if (!hotel.media) return '';
+    if (hotel.media.type === 'img' && hotel.media.src) {
+      return '<div class="hotel-engine-media"><img src="' + esc(hotel.media.src) + '" alt="' + esc(hotel.media.alt || hotel.name) + '" loading="lazy"></div>';
+    }
+    if (hotel.media.type === 'sprite') {
+      var cls = hotel.media.className === 'batch-thumb batch-thumb-13' ? 'batch-thumb batch-thumb-13' : 'batch-thumb';
+      var style = /^background-position\s*:\s*[-0-9.% ]+$/i.test(hotel.media.style || '') ? hotel.media.style : '';
+      return '<div class="hotel-engine-media"><span class="' + cls + '"' + (style ? ' style="' + esc(style) + '"' : '') + ' aria-hidden="true"></span></div>';
+    }
+    return '';
+  }
+
   function render(shortlist) {
     summary.textContent = labels.count(shortlist.length);
     results.innerHTML = shortlist.map(function(hotel, index){
@@ -340,8 +366,9 @@
       } else if (hotel.detailPath) {
         action = '<a class="button" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>';
       }
-      return '<article class="hotel-engine-result">' +
+      return '<article class="hotel-engine-result' + (hotel.media ? ' has-media' : '') + '">' +
         '<div class="hotel-engine-rank">' + String(index + 1).padStart(2, '0') + '</div>' +
+        renderHotelMedia(hotel) +
         '<div class="hotel-engine-copy">' +
           '<p class="eyebrow">' + esc(metaText(hotel)) + '</p>' +
           '<h3>' + esc(hotel.name) + '</h3>' +
