@@ -195,8 +195,10 @@ def finder_budget_block(lang: str) -> str:
 
 def patch_finder(path: Path, lang: str) -> None:
     text = path.read_text(encoding="utf-8")
-    text = text.replace("Quatre décisions. Puis seulement les hôtels.", "Cinq décisions. Puis seulement les hôtels.")
-    text = text.replace("Four decisions. Then the hotels.", "Five decisions. Then the hotels.")
+    text = text.replace("Quatre décisions. Puis seulement les hôtels.", "Cinq choix. Puis seulement les hôtels qui collent.")
+    text = text.replace("Quatre choix. Puis seulement les hôtels qui collent.", "Cinq choix. Puis seulement les hôtels qui collent.")
+    text = text.replace("Four decisions. Then the hotels.", "Five choices. Then only the hotels that fit.")
+    text = text.replace("Four choices. Then only the hotels that fit.", "Five choices. Then only the hotels that fit.")
     if 'data-engine-group="budget"' not in text:
         marker = '<div class="engine-submit-row">'
         if marker not in text:
