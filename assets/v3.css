@@ -641,3 +641,17 @@ button { color: inherit; font: inherit; }
   .explore-practical .practical-link{min-height:190px}
   .explore-practical .practical-link h3{margin:24px 0 8px}
 }
+
+
+/* Shared stock imagery utility */
+.article-visual{margin:28px 0 42px}
+.article-visual img{display:block;width:100%;max-height:520px;object-fit:cover}
+.article-visual--panorama img{aspect-ratio:16/9}
+.article-visual-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:28px 0 42px}
+.article-visual-item{min-width:0}
+.article-visual-item img{display:block;width:100%;height:320px;object-fit:cover}
+@media(max-width:700px){
+  .article-visual{margin:22px 0 32px}
+  .article-visual-pair{grid-template-columns:1fr;margin:22px 0 32px}
+  .article-visual-item img{height:auto;aspect-ratio:4/3}
+}
