@@ -204,8 +204,8 @@ def patch_finder(path: Path, lang: str) -> None:
         if marker not in text:
             raise RuntimeError(f"{path.relative_to(ROOT)}: finder submit marker missing")
         text = text.replace(marker, finder_budget_block(lang) + marker, 1)
-    text = re.sub(r'/assets/hotel-engine\.css\?v=\d+', '/assets/hotel-engine.css?v=6', text)
-    text = re.sub(r'/assets/hotel-engine\.js\?v=\d+', '/assets/hotel-engine.js?v=4', text)
+    text = re.sub(r'/assets/hotel-engine\.css\?v=\d+', '/assets/hotel-engine.css?v=7', text)
+    text = re.sub(r'/assets/hotel-engine\.js\?v=\d+', '/assets/hotel-engine.js?v=5', text)
     path.write_text(text, encoding="utf-8")
     print(f"Budget criterion added to {path.relative_to(ROOT)}")
 
