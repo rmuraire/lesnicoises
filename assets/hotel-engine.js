@@ -37,11 +37,11 @@
   ];
 
   var labels = fr ? {
-    loading:'On regarde la sélection Mametas…',
+    loading:'On passe la sélection Mametas au crible…',
     choose:'Choisissez au moins un critère avant de lancer la recherche.',
-    changed:'Vos choix ont changé. Relancez la sélection quand vous avez fini.',
-    none:'Pas assez de correspondances nettes. Élargissez un critère.',
-    count:function(n){ return n + (n > 1 ? ' adresses ressortent' : ' adresse ressort') + ' de vos choix.'; },
+    changed:'Vous avez changé un critère. Relancez quand c’est bon.',
+    none:'Rien de suffisamment net. Élargissez un critère.',
+    count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
     why:'Pourquoi elle ressort',
     catch:'Le compromis',
     rates:'Voir les tarifs',
