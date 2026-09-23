@@ -14,7 +14,7 @@ def patch(rel: str, section_id: str, replacement: str, old_hero: str, new_hero: 
     path = ROOT / rel
     text = path.read_text(encoding="utf-8")
     pattern = re.compile(
-        rf'<section class="v3-section" id="{re.escape(section_id)}">.*?</section>\s*(?=<section class="v3-section" id="bases">)',
+        rf'<section class="v3-section(?: chooser-signature-section)?" id="{re.escape(section_id)}">.*?</section>\s*(?=<section class="v3-section" id="bases">)',
         re.S,
     )
     text, count = pattern.subn(replacement + "\n", text, count=1)
