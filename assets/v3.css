@@ -328,7 +328,7 @@ button { color: inherit; font: inherit; }
 .verdict-box p { margin: 14px 0 0; font-family: var(--serif); font-size: 24px; line-height: 1.5; }
 .source-box { margin-top: 48px; padding-top: 26px; border-top: 1px solid var(--line); font-size: 12px; }
 .itinerary-stay-prompt { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 26px 0 22px; }
-.article-body .itinerary-stay-prompt a { min-height: 142px; padding: 19px; display: flex; flex-direction: column; border: 1px solid var(--line); background: rgba(255,253,248,.38); color: var(--ink); text-decoration: none; transition: background 160ms ease, transform 160ms ease; }
+.article-body .itinerary-stay-prompt a { min-height: 142px; padding: 19px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); background: rgba(255,253,248,.38); color: var(--ink); text-decoration: none; transition: background 160ms ease, transform 160ms ease; }\n.itinerary-stay-prompt img { display: block; width: calc(100% + 38px); height: 118px; margin: -19px -19px 16px; object-fit: cover; border-bottom: 1px solid var(--line); }
 .article-body .itinerary-stay-prompt a:hover, .article-body .itinerary-stay-prompt a:focus-visible { background: var(--white); transform: translateY(-2px); }
 .itinerary-stay-prompt span { color: var(--coral); font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
 .itinerary-stay-prompt strong { margin-top: auto; font-family: var(--serif); font-size: 20px; font-weight: 500; line-height: 1.15; }
