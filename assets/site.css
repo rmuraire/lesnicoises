@@ -513,3 +513,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .beach-zone-title{margin-top:66px}
 @media(max-width:980px){.beach-decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:580px){.beach-decision-grid{grid-template-columns:1fr}.beach-decision{min-height:0}}
+
+/* Inline dialect glossary */
+.dialect-inline{border-bottom:1px dotted currentColor;text-decoration:none;text-underline-offset:3px}
+.dialect-inline:hover,.dialect-inline:focus-visible{color:var(--med-blue);border-bottom-style:solid}
