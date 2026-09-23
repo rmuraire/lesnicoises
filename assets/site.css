@@ -499,3 +499,17 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .mametas-checked small{color:var(--ink);font-size:9px;font-weight:500;letter-spacing:.02em;text-transform:none}
 .mametas-checked:hover,.mametas-checked:focus-visible{background:var(--cream-deep);border-color:rgba(22,34,61,.28)}
 @media(max-width:520px){.mametas-checked{align-items:flex-start;flex-wrap:wrap}.mametas-checked small{flex-basis:calc(100% - 29px);margin-left:27px;margin-top:-5px}}
+
+
+/* Beach decision layer */
+.beach-decision-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin:30px 0 0;background:var(--line);border:1px solid var(--line)}
+.beach-decision{display:flex;min-height:225px;padding:24px;flex-direction:column;background:var(--cream);transition:background .18s ease,transform .18s ease}
+.beach-decision:hover,.beach-decision:focus-visible{background:var(--cream-deep)}
+.beach-decision .kicker{color:var(--med-blue);font-size:9.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+.beach-decision h3{margin:12px 0 10px;font-family:var(--serif);font-size:27px;font-weight:500;line-height:1.06}
+.beach-decision p{margin:0;color:var(--ink);font-size:13px;line-height:1.62}
+.beach-decision .more{margin-top:auto;padding-top:20px;color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.beach-principle{max-width:820px;margin:28px 0 0;color:var(--ink);font-family:var(--serif);font-size:21px;line-height:1.5}
+.beach-zone-title{margin-top:66px}
+@media(max-width:980px){.beach-decision-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.beach-decision-grid{grid-template-columns:1fr}.beach-decision{min-height:0}}
