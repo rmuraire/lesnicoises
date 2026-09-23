@@ -9,18 +9,18 @@ EXACT_REPLACEMENTS = {
         ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
         ('href="#explore">Explore</a>', 'href="/en/explore/">Explore</a>'),
         ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
-        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.7'),
-        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
-        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.9'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
+        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
     ),
     "fr/index.html": (
         ('href="#planifier">Planifier</a>', 'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>'),
         ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
         ('href="#explorer">Explorer</a>', 'href="/explore/">Explorer</a>'),
         ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
-        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.7'),
-        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
-        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+        ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.9'),
+        ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
+        ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
     ),
     "riviera-guide/index.html": (
         ('family=Inter:wght@400;500;600&amp;display=swap', 'family=Inter:wght@400;500;600;700&amp;display=swap'),
@@ -79,12 +79,12 @@ GLOBAL_HTML_REPLACEMENTS = (
     ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
     ('/assets/v3.css?v=0.4', '/assets/v3.css?v=0.6'),
     ('/assets/v3.css?v=0.5', '/assets/v3.css?v=0.6'),
-    ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
-    ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.7"></script>'),
+    ('<script src="/assets/v3.js"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
+    ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
     ('/assets/site.css?v=23.0', '/assets/site.css?v=23.4'),
     ('/assets/site.css?v=23.1', '/assets/site.css?v=23.4'),
     ('/assets/site.css?v=23.2', '/assets/site.css?v=23.4'),
-    ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.1"></script>'),
+    ('<script src="/assets/site.js"></script>', '<script src="/assets/site.js?v=23.2"></script>'),
 )
 
 
@@ -152,6 +152,18 @@ def main() -> int:
     if "assets/site.css" not in changed:
         changed.append("assets/site.css")
 
+    # Cache-bust the shared site script everywhere so dialect links and shared fixes are visible immediately.
+    for html_path in ROOT.rglob("*.html"):
+        text = html_path.read_text(encoding="utf-8")
+        original = text
+        text = text.replace('/assets/site.js"></script>', '/assets/site.js?v=23.2"></script>')
+        text = text.replace('/assets/site.js?v=23.1"></script>', '/assets/site.js?v=23.2"></script>')
+        if text != original:
+            html_path.write_text(text, encoding="utf-8")
+            rel = str(html_path.relative_to(ROOT))
+            if rel not in changed:
+                changed.append(rel)
+
     # Cache-bust the legacy stylesheet everywhere so the typography pass is visible immediately.
     for html_path in ROOT.rglob("*.html"):
         text = html_path.read_text(encoding="utf-8")
@@ -196,8 +208,8 @@ def main() -> int:
             'href="/en/hotels/">Stay</a>',
             'href="/en/explore/">Explore</a>',
             'href="/en/good-finds/">Now</a>',
-            '/assets/v3.css?v=0.7',
-            '/assets/v3.js?v=0.7',
+            '/assets/v3.css?v=0.9',
+            '/assets/v3.js?v=0.9',
         ),
         "fr/index.html": (
             'href="/fr/planifier/cinq-jours-nice-sans-voiture/">Planifier</a>',
@@ -205,8 +217,8 @@ def main() -> int:
             'href="/hotels/">Dormir</a>',
             'href="/explore/">Explorer</a>',
             'href="/bons-plans/">Maintenant</a>',
-            '/assets/v3.css?v=0.7',
-            '/assets/v3.js?v=0.7',
+            '/assets/v3.css?v=0.9',
+            '/assets/v3.js?v=0.9',
         ),
         "assets/site.css": (
             "@media(max-width:1080px){.primary-nav{display:none}",
