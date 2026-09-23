@@ -23,6 +23,71 @@
   var MOBILITY_HUB = { nocar:1.25, either:1, car:.65 };
   var DURATION_HUB = { '3':1.25, '5':1, '7':.8 };
 
+
+  var REGIONAL = {
+    en:{
+      items:{
+        nice:{label:'Nice properly',body:'Old Nice, the Promenade and one proper swim. It is a destination, not just the airport.',href:'/en/riviera-guide/nice/'},
+        capferrat:{label:'Villefranche + Cap-Ferrat',body:'The water-and-scenery day: bay, coast path or coves. Worth the eastbound move.',href:'/en/riviera-guide/villefranche-cap-ferrat/'},
+        antibes:{label:'Antibes',body:'Old town, Picasso and actual sand. One of the coast’s easiest full-day contrasts.',href:'/en/riviera-guide/antibes/'},
+        saintpaul:{label:'Saint-Paul-de-Vence',body:'Use the car properly: village + Fondation Maeght, preferably before or after peak day-tripper hours.',href:'/en/riviera-guide/saint-paul-de-vence/'},
+        cannes:{label:'Cannes + Lérins',body:'Sand, Croisette and an island escape if you want the western Riviera in one day.',href:'/en/riviera-guide/cannes/'},
+        monaco:{label:'Monaco',body:'Use it for one concentrated contrast day: architecture, sea views and unapologetic polish.',href:'/en/riviera-guide/monaco/'},
+        menton:{label:'Menton',body:'Colour, gardens and an eastern edge that feels noticeably different from Nice or Cannes.',href:'/en/riviera-guide/menton/'},
+        eze:{label:'Èze',body:'Spectacular, yes. Go early or late, and remember the village and the beach are not the same place.',href:'/en/riviera-guide/eze/'}
+      },
+      defaultOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','monaco','menton','cannes','eze'],
+        sea:['capferrat','nice','antibes','cannes','menton','monaco','eze','saintpaul'],
+        food:['nice','antibes','cannes','monaco','menton','saintpaul','capferrat','eze'],
+        culture:['saintpaul','nice','antibes','eze','monaco','menton','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','capferrat','antibes','saintpaul','menton','eze'],
+        peace:['capferrat','menton','saintpaul','eze','antibes','nice','cannes','monaco']
+      },
+      carOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','cannes','menton','monaco','eze'],
+        sea:['capferrat','nice','saintpaul','cannes','antibes','menton','eze','monaco'],
+        food:['nice','antibes','saintpaul','cannes','menton','monaco','capferrat','eze'],
+        culture:['saintpaul','nice','eze','antibes','menton','monaco','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','saintpaul','capferrat','antibes','menton','eze'],
+        peace:['capferrat','saintpaul','menton','eze','antibes','nice','cannes','monaco']
+      }
+    },
+    fr:{
+      items:{
+        nice:{label:'Nice, vraiment',body:'Vieux-Nice, Promenade et une vraie baignade. C’est une destination, pas seulement l’aéroport.',href:'/riviera-guide/nice/'},
+        capferrat:{label:'Villefranche + Cap-Ferrat',body:'La journée eau et paysages : baie, sentier côtier ou criques. Le déplacement vers l’est vaut le coup.',href:'/riviera-guide/villefranche-cap-ferrat/'},
+        antibes:{label:'Antibes',body:'Vieille ville, Picasso et vraie plage de sable. Un des contrastes les plus faciles de la côte.',href:'/riviera-guide/antibes/'},
+        saintpaul:{label:'Saint-Paul-de-Vence',body:'Servez-vous vraiment de la voiture : village + Fondation Maeght, de préférence avant ou après le pic des excursionnistes.',href:'/riviera-guide/saint-paul-de-vence/'},
+        cannes:{label:'Cannes + Lérins',body:'Sable, Croisette et échappée sur les îles si vous voulez la Riviera ouest en une journée.',href:'/riviera-guide/cannes/'},
+        monaco:{label:'Monaco',body:'Gardez-le pour une journée de contraste concentrée : architecture, vues mer et polish assumé.',href:'/riviera-guide/monaco/'},
+        menton:{label:'Menton',body:'Couleur, jardins et une extrémité est qui ne ressemble franchement ni à Nice ni à Cannes.',href:'/riviera-guide/menton/'},
+        eze:{label:'Èze',body:'Spectaculaire, oui. Allez-y tôt ou tard, et souvenez-vous que le village et la plage ne sont pas au même endroit.',href:'/riviera-guide/eze/'}
+      },
+      defaultOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','monaco','menton','cannes','eze'],
+        sea:['capferrat','nice','antibes','cannes','menton','monaco','eze','saintpaul'],
+        food:['nice','antibes','cannes','monaco','menton','saintpaul','capferrat','eze'],
+        culture:['saintpaul','nice','antibes','eze','monaco','menton','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','capferrat','antibes','saintpaul','menton','eze'],
+        peace:['capferrat','menton','saintpaul','eze','antibes','nice','cannes','monaco']
+      },
+      carOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','cannes','menton','monaco','eze'],
+        sea:['capferrat','nice','saintpaul','cannes','antibes','menton','eze','monaco'],
+        food:['nice','antibes','saintpaul','cannes','menton','monaco','capferrat','eze'],
+        culture:['saintpaul','nice','eze','antibes','menton','monaco','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','saintpaul','capferrat','antibes','menton','eze'],
+        peace:['capferrat','saintpaul','menton','eze','antibes','nice','cannes','monaco']
+      }
+    }
+  };
+
+  var REGIONAL_EXCLUDES = {
+    nice:['nice'], cannes:['cannes'], antibes:['antibes'], villefranche:['capferrat'],
+    menton:['menton'], monaco:['monaco'], sainttropez:[], saintpaul:['saintpaul']
+  };
+
   function scoreBase(id, profile) {
     var base = BASES[id];
     var hubWeight = PACE_HUB[profile.pace] * MOBILITY_HUB[profile.mobility] * DURATION_HUB[profile.days];
@@ -86,8 +151,8 @@
       },
       pace:{
         slow:'Slow means the base should do more of the work. Plan fewer departures and leave one half-day completely unclaimed.',
-        balanced:'Balanced means two or three proper outings, with enough time left to enjoy the place you paid to sleep in.',
-        ambitious:'Ambitious makes hub quality matter more. We are giving you efficient departures, not permission to turn the Riviera into a delivery route.'
+        balanced:'Balanced means the base still matters, but two proper regional outings belong in the trip. You did not come this far to inspect one postcode.',
+        ambitious:'Ambitious means we widen the map. Keep one direction per day and use the car or train to cover more of the Riviera intelligently.'
       },
       priorities:{
         nice:{
@@ -208,8 +273,8 @@
       },
       pace:{
         slow:'Slow signifie que la base doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement tranquille.',
-        balanced:'Balanced signifie deux ou trois vraies sorties, avec assez de temps pour profiter de l’endroit où vous avez payé pour dormir.',
-        ambitious:'Ambitious rend la qualité du hub plus importante. On vous donne des départs efficaces, pas l’autorisation de transformer la Riviera en tournée de livraison.'
+        balanced:'Balanced : la base compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
+        ambitious:'Ambitious : on élargit franchement la carte. Une direction par jour, et servez-vous de la voiture ou du train pour couvrir davantage de Riviera intelligemment.'
       },
       priorities:{
         nice:{
@@ -320,6 +385,37 @@
     return list;
   }
 
+
+  function regionalCount(profile, baseId) {
+    if (profile.pace === 'slow') return 0;
+    var count = profile.pace === 'ambitious' ? 3 : 2;
+    if (profile.days === '3') count = 1;
+    if (BASES[baseId] && BASES[baseId].type === 'intentional') count = Math.min(count, profile.pace === 'ambitious' ? 2 : 1);
+    return count;
+  }
+
+  function regionalFor(profile, baseId, lang) {
+    var data = REGIONAL[lang];
+    var order = (profile.mobility === 'car' ? data.carOrder : data.defaultOrder)[profile.mood] || data.defaultOrder.decide;
+    var exclude = REGIONAL_EXCLUDES[baseId] || [];
+    var count = regionalCount(profile, baseId);
+    var out = [];
+    order.forEach(function (id) {
+      if (out.length >= count || exclude.indexOf(id) >= 0 || !data.items[id]) return;
+      out.push(data.items[id]);
+    });
+    return out;
+  }
+
+  function skipFor(content, baseId, profile, lang) {
+    if (profile.pace === 'ambitious') {
+      return lang === 'fr'
+        ? 'Ne faites pas les deux extrémités de la côte le même jour. Ambitious veut dire plus de Riviera, pas plus de pare-brise.'
+        : 'Do not do both ends of the coast in the same day. Ambitious means more Riviera, not more windscreen.';
+    }
+    return content.skips[baseId];
+  }
+
   function escapeFor(profile, winner, lang) {
     var fr = lang === 'fr';
     if (profile.mood === 'glamour' && winner !== 'monaco') {
@@ -351,7 +447,8 @@
       reason:content.moodLine[profile.mood],
       pace:content.pace[profile.pace],
       priorities:prioritiesFor(content, baseId, profile.mood, profile.pace),
-      skip:content.skips[baseId],
+      further:regionalFor(profile, baseId, lang),
+      skip:skipFor(content, baseId, profile, lang),
       hotels:content.hotels[baseId] || [],
       escape:escapeFor(profile, baseId, lang)
     };
@@ -375,7 +472,10 @@
       incomplete:'Répondez aux quatre questions. Ensuite, Mametas tranche.',
       verdict:'LE VERDICT MAMETAS',
       stay:'Dormez à ',
-      do:'Ce qu’on ferait',
+      do:'Indispensable',
+      further:'Pour aller plus loin',
+      furtherBalanced:'Vous avez choisi balanced : deux détours régionaux valent réellement de quitter votre base.',
+      furtherAmbitious:'Vous avez choisi ambitious : on élargit la carte avec trois essentiels qui justifient le kilométrage.',
       skip:'Ce qu’on laisserait tomber',
       hotel:'Trois niveaux. Même base.',
       hotelNote:'Le tier est éditorial ; les € sont des repères relatifs Mametas, jamais un tarif en temps réel.',
@@ -389,7 +489,10 @@
       incomplete:'Answer all four questions. Then Mametas makes the call.',
       verdict:'THE MAMETAS VERDICT',
       stay:'Stay in ',
-      do:'What we would do',
+      do:'The essentials',
+      further:'Go further',
+      furtherBalanced:'You chose balanced: two regional detours are genuinely worth leaving the base for.',
+      furtherAmbitious:'You chose ambitious: widen the map with three Riviera essentials worth the mileage.',
       skip:'What we would skip',
       hotel:'Three levels. Same base.',
       hotelNote:'The tier is editorial; € symbols are Mametas relative guides, never a live rate.',
@@ -430,6 +533,13 @@
       var priorities = model.priorities.map(function (p, i) {
         return '<li><span>0' + (i+1) + '</span><strong>' + esc(p) + '</strong></li>';
       }).join('');
+      var further = '';
+      if (model.further && model.further.length) {
+        var furtherCards = model.further.map(function (item, i) {
+          return '<a class="chooser-further-card" href="' + esc(item.href) + '"><span>0' + (i+1) + '</span><strong>' + esc(item.label) + '</strong><small>' + esc(item.body) + '</small></a>';
+        }).join('');
+        further = '<section class="chooser-further"><div class="chooser-further-head"><div><p class="eyebrow">' + (lang==='fr'?'LA RIVIERA AU-DELÀ DE LA BASE':'BEYOND THE BASE') + '</p><h3>' + labels.further + '</h3></div><p>' + (state.pace === 'ambitious' ? labels.furtherAmbitious : labels.furtherBalanced) + '</p></div><div class="chooser-further-grid">' + furtherCards + '</div></section>';
+      }
       var hotelCards = model.hotels.map(function (h) {
         var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
         return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
@@ -443,6 +553,7 @@
       out.innerHTML =
         '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
         '<div class="chooser-result-grid"><section class="chooser-do"><h3>' + labels.do + '</h3><ol>' + priorities + '</ol></section><section class="chooser-skip"><h3>' + labels.skip + '</h3><p>' + esc(model.skip) + '</p></section></div>' +
+        further +
         escape +
         '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'VOTRE HÔTEL':'YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + esc(model.base.hotels) + '">' + labels.allHotels + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
         '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
@@ -493,6 +604,13 @@
       [{days:'3',mobility:'nocar',mood:'decide',pace:'balanced'},'nice']
     ];
     fixtures.forEach(function(f){ var got=chooseBase(f[0]).base; if (got!==f[1]) errors.push('fixture '+JSON.stringify(f[0])+' expected '+f[1]+' got '+got); });
+    var balancedSeaCar = resultModel({days:'5',mobility:'car',mood:'sea',pace:'balanced'}, null, 'en');
+    var balancedLabels = balancedSeaCar.further.map(function(x){ return x.label; });
+    if (balancedSeaCar.baseId !== 'antibes') errors.push('5-day car sea balanced should stay Antibes');
+    if (balancedLabels.indexOf('Nice properly') < 0 || balancedLabels.indexOf('Villefranche + Cap-Ferrat') < 0) errors.push('balanced sea/car must include Nice and Cap-Ferrat');
+    var ambitiousSeaCar = resultModel({days:'5',mobility:'car',mood:'sea',pace:'ambitious'}, null, 'en');
+    var ambitiousLabels = ambitiousSeaCar.further.map(function(x){ return x.label; });
+    if (ambitiousLabels.indexOf('Saint-Paul-de-Vence') < 0) errors.push('ambitious sea/car must add Saint-Paul-de-Vence');
     ['en','fr'].forEach(function(lang){
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
