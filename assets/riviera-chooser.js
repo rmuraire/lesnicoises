@@ -146,44 +146,44 @@
       },
       hotels:{
         nice:[
-          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',note:'Station-friendly and built for easy departures.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Apollinaire Nice',note:'A strong all-rounder when centre and day trips both matter.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',note:'Choose it when the hotel is allowed to become part of the trip.'}
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e',note:'Station-friendly and built for easy departures.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://expedia.com/affiliates/nice-hotels-villa-victoria.lh2gcVM',note:'Central calm when you want Nice nearby without putting the city in the bedroom.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'Choose it when the hotel is allowed to become part of the trip.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',note:'A smaller, calmer answer when you do not need palace scale.'},
-          {tier:'Comfort',price:'€€€',name:'Le Cavendish',note:'Boutique Cannes with enough polish and less ceremony.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',note:'The Croisette in full Riviera mode.'}
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-provence.PzpsLqs',note:'A smaller, calmer answer when you do not need palace scale.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://expedia.com/affiliates/cannes-hotels-cavendish.aINZKEt',note:'Boutique Cannes with enough polish and less ceremony.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://expedia.com/affiliates/cannes-hotels-hotel-martinez.HiABD4g',note:'The Croisette in full Riviera mode.'}
         ],
         antibes:[
-          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',note:'Central and rational when the town matters more than the lobby.'},
-          {tier:'Comfort',price:'€€€',name:'Royal Antibes',note:'Sea-facing without giving up walkable Antibes.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-letoile.sselo5i',note:'Central and rational when the town matters more than the lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://expedia.com/affiliates/cannes-hotels-hotel-la-villa-port-d-antibes-spa.eh0bX1K',note:'A polished, walkable Antibes answer with the port and old town close at hand.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://expedia.com/affiliates/antibes-hotels-hotel-belles-rives.LV3AtZi',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Le Provençal',note:'Village, station and bay before hotel theatre.'},
-          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',note:'The harbour fantasy, with the geography doing most of the seducing.'},
-          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, the train and a quieter base before hotel theatre.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://expedia.com/affiliates/nice-hotels-welcome-hotel.JcZAjpo',note:'The harbour fantasy, with the geography doing most of the seducing.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
         ],
         menton:[
-          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',note:'A rational eastern base when the room is not the main event.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',note:'Sea + pool for a slower stay without palace economics.'},
-          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'A rational eastern base when the room is not the main event.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://expedia.com/affiliates/monaco-hotels-hotel-napoleon.IbOR18k',note:'Sea + pool for a slower stay without palace economics.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://expedia.com/affiliates/monaco-hotels-villa-genesis.4oRKrZj',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€',name:'Columbus Hotel Monte-Carlo',note:'The less ceremonial Monaco answer.'},
-          {tier:'Comfort',price:'€€€€',name:'Fairmont Monte Carlo',note:'Big-hotel Monaco with the spectacle close at hand.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',note:'Palace logic, deliberately chosen rather than accidentally inherited.'}
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://expedia.com/affiliates/monaco-hotels-monte-carlo-bay-hotel-resort.bfOGHJs',note:'The less ceremonial Monaco answer: resort logic, space and fewer palace rituals.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-hermitage-monte-carlo.3aoB6Yg',note:'Classic Monte-Carlo polish without making every minute a performance.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-de-paris-monte-carlo.FVHdPEk',note:'The full palace answer. Choose it because the hotel itself is part of the Monaco decision.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Palmiers',note:'A more measured way to stay in the Gulf.'},
-          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',note:'A softer peninsula stay when beach time matters.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://expedia.com/affiliates/gassin-hotels-kube-hotel-saint-tropez.8plL7QK',note:'A more measured peninsula answer when you want access without sleeping in the village theatre.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://expedia.com/affiliates/ramatuelle-hotels-la-ferme-daugustin.ffyJPA4',note:'A softer peninsula stay when beach time matters.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://expedia.com/affiliates/saint-tropez-hotels-hotel-la-ponche.tnuw1I6',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
         ],
         saintpaul:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',note:'A quieter village-area stay without making the hotel the whole event.'},
-          {tier:'Comfort',price:'€€€',name:'Toile Blanche',note:'Art-led, grown-up and suitably removed from the coastal machine.'},
-          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',note:'The retreat version, where staying in is a legitimate part of the plan.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://expedia.com/affiliates/nice-hotels-hotel-les-messugues.k8B02QK',note:'A quieter village-area stay without making the hotel the whole event.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://expedia.com/affiliates/nice-hotels-toile-blanche.4pRKZOK',note:'Art-led, grown-up and suitably removed from the coastal machine.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://expedia.com/affiliates/nice-hotels-le-domaine-du-mas-de-pierre.AZB0L82',note:'The retreat version, where staying in is a legitimate part of the plan.'}
         ]
       }
     },
@@ -268,44 +268,44 @@
       },
       hotels:{
         nice:[
-          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',note:'Près de la gare et pensé pour des départs faciles.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Apollinaire Nice',note:'Très bon équilibre quand centre et excursions comptent tous les deux.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',note:'À choisir quand l’hôtel a le droit de devenir une partie du voyage.'}
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e',note:'Près de la gare et pensé pour des départs faciles.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://expedia.com/affiliates/nice-hotels-villa-victoria.lh2gcVM',note:'Du calme au centre quand vous voulez Nice à proximité sans l’avoir dans la chambre.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'À choisir quand l’hôtel a le droit de devenir une partie du voyage.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',note:'Une réponse plus petite et plus calme sans échelle palace.'},
-          {tier:'Comfort',price:'€€€',name:'Le Cavendish',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',note:'La Croisette en mode Riviera intégral.'}
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-provence.PzpsLqs',note:'Une réponse plus petite et plus calme sans échelle palace.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://expedia.com/affiliates/cannes-hotels-cavendish.aINZKEt',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://expedia.com/affiliates/cannes-hotels-hotel-martinez.HiABD4g',note:'La Croisette en mode Riviera intégral.'}
         ],
         antibes:[
-          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',note:'Central et rationnel quand la ville compte plus que le lobby.'},
-          {tier:'Comfort',price:'€€€',name:'Royal Antibes',note:'Face à la mer sans renoncer à Antibes à pied.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-letoile.sselo5i',note:'Central et rationnel quand la ville compte plus que le lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://expedia.com/affiliates/cannes-hotels-hotel-la-villa-port-d-antibes-spa.eh0bX1K',note:'Une réponse soignée et piétonne, avec le port et la vieille ville à portée de pas.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://expedia.com/affiliates/antibes-hotels-hotel-belles-rives.LV3AtZi',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Le Provençal',note:'Village, gare et baie avant le théâtre hôtelier.'},
-          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
-          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, le train et une base plus calme avant le théâtre hôtelier.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://expedia.com/affiliates/nice-hotels-welcome-hotel.JcZAjpo',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
         ],
         menton:[
-          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',note:'Une base rationnelle à l’est quand la chambre n’est pas l’événement principal.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
-          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'Une base rationnelle à l’est quand la chambre n’est pas l’événement principal.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://expedia.com/affiliates/monaco-hotels-hotel-napoleon.IbOR18k',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://expedia.com/affiliates/monaco-hotels-villa-genesis.4oRKrZj',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€',name:'Columbus Hotel Monte-Carlo',note:'La réponse Monaco la moins cérémonielle.'},
-          {tier:'Comfort',price:'€€€€',name:'Fairmont Monte Carlo',note:'Grand hôtel monégasque, spectacle à portée de main.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',note:'Logique palace, choisie volontairement et non héritée par accident.'}
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://expedia.com/affiliates/monaco-hotels-monte-carlo-bay-hotel-resort.bfOGHJs',note:'La réponse Monaco la moins cérémonielle : logique resort, espace et moins de rituel palace.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-hermitage-monte-carlo.3aoB6Yg',note:'Le poli Monte-Carlo classique sans transformer chaque minute en représentation.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-de-paris-monte-carlo.FVHdPEk',note:'La réponse palace intégrale. À choisir parce que l’hôtel fait partie de la décision Monaco.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Palmiers',note:'Une façon plus mesurée de dormir dans le Golfe.'},
-          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',note:'Une version plus douce de la presqu’île quand la plage compte.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://expedia.com/affiliates/gassin-hotels-kube-hotel-saint-tropez.8plL7QK',note:'Une réponse plus mesurée sur la presqu’île quand vous voulez l’accès sans dormir dans le théâtre du village.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://expedia.com/affiliates/ramatuelle-hotels-la-ferme-daugustin.ffyJPA4',note:'Une version plus douce de la presqu’île quand la plage compte.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://expedia.com/affiliates/saint-tropez-hotels-hotel-la-ponche.tnuw1I6',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
         ],
         saintpaul:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
-          {tier:'Comfort',price:'€€€',name:'Toile Blanche',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
-          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://expedia.com/affiliates/nice-hotels-hotel-les-messugues.k8B02QK',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://expedia.com/affiliates/nice-hotels-toile-blanche.4pRKZOK',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://expedia.com/affiliates/nice-hotels-le-domaine-du-mas-de-pierre.AZB0L82',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
         ]
       }
     }
@@ -413,10 +413,7 @@
       var submit = root.querySelector('[data-chooser-submit]');
       if (submit) submit.disabled = !ready;
       root.querySelectorAll('[data-step]').forEach(function (step) {
-        var n = Number(step.getAttribute('data-step'));
-        var visible = n === 1 || (n === 2 && state.days) || (n === 3 && state.days && state.mobility) ||
-          (n === 4 && state.days && state.mobility && state.mood);
-        step.hidden = !visible;
+        step.hidden = false;
       });
     }
 
@@ -434,7 +431,8 @@
         return '<li><span>0' + (i+1) + '</span><strong>' + esc(p) + '</strong></li>';
       }).join('');
       var hotelCards = model.hotels.map(function (h) {
-        return '<article class="chooser-hotel-card"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p></article>';
+        var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
+        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
       }).join('');
       var escape = '';
       if (!model.override && model.escape) {
@@ -495,6 +493,13 @@
       [{days:'3',mobility:'nocar',mood:'decide',pace:'balanced'},'nice']
     ];
     fixtures.forEach(function(f){ var got=chooseBase(f[0]).base; if (got!==f[1]) errors.push('fixture '+JSON.stringify(f[0])+' expected '+f[1]+' got '+got); });
+    ['en','fr'].forEach(function(lang){
+      Object.keys(CONTENT[lang].hotels).forEach(function(base){
+        CONTENT[lang].hotels[base].forEach(function(h){
+          if (!h.url || h.url.indexOf('https://') !== 0) errors.push('missing affiliate '+lang+' '+base+' '+h.name);
+        });
+      });
+    });
     if (errors.length) { throw new Error('Riviera Chooser self-test failed:\n'+errors.join('\n')); }
     if (typeof console !== 'undefined') console.log('Riviera Chooser self-test passed: '+count+' profiles + '+fixtures.length+' doctrine fixtures.');
     return true;
