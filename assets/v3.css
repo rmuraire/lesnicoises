@@ -608,3 +608,12 @@ button { color: inherit; font: inherit; }
   .base-card{min-height:390px}
   .now-card{min-height:250px}
 }
+
+
+/* Destination practical layer */
+.destination-practical{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:24px 0 0;border:1px solid var(--line);background:var(--line)}
+.destination-practical>div{padding:16px;background:var(--paper)}
+.destination-practical b{display:block;margin-bottom:6px;color:var(--navy);font-size:10px;letter-spacing:.13em;text-transform:uppercase}
+.destination-practical span,.destination-practical a{font-size:12.5px;line-height:1.55;color:var(--ink-soft)}
+.destination-practical a{font-weight:700;color:var(--blue-deep);border-bottom:1px solid rgba(211,99,67,.55)}
+@media(max-width:700px){.destination-practical{grid-template-columns:1fr}}
