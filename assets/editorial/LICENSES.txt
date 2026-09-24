@@ -48,3 +48,9 @@ Explore category cards — owner-selected source images, 20 Sep 2026
 Gay Nice hotel detail pages — 20 Sep 2026
 - Hôtel Le Grimaldi by HappyCulture: user-supplied hotel/Booking imagery; stored under assets/hotels/hotel-le-grimaldi-by-happyculture/.
 - Hotel Beau Rivage and Boscolo Nice Hôtel & Spa: temporary HD crop from Mametas hotel sprite pending replacement by supplied detail imagery.
+
+
+Visual audit / Batch 4 — owner-supplied files, 24 Sep 2026
+- Cannes beach — Sophie Kat / Pexels — original: Plage Cannes_pexels-sophie-kat-784393184-32156382.jpg — web file: cannes-beach-sophie-kat.jpg — Pexels source file supplied by owner.
+- Monaco / Casino de Monte-Carlo — Chloé Laurens / Pexels — original: Casino de Monaco_pexels-chloe-laurens-2156921958-36918930 (1).jpg — web file: monaco-casino-chloe-laurens.jpg — Pexels source file supplied by owner.
+- Old Antibes — Catherine Kozdoba / Pexels — original: Antibes_pexels-catherine-kozdoba-2160948963-37181647.jpg — web file: antibes-old-town-catherine-kozdoba.jpg — Pexels source file supplied by owner.
