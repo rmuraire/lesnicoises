@@ -305,6 +305,113 @@ def ensure_hotel_fit_launch_css() -> None:
   .hotel-fit-launch-cta{width:100%}
 }
 """
+    marker_v2 = "/* V3 Hotel Fit demo panel v2 2026-09-25 */"
+    if marker_v2 not in text:
+        text += r"""
+
+/* V3 Hotel Fit demo panel v2 2026-09-25 */
+.hotel-fit-launch-grid{
+  grid-template-columns:minmax(0,.92fr) minmax(480px,1.08fr);
+}
+.hotel-fit-demo-panel{
+  overflow:hidden;
+  border:1px solid rgba(20,33,61,.2);
+  background:rgba(255,253,248,.82);
+  box-shadow:0 22px 48px rgba(20,33,61,.1);
+}
+.hotel-fit-demo-priorities{
+  padding:20px 22px 18px;
+  border-bottom:1px solid var(--line);
+  background:rgba(216,108,78,.07);
+}
+.hotel-fit-demo-section-label{
+  margin:0 0 12px!important;
+  color:var(--coral)!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  letter-spacing:.16em;
+  line-height:1.3!important;
+  text-transform:uppercase;
+}
+.hotel-fit-demo-chips{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.hotel-fit-demo-chips span{
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:5px 9px;
+  border:1px solid rgba(20,33,61,.16);
+  background:var(--white);
+  color:var(--ink);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+.hotel-fit-demo-recommendation{
+  padding:20px 22px 22px;
+}
+.hotel-fit-demo-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+.hotel-fit-demo-card{
+  min-width:0;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background:var(--ink);
+  color:var(--white);
+  transition:transform 170ms ease,box-shadow 170ms ease;
+}
+.hotel-fit-demo-card:hover,.hotel-fit-demo-card:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:0 16px 34px rgba(20,33,61,.16);
+}
+.hotel-fit-demo-card .hotel-fit-demo-media{
+  aspect-ratio:16/10;
+}
+.hotel-fit-demo-card .hotel-fit-demo-kicker{
+  top:10px;
+  left:10px;
+  padding:6px 8px;
+}
+.hotel-fit-demo-card .hotel-fit-demo-copy{
+  padding:16px 16px 18px;
+}
+.hotel-fit-demo-card h3{
+  margin:0 0 11px;
+  color:var(--white);
+  font-family:var(--serif);
+  font-size:clamp(21px,2vw,27px);
+  font-weight:500;
+  line-height:1.08;
+}
+.hotel-fit-demo-card .hotel-fit-demo-copy p{
+  margin:6px 0!important;
+  color:rgba(255,255,255,.74)!important;
+  font-size:10px!important;
+  line-height:1.5!important;
+}
+.hotel-fit-demo-card .hotel-fit-demo-copy strong{
+  color:var(--white);
+}
+.hotel-fit-demo-card .hotel-fit-demo-catch{
+  margin-top:10px!important;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,.16);
+}
+@media(max-width:1040px){
+  .hotel-fit-launch-grid{grid-template-columns:1fr}
+  .hotel-fit-demo-panel{max-width:760px}
+}
+@media(max-width:620px){
+  .hotel-fit-demo-recommendation,.hotel-fit-demo-priorities{padding:18px}
+  .hotel-fit-demo-grid{grid-template-columns:1fr}
+}
+"""
     write_if_changed("assets/hotel-engine.css", text, original)
 
 
@@ -449,7 +556,7 @@ def validate() -> None:
                 errors.append(f"{rel}: missing {needle!r}")
 
     css = (ROOT / "assets/hotel-engine.css").read_text(encoding="utf-8")
-    for needle in ("/* V3 Hotel Fit launch surface 2026-09-25 */", ".hotel-fit-launch-grid", ".hotel-fit-demo"):
+    for needle in ("/* V3 Hotel Fit launch surface 2026-09-25 */", "/* V3 Hotel Fit demo panel v2 2026-09-25 */", ".hotel-fit-launch-grid", ".hotel-fit-demo-panel", ".hotel-fit-demo-grid"):
         if needle not in css:
             errors.append(f"assets/hotel-engine.css: missing {needle}")
 
