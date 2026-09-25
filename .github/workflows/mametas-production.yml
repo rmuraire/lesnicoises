@@ -162,6 +162,9 @@ jobs:
       - name: Migrate canonical Mametas Riviera Fit route
         run: python scripts/v3_riviera_fit_route_2026_09_25.py
 
+      - name: Apply V3 presentation polish
+        run: python scripts/v3_presentation_polish_2026_09_25.py
+
       - name: Validate production site
         run: python scripts/validate_mametas.py
 
@@ -190,8 +193,8 @@ jobs:
           from urllib.request import Request, urlopen
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
-              f"https://www.mametas.com/plan/?deploy={sha}": ("phase4-plan-depth", "architecture-card--featured", "harmonisation-plan-visual", "/plan/real-budget/"),
-              f"https://www.mametas.com/fr/planifier/?deploy={sha}": ("phase4-plan-depth", "architecture-card--featured", "harmonisation-plan-visual", "/fr/planifier/budget-reel/"),
+              f"https://www.mametas.com/plan/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", "harmonisation-plan-visual", "/plan/real-budget/"),
+              f"https://www.mametas.com/fr/planifier/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", "harmonisation-plan-visual", "/fr/planifier/budget-reel/"),
               f"https://www.mametas.com/plan/real-budget/?deploy={sha}": ("PASS Sud Azur Explore", "€675", "€2,020"),
               f"https://www.mametas.com/fr/planifier/budget-reel/?deploy={sha}": ("PASS Sud Azur Explore", "675 €", "2 020 €"),
               f"https://www.mametas.com/plan/car-or-no-car/?deploy={sha}": ("CAR FOR 1-2 DAYS", "Practical"),
