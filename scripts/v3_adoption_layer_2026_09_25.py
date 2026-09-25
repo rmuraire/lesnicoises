@@ -152,6 +152,8 @@ def patch_hub(rel: str, lang: str, kind: str) -> None:
     original = text
     text = add_body_class(text, "adoption-hub")
     text = add_body_class(text, f"adoption-hub--{kind}")
+    if kind == "explore":
+        text = add_body_class(text, "explore-product-polished")
     text = insert_after_article_hero(text, hub_cue(kind, lang))
 
     if kind == "stay":
