@@ -47,15 +47,20 @@ def patch_home_hotel_selection(rel, lang):
     original = text
 
     if lang == "fr":
-        old = '<div class="stay-intro"><p class="eyebrow">Où dormir à Nice</p><h2>Un bel hôtel peut rester le mauvais hôtel.</h2><p>Pour un premier séjour, Nice reste notre base par défaut. Nos cartes commencent par l’usage et se terminent par le compromis. Les prix bougent. Un mauvais emplacement reste remarquablement fidèle.</p><a class="button secondary" href="/fr/dormir/nice/">Choisir son hôtel à Nice</a></div>'
+        section_id = "hotels"
         new = '<div class="stay-intro"><p class="eyebrow">SÉLECTION COURTE · OÙ DORMIR À NICE</p><h2>Un bel hôtel peut rester le mauvais hôtel.</h2><p>Trois exemples pour montrer trois logiques de séjour. Ce n’est pas notre sélection complète. Nos cartes commencent par l’usage et se terminent par le compromis.</p><div class="hotel-selection-actions"><a class="button" href="/hotels/finder/?base=nice">Trouver mon hôtel avec Hotel Fit</a><a class="button secondary" href="/fr/dormir/nice/">Voir toute la sélection Nice</a></div></div>'
     else:
-        old = '<div class="stay-intro"><p class="eyebrow">Where to stay in Nice</p><h2>A beautiful hotel can still be the wrong hotel.</h2><p>Nice is our default first-trip base. Our cards start with the use case and end with the catch. Rates move. A bad location remains impressively loyal.</p><a class="button secondary" href="/stay/nice/">Choose your Nice hotel</a></div>'
+        section_id = "stay"
         new = '<div class="stay-intro"><p class="eyebrow">SHORT SELECTION · WHERE TO STAY IN NICE</p><h2>A beautiful hotel can still be the wrong hotel.</h2><p>Three examples, three different trip logics. This is not the full shortlist. Our cards start with the use case and end with the catch.</p><div class="hotel-selection-actions"><a class="button" href="/en/hotels/finder/?base=nice">Find my hotel with Hotel Fit</a><a class="button secondary" href="/stay/nice/">See the full Nice selection</a></div></div>'
 
-    if old not in text:
-        raise RuntimeError(f"{rel}: homepage hotel intro not found")
-    text = text.replace(old, new, 1)
+    section_pattern = re.compile(
+        rf'(<section class="v3-section" id="{section_id}"><div class="wrap stay-layout">)'
+        r'<div class="stay-intro">.*?</div>(<div class="stay-list">)',
+        re.S,
+    )
+    text, count = section_pattern.subn(r'\1' + new + r'\2', text, count=1)
+    if count != 1:
+        raise RuntimeError(f"{rel}: homepage hotel section not found")
     save(rel, text, original)
 
 def rebrand_hotel_fit(rel, lang):
