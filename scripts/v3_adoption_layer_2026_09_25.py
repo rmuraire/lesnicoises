@@ -194,6 +194,163 @@ def patch_hub(rel: str, lang: str, kind: str) -> None:
     save(rel, text, original)
 
 
+
+def patch_home_fit_examples() -> None:
+    pairs = {
+        "index.html": (
+            ("EXAMPLE · WHAT YOU GET", "IF YOU HAD THE FOLLOWING CRITERIA"),
+            ("<span>5 days</span><span>No car</span><span>First visit</span><span>June</span><span>Balanced</span>",
+             "<span>7+ days</span><span>No car</span><span>Peace &amp; beauty</span><span>Sep–Oct</span><span>Slow</span>"),
+            ("SAMPLE RESULT", "MAMETAS RIVIERA FIT WOULD SUGGEST"),
+            ("Stay in Nice.", "Stay in Villefranche / Beaulieu."),
+            ("<strong>Why:</strong> strongest transport network and best reach for day trips.",
+             "<strong>Why:</strong> beauty and quiet matter more than maximum connectivity, and a slow week lets the bay do more of the work."),
+            ("<strong>Why not Cannes:</strong> choose it instead if sand and nightlife matter more.",
+             "<strong>Why not Nice:</strong> it is more efficient for day trips, but busier than the priorities above ask for."),
+            ("<span>Car-free <b>Excellent</b></span><span>Budget <b>€€</b></span><span>Friction <b>Low</b></span><span>Season <b>Great</b></span>",
+             "<span>Car-free <b>Good</b></span><span>Pace <b>Slow</b></span><span>Friction <b>Medium</b></span><span>Season <b>Great</b></span>"),
+        ),
+        "fr/index.html": (
+            ("EXEMPLE · CE QUE VOUS OBTENEZ", "SI VOUS AVIEZ LES CRITÈRES SUIVANTS"),
+            ("<span>5 jours</span><span>Sans voiture</span><span>Premier séjour</span><span>Juin</span><span>Équilibré</span>",
+             "<span>7+ jours</span><span>Sans voiture</span><span>Calme &amp; beauté</span><span>Sep–Oct</span><span>Tranquille</span>"),
+            ("RÉSULTAT D’EXEMPLE", "MAMETAS RIVIERA FIT VOUS PROPOSERAIT"),
+            ("Posez vos valises à Nice.", "Posez vos valises à Villefranche / Beaulieu."),
+            ("<strong>Pourquoi :</strong> meilleur réseau de transport et plus grande portée pour les excursions.",
+             "<strong>Pourquoi :</strong> le calme et la beauté passent devant la connexion maximale, et une semaine lente laisse davantage la baie faire le travail."),
+            ("<strong>Pourquoi pas Cannes :</strong> choisissez-la plutôt si sable et soirées comptent davantage.",
+             "<strong>Pourquoi pas Nice :</strong> elle est plus efficace pour rayonner, mais plus animée que ne le demandent les priorités ci-dessus."),
+            ("<span>Sans voiture <b>Excellent</b></span><span>Budget <b>€€</b></span><span>Friction <b>Faible</b></span><span>Saison <b>Très bonne</b></span>",
+             "<span>Sans voiture <b>Bien</b></span><span>Rythme <b>Lent</b></span><span>Friction <b>Moyenne</b></span><span>Saison <b>Très bonne</b></span>"),
+        ),
+    }
+    for rel, replacements in pairs.items():
+        p = ROOT / rel
+        text = p.read_text(encoding="utf-8")
+        original = text
+        for old, new in replacements:
+            text = text.replace(old, new)
+        save(rel, text, original)
+
+
+def patch_stay_city_links_and_demo() -> None:
+    link_maps = {
+        "en/hotels/index.html": {
+            "nice": "/stay/nice/",
+            "antibes": "/en/hotels/antibes/",
+            "cannes": "/en/hotels/cannes/",
+            "villefranche": "/en/hotels/villefranche-sur-mer/",
+            "monaco": "/en/hotels/monaco/",
+            "menton": "/en/hotels/menton/",
+            "saint-paul": "/en/hotels/saint-paul-de-vence/",
+            "beaulieu": "/en/hotels/beaulieu-sur-mer/",
+            "mougins": "/en/hotels/mougins/",
+            "saint-tropez": "/en/hotels/saint-tropez/",
+        },
+        "hotels/index.html": {
+            "nice": "/fr/dormir/nice/",
+            "antibes": "/hotels/antibes/",
+            "cannes": "/hotels/cannes/",
+            "villefranche": "/hotels/villefranche-sur-mer/",
+            "monaco": "/hotels/monaco/",
+            "menton": "/hotels/menton/",
+            "saint-paul": "/hotels/saint-paul-de-vence/",
+            "beaulieu": "/hotels/beaulieu-sur-mer/",
+            "mougins": "/hotels/mougins/",
+            "saint-tropez": "/hotels/saint-tropez/",
+        },
+    }
+    for rel, mapping in link_maps.items():
+        p = ROOT / rel
+        text = p.read_text(encoding="utf-8")
+        original = text
+        prefix = "/en/hotels/finder/?base=" if rel.startswith("en/") else "/hotels/finder/?base="
+        for base, target in mapping.items():
+            text = text.replace(f'href="{prefix}{base}"', f'href="{target}"')
+        if rel.startswith("en/"):
+            text = text.replace('<p class="hotel-fit-demo-example-label">EXAMPLE PRIORITIES</p>', '<p class="hotel-fit-demo-example-label">IF YOUR PRIORITIES WERE AS FOLLOWS</p>')
+            text = text.replace('<p class="hotel-fit-demo-section-label">YOUR PRIORITIES</p>', '')
+            text = text.replace('<p class="hotel-fit-demo-section-label">MAMETAS RECOMMENDATION</p>', '<p class="hotel-fit-demo-section-label">MAMETAS HOTEL FIT WOULD SUGGEST</p>')
+        else:
+            text = text.replace('<p class="hotel-fit-demo-example-label">EXEMPLE DE PRIORITÉS</p>', '<p class="hotel-fit-demo-example-label">SI VOS PRIORITÉS ÉTAIENT LES SUIVANTES</p>')
+            text = text.replace('<p class="hotel-fit-demo-section-label">VOS PRIORITÉS</p>', '')
+            text = text.replace('<p class="hotel-fit-demo-section-label">RECOMMANDATION MAMETAS</p>', '<p class="hotel-fit-demo-section-label">MAMETAS HOTEL FIT VOUS PROPOSERAIT</p>')
+        save(rel, text, original)
+
+
+def patch_finder_version() -> None:
+    for rel in ("en/hotels/finder/index.html", "hotels/finder/index.html"):
+        p = ROOT / rel
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text = re.sub(r"/assets/hotel-engine\.js\?v=\d+", "/assets/hotel-engine.js?v=11", text)
+        save(rel, text, original)
+
+
+def add_template_class(text: str, cls: str) -> str:
+    return add_body_class(text, cls)
+
+
+def patch_template_surfaces() -> None:
+    for p in ROOT.rglob("*.html"):
+        rel = p.relative_to(ROOT).as_posix()
+        if rel in ("index.html", "fr/index.html"):
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+
+        is_v3_article = (
+            (rel.startswith("en/riviera-guide/") or rel.startswith("riviera-guide/") or
+             rel.startswith("plan/") or rel.startswith("fr/planifier/") or
+             rel.startswith("en/culture/") or rel.startswith("culture/") or
+             rel.startswith("en/day-trips/") or rel.startswith("escapades/") or
+             rel.startswith("en/beaches/") or rel.startswith("plages/"))
+            and 'class="article-hero"' in text
+        )
+        if is_v3_article:
+            text = add_template_class(text, "template-polished")
+
+        if 'class="hotel-detail"' in text:
+            text = add_template_class(text, "template-hotel-polished")
+
+        if ('class="article"' in text or '<article class="article"' in text) and (
+            rel.startswith("en/good-finds/") or rel.startswith("bons-plans/")
+        ):
+            text = add_template_class(text, "template-practical-polished")
+
+        save(rel, text, original)
+
+
+def patch_site_template_css() -> None:
+    p = ROOT / "assets/site.css"
+    text = p.read_text(encoding="utf-8")
+    original = text
+    marker = "/* V3 final template hierarchy 2026-09-25 */"
+    if marker not in text:
+        text += r'''
+
+/* V3 final template hierarchy 2026-09-25 */
+.template-hotel-polished .hotel-detail{padding-top:52px}
+.template-hotel-polished .hotel-detail h1{font-size:clamp(48px,6.2vw,74px)}
+.template-hotel-polished .hotel-detail .standfirst{margin:18px 0 30px;font-size:clamp(22px,2.5vw,28px)}
+.template-hotel-polished .hotel-hero-media{margin-bottom:32px}
+.template-hotel-polished .hotel-hero-media img{aspect-ratio:16/8.5;max-height:590px}
+.template-hotel-polished .hotel-facts{margin:26px 0 32px}
+.template-hotel-polished .verdict{margin:30px 0}
+.template-hotel-polished .hotel-detail h2{margin-top:40px}
+.template-hotel-polished .hotel-gallery{margin-top:38px}
+.template-hotel-polished .affiliate-cta{margin-top:42px}
+.template-practical-polished .article{padding-top:50px;padding-bottom:56px}
+.template-practical-polished .article h1{font-size:clamp(40px,5.4vw,62px)}
+.template-practical-polished .article .standfirst{margin:20px 0 32px;font-size:22px}
+.template-practical-polished .article h2{margin-top:38px}
+@media(max-width:650px){
+  .template-hotel-polished .hotel-detail{padding-top:40px}
+  .template-hotel-polished .hotel-hero-media img{aspect-ratio:4/3}
+}
+'''
+    save("assets/site.css", text, original)
+
 def patch_css() -> None:
     p = ROOT / "assets/v3.css"
     text = p.read_text(encoding="utf-8")
@@ -261,6 +418,27 @@ def patch_css() -> None:
 .adoption-hub--plan .architecture-next{display:none}
 .adoption-hub--places .decision-grid+.hub-next-step{margin-top:0}
 
+/* Final hub and template hierarchy. */
+.adoption-hub--explore .hub-primary-action{background:var(--coral);border-color:var(--coral)}
+.explore-product-polished .base-grid{width:min(calc(100% - 2 * var(--gutter)),var(--max));margin-left:auto;margin-right:auto;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.explore-product-polished .base-card{min-height:235px}
+.explore-product-polished .base-card-content{padding:17px}
+.explore-product-polished .base-card-content h3{font-size:clamp(24px,2.2vw,31px)}
+.explore-product-polished .base-card-content p{font-size:10px;line-height:1.42}
+.phase4-short-entry{border-top:3px solid var(--coral);background:rgba(199,91,61,.055)}
+.phase4-short-entry .button{background:var(--coral);border-color:var(--coral);color:#fff}
+.template-polished .article-hero{padding:clamp(54px,6vw,84px) 0 46px}
+.template-polished .article-hero h1{font-size:clamp(46px,6.4vw,82px)}
+.template-polished .article-deck{margin-top:22px}
+.template-polished .article-meta{margin-top:22px}
+.template-polished .article-cover{height:clamp(300px,46vw,580px)}
+.template-polished .v3-section{padding:clamp(44px,5vw,70px) 0}
+.template-polished .article-body h2{margin-top:52px}
+.template-polished .verdict-box{margin:28px 0 38px}
+.template-polished .article-aside{top:96px}
+@media(max-width:1180px){
+  .explore-product-polished .base-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 @media(max-width:1050px){
   .home-journey-inner{grid-template-columns:repeat(2,minmax(0,1fr))}
   .home-journey-label{grid-column:1/-1;padding:13px 0;border-bottom:1px solid var(--line)}
@@ -326,6 +504,19 @@ def validate() -> None:
         for needle in needles:
             if needle not in text:
                 errors.append(f"{rel}: missing hub adoption marker {needle!r}")
+    extra_checks = {
+        "index.html": ("IF YOU HAD THE FOLLOWING CRITERIA", "Villefranche / Beaulieu", "MAMETAS RIVIERA FIT WOULD SUGGEST"),
+        "fr/index.html": ("SI VOUS AVIEZ LES CRITÈRES SUIVANTS", "Villefranche / Beaulieu", "MAMETAS RIVIERA FIT VOUS PROPOSERAIT"),
+        "en/hotels/index.html": ("IF YOUR PRIORITIES WERE AS FOLLOWS", "MAMETAS HOTEL FIT WOULD SUGGEST", 'href="/stay/nice/"'),
+        "hotels/index.html": ("SI VOS PRIORITÉS ÉTAIENT LES SUIVANTES", "MAMETAS HOTEL FIT VOUS PROPOSERAIT", 'href="/fr/dormir/nice/"'),
+        "en/hotels/finder/index.html": ("/assets/hotel-engine.js?v=11",),
+        "hotels/finder/index.html": ("/assets/hotel-engine.js?v=11",),
+    }
+    for rel, needles in extra_checks.items():
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        for needle in needles:
+            if needle not in text:
+                errors.append(f"{rel}: missing final polish marker {needle!r}")
     css = (ROOT / "assets/v3.css").read_text(encoding="utf-8")
     if "V3 adoption layer 2026-09-25" not in css:
         errors.append("assets/v3.css: adoption layer CSS missing")
@@ -336,6 +527,11 @@ def validate() -> None:
 def main() -> int:
     patch_home("index.html", "en")
     patch_home("fr/index.html", "fr")
+    patch_home_fit_examples()
+    patch_stay_city_links_and_demo()
+    patch_finder_version()
+    patch_template_surfaces()
+    patch_site_template_css()
     patch_hub("plan/index.html", "en", "plan")
     patch_hub("fr/planifier/index.html", "fr", "plan")
     patch_hub("en/riviera-guide/index.html", "en", "places")
