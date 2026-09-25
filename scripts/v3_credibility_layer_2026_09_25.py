@@ -18,9 +18,13 @@ def patch_about(rel: str, lang: str) -> None:
     else:
         anchor = '<h2>Where Mametas comes from</h2>'
         block = '''<section class="editor-identity" data-editor-identity="true"><span class="kicker">EDITOR</span><h2>Created and edited by Renaud Muraire.</h2><p>A Niçois, Renaud grew up with the French Riviera as familiar territory rather than brochure scenery. Mametas combines that personal knowledge with documented work on official sources, geography, transport and practical information. When somewhere has not been personally visited, the site does not pretend otherwise.</p><p><a href="/en/method/">Read the Mametas Checked method →</a> · <a href="/en/press/">Press & professionals →</a></p></section>'''
-    if anchor not in text:
-        raise RuntimeError(f"{rel}: About anchor missing")
-    text = text.replace(anchor, block + anchor, 1)
+    if anchor in text:
+        text = text.replace(anchor, block + anchor, 1)
+    else:
+        marker = '<section class="section"><div class="wrap">'
+        if marker not in text:
+            raise RuntimeError(f"{rel}: About content wrapper missing")
+        text = text.replace(marker, marker + block, 1)
     p.write_text(text, encoding="utf-8")
 
 def page(lang: str) -> str:
