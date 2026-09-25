@@ -144,11 +144,11 @@ jobs:
       - name: Validate V1 release layer
         run: python scripts/validate_v1_release.py
 
-      - name: Validate production site
-        run: python scripts/validate_mametas.py
-
       - name: Migrate canonical Mametas Riviera Fit route
         run: python scripts/v3_riviera_fit_route_2026_09_25.py
+
+      - name: Validate production site
+        run: python scripts/validate_mametas.py
 
       - name: Deploy changed public files to OVH
         env:
