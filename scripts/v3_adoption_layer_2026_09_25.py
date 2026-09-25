@@ -55,13 +55,18 @@ def patch_home(rel: str, lang: str) -> None:
             raise RuntimeError(f"{rel}: Riviera Fit homepage section not found")
         text = text[:anchor.start()] + journey_spine(lang) + text[anchor.start():]
 
+    text = re.sub(
+        r'<p class="eyebrow">[^<]*RIVIERA FIT[^<]*</p>',
+        '<p class="eyebrow">MAMETAS · RIVIERA FIT</p>',
+        text,
+        count=1,
+        flags=re.I,
+    )
     if lang == "fr":
-        text = text.replace("MAMETAS RIVIERA FIT · LA RECO", "MAMETAS · RIVIERA FIT")
         text = text.replace("EXEMPLE · VOTRE SÉJOUR", "EXEMPLE · CE QUE VOUS OBTENEZ")
         text = text.replace("LA RECO MAMETAS", "RÉSULTAT D’EXEMPLE")
         text = text.replace('href="/riviera-chooser/"', 'href="/riviera-fit/"')
     else:
-        text = text.replace("MAMETAS RIVIERA FIT · THE CALL", "MAMETAS · RIVIERA FIT")
         text = text.replace("EXAMPLE · YOUR TRIP", "EXAMPLE · WHAT YOU GET")
         text = text.replace("THE MAMETAS CALL", "SAMPLE RESULT")
         text = text.replace('href="/en/riviera-chooser/"', 'href="/en/riviera-fit/"')
