@@ -139,17 +139,191 @@ def patch_finder(rel: str, lang: str) -> None:
 
     write_if_changed(rel, text, original)
 
+def ensure_hotel_fit_launch_css() -> None:
+    path = ROOT / "assets/hotel-engine.css"
+    text = path.read_text(encoding="utf-8")
+    original = text
+    marker = "/* V3 Hotel Fit launch surface 2026-09-25 */"
+    if marker not in text:
+        text += r"""
+
+/* V3 Hotel Fit launch surface 2026-09-25 */
+.hotel-fit-launch{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(58px,7vw,92px) 0;
+  border-top:4px solid var(--coral);
+  background:linear-gradient(135deg,rgba(255,253,248,.88),rgba(232,223,207,.62));
+}
+.hotel-fit-launch-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);
+  gap:clamp(34px,6vw,78px);
+  align-items:center;
+}
+.hotel-fit-launch-label{
+  margin:0 0 18px!important;
+  color:var(--coral)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.hotel-fit-launch-label span{
+  display:inline-block;
+  margin-right:7px;
+  padding:5px 8px;
+  background:var(--coral);
+  color:var(--white);
+  letter-spacing:.14em;
+}
+.hotel-fit-launch h2{
+  max-width:760px;
+  margin:0 0 18px;
+  font-family:var(--serif);
+  font-size:clamp(42px,5.4vw,70px);
+  font-weight:500;
+  letter-spacing:-.045em;
+  line-height:.98;
+}
+.hotel-fit-launch-punch{
+  max-width:760px!important;
+  margin:0 0 18px!important;
+  color:var(--coral)!important;
+  font-family:var(--serif);
+  font-size:clamp(22px,2.3vw,30px)!important;
+  font-weight:600;
+  line-height:1.2!important;
+}
+.hotel-fit-launch-punch a{
+  text-decoration:underline;
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+}
+.hotel-fit-launch-punch a:hover,.hotel-fit-launch-punch a:focus-visible{color:var(--ink)}
+.hotel-fit-launch-body{
+  max-width:700px!important;
+  margin:0 0 26px!important;
+  color:var(--ink-soft)!important;
+  font-size:15px!important;
+  line-height:1.72!important;
+}
+.hotel-fit-launch-cta{
+  min-height:52px;
+  padding-inline:24px;
+  background:var(--coral);
+  border-color:var(--coral);
+}
+.hotel-fit-launch-cta:hover,.hotel-fit-launch-cta:focus-visible{
+  background:var(--ink);
+  border-color:var(--ink);
+}
+.hotel-fit-demo{
+  display:block;
+  overflow:hidden;
+  border:1px solid rgba(20,33,61,.22);
+  background:var(--ink);
+  color:var(--white);
+  box-shadow:0 22px 48px rgba(20,33,61,.12);
+  transition:transform 180ms ease,box-shadow 180ms ease;
+}
+.hotel-fit-demo:hover,.hotel-fit-demo:focus-visible{
+  transform:translateY(-4px);
+  box-shadow:0 28px 58px rgba(20,33,61,.18);
+}
+.hotel-fit-demo-media{
+  position:relative;
+  aspect-ratio:16/9;
+  overflow:hidden;
+  background:var(--paper-deep);
+}
+.hotel-fit-demo-media img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:transform 320ms ease;
+}
+.hotel-fit-demo:hover img,.hotel-fit-demo:focus-visible img{transform:scale(1.025)}
+.hotel-fit-demo-kicker{
+  position:absolute;
+  top:16px;
+  left:16px;
+  padding:7px 9px;
+  background:var(--coral);
+  color:var(--white);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.hotel-fit-demo-copy{padding:22px 24px 24px}
+.hotel-fit-demo-criteria{
+  margin:0 0 12px!important;
+  color:#f7c966!important;
+  font-size:9px!important;
+  font-weight:800;
+  letter-spacing:.12em;
+  line-height:1.45!important;
+  text-transform:uppercase;
+}
+.hotel-fit-demo h3{
+  margin:0 0 16px;
+  color:var(--white);
+  font-family:var(--serif);
+  font-size:clamp(28px,3vw,38px);
+  font-weight:500;
+  line-height:1.05;
+}
+.hotel-fit-demo-copy p{
+  margin:8px 0!important;
+  color:rgba(255,255,255,.76)!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+.hotel-fit-demo-copy strong{color:var(--white)}
+.hotel-fit-demo-catch{
+  margin-top:14px!important;
+  padding-top:14px;
+  border-top:1px solid rgba(255,255,255,.18);
+}
+.hotel-fit-demo-link{
+  display:inline-block;
+  margin-top:16px;
+  color:#f7c966;
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+}
+@media(max-width:900px){
+  .hotel-fit-launch-grid{grid-template-columns:1fr}
+  .hotel-fit-demo{max-width:680px}
+}
+@media(max-width:600px){
+  .hotel-fit-launch{padding:48px 0}
+  .hotel-fit-launch h2{font-size:clamp(39px,12vw,54px)}
+  .hotel-fit-launch-cta{width:100%}
+}
+"""
+    write_if_changed("assets/hotel-engine.css", text, original)
+
+
 def patch_hotel_hub(rel: str, lang: str) -> None:
     path = ROOT / rel
     text = path.read_text(encoding="utf-8")
     original = text
+
     if lang == "fr":
-        text = text.replace("<h2>Trouver votre hôtel</h2>", "<h2>Hotel Fit</h2>")
-        text = text.replace(">Lancer l’outil hôtel</a>", ">Lancer Hotel Fit</a>")
-        text = text.replace("Vous préférez qu’on tranche ?", "Vous préférez qu’on tranche ?")
+        block = """<section class="v3-section hotel-finder-entry hotel-fit-launch" data-hotel-finder-entry="true"><div class="wrap"><div class="hotel-fit-launch-grid"><div class="hotel-fit-launch-copy"><p class="hotel-fit-launch-label"><span>NOUVEAU</span> HOTEL FIT · OUTIL INTERACTIF MAMETAS</p><h2>Le raccourci pour choisir votre hôtel sur la Riviera.</h2><p class="hotel-fit-launch-punch"><a href="/lexique/#pichoun">Pichoun</a>, 47 onglets d’hôtels, ce n’est pas une stratégie !</p><p class="hotel-fit-launch-body">Trop d’hôtels sur la Riviera, pas assez de patience ? Normal. Répondez à quelques questions et Hotel Fit retient 3 ou 4 hôtels qui correspondent vraiment à votre séjour, votre budget et vos contraintes. On vous donne la raison, le compromis et ce pour quoi chaque adresse est vraiment bonne.</p><a class="button hotel-fit-launch-cta" href="/hotels/finder/">Trouver mon hôtel</a></div><a class="hotel-fit-demo" href="/hotels/nice/la-perouse/" aria-label="Voir Hôtel La Pérouse à Nice"><div class="hotel-fit-demo-media"><span class="hotel-fit-demo-kicker">Exemple de résultat Hotel Fit</span><img src="/assets/hotels/la-perouse/hero.jpg" alt="Hôtel La Pérouse à Nice" loading="lazy"></div><div class="hotel-fit-demo-copy"><p class="hotel-fit-demo-criteria">€€€ · Couple · Mer · À pied · Sans voiture</p><h3>Hôtel La Pérouse · Nice</h3><p><strong>Idéal pour :</strong> la mer, le Vieux-Nice et un premier séjour romantique.</p><p class="hotel-fit-demo-catch"><strong>Le compromis :</strong> moins pratique si votre semaine repose sur des excursions quotidiennes en train.</p><span class="hotel-fit-demo-link">Voir cet hôtel →</span></div></a></div></div></section>"""
     else:
-        text = text.replace("<h2>Find your hotel</h2>", "<h2>Hotel Fit</h2>")
-        text = text.replace(">Open the hotel finder</a>", ">Open Hotel Fit</a>")
+        block = """<section class="v3-section hotel-finder-entry hotel-fit-launch" data-hotel-finder-entry="true"><div class="wrap"><div class="hotel-fit-launch-grid"><div class="hotel-fit-launch-copy"><p class="hotel-fit-launch-label"><span>NEW</span> HOTEL FIT · MAMETAS INTERACTIVE TOOL</p><h2>The fast way to choose a Riviera hotel.</h2><p class="hotel-fit-launch-punch"><a href="/en/lexicon/#pichoun">Pichoun</a>, 47 hotel tabs is not a strategy!</p><p class="hotel-fit-launch-body">Too many Riviera hotels, not enough patience? Fair. Answer a few quick questions and get 3 or 4 hotel picks that actually fit your trip, budget and constraints. We give you the reason, the catch and what each hotel is really good for.</p><a class="button hotel-fit-launch-cta" href="/en/hotels/finder/">Find my hotel</a></div><a class="hotel-fit-demo" href="/en/hotels/nice/la-perouse/" aria-label="See Hôtel La Pérouse in Nice"><div class="hotel-fit-demo-media"><span class="hotel-fit-demo-kicker">Example Hotel Fit result</span><img src="/assets/hotels/la-perouse/hero.jpg" alt="Hôtel La Pérouse in Nice" loading="lazy"></div><div class="hotel-fit-demo-copy"><p class="hotel-fit-demo-criteria">€€€ · Couple · Sea · Walkable · No car</p><h3>Hôtel La Pérouse · Nice</h3><p><strong>Best for:</strong> sea views, Old Nice and a romantic first stay.</p><p class="hotel-fit-demo-catch"><strong>The catch:</strong> less practical if repeated train day trips drive the week.</p><span class="hotel-fit-demo-link">See this hotel →</span></div></a></div></div></section>"""
+
+    pattern = re.compile(r'<section class="v3-section hotel-finder-entry[^"]*" data-hotel-finder-entry="true">.*?</section>', re.S)
+    text, count = pattern.subn(block, text, count=1)
+    if count != 1:
+        raise RuntimeError(f"{rel}: Hotel Fit launch section not found")
+
+    text = re.sub(r"/assets/hotel-engine\.css\?v=\d+", "/assets/hotel-engine.css?v=9", text)
     write_if_changed(rel, text, original)
 
 def patch_chooser(rel: str, lang: str) -> None:
@@ -264,6 +438,21 @@ def validate() -> None:
         if "/assets/hotel-engine.js?v=7" not in text:
             errors.append(f"{rel}: engine cache bust missing")
 
+    hub_checks = {
+        "hotels/index.html": ("HOTEL FIT · OUTIL INTERACTIF MAMETAS", "/lexique/#pichoun", "47 onglets d’hôtels, ce n’est pas une stratégie !", "Hôtel La Pérouse · Nice", "/assets/hotel-engine.css?v=9"),
+        "en/hotels/index.html": ("HOTEL FIT · MAMETAS INTERACTIVE TOOL", "/en/lexicon/#pichoun", "47 hotel tabs is not a strategy!", "Hôtel La Pérouse · Nice", "/assets/hotel-engine.css?v=9"),
+    }
+    for rel, needles in hub_checks.items():
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        for needle in needles:
+            if needle not in text:
+                errors.append(f"{rel}: missing {needle!r}")
+
+    css = (ROOT / "assets/hotel-engine.css").read_text(encoding="utf-8")
+    for needle in ("/* V3 Hotel Fit launch surface 2026-09-25 */", ".hotel-fit-launch-grid", ".hotel-fit-demo"):
+        if needle not in css:
+            errors.append(f"assets/hotel-engine.css: missing {needle}")
+
     for rel, base in {**FR_DESTINATIONS, **EN_DESTINATIONS}.items():
         text = (ROOT / rel).read_text(encoding="utf-8")
         if 'data-hotel-fit-cta="true"' not in text:
@@ -278,6 +467,7 @@ def validate() -> None:
         raise SystemExit("V3 Hotel Fit foundation failed:\n- " + "\n- ".join(errors))
 
 def main() -> int:
+    ensure_hotel_fit_launch_css()
     patch_finder("hotels/finder/index.html", "fr")
     patch_finder("en/hotels/finder/index.html", "en")
     patch_hotel_hub("hotels/index.html", "fr")
