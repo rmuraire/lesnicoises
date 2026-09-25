@@ -6,11 +6,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data" / "hotels" / "nice.json"
+FIT_SOURCE = ROOT / "data" / "hotels" / "hotel-fit-v3.json"
 OUTPUT = ROOT / "assets" / "hotel-finder-nice.json"
 
 
 def main() -> int:
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
+    fit_source = json.loads(FIT_SOURCE.read_text(encoding="utf-8")) if FIT_SOURCE.is_file() else {}
+    fit_hotels = fit_source.get("hotels", {})
     hotels = []
     for item in source.get("hotels", []):
         expedia = (item.get("affiliate") or {}).get("expedia") or {}
@@ -32,11 +35,14 @@ def main() -> int:
             "image": image,
             "paths": item.get("paths", {}),
             "affiliate": {"url": affiliate_url} if affiliate_url else {},
+            "fit": fit_hotels.get(item.get("id", ""), {}),
         })
 
     payload = {
-        "schemaVersion": 1,
+        "schemaVersion": 2,
         "base": "nice",
+        "fitSchemaVersion": fit_source.get("schemaVersion"),
+        "fitTagLabels": fit_source.get("tagLabels", {}),
         "lastEditorialReview": source.get("lastEditorialReview"),
         "priceBandNote": source.get("priceBandNote", {}),
         "hotels": hotels,
