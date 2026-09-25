@@ -38,23 +38,25 @@ def add_body_class(text: str, cls: str) -> str:
 def fit_preview(lang: str) -> str:
     if lang == "fr":
         return """<section class="plan-riviera-fit-panel" aria-labelledby="plan-riviera-fit-title">
-<div class="fit-preview-head"><div><p class="fit-tool-label">MAMETAS · RIVIERA FIT</p><h3 id="plan-riviera-fit-title">Cinq questions. Une base.</h3><p>Répondez aux choix qui changent vraiment la géographie du séjour. Riviera Fit tranche ensuite, compromis compris.</p></div><a class="fit-primary-action" href="/riviera-fit/">Lancer Riviera Fit →</a></div>
-<div class="fit-preview-questions">
-<div class="fit-preview-row"><span>01</span><strong>Combien de temps ?</strong><small>3 jours · 5 jours · 7+</small></div>
-<div class="fit-preview-row"><span>02</span><strong>Quand partez-vous ?</strong><small>Printemps · Été · Automne · Hiver</small></div>
-<div class="fit-preview-row"><span>03</span><strong>Comment vous déplacez-vous ?</strong><small>Sans voiture · Voiture · Peu importe</small></div>
-<div class="fit-preview-row"><span>04</span><strong>Qu’est-ce qui compte le plus ?</strong><small>Glamour · Art · Mer · Calme · Décidez pour moi</small></div>
-<div class="fit-preview-row"><span>05</span><strong>Quel rythme ?</strong><small>Lent · Équilibré · Ambitieux</small></div>
-</div></section>"""
+<div class="fit-preview-head"><div><p class="fit-tool-label">MAMETAS · RIVIERA FIT</p><h3 id="plan-riviera-fit-title">Cinq questions. Une base.</h3><p>Pas une liste de villes. Répondez ici : Riviera Fit choisit la base, explique pourquoi et vous montre les compromis.</p></div></div>
+<div class="plan-fit-engine" data-riviera-chooser><div class="chooser-engine">
+<section class="chooser-step" data-step="1"><div class="chooser-step-head"><span class="chooser-step-number">01</span><div><h2>Combien de jours avez-vous vraiment ?</h2><p>Sept jours, ce n’est pas trois jours avec quatre étapes de plus.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="days" data-choice="3">3 jours</button><button type="button" aria-pressed="false" data-group="days" data-choice="5">5 jours</button><button type="button" aria-pressed="false" data-group="days" data-choice="7">7 jours ou plus</button></div></section>
+<section class="chooser-step" data-step="2"><div class="chooser-step-head"><span class="chooser-step-number">02</span><div><h2>Quand venez-vous ?</h2><p>La Riviera ne joue pas la même partie en février et en août.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="season" data-choice="winter">Novembre à mars</button><button type="button" aria-pressed="false" data-group="season" data-choice="spring">Avril à juin</button><button type="button" aria-pressed="false" data-group="season" data-choice="summer">Juillet et août</button><button type="button" aria-pressed="false" data-group="season" data-choice="autumn">Septembre et octobre</button></div></section>
+<section class="chooser-step" data-step="3"><div class="chooser-step-head"><span class="chooser-step-number">03</span><div><h2>Comment allez-vous vous déplacer ?</h2><p>Parfois le train gagne. Parfois absolument pas.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="mobility" data-choice="nocar">Sans voiture</button><button type="button" aria-pressed="false" data-group="mobility" data-choice="car">Avec voiture</button><button type="button" aria-pressed="false" data-group="mobility" data-choice="either">Les deux me vont</button></div></section>
+<section class="chooser-step" data-step="4"><div class="chooser-step-head"><span class="chooser-step-number">04</span><div><h2>Qu’attendez-vous le plus de la Riviera ?</h2><p>Choisissez ce qui vous manquerait vraiment si le séjour ne vous le donnait pas.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="mood" data-choice="decide">Décidez pour moi</button><button type="button" aria-pressed="false" data-group="mood" data-choice="sea">Mer &amp; baignade</button><button type="button" aria-pressed="false" data-group="mood" data-choice="food">Restaurants &amp; ville</button><button type="button" aria-pressed="false" data-group="mood" data-choice="culture">Art &amp; villages</button><button type="button" aria-pressed="false" data-group="mood" data-choice="glamour">Glamour Riviera</button><button type="button" aria-pressed="false" data-group="mood" data-choice="peace">Calme &amp; beauté</button></div></section>
+<section class="chooser-step" data-step="5"><div class="chooser-step-head"><span class="chooser-step-number">05</span><div><h2>Quel rythme ressemble encore à des vacances ?</h2><p>Le rythme décide jusqu’où on vous envoie.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="pace" data-choice="slow">Tranquille</button><button type="button" aria-pressed="false" data-group="pace" data-choice="balanced">Équilibré</button><button type="button" aria-pressed="false" data-group="pace" data-choice="ambitious">Ambitieux</button></div></section>
+<div class="chooser-submit-row"><button class="button plan-fit-submit" type="button" data-chooser-submit disabled>Donnez-moi le verdict</button><a class="plan-fit-full-link" href="/riviera-fit/">Voir Riviera Fit en plein écran →</a></div>
+</div><section class="chooser-result" data-chooser-result hidden aria-live="polite"></section></div></section>"""
     return """<section class="plan-riviera-fit-panel" aria-labelledby="plan-riviera-fit-title">
-<div class="fit-preview-head"><div><p class="fit-tool-label">MAMETAS · RIVIERA FIT</p><h3 id="plan-riviera-fit-title">Five questions. One base.</h3><p>Answer the choices that genuinely change the geography of the trip. Riviera Fit makes the call, trade-offs included.</p></div><a class="fit-primary-action" href="/en/riviera-fit/">Start Riviera Fit →</a></div>
-<div class="fit-preview-questions">
-<div class="fit-preview-row"><span>01</span><strong>How long do you have?</strong><small>3 days · 5 days · 7+</small></div>
-<div class="fit-preview-row"><span>02</span><strong>When are you going?</strong><small>Spring · Summer · Autumn · Winter</small></div>
-<div class="fit-preview-row"><span>03</span><strong>How will you move?</strong><small>No car · Car · Either</small></div>
-<div class="fit-preview-row"><span>04</span><strong>What matters most?</strong><small>Glamour · Art · Sea · Peace · Decide for me</small></div>
-<div class="fit-preview-row"><span>05</span><strong>What pace?</strong><small>Slow · Balanced · Ambitious</small></div>
-</div></section>"""
+<div class="fit-preview-head"><div><p class="fit-tool-label">MAMETAS · RIVIERA FIT</p><h3 id="plan-riviera-fit-title">Five questions. One base.</h3><p>Not a list of towns. Answer here: Riviera Fit picks the base, explains why and shows the trade-offs.</p></div></div>
+<div class="plan-fit-engine" data-riviera-chooser><div class="chooser-engine">
+<section class="chooser-step" data-step="1"><div class="chooser-step-head"><span class="chooser-step-number">01</span><div><h2>How long do you actually have?</h2><p>Seven days is not three days with four extra stops.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="days" data-choice="3">3 days</button><button type="button" aria-pressed="false" data-group="days" data-choice="5">5 days</button><button type="button" aria-pressed="false" data-group="days" data-choice="7">7 days or more</button></div></section>
+<section class="chooser-step" data-step="2"><div class="chooser-step-head"><span class="chooser-step-number">02</span><div><h2>When are you coming?</h2><p>The Riviera is not playing the same game in February and August.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="season" data-choice="winter">November to March</button><button type="button" aria-pressed="false" data-group="season" data-choice="spring">April to June</button><button type="button" aria-pressed="false" data-group="season" data-choice="summer">July and August</button><button type="button" aria-pressed="false" data-group="season" data-choice="autumn">September and October</button></div></section>
+<section class="chooser-step" data-step="3"><div class="chooser-step-head"><span class="chooser-step-number">03</span><div><h2>How are you moving around?</h2><p>Sometimes the train wins. Sometimes it absolutely does not.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="mobility" data-choice="nocar">No car</button><button type="button" aria-pressed="false" data-group="mobility" data-choice="car">I’ll have a car</button><button type="button" aria-pressed="false" data-group="mobility" data-choice="either">Either is fine</button></div></section>
+<section class="chooser-step" data-step="4"><div class="chooser-step-head"><span class="chooser-step-number">04</span><div><h2>What do you want most from the Riviera?</h2><p>Pick the thing you would actually notice if the trip failed to deliver it.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="mood" data-choice="decide">Decide for me</button><button type="button" aria-pressed="false" data-group="mood" data-choice="sea">Sea &amp; swimming</button><button type="button" aria-pressed="false" data-group="mood" data-choice="food">Food &amp; city life</button><button type="button" aria-pressed="false" data-group="mood" data-choice="culture">Art &amp; villages</button><button type="button" aria-pressed="false" data-group="mood" data-choice="glamour">Riviera glamour</button><button type="button" aria-pressed="false" data-group="mood" data-choice="peace">Peace &amp; beauty</button></div></section>
+<section class="chooser-step" data-step="5"><div class="chooser-step-head"><span class="chooser-step-number">05</span><div><h2>What pace still feels like a holiday?</h2><p>Pace decides how far we send you.</p></div></div><div class="chooser-options"><button type="button" aria-pressed="false" data-group="pace" data-choice="slow">Slow</button><button type="button" aria-pressed="false" data-group="pace" data-choice="balanced">Balanced</button><button type="button" aria-pressed="false" data-group="pace" data-choice="ambitious">Ambitious</button></div></section>
+<div class="chooser-submit-row"><button class="button plan-fit-submit" type="button" data-chooser-submit disabled>Give me the verdict</button><a class="plan-fit-full-link" href="/en/riviera-fit/">Open Riviera Fit full screen →</a></div>
+</div><section class="chooser-result" data-chooser-result hidden aria-live="polite"></section></div></section>"""
 
 
 def patch_plan(rel: str, lang: str) -> None:
@@ -66,6 +68,15 @@ def patch_plan(rel: str, lang: str) -> None:
     text, n = re.subn(pattern, fit_preview(lang), text, count=1, flags=re.S)
     if n != 1 and "plan-riviera-fit-panel" not in text:
         raise RuntimeError(f"{rel}: Riviera Fit Plan card not found")
+    if "/assets/riviera-chooser.css?v=5" not in text:
+        text = re.sub(
+            r'(<link rel="stylesheet" href="/assets/v3\.css\?v=[^"]+">)',
+            '<link rel="stylesheet" href="/assets/riviera-chooser.css?v=5">\\1',
+            text,
+            count=1,
+        )
+    if "/assets/riviera-chooser.js?v=9" not in text:
+        text = text.replace("</body>", '<script src="/assets/riviera-chooser.js?v=9"></script></body>', 1)
     save(rel, text, original)
 
 
@@ -217,6 +228,33 @@ def patch_v3_css() -> None:
     save("assets/v3.css", text, original)
 
 
+def patch_riviera_css() -> None:
+    p = ROOT / "assets/riviera-chooser.css"
+    text = p.read_text(encoding="utf-8")
+    original = text
+    marker = "/* Plan embedded Riviera Fit 2026-09-25 */"
+    if marker not in text:
+        text += r'''
+
+/* Plan embedded Riviera Fit 2026-09-25 */
+.plan-product-polished .plan-riviera-fit-panel .chooser-engine{border:0;border-top:1px solid var(--line);background:transparent}
+.plan-product-polished .plan-riviera-fit-panel .chooser-step{grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);gap:20px;padding:14px 20px;background:rgba(255,253,248,.28)}
+.plan-product-polished .plan-riviera-fit-panel .chooser-step h2{font-size:clamp(18px,1.8vw,23px)}
+.plan-product-polished .plan-riviera-fit-panel .chooser-step p{font-size:9.5px}
+.plan-product-polished .plan-riviera-fit-panel .chooser-options button{min-height:34px;padding:7px 10px;font-size:9px}
+.plan-product-polished .plan-riviera-fit-panel .chooser-submit-row{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border-top:1px solid var(--line)}
+.plan-product-polished .plan-riviera-fit-panel .plan-fit-submit{background:var(--blue);color:#fff}
+.plan-fit-full-link{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;text-decoration:none}
+.plan-product-polished .plan-riviera-fit-panel .chooser-result{margin:0 20px 22px}
+@media(max-width:780px){
+  .plan-product-polished .plan-riviera-fit-panel .chooser-step{grid-template-columns:1fr;gap:10px;padding:14px 16px}
+  .plan-product-polished .plan-riviera-fit-panel .chooser-submit-row{align-items:stretch;flex-direction:column}
+  .plan-product-polished .plan-riviera-fit-panel .plan-fit-submit{width:100%}
+}
+'''
+    save("assets/riviera-chooser.css", text, original)
+
+
 def patch_site_css() -> None:
     p = ROOT / "assets/site.css"
     text = p.read_text(encoding="utf-8")
@@ -238,8 +276,8 @@ def patch_site_css() -> None:
 
 def validate() -> None:
     checks = {
-        "plan/index.html": ("plan-riviera-fit-panel", "Five questions. One base.", "fit-primary-action"),
-        "fr/planifier/index.html": ("plan-riviera-fit-panel", "Cinq questions. Une base.", "fit-primary-action"),
+        "plan/index.html": ("plan-riviera-fit-panel", "Five questions. One base.", 'data-riviera-chooser', 'data-group="days"', 'data-chooser-submit', "/assets/riviera-chooser.js?v=9"),
+        "fr/planifier/index.html": ("plan-riviera-fit-panel", "Cinq questions. Une base.", 'data-riviera-chooser', 'data-group="days"', 'data-chooser-submit', "/assets/riviera-chooser.js?v=9"),
         "en/riviera-fit/index.html": ("riviera-fit-polished", "fit-tool-label", "riviera-fit-start", 'id="riviera-fit-questions"'),
         "riviera-fit/index.html": ("riviera-fit-polished", "fit-tool-label", "riviera-fit-start", 'id="riviera-fit-questions"'),
         "en/explore/index.html": ("explore-product-polished",),
@@ -263,7 +301,7 @@ def validate() -> None:
         errors.append("assets/v3.css: presentation polish missing")
     if "V3 booking visual polish 2026-09-25" not in (ROOT / "assets/site.css").read_text(encoding="utf-8"):
         errors.append("assets/site.css: booking polish missing")
-    if errors:
+    if "Plan embedded Riviera Fit 2026-09-25" not in (ROOT / "assets/riviera-chooser.css").read_text(encoding="utf-8"):\n        errors.append("assets/riviera-chooser.css: embedded Plan tool polish missing")\n    if errors:
         raise SystemExit("V3 presentation polish failed:\n- " + "\n- ".join(errors))
 
 
@@ -281,6 +319,7 @@ def main() -> int:
     patch_gay_nice("en/gay-nice/index.html", "en")
     patch_gay_nice("guide-gay-nice/index.html", "fr")
     patch_v3_css()
+    patch_riviera_css()
     patch_site_css()
     validate()
     print(f"V3 presentation polish passed; changed {len(changed)} file(s).")
