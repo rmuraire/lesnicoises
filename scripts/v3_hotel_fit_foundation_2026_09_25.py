@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from html import escape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,6 +22,63 @@ EN_DESTINATIONS = {
     "en/riviera-guide/monaco/index.html": "monaco",
     "en/riviera-guide/cannes/index.html": "cannes",
     "en/riviera-guide/eze/index.html": "eze",
+}
+
+FIT_PROFILES = {
+    "fr": {
+        "pratique-central": (["car-free","excursions","value","old-town"], ["hotel-as-trip","beach-first"], "Un séjour où la plage ou l’hôtel lui-même doit être le sujet.", "On gagne en simplicité et en déplacements ce qu’on perd en grand spectacle hôtelier."),
+        "vivant-facile": (["city-life","beach-first","car-free"], ["quiet","excursions"], "Le calme absolu ou un séjour construit autour des départs en train.", "La plage et les soirées sont faciles. Le retrait l’est beaucoup moins."),
+        "riviera-bord-de-mer": (["beach-first","hotel-as-trip","romantic"], ["value","excursions"], "Un séjour très rationnel ou centré sur les excursions.", "La mer et l’ambiance gagnent. Le budget et la logistique peuvent suivre derrière."),
+        "palaces-grand-spectacle": (["hotel-as-trip","beach-first","city-life"], ["value","quiet"], "Un séjour discret ou attentif au budget.", "Vous payez aussi pour être dans le spectacle cannois. Autant vouloir le spectacle."),
+        "luxe-central": (["hotel-as-trip","beach-first","city-life","car-free"], ["value","quiet"], "Le retrait total ou un arbitrage serré sur le prix.", "Très peu de friction sur place, mais un positionnement tarifaire qui sait où il habite."),
+        "charme-plus-intime": (["city-life","car-free","romantic"], ["hotel-as-trip"], "Ceux qui veulent un grand hôtel-destination avec tous les services.", "Plus de personnalité et moins de cérémonial, avec des équipements souvent plus limités."),
+        "port-sans-voiture": (["car-free","beach-first","old-town","quiet"], ["excursions"], "Un programme qui traverse la côte tous les jours.", "La baie est simple à vivre. Le rôle de hub régional est moins convaincant."),
+        "grand-luxe-retrait": (["hotel-as-trip","quiet","romantic","beach-first"], ["value","excursions","city-life"], "Un séjour urbain, économique ou construit sur des départs quotidiens.", "On vient ici pour ralentir. Si vous partez toute la journée, vous payez une partie du produit sans l’utiliser."),
+        "palace-classique": (["hotel-as-trip","city-life","romantic"], ["value","quiet"], "Un séjour sobre ou attentif au budget.", "L’adresse fait partie du voyage. À Monaco, le décor et le service se paient aussi."),
+        "resort-plus-detendu": (["hotel-as-trip","quiet"], ["value","old-town"], "Ceux qui veulent tout faire à pied autour du Casino.", "Plus d’espace et de respiration, contre un peu moins d’immersion dans le cœur cérémoniel."),
+        "pratique-budget": (["car-free","value","old-town","excursions"], ["hotel-as-trip"], "Un séjour où l’hôtel doit être une destination en soi.", "Très utile pour vivre Menton et rayonner à l’est, moins mémorable comme expérience hôtelière."),
+        "mer-calme": (["beach-first","quiet","romantic","car-free"], ["city-life"], "Les voyageurs qui veulent surtout soirées et animation.", "La mer et le calme gagnent. Le centre reste accessible, mais n’est pas toujours sous la fenêtre."),
+        "riviera-plus-chic": (["beach-first","hotel-as-trip","quiet","romantic"], ["value"], "Un séjour où le prix doit rester le premier arbitre.", "Plus de confort et de mer, avec un supplément Riviera assumé."),
+        "retraite-chic": (["quiet","hotel-as-trip","romantic"], ["car-free","excursions","beach-first"], "Un séjour sans voiture ou centré sur la côte.", "Très bon pour ralentir. Beaucoup moins pour improviser dix déplacements par jour."),
+        "simple-calme": (["quiet","value"], ["car-free","beach-first","city-life"], "Ceux qui veulent la mer, la ville ou les transports devant la porte.", "Le calme et le prix sont le sujet. La localisation demande davantage d’organisation."),
+        "village-caractere": (["old-town","romantic","hotel-as-trip"], ["excursions","beach-first"], "Un séjour tourné vers la côte ou les transports quotidiens.", "Dormir dans ou près du village change l’expérience, mais pas la géographie de l’arrière-pays."),
+        "calme-retraite": (["quiet","hotel-as-trip","romantic"], ["car-free","city-life"], "Ceux qui veulent sortir à pied le soir ou voyager sans voiture.", "Le retrait fonctionne précisément parce qu’il y a moins de choses au pied de la porte."),
+        "design-raffine": (["hotel-as-trip","romantic","quiet"], ["value","excursions"], "Un séjour où l’hôtel sert surtout de base pratique.", "Vous payez la singularité du lieu. Il faut avoir envie d’en profiter."),
+        "bon-equilibre": (["quiet","value","romantic"], ["beach-first","city-life"], "Une priorité plage ou vie urbaine.", "Bon compromis pour Saint-Paul, sans transformer l’adresse en destination à elle seule."),
+        "saint-tropez-meme": (["city-life","hotel-as-trip","romantic"], ["value","excursions"], "Un séjour économique ou conçu pour parcourir toute la Côte.", "Vous achetez Saint-Tropez lui-même. Le tarif et la circulation font partie du paquet."),
+        "ramatuelle-retrait": (["quiet","beach-first","hotel-as-trip","romantic"], ["car-free","city-life"], "Un séjour sans voiture ou des soirées spontanées au village.", "Pampelonne et le retrait gagnent. Les transferts deviennent une vraie variable."),
+        "gassin-resort": (["hotel-as-trip","quiet","beach-first"], ["car-free","old-town"], "Ceux qui veulent Saint-Tropez à pied.", "Le resort fonctionne comme destination. Le village, lui, demande un déplacement."),
+        "sainte-maxime-autre-rive": (["value","beach-first","city-life"], ["excursions"], "Ceux qui veulent être réellement basés à Saint-Tropez.", "Vous gagnez une autre échelle de prix, mais vous êtes de l’autre côté du golfe."),
+        "pratique-sans-spectacle": (["car-free","quiet","value"], ["hotel-as-trip","city-life"], "Un hôtel-destination ou une vie nocturne importante.", "Beaulieu reste simple et calme. L’hôtel fait le travail sans chercher à devenir le voyage."),
+        "port-riviera": (["beach-first","quiet","hotel-as-trip","romantic","car-free"], ["value","city-life"], "Une priorité budget ou vie urbaine.", "La mer et le calme sont très faciles. L’animation est ailleurs."),
+    },
+    "en": {
+        "practical-central": (["car-free","excursions","value","old-town"], ["hotel-as-trip","beach-first"], "A trip where the beach or the hotel itself needs to be the point.", "You gain simplicity and movement, and give up some hotel theatre."),
+        "lively-easy": (["city-life","beach-first","car-free"], ["quiet","excursions"], "Absolute quiet or a trip built around repeated train departures.", "Beach and evenings are easy. Retreat is much less so."),
+        "riviera-seafront": (["beach-first","hotel-as-trip","romantic"], ["value","excursions"], "A highly practical or day-trip-heavy stay.", "Sea and atmosphere win. Budget and logistics may follow behind."),
+        "palaces-spectacle": (["hotel-as-trip","beach-first","city-life"], ["value","quiet"], "A discreet stay or close budget control.", "You are also paying to be inside the Cannes spectacle. Better to want the spectacle."),
+        "central-luxury": (["hotel-as-trip","beach-first","city-life","car-free"], ["value","quiet"], "Total retreat or a tight price trade-off.", "Very little friction on the ground, with rates that know exactly where they are."),
+        "character-more-intimate": (["city-life","car-free","romantic"], ["hotel-as-trip"], "Travellers who want a full destination hotel with every service.", "More personality and less ceremony, usually with fewer facilities."),
+        "harbour-car-free": (["car-free","beach-first","old-town","quiet"], ["excursions"], "An itinerary that crosses the coast every day.", "The bay is easy to live. The regional-hub role is less convincing."),
+        "grand-luxury-retreat": (["hotel-as-trip","quiet","romantic","beach-first"], ["value","excursions","city-life"], "An urban, value-led or daily-departure trip.", "You come here to slow down. Leave all day and you are paying for product you do not use."),
+        "classic-palace": (["hotel-as-trip","city-life","romantic"], ["value","quiet"], "A low-key stay or close budget control.", "The address is part of the trip. In Monaco, setting and service cost money too."),
+        "resort-more-relaxed": (["hotel-as-trip","quiet"], ["value","old-town"], "Travellers who want everything around Casino Square on foot.", "More space and breathing room, with less immersion in the ceremonial core."),
+        "practical-budget": (["car-free","value","old-town","excursions"], ["hotel-as-trip"], "A stay where the hotel needs to be a destination in itself.", "Very useful for Menton and the eastern coast, less memorable as a hotel experience."),
+        "sea-quiet": (["beach-first","quiet","romantic","car-free"], ["city-life"], "Travellers mainly after nightlife and activity.", "Sea and calm win. The centre remains accessible, but is not always under the window."),
+        "riviera-more-polished": (["beach-first","hotel-as-trip","quiet","romantic"], ["value"], "A trip where price needs to remain the first filter.", "More comfort and sea, with a clear Riviera premium."),
+        "chic-retreat": (["quiet","hotel-as-trip","romantic"], ["car-free","excursions","beach-first"], "A car-free trip or one centred on the coast.", "Excellent for slowing down. Much less useful for ten improvised movements a day."),
+        "simple-quiet": (["quiet","value"], ["car-free","beach-first","city-life"], "Travellers who want sea, city or transport at the door.", "Calm and price are the point. The location asks for more organisation."),
+        "village-character": (["old-town","romantic","hotel-as-trip"], ["excursions","beach-first"], "A coast-led trip or one built on daily transport.", "Sleeping in or near the village changes the experience, not the inland geography."),
+        "quiet-retreat": (["quiet","hotel-as-trip","romantic"], ["car-free","city-life"], "Travellers who want spontaneous evenings on foot or no car.", "The retreat works because there is less at the door."),
+        "design-refined": (["hotel-as-trip","romantic","quiet"], ["value","excursions"], "A stay where the hotel is mainly a practical base.", "You are paying for the singularity of the place. You need to want to use it."),
+        "balanced-choice": (["quiet","value","romantic"], ["beach-first","city-life"], "A beach-first or urban trip.", "A sound Saint-Paul compromise without making the hotel the entire destination."),
+        "saint-tropez-itself": (["city-life","hotel-as-trip","romantic"], ["value","excursions"], "A value trip or one designed to cover the whole Riviera.", "You are buying Saint-Tropez itself. Rates and traffic come in the package."),
+        "ramatuelle-retreat": (["quiet","beach-first","hotel-as-trip","romantic"], ["car-free","city-life"], "A car-free stay or spontaneous evenings in the village.", "Pampelonne and retreat win. Transfers become a real variable."),
+        "gassin-resort": (["hotel-as-trip","quiet","beach-first"], ["car-free","old-town"], "Travellers who want Saint-Tropez on foot.", "The resort works as a destination. The village still requires a transfer."),
+        "sainte-maxime-opposite-shore": (["value","beach-first","city-life"], ["excursions"], "Travellers who want to be genuinely based in Saint-Tropez.", "You gain another price scale, but you are on the other side of the gulf."),
+        "practical-low-key": (["car-free","quiet","value"], ["hotel-as-trip","city-life"], "A destination hotel or important nightlife.", "Beaulieu stays simple and calm. The hotel does the job without trying to become the trip."),
+        "harbour-riviera": (["beach-first","quiet","hotel-as-trip","romantic","car-free"], ["value","city-life"], "A budget-first or urban trip.", "Sea and calm are easy. The activity is elsewhere."),
+    },
 }
 
 changed = []
@@ -147,6 +205,56 @@ def inject_shortlist_cta(rel: str, base: str, lang: str) -> None:
     text = text[:paragraph_end] + block + text[paragraph_end:]
     write_if_changed(rel, text, original)
 
+def inject_hub_fit_profiles() -> None:
+    hub_pairs = []
+    for path in sorted((ROOT / "hotels").glob("*/index.html")):
+        if path.parent.name == "finder":
+            continue
+        hub_pairs.append((path, "fr"))
+    for path in sorted((ROOT / "en" / "hotels").glob("*/index.html")):
+        if path.parent.name == "finder":
+            continue
+        hub_pairs.append((path, "en"))
+
+    for path, lang in hub_pairs:
+        text = path.read_text(encoding="utf-8")
+        original = text
+        for section_id, profile in FIT_PROFILES[lang].items():
+            best, not_for, not_for_text, tradeoff = profile
+            section_re = re.compile(
+                rf'(<section[^>]+id="{re.escape(section_id)}"[^>]*>)(.*?)(</section>)',
+                re.S,
+            )
+            match = section_re.search(text)
+            if not match:
+                continue
+            body = match.group(2)
+            attrs = (
+                f' data-fit-best="{escape(" ".join(best), quote=True)}"'
+                f' data-fit-not-for="{escape(" ".join(not_for), quote=True)}"'
+                f' data-fit-not-for-text="{escape(not_for_text, quote=True)}"'
+                f' data-fit-tradeoff="{escape(tradeoff, quote=True)}"'
+            )
+            def card_repl(card_match: re.Match[str]) -> str:
+                existing = card_match.group(1)
+                existing = re.sub(r'\sdata-fit-(?:best|not-for|not-for-text|tradeoff)="[^"]*"', "", existing)
+                return '<article class="hotel-choice-card"' + existing + attrs + '>'
+            body = re.sub(r'<article class="hotel-choice-card"([^>]*)>', card_repl, body)
+            text = text[:match.start(2)] + body + text[match.end(2):]
+
+        if lang == "fr" and path.as_posix().endswith("hotels/villefranche-sur-mer/index.html"):
+            text = text.replace("02 · Grand luxe &amp; retrait", "02 · Cap-Ferrat &amp; retrait")
+            text = text.replace("<span>Grand luxe &amp; retrait</span>", "<span>Cap-Ferrat &amp; retrait</span>")
+        if lang == "en" and path.as_posix().endswith("en/hotels/villefranche-sur-mer/index.html"):
+            text = text.replace("02 · Grand luxury &amp; retreat", "02 · Cap-Ferrat &amp; retreat")
+            text = text.replace("<span>Grand luxury &amp; retreat</span>", "<span>Cap-Ferrat &amp; retreat</span>")
+
+        if text != original:
+            rel = str(path.relative_to(ROOT))
+            path.write_text(text, encoding="utf-8")
+            if rel not in changed:
+                changed.append(rel)
+
 def validate() -> None:
     errors = []
     for rel in ("hotels/finder/index.html", "en/hotels/finder/index.html"):
@@ -176,6 +284,7 @@ def main() -> int:
     patch_hotel_hub("en/hotels/index.html", "en")
     patch_chooser("riviera-chooser/index.html", "fr")
     patch_chooser("en/riviera-chooser/index.html", "en")
+    inject_hub_fit_profiles()
 
     for rel, base in FR_DESTINATIONS.items():
         inject_shortlist_cta(rel, base, "fr")
