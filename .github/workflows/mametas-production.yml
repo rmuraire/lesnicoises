@@ -390,7 +390,7 @@ jobs:
           checks = {
               f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=7',
+                  '/assets/hotel-engine.js?v=5',
                   'Cinq choix. Une sélection courte et expliquée.',
               ),
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
