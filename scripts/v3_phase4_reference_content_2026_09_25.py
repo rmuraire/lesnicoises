@@ -168,7 +168,7 @@ def short_routes(lang: str) -> str:
         routes=[
             ("nice","Nice","2 h 30","Cours Saleya → Vieux-Nice → Colline du Château → Port","Commencez au marché/Cours Saleya, traversez le Vieux-Nice, montez au Château, redescendez côté Port. Si vous n’avez que 2 h, coupez le Port.","Premier aperçu de Nice","Montée au Château ; ascenseur possible selon horaires.","https://www.explorenicecotedazur.com/explorer/villes-villages/nice-la-capitale-de-la-cote-dazur/"),
             ("cannes","Cannes","3 h","Forville → Le Suquet → Place de la Castre → Vieux Port → Croisette","Le marché le matin si ouvert, puis la vieille ville avant de finir sur le port et la Croisette. C’est plus intéressant dans cet ordre que l’inverse.","Première visite courte","Forville est actuellement ouvert mardi–dimanche 7 h–13 h ; sinon commencez au Suquet.","https://www.cannes-france.com/que-faire/en-3-heures/"),
-            ("antibes","Antibes","2 h 30","Gare → vieille ville → musée Picasso → remparts → Gravette","Le musée Picasso mérite 60–75 minutes si vous entrez. Si vous voulez surtout marcher, restez dehors et gardez les remparts + Gravette.","Vieille ville + culture","Le musée transforme la balade en visite culturelle ; ne le faites pas par réflexe.","https://www.antibesjuanlespins.com/decouvrir/les-incontournables/le-musee-picasso"),
+            ("antibes","Antibes","2 h 30","Gare → vieille ville → musée Picasso → remparts → Gravette","Si vous entrez au musée Picasso, faites-en le vrai temps fort du créneau. Si vous voulez surtout marcher, restez dehors et gardez les remparts + Gravette.","Vieille ville + culture","Le musée transforme la balade en visite culturelle ; ne le faites pas par réflexe.","https://www.antibesjuanlespins.com/decouvrir/les-incontournables/le-musee-picasso"),
             ("villefranche","Villefranche-sur-Mer","2 h","Gare → vieille ville → Rue Obscure → Citadelle → port → Marinières","Une boucle compacte entre ruelles, patrimoine et eau. Ne construisez pas le créneau autour du musée de la Citadelle : ses salles sont actuellement fermées pour rénovation.","Beauté sans journée entière","Escaliers et dénivelé léger à modéré.","https://www.explorenicecotedazur.com/explorer/villes-villages/littoral/villefranche-sur-mer/"),
             ("menton","Menton","2 h 30","Biovès → vieille ville → basilique Saint-Michel → Sablettes","Montez progressivement vers Saint-Michel, prenez le point de vue, redescendez vers la mer. Si vous avez 30 minutes de plus, prolongez vers le Bastion/Cocteau.","Couleur + vieille ville","La pente vers Saint-Michel est le seul vrai effort.","https://www.menton-riviera-merveilles.fr/menton-et-le-littoral/nos-incontournables/vieille-ville-de-menton/"),
             ("monaco","Monaco","2 h 30","Place d’Armes → Rocher → Palais → Cathédrale → jardins Saint-Martin → Musée océanographique extérieur","Le Rocher tient dans 2–3 h si vous restez dehors. Si vous entrez au Musée océanographique, faites-en le programme principal : VisitMonaco indique environ 3 h pour le musée seul.","Le Monaco historique","Ne mélangez pas Rocher + musée complet + Casino dans le même créneau.","https://www.visitmonaco.com/fr/parcours-et-balades/26633/parcours-famille"),
@@ -183,7 +183,7 @@ def short_routes(lang: str) -> str:
         routes=[
             ("nice","Nice","2h30","Cours Saleya → Old Nice → Castle Hill → Port","Start around Cours Saleya, cross Old Nice, climb Castle Hill, descend toward the Port. If you only have 2 hours, cut the Port.","First look at Nice","Castle Hill climb; lift may be available depending on opening times.","https://www.explorenicecotedazur.com/explorer/villes-villages/nice-la-capitale-de-la-cote-dazur/"),
             ("cannes","Cannes","3h","Forville → Le Suquet → Place de la Castre → Old Port → Croisette","Use the market in the morning if open, then do the old town before finishing at the port and Croisette. It is more interesting in that order.","Short first visit","Forville is currently Tue–Sun 7am–1pm; otherwise start at Le Suquet.","https://www.cannes-france.com/que-faire/en-3-heures/"),
-            ("antibes","Antibes","2h30","Station → old town → Picasso Museum → ramparts → Gravette","Picasso deserves roughly an hour if you go inside. If you mainly want the walk, stay outside and keep the ramparts + Gravette.","Old town + culture","The museum turns this into a culture visit. Do not enter by reflex.","https://www.antibesjuanlespins.com/decouvrir/les-incontournables/le-musee-picasso"),
+            ("antibes","Antibes","2h30","Station → old town → Picasso Museum → ramparts → Gravette","If you go inside the Picasso Museum, make it the real centre of the slot. If you mainly want the walk, stay outside and keep the ramparts + Gravette.","Old town + culture","The museum turns this into a culture visit. Do not enter by reflex.","https://www.antibesjuanlespins.com/decouvrir/les-incontournables/le-musee-picasso"),
             ("villefranche","Villefranche-sur-Mer","2h","Station → old town → Rue Obscure → Citadel → harbour → Marinières","A compact loop through lanes, heritage and water. Do not build the slot around the Citadel museum: its museum rooms are currently closed for renovation.","Beauty without a full day","Steps and light-to-moderate gradients.","https://www.explorenicecotedazur.com/explorer/villes-villages/littoral/villefranche-sur-mer/"),
             ("menton","Menton","2h30","Biovès → old town → Saint-Michel → Sablettes","Climb gradually to Saint-Michel, take the viewpoint, then come down toward the sea. With 30 minutes more, extend toward the Bastion/Cocteau.","Colour + old town","The climb to Saint-Michel is the only real effort.","https://www.menton-riviera-merveilles.fr/menton-et-le-littoral/nos-incontournables/vieille-ville-de-menton/"),
             ("monaco","Monaco","2h30","Place d’Armes → Rock → Palace → Cathedral → Saint-Martin gardens → Oceanographic Museum exterior","The Rock fits 2–3 hours if you stay outside. If you enter the Oceanographic Museum, make that the main programme: VisitMonaco gives about 3 hours for the museum alone.","Historic Monaco","Do not combine the Rock + full museum + Casino in the same slot.","https://www.visitmonaco.com/fr/parcours-et-balades/26633/parcours-famille"),
@@ -291,6 +291,29 @@ def css() -> None:
 '''
     save("assets/v3.css",text,original)
 
+
+def patch_sitemap() -> None:
+    p=ROOT/"sitemap.xml"
+    if not p.exists(): return
+    text=p.read_text(encoding="utf-8"); original=text
+    urls=[
+        "/plan/real-budget/","/fr/planifier/budget-reel/",
+        "/plan/car-or-no-car/","/fr/planifier/voiture-ou-pas/",
+        "/plan/when-to-go/","/fr/planifier/quand-partir/",
+        "/plan/three-days-riviera/","/fr/planifier/trois-jours-cote-d-azur/",
+        "/plan/seven-days-riviera/","/fr/planifier/sept-jours-cote-d-azur/",
+        "/en/explore/2-3-hours/","/explore/2-3-heures/",
+        "/en/practical/weather-by-season/","/pratique/climat-saisons/"
+    ]
+    additions=""
+    for path in urls:
+        url="https://www.mametas.com"+path
+        if f"<loc>{url}</loc>" not in text:
+            additions += f'  <url><loc>{url}</loc><lastmod>2026-09-25</lastmod></url>\n'
+    if additions:
+        text=text.replace("</urlset>",additions+"</urlset>")
+    save("sitemap.xml",text,original)
+
 def validate() -> None:
     checks={
         "plan/real-budget/index.html":("PASS Sud Azur Explore","€675","€2,020"),
@@ -347,6 +370,7 @@ def main() -> int:
     patch_practical_hub("en/practical/index.html","en")
     patch_practical_hub("pratique/index.html","fr")
     css()
+    patch_sitemap()
     validate()
     print(f"V3 phase 4 passed; changed {len(changed)} file(s).")
     for rel in sorted(changed): print(rel)
