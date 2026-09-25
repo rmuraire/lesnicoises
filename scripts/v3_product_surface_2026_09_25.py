@@ -63,6 +63,86 @@ def patch_home_hotel_selection(rel, lang):
         raise RuntimeError(f"{rel}: homepage hotel section not found")
     save(rel, text, original)
 
+
+def patch_home_riviera_fit(rel, lang):
+    p = ROOT / rel
+    text = p.read_text(encoding="utf-8")
+    original = text
+
+    # Riviera Fit is the single signature product on the homepage.
+    text = re.sub(r'<section class="v3-section v3-product-proof".*?</section>\s*', '', text, count=1, flags=re.S)
+
+    if lang == "fr":
+        block = '''<section class="v3-section chooser-signature-section chooser-signature-section--fit" id="planifier"><div class="wrap riviera-fit-home"><div class="riviera-fit-home-copy"><p class="eyebrow">RIVIERA FIT · LA RECO MAMETAS</p><h2>Choisissez la bonne base avant le reste.</h2><p class="riviera-fit-home-punch"><a href="/lexique/#pichoun">Pichoun</a>, choisissez la ville avant le peignoir.</p><p>Durée, saison, mobilité, envies, rythme. Riviera Fit tranche entre Nice, Cannes, Antibes, Menton et les autres bases, puis explique pourquoi le choix fonctionne et ce que vous perdez en écartant les alternatives.</p><a class="button chooser-signature-primary" href="/riviera-chooser/">Tester Riviera Fit</a></div><div class="riviera-fit-home-demo" aria-label="Exemple de résultat Riviera Fit"><p class="riviera-fit-demo-label">EXEMPLE · VOTRE SÉJOUR</p><div class="riviera-fit-demo-chips"><span>5 jours</span><span>Sans voiture</span><span>Premier séjour</span><span>Juin</span><span>Équilibré</span></div><div class="riviera-fit-home-verdict"><p class="riviera-fit-demo-label">LA RECO MAMETAS</p><h3>Posez vos valises à Nice.</h3><p><strong>Pourquoi :</strong> meilleur réseau de transport et plus grande portée pour les excursions.</p><p><strong>Pourquoi pas Cannes :</strong> choisissez-la plutôt si sable et soirées comptent davantage.</p><div class="riviera-fit-reality"><span>Sans voiture <b>Excellent</b></span><span>Budget <b>€€</b></span><span>Friction <b>Faible</b></span><span>Saison <b>Très bonne</b></span></div></div></div></div></section>'''
+        text = text.replace('>Lancer le Riviera Chooser</a>', '>Tester Riviera Fit</a>')
+        text = text.replace('<a class="button" href="/hotels/finder/?base=nice">Trouver mon hôtel avec Hotel Fit</a><a class="button secondary" href="/fr/dormir/nice/">Voir toute la sélection Nice</a>',
+                            '<a class="button" href="/hotels/">Explorer la rubrique Dormir</a><a class="button secondary" href="/fr/dormir/nice/">Voir toute la sélection Nice</a>')
+        section_id = "planifier"
+    else:
+        block = '''<section class="v3-section chooser-signature-section chooser-signature-section--fit" id="plan"><div class="wrap riviera-fit-home"><div class="riviera-fit-home-copy"><p class="eyebrow">RIVIERA FIT · THE MAMETAS CALL</p><h2>Choose the right base before everything else.</h2><p class="riviera-fit-home-punch"><a href="/en/lexicon/#pichoun">Pichoun</a>, choose the town before the bathrobe.</p><p>Duration, season, mobility, priorities, pace. Riviera Fit makes the call between Nice, Cannes, Antibes, Menton and the other bases, then explains why the choice works and what you give up by skipping the alternatives.</p><a class="button chooser-signature-primary" href="/en/riviera-chooser/">Try Riviera Fit</a></div><div class="riviera-fit-home-demo" aria-label="Example Riviera Fit result"><p class="riviera-fit-demo-label">EXAMPLE · YOUR TRIP</p><div class="riviera-fit-demo-chips"><span>5 days</span><span>No car</span><span>First visit</span><span>June</span><span>Balanced</span></div><div class="riviera-fit-home-verdict"><p class="riviera-fit-demo-label">THE MAMETAS CALL</p><h3>Stay in Nice.</h3><p><strong>Why:</strong> strongest transport network and best reach for day trips.</p><p><strong>Why not Cannes:</strong> choose it instead if sand and nightlife matter more.</p><div class="riviera-fit-reality"><span>Car-free <b>Excellent</b></span><span>Budget <b>€€</b></span><span>Friction <b>Low</b></span><span>Season <b>Great</b></span></div></div></div></div></section>'''
+        text = text.replace('>Start the Riviera Chooser</a>', '>Try Riviera Fit</a>')
+        text = text.replace('<a class="button" href="/en/hotels/finder/?base=nice">Find my hotel with Hotel Fit</a><a class="button secondary" href="/stay/nice/">See the full Nice selection</a>',
+                            '<a class="button" href="/en/hotels/">Explore Stay</a><a class="button secondary" href="/stay/nice/">See the full Nice selection</a>')
+        section_id = "plan"
+
+    pattern = re.compile(rf'<section class="v3-section chooser-signature-section" id="{section_id}">.*?</section>', re.S)
+    text, count = pattern.subn(block, text, count=1)
+    if count != 1:
+        # Accept an already-upgraded class on repeat runs.
+        pattern = re.compile(rf'<section class="v3-section chooser-signature-section chooser-signature-section--fit" id="{section_id}">.*?</section>', re.S)
+        text, count = pattern.subn(block, text, count=1)
+    if count != 1:
+        raise RuntimeError(f"{rel}: Riviera Fit homepage block not found")
+    save(rel, text, original)
+
+
+def rebrand_riviera_fit(rel, lang):
+    p = ROOT / rel
+    text = p.read_text(encoding="utf-8")
+    original = text
+    if lang == "fr":
+        text = text.replace("RIVIERA FIT · LE DIAGNOSTIC MAMETAS", "RIVIERA FIT · LA RECO MAMETAS")
+    else:
+        text = text.replace("RIVIERA FIT · THE MAMETAS DIAGNOSIS", "RIVIERA FIT · THE MAMETAS CALL")
+    save(rel, text, original)
+
+
+def add_riviera_fit_home_css():
+    p = ROOT / "assets/v3.css"
+    text = p.read_text(encoding="utf-8")
+    original = text
+    marker = "/* V3 Riviera Fit homepage story 2026-09-25 */"
+    if marker in text:
+        return
+    text += r'''
+
+/* V3 Riviera Fit homepage story 2026-09-25 */
+.chooser-signature-section--fit{padding:clamp(54px,6vw,78px) 0;background:var(--blue);color:var(--white)}
+.riviera-fit-home{display:grid;grid-template-columns:minmax(0,.88fr) minmax(460px,1.12fr);gap:clamp(34px,5vw,72px);align-items:center}
+.riviera-fit-home-copy{max-width:650px}
+.riviera-fit-home-copy .eyebrow{color:#f7c966}
+.riviera-fit-home-copy h2{max-width:11ch;margin:0 0 18px;font-family:var(--serif);font-size:clamp(42px,4.8vw,64px);font-weight:500;letter-spacing:-.045em;line-height:.98}
+.riviera-fit-home-punch{margin:0 0 16px!important;color:#f7c966!important;font-family:var(--serif);font-size:clamp(21px,2vw,27px)!important;font-weight:600;line-height:1.2!important}
+.riviera-fit-home-punch a{text-decoration:underline;text-underline-offset:4px}
+.riviera-fit-home-copy>p:not(.eyebrow):not(.riviera-fit-home-punch){max-width:620px;margin:0 0 24px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.68}
+.riviera-fit-home-demo{overflow:hidden;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08)}
+.riviera-fit-demo-label{margin:0!important;color:#f7c966!important;font-size:9px!important;font-weight:800!important;letter-spacing:.16em;line-height:1.35!important;text-transform:uppercase}
+.riviera-fit-home-demo>.riviera-fit-demo-label{padding:20px 22px 0}
+.riviera-fit-demo-chips{display:flex;flex-wrap:wrap;gap:7px;padding:12px 22px 20px;border-bottom:1px solid rgba(255,255,255,.2)}
+.riviera-fit-demo-chips span{padding:6px 9px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.08);font-size:9px;font-weight:700;letter-spacing:.03em}
+.riviera-fit-home-verdict{padding:21px 22px 22px;background:rgba(11,23,48,.34)}
+.riviera-fit-home-verdict h3{margin:10px 0 14px;font-family:var(--serif);font-size:clamp(30px,3.2vw,43px);font-weight:500;line-height:1}
+.riviera-fit-home-verdict>p:not(.riviera-fit-demo-label){margin:7px 0;color:rgba(255,255,255,.78);font-size:11px;line-height:1.55}
+.riviera-fit-home-verdict strong{color:var(--white)}
+.riviera-fit-reality{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:18px;background:rgba(255,255,255,.2)}
+.riviera-fit-reality span{padding:10px 8px;background:var(--blue-deep);color:rgba(255,255,255,.68);font-size:8px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.riviera-fit-reality b{display:block;margin-top:4px;color:var(--white);font-size:10px}
+@media(max-width:940px){.riviera-fit-home{grid-template-columns:1fr}.riviera-fit-home-demo{max-width:760px}.riviera-fit-home-copy h2{max-width:14ch}}
+@media(max-width:600px){.chooser-signature-section--fit{padding:46px 0}.riviera-fit-reality{grid-template-columns:repeat(2,1fr)}}
+'''
+    save("assets/v3.css", text, original)
+
+
 def rebrand_hotel_fit(rel, lang):
     p = ROOT / rel
     text = p.read_text(encoding="utf-8")
@@ -116,11 +196,13 @@ def add_css():
 
 def validate():
     checks = {
-        "index.html": ("v3-product-proof", "Open Hotel Fit", "SHORT SELECTION · WHERE TO STAY IN NICE"),
-        "fr/index.html": ("v3-product-proof", "Trouver mon hôtel avec Hotel Fit", "SÉLECTION COURTE · OÙ DORMIR À NICE"),
+        "index.html": ("RIVIERA FIT · THE MAMETAS CALL", "EXAMPLE · YOUR TRIP", "THE MAMETAS CALL", "Try Riviera Fit", "Explore Stay", "SHORT SELECTION · WHERE TO STAY IN NICE"),
+        "fr/index.html": ("RIVIERA FIT · LA RECO MAMETAS", "EXEMPLE · VOTRE SÉJOUR", "LA RECO MAMETAS", "Tester Riviera Fit", "Explorer la rubrique Dormir", "SÉLECTION COURTE · OÙ DORMIR À NICE"),
+        "riviera-chooser/index.html": ("RIVIERA FIT · LA RECO MAMETAS",),
+        "en/riviera-chooser/index.html": ("RIVIERA FIT · THE MAMETAS CALL",),
         "hotels/finder/index.html": ("HOTEL FIT · LE MATCHING HÔTELIER MAMETAS", "Cinq choix. Puis seulement les hôtels qui collent."),
         "en/hotels/finder/index.html": ("HOTEL FIT · THE MAMETAS HOTEL MATCHER", "Five choices. Then only the hotels that fit."),
-        "assets/v3.css": ("/* V3 product surface 2026-09-25 */", ".product-proof-grid", ".hotel-selection-actions"),
+        "assets/v3.css": ("/* V3 Riviera Fit homepage story 2026-09-25 */", ".riviera-fit-home", ".riviera-fit-home-demo"),
     }
     errors = []
     for rel, needles in checks.items():
@@ -128,6 +210,14 @@ def validate():
         for needle in needles:
             if needle not in text:
                 errors.append(f"{rel}: missing {needle!r}")
+    for rel in ("index.html", "fr/index.html"):
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        if "v3-product-proof" in text or "WHAT MAMETAS DOES DIFFERENTLY" in text or "CE QUE MAMETAS FAIT DIFFÉREMMENT" in text:
+            errors.append(f"{rel}: redundant product-proof block still present")
+        if "Riviera Chooser" in text:
+            errors.append(f"{rel}: old Riviera Chooser naming still visible")
+        if "Hotel Fit" in text:
+            errors.append(f"{rel}: Hotel Fit should not be promoted on the homepage")
     if errors:
         raise SystemExit("V3 product surface validation failed:\n- " + "\n- ".join(errors))
 
@@ -136,9 +226,14 @@ def main():
     add_home_product_proof("fr/index.html", "fr")
     patch_home_hotel_selection("index.html", "en")
     patch_home_hotel_selection("fr/index.html", "fr")
+    patch_home_riviera_fit("index.html", "en")
+    patch_home_riviera_fit("fr/index.html", "fr")
+    rebrand_riviera_fit("riviera-chooser/index.html", "fr")
+    rebrand_riviera_fit("en/riviera-chooser/index.html", "en")
     rebrand_hotel_fit("hotels/finder/index.html", "fr")
     rebrand_hotel_fit("en/hotels/finder/index.html", "en")
     add_css()
+    add_riviera_fit_home_css()
     validate()
     print(f"V3 product surface passed; patched {len(changed)} generated file(s).")
     for rel in sorted(changed):
