@@ -50,10 +50,10 @@ def patch_home(rel: str, lang: str) -> None:
     text = add_body_class(text, "adoption-home")
 
     if "home-journey-spine" not in text:
-        m = re.search(r'<section[^>]*class="[^"]*\\bhome-hero\\b[^"]*"[^>]*>.*?</section>', text, flags=re.S)
-        if not m:
-            raise RuntimeError(f"{rel}: homepage hero not found")
-        text = text[:m.end()] + journey_spine(lang) + text[m.end():]
+        anchor = re.search(r'<section[^>]*class="[^"]*chooser-signature-section--fit[^"]*"[^>]*>', text, flags=re.S)
+        if not anchor:
+            raise RuntimeError(f"{rel}: Riviera Fit homepage section not found")
+        text = text[:anchor.start()] + journey_spine(lang) + text[anchor.start():]
 
     if lang == "fr":
         text = text.replace("MAMETAS RIVIERA FIT · LA RECO", "MAMETAS · RIVIERA FIT")
