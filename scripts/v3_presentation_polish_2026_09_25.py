@@ -301,7 +301,9 @@ def validate() -> None:
         errors.append("assets/v3.css: presentation polish missing")
     if "V3 booking visual polish 2026-09-25" not in (ROOT / "assets/site.css").read_text(encoding="utf-8"):
         errors.append("assets/site.css: booking polish missing")
-    if "Plan embedded Riviera Fit 2026-09-25" not in (ROOT / "assets/riviera-chooser.css").read_text(encoding="utf-8"):\n        errors.append("assets/riviera-chooser.css: embedded Plan tool polish missing")\n    if errors:
+    if "Plan embedded Riviera Fit 2026-09-25" not in (ROOT / "assets/riviera-chooser.css").read_text(encoding="utf-8"):
+        errors.append("assets/riviera-chooser.css: embedded Plan tool polish missing")
+    if errors:
         raise SystemExit("V3 presentation polish failed:\n- " + "\n- ".join(errors))
 
 
