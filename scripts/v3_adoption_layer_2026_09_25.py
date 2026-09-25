@@ -50,7 +50,7 @@ def patch_home(rel: str, lang: str) -> None:
     text = add_body_class(text, "adoption-home")
 
     if "home-journey-spine" not in text:
-        m = re.search(r'<section class="home-hero"\b.*?</section>', text, flags=re.S)
+        m = re.search(r'<section[^>]*class="[^"]*\\bhome-hero\\b[^"]*"[^>]*>.*?</section>', text, flags=re.S)
         if not m:
             raise RuntimeError(f"{rel}: homepage hero not found")
         text = text[:m.end()] + journey_spine(lang) + text[m.end():]
