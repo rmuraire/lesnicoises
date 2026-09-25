@@ -226,7 +226,7 @@ jobs:
                   print(f"V3 phase 4 / harmonisation check passed: {url}")
           PY
 
-      - name: Check refreshed Explore and Gay Nice
+      - name: Check refreshed homepage and Gay Nice
         run: |
           python - <<'PY'
           import os
@@ -235,25 +235,19 @@ jobs:
           checks = {
               f"https://www.mametas.com/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
-                  "sculpture-4080986_1280.jpg",
-                  'class="lgbtq-banner"',
-                  'class="first-trip-grid"',
-                  '<a class="first-trip-card" href=',
-                  'class="wrap home-lgbtq-wrap"',
+                  'class="home-experience-grid"',
+                  'class="home-lgbtq-section"',
                   "/en/gay-french-riviera/",
-                  'class="v3-section chooser-signature-section"',
-                  'href="/en/riviera-fit/?days=5"',
+                  "home-credibility-strip",
+                  'href="/en/riviera-fit/">Try Riviera Fit</a>',
               ),
               f"https://www.mametas.com/fr/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
-                  "sculpture-4080986_1280.jpg",
-                  'class="lgbtq-banner"',
-                  'class="first-trip-grid"',
-                  '<a class="first-trip-card" href=',
-                  'class="wrap home-lgbtq-wrap"',
+                  'class="home-experience-grid"',
+                  'class="home-lgbtq-section"',
                   "/cote-dazur-gay/",
-                  'class="v3-section chooser-signature-section"',
-                  'href="/riviera-fit/?days=5"',
+                  "home-credibility-strip",
+                  'href="/riviera-fit/">Tester Riviera Fit</a>',
               ),
               f"https://www.mametas.com/en/gay-nice/?deploy={sha}": (
                   'class="place gay-hotel-card"',
@@ -277,12 +271,6 @@ jobs:
                   missing = [needle for needle in needles if needle not in body]
                   if missing:
                       raise SystemExit(f"{url} is missing refreshed markers: {missing}")
-                  if "mametas.com/?deploy=" in url or "mametas.com/fr/?deploy=" in url:
-                      base_pos = body.find('id="bases"')
-                      gay_pos = body.find('class="wrap home-lgbtq-wrap"')
-                      first_trip_pos = body.find('id="riviera-first-trip-edit"')
-                      if not (base_pos >= 0 and base_pos < gay_pos < first_trip_pos):
-                          raise SystemExit(f"{url} homepage order is wrong: base={base_pos}, gay={gay_pos}, first-trip={first_trip_pos}")
                   print(f"Refreshed page check passed: {url}")
           PY
 
