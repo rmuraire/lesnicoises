@@ -226,7 +226,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=8",
+                  "/assets/riviera-chooser.js?v=9",
               ),
               f"https://www.mametas.com/riviera-chooser/?deploy={sha}": (
                   "Cinq questions. Une base. Et les compromis avec.",
@@ -234,7 +234,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=8",
+                  "/assets/riviera-chooser.js?v=9",
               ),
           }
           for url, needles in checks.items():
@@ -329,7 +329,7 @@ jobs:
           checks = {
               f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=6',
+                  '/assets/hotel-engine.js?v=7',
                   'Cinq choix. Une sélection courte et expliquée.',
               ),
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
