@@ -574,3 +574,23 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .article-visual-pair{grid-template-columns:1fr;margin:22px 0 32px}
   .article-visual-item img{height:auto;aspect-ratio:4/3}
 }
+
+
+/* V3 culture logistics */
+.culture-logistics{margin:28px 0;padding:0;border:1px solid var(--line);background:rgba(255,253,248,.58)}
+.culture-logistics-head{display:flex;justify-content:space-between;gap:18px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:rgba(23,54,95,.035)}
+.culture-logistics-head span{color:var(--blue-deep);font:700 9px/1.35 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+.culture-logistics-head small{color:var(--ink-soft);font:600 9px/1.35 var(--sans)}
+.culture-logistics-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.culture-logistics-grid>div{display:grid;gap:6px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.culture-logistics-grid>div:nth-child(odd){border-right:1px solid var(--line)}
+.culture-logistics-grid>div:nth-last-child(-n+2){border-bottom:0}
+.culture-logistics-grid b{color:var(--ink);font:700 10px/1.35 var(--sans);letter-spacing:.06em;text-transform:uppercase}
+.culture-logistics-grid span{color:var(--ink-soft);font:400 12px/1.6 var(--sans)}
+.culture-logistics-grid a{color:var(--blue-deep);font-weight:700;border-bottom:1px solid var(--coral)}
+@media(max-width:650px){
+  .culture-logistics-head{display:grid;gap:5px}
+  .culture-logistics-grid{grid-template-columns:1fr}
+  .culture-logistics-grid>div,.culture-logistics-grid>div:nth-child(odd),.culture-logistics-grid>div:nth-last-child(-n+2){border-right:0;border-bottom:1px solid var(--line)}
+  .culture-logistics-grid>div:last-child{border-bottom:0}
+}
