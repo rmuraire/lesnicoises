@@ -42,7 +42,9 @@
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
     none:'Rien de suffisamment net. Élargissez un critère.',
     count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
+    bestFor:'Idéal pour',
     why:'Pourquoi elle ressort',
+    notFor:'Moins adapté à',
     catch:'Le compromis',
     rates:'Voir les tarifs',
     details:'Voir la fiche Mametas',
@@ -53,7 +55,9 @@
     changed:'Your choices changed. Run the shortlist again when you are done.',
     none:'Not enough clean matches. Widen one criterion.',
     count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
+    bestFor:'Best for',
     why:'Why it made the cut',
+    notFor:'Not for',
     catch:'The catch',
     rates:'Check rates',
     details:'See the Mametas review',
@@ -82,16 +86,18 @@
 
   function structuredSignals(item) {
     var styles = item.styles || [];
+    var fit = item.fit || {};
+    var best = fit.bestFor || [];
     return {
-      station: !!item.stationFriendly,
-      noCar: item.carFree === true || item.noCarFriendly === true,
-      sea: !!item.seaAccess,
-      oldtown: !!item.oldTownAccess,
-      quiet: !!item.quiet,
-      practical: styles.indexOf('practical') >= 0,
-      active: styles.indexOf('active') >= 0,
-      chic: styles.indexOf('chic') >= 0,
-      text: normalise([item.name, item.neighborhood, styles.join(' ')].join(' '))
+      station: !!item.stationFriendly || best.indexOf('excursions') >= 0,
+      noCar: item.carFree === true || item.noCarFriendly === true || best.indexOf('car-free') >= 0,
+      sea: !!item.seaAccess || best.indexOf('beach-first') >= 0,
+      oldtown: !!item.oldTownAccess || best.indexOf('old-town') >= 0,
+      quiet: !!item.quiet || best.indexOf('quiet') >= 0,
+      practical: styles.indexOf('practical') >= 0 || best.indexOf('excursions') >= 0 || best.indexOf('car-free') >= 0 || best.indexOf('value') >= 0,
+      active: styles.indexOf('active') >= 0 || best.indexOf('city-life') >= 0,
+      chic: styles.indexOf('chic') >= 0 || best.indexOf('hotel-as-trip') >= 0,
+      text: normalise([item.name, item.neighborhood, styles.join(' '), best.join(' ')].join(' '))
     };
   }
 
@@ -250,6 +256,7 @@
         detailPath:fr ? (paths.fr || '') : (paths.en || ''),
         affiliate:affiliateUrl,
         priceBand:item.priceBand || '',
+        fit:item.fit || {},
         media:(item.image && item.image.indexOf('batch-sprite') < 0) ? { type:'img', src:item.image, alt:item.name || '' } : null,
         _order:index
       };
@@ -329,6 +336,41 @@
     return bits.join(' · ');
   }
 
+  var fitTagLabels = fr ? {
+    'car-free':'Sans voiture',
+    'excursions':'Excursions',
+    'beach-first':'Plage d’abord',
+    'city-life':'Vie de ville',
+    'quiet':'Calme',
+    'hotel-as-trip':'L’hôtel fait partie du voyage',
+    'old-town':'Vieille ville',
+    'value':'Budget maîtrisé',
+    'romantic':'Couple'
+  } : {
+    'car-free':'Car-free',
+    'excursions':'Day trips',
+    'beach-first':'Beach-first',
+    'city-life':'City life',
+    'quiet':'Quiet',
+    'hotel-as-trip':'Hotel as the trip',
+    'old-town':'Old town',
+    'value':'Value',
+    'romantic':'Couples'
+  };
+
+  function fitText(hotel, field) {
+    var fit = hotel.fit || {};
+    var value = fit[field];
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    return value[fr ? 'fr' : 'en'] || value.en || value.fr || '';
+  }
+
+  function bestForText(hotel) {
+    var tags = (hotel.fit && hotel.fit.bestFor) || [];
+    return tags.map(function(tag){ return fitTagLabels[tag] || tag; }).join(' · ');
+  }
+
   function esc(value) {
     return String(value || '').replace(/[&<>"']/g, function(ch){
       return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch];
@@ -359,7 +401,10 @@
   function render(shortlist) {
     summary.textContent = labels.count(shortlist.length);
     results.innerHTML = shortlist.map(function(hotel, index){
-      var reason = hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
+      var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
+      var bestFor = bestForText(hotel);
+      var notFor = fitText(hotel, 'notForText');
+      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
       var action = '';
       if (hotel.affiliate) {
         action = '<a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>';
@@ -373,8 +418,10 @@
           '<p class="eyebrow">' + esc(metaText(hotel)) + '</p>' +
           '<h3>' + esc(hotel.name) + '</h3>' +
           (hotel.priceBand ? '<p class="engine-price-band" title="' + (fr ? 'Positionnement prix relatif, pas un tarif en temps réel' : 'Relative price positioning, not a live rate') + '">' + esc(priceSymbol[hotel.priceBand] || '') + '<span>' + (fr ? 'repère budget' : 'budget guide') + '</span></p>' : '') +
+          (bestFor ? '<p class="engine-result-line engine-fit-line"><strong>' + labels.bestFor + '.</strong> ' + esc(bestFor) + '</p>' : '') +
           '<p class="engine-result-line"><strong>' + labels.why + '.</strong> ' + esc(reason) + '</p>' +
-          '<p class="engine-result-line"><strong>' + labels.catch + '.</strong> ' + esc(catchText(hotel)) + '</p>' +
+          (notFor ? '<p class="engine-result-line"><strong>' + labels.notFor + '.</strong> ' + esc(notFor) + '</p>' : '') +
+          '<p class="engine-result-line"><strong>' + labels.catch + '.</strong> ' + esc(tradeOff) + '</p>' +
           (action ? '<div class="hotel-engine-actions">' + action + '</div>' : '') +
         '</div>' +
       '</article>';
