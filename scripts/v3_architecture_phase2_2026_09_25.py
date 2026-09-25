@@ -38,10 +38,11 @@ def nav_html(lang: str, active: str = "") -> str:
             ("practical", "/en/practical/", "Practical"),
         ]
         aria = "Primary navigation"
-    lis = "".join(
-        f'<li><a href="{href}"{" aria-current=\"page\"" if key == active else ""}>{label}</a></li>'
-        for key, href, label in items
-    )
+    lis_parts = []
+    for key, href, label in items:
+        current = ' aria-current="page"' if key == active else ''
+        lis_parts.append(f'<li><a href="{href}"{current}>{label}</a></li>')
+    lis = "".join(lis_parts)
     return f'<nav class="v3-nav" aria-label="{aria}"><ul>{lis}</ul></nav>'
 
 
@@ -57,8 +58,8 @@ def header(lang: str, active: str, fr_href: str, en_href: str) -> str:
         f'<span class="v3-brand-line">They know the Riviera.</span></a>'
         f'{nav_html(lang, active)}'
         f'<div class="lang-switch" aria-label="{lang_aria}">'
-        f'<a href="{fr_href}"{" aria-current=\"page\"" if is_fr else ""}>FR</a><span>/</span>'
-        f'<a href="{en_href}"{" aria-current=\"page\"" if not is_fr else ""}>EN</a></div>'
+        f'<a href="{fr_href}"' + (' aria-current="page"' if is_fr else '') + '>FR</a><span>/</span>'
+        f'<a href="{en_href}"' + (' aria-current="page"' if not is_fr else '') + '>EN</a></div>'
         f'<button class="menu-button" type="button" aria-label="{open_label}" data-v3-menu-open>'
         f'<span></span><span></span><span></span></button></div></header>'
     )
@@ -346,7 +347,11 @@ def patch_static_navs() -> None:
             items = [("plan","/fr/planifier/","Plan"),("places","/riviera-guide/","Destinations"),("stay","/hotels/","Dormir"),("explore","/explore/","Explorer"),("practical","/pratique/","Pratique")]
         else:
             items = [("plan","/plan/","Plan"),("places","/en/riviera-guide/","Places"),("stay","/en/hotels/","Stay"),("explore","/en/explore/","Explore"),("practical","/en/practical/","Practical")]
-        lis = "".join(f'<li><a href="{href}"{" aria-current=\"page\"" if key == active else ""}>{label}</a></li>' for key,href,label in items)
+        lis_parts = []
+        for key, href, label in items:
+            current = ' aria-current="page"' if key == active else ''
+            lis_parts.append(f'<li><a href="{href}"{current}>{label}</a></li>')
+        lis = "".join(lis_parts)
         text = nav_re.sub(lambda m: m.group(1) + lis + m.group(2), text)
         if text != original:
             save(rel, text, original)
