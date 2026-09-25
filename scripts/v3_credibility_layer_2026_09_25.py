@@ -57,6 +57,16 @@ def main() -> int:
         p.parent.mkdir(parents=True,exist_ok=True)
         p.write_text(page(lang),encoding="utf-8")
     add_css()
+    sitemap = ROOT / "sitemap.xml"
+    sm = sitemap.read_text(encoding="utf-8")
+    entries = [
+        '  <url><loc>https://www.mametas.com/presse/</loc><lastmod>2026-09-25</lastmod></url>',
+        '  <url><loc>https://www.mametas.com/en/press/</loc><lastmod>2026-09-25</lastmod></url>',
+    ]
+    for entry in entries:
+        if entry not in sm:
+            sm = sm.replace("</urlset>", entry + "\n</urlset>")
+    sitemap.write_text(sm, encoding="utf-8")
     print("V3 credibility layer passed.")
     return 0
 
