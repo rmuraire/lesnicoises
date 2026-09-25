@@ -323,8 +323,8 @@ jobs:
           checks = {
               f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=5',
-                  'Cinq choix. Puis seulement les hôtels qui collent.',
+                  '/assets/hotel-engine.js?v=6',
+                  'Cinq choix. Une sélection courte et expliquée.',
               ),
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
                   'hotel-price-band',
@@ -334,7 +334,7 @@ jobs:
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
                   '/assets/hotel-engine.js?v=5',
-                  'Five choices. Then only the hotels that fit.',
+                  'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
                   'class="card seasonal-card"',
