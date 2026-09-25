@@ -1,4 +1,4 @@
-// Finder V3.1: city-only selections show the full city inventory; filtered searches remain shortlists.
+// Finder V3.2: city-only selections show the full city inventory; filtered searches remain shortlists.
 (function () {
   var root = document.querySelector('[data-hotel-engine]');
   if (!root) return;
@@ -39,6 +39,7 @@
   var labels = fr ? {
     loading:'On passe la sélection Mametas au crible…',
     choose:'Choisissez au moins un critère avant de lancer la recherche.',
+    chooseBase:'Choisissez d’abord votre base. Si vous hésitez encore entre les villes, commencez par Riviera Fit.',
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
     none:'Rien de suffisamment net. Élargissez un critère.',
     count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
@@ -52,6 +53,7 @@
   } : {
     loading:'Checking the Mametas selection…',
     choose:'Pick at least one criterion before running the finder.',
+    chooseBase:'Choose your base first. If you are still deciding between towns, start with Riviera Fit.',
     changed:'Your choices changed. Run the shortlist again when you are done.',
     none:'Not enough clean matches. Widen one criterion.',
     count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
@@ -462,6 +464,10 @@
     clearDisclosure();
     results.innerHTML = '';
     output.hidden = false;
+    if (state.base === 'any') {
+      summary.textContent = labels.chooseBase;
+      return;
+    }
     if (!chosenSomething()) {
       summary.textContent = labels.choose;
       return;
