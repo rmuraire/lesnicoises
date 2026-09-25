@@ -3,17 +3,17 @@
   var path = window.location.pathname;
   var isHome = path === "/" || path === "/fr/";
   var items = isFrench ? [
-    { label: "Planifier", href: "/riviera-fit/" },
-    { label: "Lieux", href: "/riviera-guide/" },
+    { label: "Plan", href: "/fr/planifier/" },
+    { label: "Destinations", href: "/riviera-guide/" },
     { label: "Dormir", href: "/hotels/" },
     { label: "Explorer", href: "/explore/" },
-    { label: "Maintenant", href: "/bons-plans/" }
+    { label: "Pratique", href: "/pratique/" }
   ] : [
-    { label: "Plan", href: "/en/riviera-fit/" },
+    { label: "Plan", href: "/plan/" },
     { label: "Places", href: "/en/riviera-guide/" },
     { label: "Stay", href: "/en/hotels/" },
     { label: "Explore", href: "/en/explore/" },
-    { label: "Now", href: "/en/good-finds/" }
+    { label: "Practical", href: "/en/practical/" }
   ];
 
   function currentSection() {
@@ -23,13 +23,13 @@
       if (path.indexOf("/riviera-guide/") === 0) return 1;
       if (path.indexOf("/fr/dormir/") === 0 || path.indexOf("/hotels/") === 0) return 2;
       if (path.indexOf("/explore/") === 0 || path.indexOf("/culture/") === 0 || path.indexOf("/restaurants/") === 0 || path.indexOf("/plages/") === 0 || path.indexOf("/escapades/") === 0) return 3;
-      if (path.indexOf("/bons-plans/") === 0) return 4;
+      if (path.indexOf("/pratique/") === 0 || path.indexOf("/bons-plans/transfert-aeroport-nice/") === 0 || path.indexOf("/bons-plans/train-ou-bus/") === 0 || path.indexOf("/bons-plans/que-reserver/") === 0 || path.indexOf("/bons-plans/nice-quand-il-pleut/") === 0) return 4;
     } else {
       if (path.indexOf("/en/riviera-fit/") === 0 || path.indexOf("/plan/") === 0) return 0;
       if (path.indexOf("/en/riviera-guide/") === 0) return 1;
       if (path.indexOf("/stay/") === 0 || path.indexOf("/en/hotels/") === 0) return 2;
       if (path.indexOf("/en/explore/") === 0 || path.indexOf("/en/culture/") === 0 || path.indexOf("/en/restaurants/") === 0 || path.indexOf("/en/beaches/") === 0 || path.indexOf("/en/day-trips/") === 0) return 3;
-      if (path.indexOf("/en/good-finds/") === 0) return 4;
+      if (path.indexOf("/en/practical/") === 0 || path.indexOf("/en/good-finds/nice-airport-transfer/") === 0 || path.indexOf("/en/good-finds/train-or-bus/") === 0 || path.indexOf("/en/good-finds/what-to-book/") === 0 || path.indexOf("/en/good-finds/nice-in-the-rain/") === 0) return 4;
     }
     return -1;
   }
