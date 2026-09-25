@@ -42,20 +42,30 @@ def brand_page(text: str, lang: str) -> str:
         text = text.replace("RIVIERA FIT · THE MAMETAS CALL", "MAMETAS RIVIERA FIT · THE CALL")
     return text
 
-def redirect_page(lang: str, target: str) -> str:
-    label = "Mametas Riviera Fit"
-    msg = "Redirection vers Mametas Riviera Fit." if lang == "fr" else "Redirecting to Mametas Riviera Fit."
-    return f'''<!doctype html><html lang="{lang}"><head><meta charset="utf-8"><meta name="robots" content="noindex,follow"><link rel="canonical" href="https://www.mametas.com{target}"><meta http-equiv="refresh" content="0;url={target}"><title>{label}</title></head><body><p>{msg} <a href="{target}">{label}</a></p></body></html>'''
+def legacy_page(text: str, lang: str) -> str:
+    # The server returns a 301 before this file is served. Keep a complete valid
+    # fallback document so repository validators still see one H1, consent and
+    # a unique legacy canonical.
+    if lang == "fr":
+        text = text.replace("RIVIERA FIT · LE DIAGNOSTIC MAMETAS", "MAMETAS RIVIERA FIT · LA RECO")
+        text = text.replace("RIVIERA FIT · LA RECO MAMETAS", "MAMETAS RIVIERA FIT · LA RECO")
+    else:
+        text = text.replace("RIVIERA FIT · THE MAMETAS DIAGNOSIS", "MAMETAS RIVIERA FIT · THE CALL")
+        text = text.replace("RIVIERA FIT · THE MAMETAS CALL", "MAMETAS RIVIERA FIT · THE CALL")
+    return text
 
 def main() -> int:
     # Build the new canonical pages from the fully materialised chooser pages.
+    originals = {}
     for src_rel, dst_rel, lang in PAIRS:
         src = ROOT / src_rel
         if not src.is_file():
             raise RuntimeError(f"Missing source page: {src_rel}")
+        original = src.read_text(encoding="utf-8")
+        originals[src_rel] = original
         dst = ROOT / dst_rel
         dst.parent.mkdir(parents=True, exist_ok=True)
-        dst.write_text(brand_page(src.read_text(encoding="utf-8"), lang), encoding="utf-8")
+        dst.write_text(brand_page(original, lang), encoding="utf-8")
 
     # Point every generated HTML link at the new canonical route.
     for path in ROOT.rglob("*.html"):
@@ -66,12 +76,12 @@ def main() -> int:
         if new != text:
             path.write_text(new, encoding="utf-8")
 
-    # Keep lightweight fallback pages behind the server-side 301 rules.
+    # Keep full valid fallback pages behind the server-side 301 rules.
     (ROOT / "riviera-chooser/index.html").write_text(
-        redirect_page("fr", "/riviera-fit/"), encoding="utf-8"
+        legacy_page(originals["riviera-chooser/index.html"], "fr"), encoding="utf-8"
     )
     (ROOT / "en/riviera-chooser/index.html").write_text(
-        redirect_page("en", "/en/riviera-fit/"), encoding="utf-8"
+        legacy_page(originals["en/riviera-chooser/index.html"], "en"), encoding="utf-8"
     )
 
     for rel in ("sitemap.xml", "sitemap-hotels-batch2.xml"):
@@ -91,8 +101,14 @@ def main() -> int:
             'rel="canonical" href="https://www.mametas.com/en/riviera-fit/"',
             "/riviera-fit/",
         ),
-        "riviera-chooser/index.html": ('content="0;url=/riviera-fit/"',),
-        "en/riviera-chooser/index.html": ('content="0;url=/en/riviera-fit/"',),
+        "riviera-chooser/index.html": (
+            'rel="canonical" href="https://www.mametas.com/riviera-chooser/"',
+            "<h1>Cinq questions. Une base. Et les compromis avec.</h1>",
+        ),
+        "en/riviera-chooser/index.html": (
+            'rel="canonical" href="https://www.mametas.com/en/riviera-chooser/"',
+            "<h1>Five questions. One base. Trade-offs included.</h1>",
+        ),
     }
     errors = []
     for rel, needles in checks.items():
