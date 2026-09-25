@@ -515,4 +515,12 @@
   });
 
   submit.addEventListener('click', runFinder);
+
+  if (typeof window !== 'undefined' && window.URLSearchParams) {
+    var requestedBase = new URLSearchParams(window.location.search).get('base');
+    if (requestedBase && bases.some(function(base){ return base.id === requestedBase; })) {
+      var requestedButton = root.querySelector('[data-engine-group="base"][data-engine-choice="' + requestedBase + '"]');
+      if (requestedButton) requestedButton.click();
+    }
+  }
 })();
