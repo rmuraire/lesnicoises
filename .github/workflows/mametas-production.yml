@@ -215,20 +215,20 @@ jobs:
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
               f"https://www.mametas.com/en/riviera-chooser/?deploy={sha}": (
-                  "Tell us about your trip. We’ll make the call.",
+                  "Five questions. One base. Trade-offs included.",
                   'data-group="days"',
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=7",
+                  "/assets/riviera-chooser.js?v=8",
               ),
               f"https://www.mametas.com/riviera-chooser/?deploy={sha}": (
-                  "Parlez-nous de votre séjour. On tranche pour vous.",
+                  "Cinq questions. Une base. Et les compromis avec.",
                   'data-group="days"',
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=7",
+                  "/assets/riviera-chooser.js?v=8",
               ),
           }
           for url, needles in checks.items():
