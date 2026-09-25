@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "lastEditorialReview": "2026-09-25",
+  "tagLabels": {
+    "fr": {
+      "car-free": "Sans voiture",
+      "excursions": "Excursions",
+      "beach-first": "Plage d'abord",
+      "city-life": "Vie de ville",
+      "quiet": "Calme",
+      "hotel-as-trip": "L'hôtel fait partie du voyage",
+      "old-town": "Vieille ville",
+      "value": "Budget maîtrisé",
+      "romantic": "Couple"
+    },
+    "en": {
+      "car-free": "Car-free",
+      "excursions": "Day trips",
+      "beach-first": "Beach-first",
+      "city-life": "City life",
+      "quiet": "Quiet",
+      "hotel-as-trip": "Hotel as the trip",
+      "old-town": "Old town",
+      "value": "Value",
+      "romantic": "Couples"
+    }
+  },
+  "hotels": {
+    "hotel-66": {
+      "bestFor": ["car-free", "excursions", "value"],
+      "notFor": ["beach-first", "hotel-as-trip"],
+      "why": {
+        "fr": "Une base très rationnelle près de Nice-Ville quand le train et le budget comptent davantage que la carte postale.",
+        "en": "A very rational base near Nice-Ville when trains and spend matter more than the postcard."
+      },
+      "notForText": {
+        "fr": "Un séjour plage ou un hôtel qui doit devenir un souvenir du voyage.",
+        "en": "A beach-led stay or a hotel you want to remember as part of the trip."
+      },
+      "tradeOff": {
+        "fr": "Vous gagnez en logistique ce que vous perdez en Méditerranée au pied de la porte.",
+        "en": "You gain logistics and give up having the Mediterranean at the door."
+      }
+    },
+    "hotel-64-nice": {
+      "bestFor": ["car-free", "excursions", "value"],
+      "notFor": ["beach-first", "hotel-as-trip"],
+      "why": {
+        "fr": "Gare et tram tout proches. Très utile si Nice sert de camp de base pour rayonner.",
+        "en": "Station and tram close by. Very useful when Nice is the base for exploring the coast."
+      },
+      "notForText": {
+        "fr": "Ceux qui veulent sortir de l'hôtel directement sur la mer ou le Vieux-Nice.",
+        "en": "Anyone who wants to step straight from the hotel into the sea or Old Nice."
+      },
+      "tradeOff": {
+        "fr": "Excellent pour partir. Moins séduisant si vous voulez que le quartier fasse déjà partie des vacances.",
+        "en": "Excellent for getting out. Less seductive if you want the neighbourhood itself to feel like the holiday."
+      }
+    },
+    "hotel-florence-nice": {
+      "bestFor": ["car-free", "excursions", "city-life", "value"],
+      "notFor": ["beach-first", "quiet"],
+      "why": {
+        "fr": "Central, proche du tram et de la gare, avec Jean Médecin sous la main.",
+        "en": "Central, close to tram and station, with Jean Médecin on the doorstep."
+      },
+      "notForText": {
+        "fr": "Le calme absolu ou une priorité plage.",
+        "en": "Absolute quiet or a beach-first trip."
+      },
+      "tradeOff": {
+        "fr": "Vous choisissez le centre utile plutôt qu'un décor de bord de mer.",
+        "en": "You are choosing useful centrality rather than a seafront setting."
+      }
+    },
+    "boutique-hotel-nice-cote-dazur": {
+      "bestFor": ["car-free", "excursions", "quiet", "value"],
+      "notFor": ["beach-first", "nightlife"],
+      "why": {
+        "fr": "Une option plus posée autour de Nice-Ville, pratique pour les départs sans donner l'impression de dormir dans un hall de gare.",
+        "en": "A calmer option around Nice-Ville, practical for departures without feeling like you sleep in a station concourse."
+      },
+      "notForText": {
+        "fr": "Une adresse de plage ou un séjour centré sur les soirées.",
+        "en": "A beach address or a stay built around nightlife."
+      },
+      "tradeOff": {
+        "fr": "Le calme relatif est utile. La mer reste une destination de la journée, pas le décor de la chambre.",
+        "en": "The relative calm is useful. The sea remains part of the day, not the room's setting."
+      }
+    },
+    "hotel-byakko-nice": {
+      "bestFor": ["car-free", "excursions", "value"],
+      "notFor": ["beach-first", "hotel-as-trip"],
+      "why": {
+        "fr": "Simple, central et bien placé pour faire de Nice une base de déplacement.",
+        "en": "Simple, central and well placed when Nice is primarily your transport base."
+      },
+      "notForText": {
+        "fr": "Un séjour où l'hôtel doit produire l'effet waouh.",
+        "en": "A stay where the hotel itself needs to deliver the wow factor."
+      },
+      "tradeOff": {
+        "fr": "C'est un choix de séjour efficace, pas une déclaration d'amour à l'hôtellerie.",
+        "en": "This is an efficient trip choice, not a declaration of love to hotels."
+      }
+    },
+    "apollinaire-nice": {
+      "bestFor": ["car-free", "excursions", "city-life", "old-town"],
+      "notFor": ["beach-first", "quiet"],
+      "why": {
+        "fr": "Un très bon compromis entre gare, centre et accès au Vieux-Nice. Il évite de sacrifier la ville pour la logistique.",
+        "en": "A strong compromise between station, centre and Old Nice access. It avoids sacrificing the city for logistics."
+      },
+      "notForText": {
+        "fr": "Une priorité plage ou un besoin de retrait total.",
+        "en": "A beach-first stay or anyone seeking total retreat."
+      },
+      "tradeOff": {
+        "fr": "Il fait beaucoup de choses bien sans être l'option la plus spectaculaire sur un critère unique.",
+        "en": "It does many things well without being the most spectacular choice on any single criterion."
+      }
+    },
+    "hotel-khla-nice": {
+      "bestFor": ["car-free", "excursions", "value"],
+      "notFor": ["beach-first", "hotel-as-trip"],
+      "why": {
+        "fr": "La proximité de Nice-Ville le rend très simple pour les excursions et les arrivées tardives.",
+        "en": "Its Nice-Ville location makes day trips and late arrivals straightforward."
+      },
+      "notForText": {
+        "fr": "Ceux qui veulent la Promenade ou le Vieux-Nice dès la sortie de l'hôtel.",
+        "en": "Anyone who wants the Promenade or Old Nice the moment they step outside."
+      },
+      "tradeOff": {
+        "fr": "La gare travaille pour vous. Le décor un peu moins.",
+        "en": "The station works for you. The setting works a little less hard."
+      }
+    },
+    "villa-victoria": {
+      "bestFor": ["quiet", "city-life", "car-free"],
+      "notFor": ["beach-first", "excursions"],
+      "why": {
+        "fr": "Un centre plus calme, avec jardin, pour ceux qui veulent rester à pied sans dormir au milieu du bruit.",
+        "en": "A calmer central base with a garden for travellers who want walkability without sleeping in the noise."
+      },
+      "notForText": {
+        "fr": "Les séjours qui enchaînent les trains ou veulent la mer au premier rang.",
+        "en": "Train-heavy itineraries or travellers who want the sea in the front row."
+      },
+      "tradeOff": {
+        "fr": "Plus doux pour dormir. Un peu moins efficace pour les départs quotidiens vers l'est ou l'ouest.",
+        "en": "Kinder for sleeping. Slightly less efficient for daily departures east and west."
+      }
+    },
+    "hotel-le-grimaldi-by-happyculture": {
+      "bestFor": ["quiet", "city-life", "car-free"],
+      "notFor": ["beach-first", "excursions"],
+      "why": {
+        "fr": "Musiciens donne un Nice central mais moins agité, avec suffisamment de ville autour pour rester à pied.",
+        "en": "Musiciens gives you central Nice with less noise, while keeping enough city around you to stay on foot."
+      },
+      "notForText": {
+        "fr": "Une logique plage ou gare avant tout.",
+        "en": "A trip where beach or station comes first."
+      },
+      "tradeOff": {
+        "fr": "Le quartier est un compromis agréable. Il n'offre ni la mer ni le Vieux-Nice juste devant la porte.",
+        "en": "The area is a pleasant compromise. Neither the sea nor Old Nice sits right outside."
+      }
+    },
+    "la-perouse": {
+      "bestFor": ["beach-first", "old-town", "quiet", "hotel-as-trip", "romantic"],
+      "notFor": ["excursions", "value"],
+      "why": {
+        "fr": "Mer, château et Vieux-Nice se rencontrent ici. Très fort pour un séjour à deux où l'emplacement fait partie du plaisir.",
+        "en": "Sea, Castle Hill and Old Nice meet here. Strong for couples when location is part of the pleasure."
+      },
+      "notForText": {
+        "fr": "Un séjour qui commence tous les matins par un TER ou qui cherche à tenir le budget.",
+        "en": "A trip that starts every morning on a TER train or needs to keep spend tight."
+      },
+      "tradeOff": {
+        "fr": "Le romantisme gagne. La gare, elle, ne se rapproche pas par magie.",
+        "en": "Romance wins. The station does not move any closer."
+      }
+    },
+    "hotel-amour-nice": {
+      "bestFor": ["city-life", "hotel-as-trip"],
+      "notFor": ["quiet", "excursions"],
+      "why": {
+        "fr": "Une adresse avec une vraie personnalité pour ceux qui veulent bars, restaurants et un hôtel moins sage.",
+        "en": "A hotel with a point of view for travellers who want bars, restaurants and somewhere less polite."
+      },
+      "notForText": {
+        "fr": "Le silence ou les départs en train à répétition.",
+        "en": "Silence or repeated early train departures."
+      },
+      "tradeOff": {
+        "fr": "L'ambiance fait partie du produit. Si vous voulez surtout dormir et repartir tôt, elle sert moins.",
+        "en": "The atmosphere is part of the product. If you mainly want to sleep and leave early, it earns its keep less."
+      }
+    },
+    "hotel-aston-la-scala": {
+      "bestFor": ["city-life", "old-town", "car-free"],
+      "notFor": ["quiet", "excursions"],
+      "why": {
+        "fr": "Masséna et le Vieux-Nice sont faciles à pied. Très pratique pour vivre le centre sans mode d'emploi.",
+        "en": "Masséna and Old Nice are easy on foot. Very practical for living central Nice without instructions."
+      },
+      "notForText": {
+        "fr": "Ceux qui cherchent du retrait ou veulent optimiser chaque départ en train.",
+        "en": "Travellers seeking retreat or trying to optimise every train departure."
+      },
+      "tradeOff": {
+        "fr": "Vous êtes au coeur de la ville. Le coeur de la ville n'est pas connu pour chuchoter.",
+        "en": "You are in the heart of the city. The heart of the city is not famous for whispering."
+      }
+    },
+    "hotel-du-couvent": {
+      "bestFor": ["hotel-as-trip", "quiet", "old-town", "romantic"],
+      "notFor": ["beach-first", "excursions", "value"],
+      "why": {
+        "fr": "Une vraie destination hôtelière dans le Vieux-Nice, à choisir quand l'hôtel compte autant que le programme.",
+        "en": "A genuine hotel destination in Old Nice, best when the hotel matters as much as the programme."
+      },
+      "notForText": {
+        "fr": "Un séjour purement logistique, une priorité plage ou un budget serré.",
+        "en": "A purely logistical stay, a beach-first trip or a tight budget."
+      },
+      "tradeOff": {
+        "fr": "Vous payez aussi pour rester sur place. Si vous partez à huit heures et revenez à minuit, c'est beaucoup de beauté inutilisée.",
+        "en": "You are paying to spend time here. Leave at eight and return at midnight and that is a lot of unused beauty."
+      }
+    },
+    "maison-albar-le-victoria": {
+      "bestFor": ["hotel-as-trip", "beach-first", "city-life", "old-town"],
+      "notFor": ["quiet", "value"],
+      "why": {
+        "fr": "Masséna, mer et centre réunis dans une logique très haut de gamme. Le luxe sans exil.",
+        "en": "Masséna, sea and centre in one very high-end package. Luxury without exile."
+      },
+      "notForText": {
+        "fr": "Le calme absolu ou la recherche du meilleur rapport utilité-prix.",
+        "en": "Absolute quiet or anyone optimising usefulness per euro."
+      },
+      "tradeOff": {
+        "fr": "Vous êtes au centre de tout, y compris de l'animation. Et le positionnement tarifaire assume clairement son adresse.",
+        "en": "You are in the middle of everything, including the activity. The price positioning knows exactly where it lives."
+      }
+    },
+    "hotel-beau-rivage": {
+      "bestFor": ["beach-first", "city-life", "old-town", "car-free"],
+      "notFor": ["quiet", "excursions"],
+      "why": {
+        "fr": "Mer, vieille ville et centre sont réunis dans un rayon très simple à pied.",
+        "en": "Sea, old town and centre come together in a very easy walking radius."
+      },
+      "notForText": {
+        "fr": "Le retrait ou une organisation centrée sur la gare.",
+        "en": "Retreat or a trip organised around the station."
+      },
+      "tradeOff": {
+        "fr": "Emplacement très fort. Calme absolu, beaucoup moins.",
+        "en": "Very strong location. Absolute quiet, much less so."
+      }
+    },
+    "hotel-west-end-nice-promenade": {
+      "bestFor": ["beach-first", "hotel-as-trip"],
+      "notFor": ["old-town", "excursions"],
+      "why": {
+        "fr": "La Promenade devant la porte, avec un vrai sentiment Riviera sans passer au palace.",
+        "en": "The Promenade at the door, with a real Riviera feel without going full palace."
+      },
+      "notForText": {
+        "fr": "Ceux qui veulent le Vieux-Nice ou la gare comme centre de gravité.",
+        "en": "Travellers who want Old Nice or the station as their centre of gravity."
+      },
+      "tradeOff": {
+        "fr": "La mer est simple. Le reste du séjour demande un peu plus de marche.",
+        "en": "The sea is easy. The rest of the trip asks for a little more walking."
+      }
+    },
+    "boscolo-nice-hotel-and-spa": {
+      "bestFor": ["hotel-as-trip", "city-life"],
+      "notFor": ["beach-first", "excursions", "value"],
+      "why": {
+        "fr": "Spa, grand format et centre-ville. À choisir quand vous voulez utiliser l'hôtel, pas simplement y dormir.",
+        "en": "Spa, scale and city centre. Choose it when you plan to use the hotel, not just sleep there."
+      },
+      "notForText": {
+        "fr": "Une priorité plage, gare ou maîtrise stricte du budget.",
+        "en": "Beach, station or strict budget discipline."
+      },
+      "tradeOff": {
+        "fr": "Le luxe est bien présent. La mer, elle, n'est pas sous le balcon.",
+        "en": "The luxury is present. The sea is not under the balcony."
+      }
+    },
+    "palais-de-la-mediterranee": {
+      "bestFor": ["beach-first", "hotel-as-trip", "car-free"],
+      "notFor": ["excursions", "value"],
+      "why": {
+        "fr": "Promenade, mer et équipements d'hôtel pour une version très classique du séjour niçois.",
+        "en": "Promenade, sea and proper hotel facilities for a classic version of a Nice stay."
+      },
+      "notForText": {
+        "fr": "Un séjour ferroviaire intensif ou un arbitrage très serré sur le prix.",
+        "en": "A train-heavy itinerary or anyone making a very tight price trade-off."
+      },
+      "tradeOff": {
+        "fr": "Très fort pour profiter de Nice sur place. Moins logique si l'hôtel n'est qu'une base de départ.",
+        "en": "Strong for enjoying Nice itself. Less logical if the hotel is only a launch pad."
+      }
+    },
+    "anantara-plaza-nice": {
+      "bestFor": ["hotel-as-trip", "beach-first", "city-life", "old-town"],
+      "notFor": ["quiet", "value"],
+      "why": {
+        "fr": "Albert 1er met la mer, Masséna et le Vieux-Nice à portée immédiate avec un niveau de service très haut.",
+        "en": "Albert 1er puts sea, Masséna and Old Nice within immediate reach with a very high service level."
+      },
+      "notForText": {
+        "fr": "Un séjour discret, calme ou très attentif au budget.",
+        "en": "A discreet, quiet stay or one with close budget control."
+      },
+      "tradeOff": {
+        "fr": "L'emplacement est presque sans compromis. Le tarif, lui, en trouve un pour vous.",
+        "en": "The location is close to compromise-free. The rate will find one for you."
+      }
+    },
+    "le-negresco": {
+      "bestFor": ["hotel-as-trip", "beach-first", "romantic"],
+      "notFor": ["excursions", "value", "quiet"],
+      "why": {
+        "fr": "Une icône à choisir précisément parce que l'hôtel fait partie du voyage, pas malgré cela.",
+        "en": "An icon to choose precisely because the hotel is part of the trip, not despite it."
+      },
+      "notForText": {
+        "fr": "Une simple chambre pour dormir entre deux trains ou un budget rationnel.",
+        "en": "A simple room between two trains or a rational budget exercise."
+      },
+      "tradeOff": {
+        "fr": "Vous payez l'adresse, l'histoire et le décor. Si cela ne vous intéresse pas, d'autres hôtels feront mieux le travail.",
+        "en": "You are paying for address, history and setting. If that does not matter to you, other hotels will do the job better."
+      }
+    }
+  }
+}
