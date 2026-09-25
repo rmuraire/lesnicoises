@@ -223,6 +223,16 @@
         sainttropez:{decide:['Saint-Tropez village','Pampelonne','Ramatuelle / the peninsula'],sea:['Pampelonne properly','One quieter peninsula beach','Saint-Tropez village late'],glamour:['Saint-Tropez village','A hotel-led afternoon','Pampelonne when you actually want the scene']},
         saintpaul:{decide:['Saint-Paul after the day-trippers','Fondation Maeght','Vence'],culture:['Fondation Maeght','Saint-Paul village','Vence / Matisse chapel'],peace:['Saint-Paul early and late','One long hotel afternoon','Vence or a single coast day']}
       },
+      whyNot:{
+        nice:'More versatile than specialised. If transport reach becomes the priority, Nice climbs back quickly.',
+        cannes:'Strong for sand and polish, weaker than Nice for reaching the eastern Riviera repeatedly.',
+        antibes:'An excellent compromise, but not as efficient as Nice for a trip built around many day trips.',
+        villefranche:'Beauty wins here, logistics less so. Transfers and slopes add friction to a busy itinerary.',
+        menton:'Calm and colourful, but far east. It becomes a poor base if Cannes and Antibes still matter a lot.',
+        monaco:'Spectacular and expensive, with real verticality. It is not the coast’s most forgiving all-purpose base.',
+        sainttropez:'The peninsula asks for time, money and transport planning. It only makes sense when it is genuinely the point.',
+        saintpaul:'Wonderful for art and a slower inland stay, weak for a sea-first or rail-heavy Riviera trip.'
+      },
       skips:{
         nice:'Skip Saint-Tropez unless it is genuinely one of the reasons you came. It eats too much of a short Riviera trip.',
         cannes:'Skip the automatic Monaco/Menton day. You chose the western Riviera; use it properly.',
@@ -344,6 +354,16 @@
         monaco:{decide:['Monaco correctement','Menton','Cap-Ferrat'],glamour:['Monte-Carlo correctement','Une demi-journée palace / spa','Menton pour respirer'],food:['Restaurants de Monaco','Menton','Nice pour le contraste']},
         sainttropez:{decide:['Village de Saint-Tropez','Pampelonne','Ramatuelle / la presqu’île'],sea:['Pampelonne correctement','Une plage plus calme de la presqu’île','Saint-Tropez en fin de journée'],glamour:['Village de Saint-Tropez','Un après-midi où l’hôtel compte','Pampelonne quand vous voulez vraiment la scène']},
         saintpaul:{decide:['Saint-Paul après les visiteurs','Fondation Maeght','Vence'],culture:['Fondation Maeght','Village de Saint-Paul','Vence / chapelle Matisse'],peace:['Saint-Paul tôt et tard','Un long après-midi à l’hôtel','Vence ou une seule journée sur la côte']}
+      },
+      whyNot:{
+        nice:'Plus polyvalente que spécialisée. Si le réseau de transport redevient prioritaire, Nice remonte très vite.',
+        cannes:'Très forte pour le sable et le décor, moins efficace que Nice pour rayonner souvent vers l’est.',
+        antibes:'Un excellent compromis, mais moins efficace que Nice si le séjour repose sur beaucoup d’excursions.',
+        villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances ajoutent de la friction.',
+        menton:'Douce et colorée, mais très à l’est. Mauvaise base si Cannes et Antibes restent des priorités fortes.',
+        monaco:'Spectaculaire, chère et verticale. Ce n’est pas la base la plus indulgente pour un premier tour complet de la côte.',
+        sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le sujet.',
+        saintpaul:'Formidable pour l’art et un séjour intérieur plus lent, faible pour une Riviera centrée sur la mer ou le train.'
       },
       skips:{
         nice:'Laissez Saint-Tropez de côté sauf si c’est réellement une des raisons de votre voyage. Sur un séjour court, il mange trop de Riviera.',
@@ -537,6 +557,51 @@
     return null;
   }
 
+  function alternativesFor(profile, chosenId, lang) {
+    var content = CONTENT[lang];
+    var intentional = intentionalCandidates(profile);
+    var pool = Object.keys(BASES).map(function (id) {
+      var score = scoreBase(id, profile);
+      var extra = intentional.filter(function (item) { return item.id === id; })[0];
+      if (extra) score += extra.bonus;
+      return { id:id, score:score };
+    }).filter(function (item) {
+      if (item.id === chosenId) return false;
+      if (BASES[item.id].type === 'intentional') {
+        return intentional.some(function (candidate) { return candidate.id === item.id; });
+      }
+      return true;
+    }).sort(function (a,b) { return b.score - a.score || a.id.localeCompare(b.id); });
+    return pool.slice(0,2).map(function (item) {
+      return {
+        id:item.id,
+        name:content.bases[item.id].name,
+        guide:content.bases[item.id].guide,
+        whyNot:(content.whyNot && content.whyNot[item.id]) || ''
+      };
+    });
+  }
+
+  function realityFor(baseId, profile, lang) {
+    var fr = lang === 'fr';
+    var baseReality = {
+      nice:{car:'Excellent sans voiture',carEn:'Excellent without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
+      cannes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
+      antibes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
+      villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less seamless',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
+      menton:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€ à €€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
+      monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne: relief + budget',frictionEn:'Medium: hills + spend'},
+      sainttropez:{car:'Voiture ou transferts à prévoir',carEn:'Car or transfers needed',budget:'€€€ à €€€€',friction:'Élevée',frictionEn:'High'},
+      saintpaul:{car:'Voiture très utile',carEn:'Car highly useful',budget:'€€ à €€€€',friction:'Moyenne à élevée',frictionEn:'Medium to high'}
+    }[baseId];
+    return {
+      mobility: fr ? baseReality.car : baseReality.carEn,
+      budget: baseReality.budget,
+      friction: fr ? baseReality.friction : baseReality.frictionEn,
+      season: seasonNoteFor(profile, baseId, lang)
+    };
+  }
+
   function resultModel(profile, overrideBase, lang) {
     var decision = chooseBase(profile);
     var baseId = overrideBase || decision.base;
@@ -555,6 +620,8 @@
       further:regionalFor(profile, baseId, lang),
       skip:skipFor(content, baseId, profile, lang),
       hotels:content.hotels[baseId] || [],
+      alternatives:alternativesFor(profile, baseId, lang),
+      reality:realityFor(baseId, profile, lang),
       escape:escapeFor(profile, baseId, lang)
     };
   }
@@ -575,8 +642,15 @@
 
     var labels = lang === 'fr' ? {
       incomplete:'Répondez aux cinq questions. Ensuite, Mametas tranche.',
-      verdict:'LE VERDICT MAMETAS',
+      verdict:'RIVIERA FIT · LE VERDICT',
       stay:'Dormez à ',
+      whyThis:'Pourquoi cette base',
+      whyNot:'Pourquoi pas les autres',
+      reality:'Reality Check',
+      mobility:'Mobilité',
+      budget:'Pression budget',
+      friction:'Friction',
+      seasonLabel:'Saison',
       do:'Indispensable',
       further:'Pour aller plus loin',
       furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre base.',
@@ -592,8 +666,15 @@
       reset:'Recommencer'
     } : {
       incomplete:'Answer all five questions. Then Mametas makes the call.',
-      verdict:'THE MAMETAS VERDICT',
+      verdict:'RIVIERA FIT · THE VERDICT',
       stay:'Stay in ',
+      whyThis:'Why this base',
+      whyNot:'Why not the others',
+      reality:'Reality Check',
+      mobility:'Mobility',
+      budget:'Budget pressure',
+      friction:'Friction',
+      seasonLabel:'Season',
       do:'The essentials',
       further:'Go further',
       furtherBalanced:'Balanced pace: two regional detours are genuinely worth leaving the base for.',
@@ -716,7 +797,7 @@
       }
       var hotelCards = model.hotels.map(function (h) {
         var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
-        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="expedia" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
+        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="booking_or_partner" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
       }).join('');
       var escape = '';
       if (!model.override && model.escape) {
@@ -725,12 +806,13 @@
         escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. La base change ; le tier hôtelier, lui, restera une décision séparée.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
       }
       out.innerHTML =
-        '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
-        '<p class="chooser-season-note"><strong>' + (lang==='fr'?'Saison.':'Season.') + '</strong> ' + esc(model.season) + '</p>' +
+        '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><h3 class="chooser-decision-label">' + labels.whyThis + '</h3><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
+        '<section class="chooser-reality"><div><p class="eyebrow">' + labels.reality + '</p><h3>' + (lang==='fr'?'Ce que ce choix implique vraiment':'What this choice really means') + '</h3></div><dl><div><dt>' + labels.mobility + '</dt><dd>' + esc(model.reality.mobility) + '</dd></div><div><dt>' + labels.budget + '</dt><dd>' + esc(model.reality.budget) + '</dd></div><div><dt>' + labels.friction + '</dt><dd>' + esc(model.reality.friction) + '</dd></div><div><dt>' + labels.seasonLabel + '</dt><dd>' + esc(model.reality.season) + '</dd></div></dl></section>' +
+        '<section class="chooser-alternatives"><p class="eyebrow">' + labels.whyNot + '</p><div class="chooser-alt-grid">' + model.alternatives.map(function(alt){ return '<a href="' + esc(alt.guide) + '"><strong>' + esc(alt.name) + '</strong><span>' + esc(alt.whyNot) + '</span></a>'; }).join('') + '</div></section>' +
         '<div class="chooser-result-grid"><section class="chooser-do"><h3>' + labels.do + '</h3><ol>' + priorities + '</ol></section><section class="chooser-skip"><h3>' + labels.skip + '</h3><p>' + esc(model.skip) + '</p></section></div>' +
         further +
         escape +
-        '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'VOTRE HÔTEL':'YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + esc(model.base.hotels) + '">' + labels.allHotels + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
+        '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'SÉLECTION COURTE · VOTRE HÔTEL':'SHORT SELECTION · YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + ' ' + (lang==='fr'?'Ces trois adresses sont des repères, pas une liste exhaustive.':'These three addresses are reference points, not the full list.') + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + (lang==='fr'?'/hotels/finder/?base=':'/en/hotels/finder/?base=') + esc(model.baseId) + '">' + (lang==='fr'?'Ouvrir Hotel Fit':'Open Hotel Fit') + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
         '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
       out.hidden = false;
       hydrateHotelMedia(model, out);
