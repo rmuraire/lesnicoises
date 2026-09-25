@@ -193,8 +193,8 @@ jobs:
           from urllib.request import Request, urlopen
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
-              f"https://www.mametas.com/plan/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", "harmonisation-plan-visual", "/plan/real-budget/"),
-              f"https://www.mametas.com/fr/planifier/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", "harmonisation-plan-visual", "/fr/planifier/budget-reel/"),
+              f"https://www.mametas.com/plan/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", 'data-riviera-chooser', 'data-chooser-submit', "harmonisation-plan-visual", "/plan/real-budget/"),
+              f"https://www.mametas.com/fr/planifier/?deploy={sha}": ("phase4-plan-depth", "plan-riviera-fit-panel", 'data-riviera-chooser', 'data-chooser-submit', "harmonisation-plan-visual", "/fr/planifier/budget-reel/"),
               f"https://www.mametas.com/plan/real-budget/?deploy={sha}": ("PASS Sud Azur Explore", "€675", "€2,020"),
               f"https://www.mametas.com/fr/planifier/budget-reel/?deploy={sha}": ("PASS Sud Azur Explore", "675 €", "2 020 €"),
               f"https://www.mametas.com/plan/car-or-no-car/?deploy={sha}": ("CAR FOR 1-2 DAYS", "Practical"),
@@ -393,7 +393,7 @@ jobs:
           checks = {
               f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=5',
+                  '/assets/hotel-engine.js?v=10',
                   'Cinq choix. Une sélection courte et expliquée.',
               ),
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
@@ -403,7 +403,7 @@ jobs:
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=5',
+                  '/assets/hotel-engine.js?v=10',
                   'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
