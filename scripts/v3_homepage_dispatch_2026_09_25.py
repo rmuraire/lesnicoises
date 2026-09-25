@@ -143,9 +143,11 @@ def patch_home(rel: str, lang: str) -> None:
     # Stay is a showcase, not a second product launch.
     if lang == "fr":
         text = text.replace('href="/hotels/finder/?base=nice">Trouver mon hôtel avec Hotel Fit</a>', 'href="/hotels/">Explorer Dormir</a>')
+        text = text.replace('href="/hotels/">Explorer la rubrique Dormir</a>', 'href="/hotels/">Explorer Dormir</a>')
         text = text.replace('href="/fr/dormir/nice/">Voir toute la sélection Nice</a>', 'href="/hotels/">Voir les hôtels par base</a>')
     else:
         text = text.replace('href="/en/hotels/finder/?base=nice">Find my hotel with Hotel Fit</a>', 'href="/en/hotels/">Explore Stay</a>')
+        text = text.replace('href="/en/hotels/">Explore Stay</a>', 'href="/en/hotels/">Explore Stay</a>')
         text = text.replace('href="/stay/nice/">See the full Nice selection</a>', 'href="/en/hotels/">Browse hotels by base</a>')
 
     # Right Now is one temporal teaser, not three repeated cards pointing to the same page.
