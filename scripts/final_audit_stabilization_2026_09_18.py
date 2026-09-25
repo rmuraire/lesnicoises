@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 EXACT_REPLACEMENTS = {
     "index.html": (
-        ('href="#plan">Plan</a>', 'href="/en/riviera-chooser/">Plan</a>'),
+        ('href="#plan">Plan</a>', 'href="/en/riviera-fit/">Plan</a>'),
         ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
         ('href="#explore">Explore</a>', 'href="/en/explore/">Explore</a>'),
         ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
@@ -17,7 +17,7 @@ EXACT_REPLACEMENTS = {
         ('<script src="/assets/v3.js?v=0.6"></script>', '<script src="/assets/v3.js?v=0.9"></script>'),
     ),
     "fr/index.html": (
-        ('href="#planifier">Planifier</a>', 'href="/riviera-chooser/">Planifier</a>'),
+        ('href="#planifier">Planifier</a>', 'href="/riviera-fit/">Planifier</a>'),
         ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
         ('href="#explorer">Explorer</a>', 'href="/explore/">Explorer</a>'),
         ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
@@ -64,8 +64,8 @@ EXACT_REPLACEMENTS = {
 
 
 GLOBAL_HTML_REPLACEMENTS = (
-    ('href="/#plan">Plan</a>', 'href="/en/riviera-chooser/">Plan</a>'),
-    ('href="#plan">Plan</a>', 'href="/en/riviera-chooser/">Plan</a>'),
+    ('href="/#plan">Plan</a>', 'href="/en/riviera-fit/">Plan</a>'),
+    ('href="#plan">Plan</a>', 'href="/en/riviera-fit/">Plan</a>'),
     ('href="/#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
     ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
     ('href="/stay/nice/">Stay</a>', 'href="/en/hotels/">Stay</a>'),
@@ -73,8 +73,8 @@ GLOBAL_HTML_REPLACEMENTS = (
     ('href="/en/restaurants/">Eat &amp; Do</a>', 'href="/en/explore/">Explore</a>'),
     ('href="/#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
     ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
-    ('href="/fr/#planifier">Planifier</a>', 'href="/riviera-chooser/">Planifier</a>'),
-    ('href="#planifier">Planifier</a>', 'href="/riviera-chooser/">Planifier</a>'),
+    ('href="/fr/#planifier">Planifier</a>', 'href="/riviera-fit/">Planifier</a>'),
+    ('href="#planifier">Planifier</a>', 'href="/riviera-fit/">Planifier</a>'),
     ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
     ('href="/fr/dormir/nice/">Dormir</a>', 'href="/hotels/">Dormir</a>'),
     ('href="/restaurants/">Manger & faire</a>', 'href="/explore/">Explorer</a>'),
@@ -190,23 +190,23 @@ def main() -> int:
             "if(!mobile&&header)",
             "provider=/expedia",
             "data-menu-bound",
-            "{label:'Plan',href:'/en/riviera-chooser/'}",
-            "{label:'Planifier',href:'/riviera-chooser/'}",
+            "{label:'Plan',href:'/en/riviera-fit/'}",
+            "{label:'Planifier',href:'/riviera-fit/'}",
         ),
         "assets/v3.js": (
             "if (!menu && header)",
             "data-v3-menu-open",
             "data-menu-bound",
-            '{ label: "Plan", href: "/en/riviera-chooser/" }',
+            '{ label: "Plan", href: "/en/riviera-fit/" }',
             '{ label: "Places", href: "/en/riviera-guide/" }',
             '{ label: "Stay", href: "/en/hotels/" }',
             '{ label: "Explore", href: "/en/explore/" }',
             '{ label: "Now", href: "/en/good-finds/" }',
-            '{ label: "Planifier", href: "/riviera-chooser/" }',
+            '{ label: "Planifier", href: "/riviera-fit/" }',
             '{ label: "Explorer", href: "/explore/" }',
         ),
         "index.html": (
-            'href="/en/riviera-chooser/">Plan</a>',
+            'href="/en/riviera-fit/">Plan</a>',
             'href="/en/riviera-guide/">Places</a>',
             'href="/en/hotels/">Stay</a>',
             'href="/en/explore/">Explore</a>',
@@ -215,7 +215,7 @@ def main() -> int:
             '/assets/v3.js?v=0.9',
         ),
         "fr/index.html": (
-            'href="/riviera-chooser/">Planifier</a>',
+            'href="/riviera-fit/">Planifier</a>',
             'href="/riviera-guide/">Lieux</a>',
             'href="/hotels/">Dormir</a>',
             'href="/explore/">Explorer</a>',
