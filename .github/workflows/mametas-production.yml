@@ -171,6 +171,9 @@ jobs:
       - name: Apply final marginal recipe
         run: python scripts/v3_final_marginal_recipe_2026_09_25.py
 
+      - name: Apply closure QA fixes
+        run: python scripts/v3_closure_qa_2026_09_25.py
+
       - name: Audit Hotel Fit coverage
         run: python scripts/v3_hotel_fit_coverage_audit_2026_09_25.py
 
@@ -299,7 +302,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=9",
+                  "/assets/riviera-chooser.js?v=10",
               ),
               f"https://www.mametas.com/riviera-fit/?deploy={sha}": (
                   "Cinq questions. Une base. Et les compromis avec.",
@@ -307,7 +310,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=9",
+                  "/assets/riviera-chooser.js?v=10",
               ),
           }
           for url, needles in checks.items():
@@ -402,7 +405,7 @@ jobs:
           checks = {
               f"https://www.mametas.com/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=11',
+                  '/assets/hotel-engine.js?v=12',
                   'Cinq choix. Une sélection courte et expliquée.',
               ),
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
@@ -412,7 +415,7 @@ jobs:
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
-                  '/assets/hotel-engine.js?v=11',
+                  '/assets/hotel-engine.js?v=12',
                   'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
