@@ -165,6 +165,9 @@ jobs:
       - name: Apply V3 presentation polish
         run: python scripts/v3_presentation_polish_2026_09_25.py
 
+      - name: Apply V3 UX adoption layer
+        run: python scripts/v3_adoption_layer_2026_09_25.py
+
       - name: Validate production site
         run: python scripts/validate_mametas.py
 
