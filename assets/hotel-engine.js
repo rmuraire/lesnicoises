@@ -271,7 +271,7 @@
         affiliate:affiliateUrl,
         priceBand:item.priceBand || '',
         fit:item.fit || {},
-        media:(item.image && item.image.indexOf('batch-sprite') < 0) ? { type:'img', src:item.image, alt:item.name || '' } : null,
+        media:(item.media && item.media.type) ? item.media : ((item.image && item.image.indexOf('batch-sprite') < 0) ? { type:'img', src:item.image, alt:item.name || '' } : null),
         _order:index
       };
       hotel.signals = structuredSignals(item);
