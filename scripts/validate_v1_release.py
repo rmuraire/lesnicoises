@@ -30,8 +30,9 @@ def main() -> int:
     for rel in ("hotels/finder/index.html","en/hotels/finder/index.html"):
         text=(ROOT/rel).read_text(encoding="utf-8")
         if 'data-engine-group="budget"' not in text: errors.append(f"{rel}: budget criterion missing")
-        if "/assets/hotel-engine.js?v=5" not in text: errors.append(f"{rel}: engine version not bumped")
+        if "/assets/hotel-engine.js?v=6" not in text: errors.append(f"{rel}: Hotel Fit engine version not bumped")
         if not any(label in text for label in ("Cinq choix", "Cinq décisions", "Five choices", "Five decisions")): errors.append(f"{rel}: five-decision copy missing")
+        if "Hotel Fit" not in text: errors.append(f"{rel}: Hotel Fit product naming missing")
     activity_links=sum((ROOT/rel).read_text(encoding="utf-8").count("partner_id=CEAKUVS") for rel in (
         "riviera-guide/nice/index.html","en/riviera-guide/nice/index.html","escapades/index.html","en/day-trips/index.html"))
     if activity_links < 10: errors.append(f"GetYourGuide: expected at least 10 FR/EN affiliate occurrences, found {activity_links}")
