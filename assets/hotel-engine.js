@@ -412,7 +412,7 @@
     return '';
   }
 
-  function render(shortlist) {
+  function render(shortlist, rankedSelection) {
     summary.textContent = labels.count(shortlist.length);
     results.innerHTML = shortlist.map(function(hotel, index){
       var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
@@ -420,6 +420,7 @@
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
       var action = '';
+      var fitStatus = rankedSelection ? (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER')) : '';
       if (hotel.affiliate) {
         action = '<a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>';
       } else if (hotel.detailPath) {
@@ -429,6 +430,7 @@
         '<div class="hotel-engine-rank">' + String(index + 1).padStart(2, '0') + '</div>' +
         renderHotelMedia(hotel) +
         '<div class="hotel-engine-copy">' +
+          (fitStatus ? '<p class="engine-fit-status' + (index === 0 ? ' is-best' : '') + '">' + fitStatus + '</p>' : '') +
           '<p class="eyebrow">' + esc(metaText(hotel)) + '</p>' +
           '<h3>' + esc(hotel.name) + '</h3>' +
           (hotel.priceBand ? '<p class="engine-price-band" title="' + (fr ? 'Positionnement prix relatif, pas un tarif en temps réel' : 'Relative price positioning, not a live rate') + '">' + esc(priceSymbol[hotel.priceBand] || '') + '<span>' + (fr ? 'repère budget' : 'budget guide') + '</span></p>' : '') +
@@ -499,7 +501,7 @@
         results.innerHTML = '';
         return;
       }
-      render(shortlist);
+      render(shortlist, !payload.wholeBase);
       output.scrollIntoView({ behavior:'smooth', block:'start' });
     }).catch(function(){
       summary.textContent = labels.none;
