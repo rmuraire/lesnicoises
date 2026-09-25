@@ -25,3 +25,10 @@ RewriteRule ^en/hotels/nice/?$ /stay/nice/ [R=301,L]
 RewriteRule ^en/hotels/nice/index\.html$ /stay/nice/ [R=301,L]
 RewriteRule ^hotels/nice/?$ /fr/dormir/nice/ [R=301,L]
 RewriteRule ^hotels/nice/index\.html$ /fr/dormir/nice/ [R=301,L]
+
+
+# Mametas Riviera Fit canonical route.
+RewriteRule ^riviera-chooser/?$ /riviera-fit/ [R=301,L]
+RewriteRule ^riviera-chooser/index\.html$ /riviera-fit/ [R=301,L]
+RewriteRule ^en/riviera-chooser/?$ /en/riviera-fit/ [R=301,L]
+RewriteRule ^en/riviera-chooser/index\.html$ /en/riviera-fit/ [R=301,L]
