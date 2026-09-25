@@ -41,7 +41,8 @@
     choose:'Choisissez au moins un critère avant de lancer la recherche.',
     chooseBase:'Choisissez d’abord votre base. Si vous hésitez encore entre les villes, commencez par Riviera Fit.',
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
-    none:'Rien de suffisamment net. Élargissez un critère.',
+    none:'Aucune adresse Mametas disponible pour cette base.',
+    closest:function(n){ return 'Aucun match exact. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ' — avec les critères qu’il faut accepter de relâcher.'; },
     count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
     bestFor:'Idéal pour',
     why:'Pourquoi elle ressort',
@@ -55,7 +56,8 @@
     choose:'Pick at least one criterion before running the finder.',
     chooseBase:'Choose your base first. If you are still deciding between towns, start with Riviera Fit.',
     changed:'Your choices changed. Run the shortlist again when you are done.',
-    none:'Not enough clean matches. Widen one criterion.',
+    none:'No Mametas hotel is currently available for this base.',
+    closest:function(n){ return 'No exact match. Here ' + (n === 1 ? 'is the closest Mametas compromise' : 'are the ' + n + ' closest Mametas compromises') + ' — with the trade-offs made explicit.'; },
     count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
     bestFor:'Best for',
     why:'Why it made the cut',
@@ -151,6 +153,21 @@
       else if (hotelPrice && hotelPrice < ceiling) value += 4;
     }
     if (hotel.copy) value += 1;
+    return value;
+  }
+
+  function fallbackScore(hotel) {
+    var sig = hotel.signals;
+    var value = score(hotel);
+    if (state.style !== 'any' && !classifyStyle(sig, state.style)) value -= 11;
+    if (state.geography !== 'any' && !classifyGeography(sig, state.geography)) value -= 11;
+    if (state.mobility === 'nocar' && !sig.noCar) value -= 14;
+    if (state.budget !== 'any') {
+      var ceiling = priceLevel[state.budget] || 4;
+      var hotelPrice = priceLevel[hotel.priceBand] || 0;
+      if (!hotelPrice) value -= 4;
+      else if (hotelPrice > ceiling) value -= 8 * (hotelPrice - ceiling);
+    }
     return value;
   }
 
@@ -414,15 +431,15 @@
     return '';
   }
 
-  function render(shortlist, rankedSelection) {
-    summary.textContent = labels.count(shortlist.length);
+  function render(shortlist, rankedSelection, relaxed) {
+    summary.textContent = relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length);
     results.innerHTML = shortlist.map(function(hotel, index){
       var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
       var bestFor = bestForText(hotel);
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
       var action = '';
-      var fitStatus = rankedSelection ? (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER')) : '';
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
       if (hotel.affiliate) {
         action = '<a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>';
       } else if (hotel.detailPath) {
@@ -488,16 +505,23 @@
       if (showWholeBase) {
         matching.sort(function(a,b){ return (a._order || 0) - (b._order || 0); });
         return Promise.all(matching.map(resolveAffiliate)).then(function(resolved){
-          return { hotels:resolved.filter(Boolean), wholeBase:true };
+          return { hotels:resolved.filter(Boolean), wholeBase:true, relaxed:false };
         });
       }
 
-      var ranked = matching
-        .map(function(h){ h._score = score(h); return h; })
+      var relaxed = false;
+      var rankedSource = matching;
+      if (!rankedSource.length) {
+        relaxed = true;
+        rankedSource = inventory.filter(function(h){ return state.base === 'any' || h.base === state.base; });
+      }
+
+      var ranked = rankedSource
+        .map(function(h){ h._score = relaxed ? fallbackScore(h) : score(h); return h; })
         .sort(function(a,b){ return b._score - a._score || (a._order || 0) - (b._order || 0) || a.name.localeCompare(b.name); });
       var candidates = selectDiverse(ranked, 12);
       return Promise.all(candidates.map(resolveAffiliate)).then(function(resolved){
-        return { hotels:resolved.filter(Boolean), wholeBase:false };
+        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed };
       });
     }).then(function(payload){
       var clean = payload.hotels;
@@ -507,7 +531,7 @@
         results.innerHTML = '';
         return;
       }
-      render(shortlist, !payload.wholeBase);
+      render(shortlist, !payload.wholeBase, !!payload.relaxed);
       output.scrollIntoView({ behavior:'smooth', block:'start' });
     }).catch(function(){
       summary.textContent = labels.none;
