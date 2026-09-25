@@ -117,6 +117,9 @@ jobs:
       - name: Apply V3 Hotel Fit foundation
         run: python scripts/v3_hotel_fit_foundation_2026_09_25.py
 
+      - name: Apply V3 culture practical layer
+        run: python scripts/v3_culture_practical_layer_2026_09_25.py
+
       - name: Validate Riviera Chooser decision engine
         run: node assets/riviera-chooser.js --self-test
 
