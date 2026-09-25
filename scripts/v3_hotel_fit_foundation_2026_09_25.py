@@ -132,7 +132,7 @@ def patch_finder(rel: str, lang: str) -> None:
     for old, new in pairs:
         text = text.replace(old, new)
 
-    text = re.sub(r"/assets/hotel-engine\.js\?v=\d+", "/assets/hotel-engine.js?v=9", text)
+    text = re.sub(r"/assets/hotel-engine\.js\?v=\d+", "/assets/hotel-engine.js?v=10", text)
     text = re.sub(r"/assets/hotel-engine\.css\?v=\d+", "/assets/hotel-engine.css?v=8", text)
     text = text.replace("16 septembre 2026", "25 septembre 2026")
     text = text.replace("16 September 2026", "25 September 2026")
@@ -542,7 +542,7 @@ def validate() -> None:
         text = (ROOT / rel).read_text(encoding="utf-8")
         if "Hotel Fit" not in text:
             errors.append(f"{rel}: Hotel Fit naming missing")
-        if "/assets/hotel-engine.js?v=9" not in text:
+        if "/assets/hotel-engine.js?v=10" not in text:
             errors.append(f"{rel}: engine cache bust missing")
 
     hub_checks = {
