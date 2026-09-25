@@ -207,6 +207,14 @@
         var spritePos = (spriteStyle.match(/background-position\s*:\s*[^;]+/i) || [''])[0];
         media = { type:'sprite', className:spriteClass, style:spritePos };
       }
+      var fitBest = (card.getAttribute('data-fit-best') || '').split(/\s+/).filter(Boolean);
+      var fitNotFor = (card.getAttribute('data-fit-not-for') || '').split(/\s+/).filter(Boolean);
+      var fit = {
+        bestFor:fitBest,
+        notFor:fitNotFor,
+        notForText:(card.getAttribute('data-fit-not-for-text') || '').trim(),
+        tradeOff:(card.getAttribute('data-fit-tradeoff') || '').trim()
+      };
       var hotel = {
         id:id,
         name:name,
@@ -219,13 +227,19 @@
         detailPath:internal,
         affiliate:directAffiliate ? (directAffiliate.getAttribute('href') || '') : '',
         priceBand:(card.getAttribute('data-price-band') || '').trim(),
+        fit:fit,
         media:media,
         _order:index
       };
-      hotel.signals = signals(hotel);
-      /* Transport is explicit: never infer rail/no-car suitability from marketing copy. */
-      hotel.signals.station = !!base.stationFriendly;
-      hotel.signals.noCar = !!base.noCarFriendly;
+      hotel.signals = fitBest.length ? structuredSignals({
+        name:name,
+        fit:fit,
+        stationFriendly:base.stationFriendly,
+        noCarFriendly:base.noCarFriendly
+      }) : signals(hotel);
+      /* Transport remains explicit at base level; fit profiles refine the other signals. */
+      hotel.signals.station = !!base.stationFriendly || hotel.signals.station;
+      hotel.signals.noCar = !!base.noCarFriendly || hotel.signals.noCar;
       hotels.push(hotel);
     });
     var seen = {};
