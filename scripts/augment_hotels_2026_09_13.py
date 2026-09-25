@@ -346,14 +346,14 @@ def update_hubs() -> None:
 def validate() -> None:
     if not SPRITE.is_file():
         raise RuntimeError(f"New hotel sprite missing: {SPRITE.relative_to(ROOT)}")
-    if len(HOTELS) != 44:
-        raise RuntimeError(f"Expected 44 new hotels, found {len(HOTELS)}")
+    if len(HOTELS) != 49:
+        raise RuntimeError(f"Expected 49 V3 hotel entries, found {len(HOTELS)}")
     slugs = [h["slug"] for h in HOTELS]
     urls = [h["url"] for h in HOTELS]
-    if len(set(slugs)) != 44:
+    if len(set(slugs)) != 49:
         raise RuntimeError("New hotel slugs are not unique")
-    if len(set(urls)) != 44:
-        raise RuntimeError("New Expedia links are not unique")
+    if len(set(urls)) != 49:
+        raise RuntimeError("Hotel booking links are not unique")
 
     css = (ROOT / "assets" / "hotel-batch.css").read_text(encoding="utf-8")
     if "/assets/hotels/batch-sprite-2026-09-13.jpg" not in css:
@@ -374,7 +374,7 @@ def validate() -> None:
     bad = {slug: counts[slug] for slug in slugs if counts[slug] != 2}
     if bad:
         raise RuntimeError(f"Each new hotel must appear once in FR and once in EN; bad counts: {bad}")
-    print("Validated 44 new hotels across FR and EN pages")
+    print("Validated 49 V3 hotel entries across FR and EN pages")
 
 
 def main() -> int:
