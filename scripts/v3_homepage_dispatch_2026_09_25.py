@@ -257,8 +257,9 @@ def validate() -> None:
         for needle in needles:
             if needle not in text:
                 errors.append(f"{rel}: missing {needle!r}")
-        if text.count('class="home-experience-card"') != 10:
-            errors.append(f"{rel}: expected 10 homepage experiences, found {text.count('class=\"home-experience-card\"')}")
+        experience_count = text.count('class="home-experience-card"')
+        if experience_count != 10:
+            errors.append(f"{rel}: expected 10 homepage experiences, found {experience_count}")
         if ("Do not collect the Riviera. Choose it." in text) or ("Ne collectionnez pas la Riviera. Choisissez-la." in text):
             errors.append(f"{rel}: duplicate second Places catalogue still present")
         if text.count('class="now-card"') > 0:
