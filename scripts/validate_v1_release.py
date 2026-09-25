@@ -30,7 +30,7 @@ def main() -> int:
     for rel in ("hotels/finder/index.html","en/hotels/finder/index.html"):
         text=(ROOT/rel).read_text(encoding="utf-8")
         if 'data-engine-group="budget"' not in text: errors.append(f"{rel}: budget criterion missing")
-        if "/assets/hotel-engine.js?v=6" not in text: errors.append(f"{rel}: Hotel Fit engine version not bumped")
+        if "/assets/hotel-engine.js?v=7" not in text: errors.append(f"{rel}: Hotel Fit engine version not bumped")
         if not any(label in text for label in ("Cinq choix", "Cinq décisions", "Five choices", "Five decisions")): errors.append(f"{rel}: five-decision copy missing")
         if "Hotel Fit" not in text: errors.append(f"{rel}: Hotel Fit product naming missing")
     activity_links=sum((ROOT/rel).read_text(encoding="utf-8").count("partner_id=CEAKUVS") for rel in (
