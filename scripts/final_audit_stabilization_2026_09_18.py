@@ -6,6 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 EXACT_REPLACEMENTS = {
     "index.html": (
         ('href="#plan">Plan</a>', 'href="/en/riviera-fit/">Plan</a>'),
+        ('href="/en/riviera-chooser/">Plan</a>', 'href="/en/riviera-fit/">Plan</a>'),
         ('href="#places">Places</a>', 'href="/en/riviera-guide/">Places</a>'),
         ('href="#explore">Explore</a>', 'href="/en/explore/">Explore</a>'),
         ('href="#now">Now</a>', 'href="/en/good-finds/">Now</a>'),
@@ -18,6 +19,7 @@ EXACT_REPLACEMENTS = {
     ),
     "fr/index.html": (
         ('href="#planifier">Planifier</a>', 'href="/riviera-fit/">Planifier</a>'),
+        ('href="/riviera-chooser/">Planifier</a>', 'href="/riviera-fit/">Planifier</a>'),
         ('href="#lieux">Lieux</a>', 'href="/riviera-guide/">Lieux</a>'),
         ('href="#explorer">Explorer</a>', 'href="/explore/">Explorer</a>'),
         ('href="#maintenant">Maintenant</a>', 'href="/bons-plans/">Maintenant</a>'),
