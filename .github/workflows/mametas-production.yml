@@ -168,6 +168,9 @@ jobs:
       - name: Apply V3 UX adoption layer
         run: python scripts/v3_adoption_layer_2026_09_25.py
 
+      - name: Apply final marginal recipe
+        run: python scripts/v3_final_marginal_recipe_2026_09_25.py
+
       - name: Audit Hotel Fit coverage
         run: python scripts/v3_hotel_fit_coverage_audit_2026_09_25.py
 
