@@ -78,7 +78,7 @@ PAGES = {
         "hours":"10am-6pm until 1 November 2026. Full rate: €18.",
         "booking":"Online booking is recommended. No timed slot is imposed for the standard visit.",
         "map":"https://www.google.com/maps/search/?api=1&query=Villa+Ephrussi+de+Rothschild",
-    },,
+    },
     "culture/villa-kerylos/index.html": {
         "lang":"fr",
         "address":"Rue Gustave Eiffel, 06310 Beaulieu-sur-Mer",
