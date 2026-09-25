@@ -16,15 +16,25 @@ def save(path: Path, text: str, original: str):
 def patch_monaco_fr():
     p=ROOT/"riviera-guide/monaco/index.html"
     text=p.read_text(encoding="utf-8"); original=text
-    m=re.search(r'<div class="destination-practical">.*?</div></div></div>', text, flags=re.S)
-    if m and m.start() < text.find('<header class="v3-header"'):
-        block=m.group(0)
-        text=text[:m.start()]+text[m.end():]
+    header_pos=text.find('<header class="v3-header"')
+    if header_pos < 0:
+        raise RuntimeError("Monaco FR global header not found")
+    pre=text[:header_pos]
+    marker='<div class="destination-practical">'
+    practical_pos=pre.find(marker)
+    if practical_pos >= 0:
+        # On this page the malformed insertion sits alone between the skip link
+        # and the global header. Capture the full fragment rather than trying
+        # to count nested closing divs.
+        block=pre[practical_pos:].strip()
+        text=pre[:practical_pos]+text[header_pos:]
         hero=re.search(r'<header class="article-hero">.*?</header>', text, flags=re.S)
-        if not hero: raise RuntimeError("Monaco FR article hero not found")
+        if not hero:
+            raise RuntimeError("Monaco FR article hero not found")
         hero_text=hero.group(0)
         pos=hero_text.rfind('</div></header>')
-        if pos < 0: raise RuntimeError("Monaco FR hero close not found")
+        if pos < 0:
+            raise RuntimeError("Monaco FR hero close not found")
         hero_text=hero_text[:pos]+block+hero_text[pos:]
         text=text[:hero.start()]+hero_text+text[hero.end():]
     save(p,text,original)
