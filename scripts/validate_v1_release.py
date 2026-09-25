@@ -6,12 +6,12 @@ ROOT = Path(__file__).resolve().parents[1]
 HUBS = [
     ("fr/dormir/nice/index.html",20),("stay/nice/index.html",20),
     ("hotels/antibes/index.html",11),("en/hotels/antibes/index.html",11),
-    ("hotels/cannes/index.html",13),("en/hotels/cannes/index.html",13),
-    ("hotels/villefranche-sur-mer/index.html",4),("en/hotels/villefranche-sur-mer/index.html",4),
+    ("hotels/cannes/index.html",15),("en/hotels/cannes/index.html",15),
+    ("hotels/villefranche-sur-mer/index.html",6),("en/hotels/villefranche-sur-mer/index.html",6),
     ("hotels/monaco/index.html",7),("en/hotels/monaco/index.html",7),
     ("hotels/menton/index.html",9),("en/hotels/menton/index.html",9),
     ("hotels/saint-paul-de-vence/index.html",8),("en/hotels/saint-paul-de-vence/index.html",8),
-    ("hotels/beaulieu-sur-mer/index.html",5),("en/hotels/beaulieu-sur-mer/index.html",5),
+    ("hotels/beaulieu-sur-mer/index.html",6),("en/hotels/beaulieu-sur-mer/index.html",6),
     ("hotels/mougins/index.html",6),("en/hotels/mougins/index.html",6),
     ("hotels/saint-tropez/index.html",12),("en/hotels/saint-tropez/index.html",12),
 ]
