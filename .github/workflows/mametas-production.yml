@@ -138,6 +138,9 @@ jobs:
       - name: Apply V3 phase 3 content reclassification
         run: python scripts/v3_reclassify_existing_2026_09_25.py
 
+      - name: Apply V3 homepage dispatch
+        run: python scripts/v3_homepage_dispatch_2026_09_25.py
+
       - name: Final V3 copy hygiene
         run: python scripts/no_long_dash_pass.py
 
