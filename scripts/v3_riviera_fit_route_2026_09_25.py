@@ -92,12 +92,14 @@ def main() -> int:
 
     checks = {
         "riviera-fit/index.html": (
-            "MAMETAS RIVIERA FIT · LA RECO",
+            '<p class="tool-badge">MAMETAS TOOL</p>',
+            "RIVIERA FIT · LA RECO",
             'rel="canonical" href="https://www.mametas.com/riviera-fit/"',
             "/en/riviera-fit/",
         ),
         "en/riviera-fit/index.html": (
-            "MAMETAS RIVIERA FIT · THE CALL",
+            '<p class="tool-badge">MAMETAS TOOL</p>',
+            "RIVIERA FIT · THE CALL",
             'rel="canonical" href="https://www.mametas.com/en/riviera-fit/"',
             "/riviera-fit/",
         ),
