@@ -268,16 +268,16 @@ jobs:
                   'href="/riviera-fit/">Tester Riviera Fit</a>',
               ),
               f"https://www.mametas.com/en/gay-nice/?deploy={sha}": (
-                  'class="place gay-hotel-card"',
-                  "/assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp",
-                  "/assets/hotels/hotel-beau-rivage/hero.webp",
-                  "/assets/hotels/boscolo-nice-hotel-and-spa/hero.webp",
+                  'data-final-gay-stays="true"',
+                  "Hôtel Windsor",
+                  "Hôtel Les Cigales",
+                  "MAMETAS PICK · NOT LABELLED",
               ),
               f"https://www.mametas.com/guide-gay-nice/?deploy={sha}": (
-                  'class="place gay-hotel-card"',
-                  "/assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp",
-                  "/assets/hotels/hotel-beau-rivage/hero.webp",
-                  "/assets/hotels/boscolo-nice-hotel-and-spa/hero.webp",
+                  'data-final-gay-stays="true"',
+                  "Hôtel Windsor",
+                  "Hôtel Les Cigales",
+                  "CHOIX MAMETAS · NON LABELLISÉ",
               ),
           }
           for url, needles in checks.items():
@@ -422,9 +422,9 @@ jobs:
                   'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
-                  'class="card seasonal-card"',
-                  'About Mametas',
-                  '>NOW<',
+                  'Things worth knowing before you arrive',
+                  'Rules that save time',
+                  'Train or bus?',
               ),
               f"https://www.mametas.com/en/about/?deploy={sha}": (
                   'about-mameta-2026-09-18.webp',
