@@ -408,13 +408,13 @@ jobs:
           # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
               "https://www.mametas.com/": (
-                  "/assets/editorial/fondation-maeght-waterborough.webp",
-                  "/assets/v3.css?v=2.2",
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
+                  "/assets/v3.css?v=2.3",
               ),
-              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.2"),
-              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.2"),
+              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.3"),
+              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.3"),
               "https://www.mametas.com/en/hotels/": ("core-hub-final",),
-              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.2"),
+              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.3"),
               "https://www.mametas.com/en/practical/": ("core-hub-final",),
           }
           for url, needles in pages.items():
@@ -432,7 +432,7 @@ jobs:
                   print(f"Public parity page check passed: {url} | Cache-Control={cc}")
 
           for css_url, marker in (
-              ("https://www.mametas.com/assets/v3.css?v=2.2", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/v3.css?v=2.3", "Core hub full layout parity 2026-09-26"),
               ("https://www.mametas.com/assets/site.css?v=25.2", "Core hub full layout parity 2026-09-26"),
           ):
               req = Request(css_url, headers={
@@ -446,7 +446,7 @@ jobs:
                       raise SystemExit(f"{css_url} PUBLIC CSS IS STALE: missing parity marker")
                   print(f"Public parity CSS check passed: {css_url} | Cache-Control={response.headers.get('Cache-Control','')}")
 
-          img_url="https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp"
+          img_url="https://www.mametas.comhttps://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG"
           req=Request(img_url, headers={
               "User-Agent":"MametasDeployCheck/1.0",
               "Cache-Control":"no-cache, no-store, must-revalidate",
