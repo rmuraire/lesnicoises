@@ -153,55 +153,106 @@ def patch_riviera_logic():
 def patch_hotel_budget_logic():
     p=ROOT/"assets/hotel-engine.js"
     text=p.read_text(encoding="utf-8"); original=text
-    # Add an explicit budget-empty message.
+
+    # Keep Hotel Fit useful even when the selected budget band has no hotel.
+    # First relax style/geography/mobility while respecting the ceiling. If the
+    # base has no hotel at or below that ceiling at all, show the nearest higher
+    # price band instead of a dead end, and flag that compromise explicitly.
     text=text.replace(
         "none:'No Mametas hotel is currently available for this base.',",
-        "none:'No Mametas hotel is currently available for this base.',\n    noneBudget:'No Mametas hotel in this base sits within that budget ceiling yet. Raise the ceiling to see the closest fits.',"
+        "none:'No Mametas hotel is currently available for this base.',\n    budgetFallback:function(symbol){ return 'Nothing in this base sits within that budget ceiling. Here are the closest Mametas options at ' + symbol + ' — clearly flagged as above budget.'; },"
     )
     text=text.replace(
         "none:'Aucune adresse Mametas disponible pour cette base.',",
-        "none:'Aucune adresse Mametas disponible pour cette base.',\n    noneBudget:'Aucune adresse Mametas de cette base ne respecte encore ce plafond. Relevez le plafond pour voir les compromis les plus proches.',"
+        "none:'Aucune adresse Mametas disponible pour cette base.',\n    budgetFallback:function(symbol){ return 'Aucune adresse de cette base ne respecte ce plafond. Voici les options Mametas les plus proches en ' + symbol + ' — clairement signalées comme au-dessus du budget.'; },"
     )
-    old="""      if (!rankedSource.length) {
+
+    old_render="""  function render(shortlist, rankedSelection, relaxed) {
+    summary.textContent = relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length);"""
+    new_render="""  function render(shortlist, rankedSelection, relaxed, budgetRaised, budgetSymbol) {
+    summary.textContent = budgetRaised ? labels.budgetFallback(budgetSymbol) : (relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length));"""
+    if old_render not in text: raise RuntimeError("Hotel Fit render anchor not found")
+    text=text.replace(old_render,new_render,1)
+
+    old_trade="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+      var action = '';
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';"""
+    new_trade="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+      if (budgetRaised) {
+        tradeOff = (fr ? 'Budget : ' : 'Budget: ') + (priceSymbol[hotel.priceBand] || budgetSymbol || '') + (fr ? ', au-dessus de votre plafond. ' : ', above your ceiling. ') + tradeOff;
+      }
+      var action = '';
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
+      if (fitStatus && budgetRaised) fitStatus += fr ? ' · AU-DESSUS DU BUDGET' : ' · ABOVE BUDGET';"""
+    if old_trade not in text: raise RuntimeError("Hotel Fit tradeoff anchor not found")
+    text=text.replace(old_trade,new_trade,1)
+
+    old="""      var relaxed = false;
+      var rankedSource = matching;
+      if (!rankedSource.length) {
         relaxed = true;
         rankedSource = inventory.filter(function(h){ return state.base === 'any' || h.base === state.base; });
       }
 
       var ranked = rankedSource"""
-    new="""      var budgetBlocked = false;
+    new="""      var relaxed = false;
+      var budgetRaised = false;
+      var budgetSymbol = '';
+      var rankedSource = matching;
       if (!rankedSource.length) {
         relaxed = true;
-        rankedSource = inventory.filter(function(h){
-          if (!(state.base === 'any' || h.base === state.base)) return false;
-          // Budget is a ceiling, not a preference. Relax style/geography/mobility
-          // if needed, but never return a hotel above the user's stated ceiling.
-          if (state.budget !== 'any') {
-            var ceiling = priceLevel[state.budget] || 4;
+        rankedSource = inventory.filter(function(h){ return state.base === 'any' || h.base === state.base; });
+
+        if (state.budget !== 'any') {
+          var ceiling = priceLevel[state.budget] || 4;
+          var withinCeiling = rankedSource.filter(function(h){
             var hotelPrice = priceLevel[h.priceBand] || 0;
             return hotelPrice > 0 && hotelPrice <= ceiling;
+          });
+          if (withinCeiling.length) {
+            rankedSource = withinCeiling;
+          } else {
+            var aboveCeiling = rankedSource.filter(function(h){
+              return (priceLevel[h.priceBand] || 0) > ceiling;
+            });
+            if (aboveCeiling.length) {
+              var nearestLevel = Math.min.apply(null, aboveCeiling.map(function(h){ return priceLevel[h.priceBand] || 99; }));
+              rankedSource = aboveCeiling.filter(function(h){ return (priceLevel[h.priceBand] || 0) === nearestLevel; });
+              budgetRaised = true;
+              budgetSymbol = rankedSource.length ? (priceSymbol[rankedSource[0].priceBand] || '') : '';
+            } else {
+              rankedSource = [];
+            }
           }
-          return true;
-        });
-        if (!rankedSource.length && state.budget !== 'any') budgetBlocked = true;
+        }
       }
 
       var ranked = rankedSource"""
     if old not in text: raise RuntimeError("Hotel Fit fallback source anchor not found")
     text=text.replace(old,new,1)
+
     old2="""        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed };
       });
     }).then(function(payload){
       var clean = payload.hotels;
       var shortlist = payload.wholeBase ? clean : selectDiverse(clean, 4);
       if (!shortlist.length) {
-        summary.textContent = labels.none;"""
-    new2="""        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed, budgetBlocked:budgetBlocked };
+        summary.textContent = labels.none;
+        results.innerHTML = '';
+        return;
+      }
+      render(shortlist, !payload.wholeBase, !!payload.relaxed);"""
+    new2="""        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed, budgetRaised:budgetRaised, budgetSymbol:budgetSymbol };
       });
     }).then(function(payload){
       var clean = payload.hotels;
       var shortlist = payload.wholeBase ? clean : selectDiverse(clean, 4);
       if (!shortlist.length) {
-        summary.textContent = payload.budgetBlocked ? labels.noneBudget : labels.none;"""
+        summary.textContent = labels.none;
+        results.innerHTML = '';
+        return;
+      }
+      render(shortlist, !payload.wholeBase, !!payload.relaxed, !!payload.budgetRaised, payload.budgetSymbol || '');"""
     if old2 not in text: raise RuntimeError("Hotel Fit payload anchor not found")
     text=text.replace(old2,new2,1)
     save(p,text,original)
@@ -256,8 +307,8 @@ def validate():
     if "profile.mobility === 'nocar'" not in (ROOT/"assets/riviera-chooser.js").read_text(encoding="utf-8"):
         errors.append("Riviera Fit consistency rule missing")
     hoteljs=(ROOT/"assets/hotel-engine.js").read_text(encoding="utf-8")
-    if "Budget is a ceiling" not in hoteljs or "noneBudget" not in hoteljs:
-        errors.append("Hotel Fit hard budget ceiling fix missing")
+    if "budgetRaised" not in hoteljs or "budgetFallback" not in hoteljs or "ABOVE BUDGET" not in hoteljs:
+        errors.append("Hotel Fit closest-budget fallback missing")
     if "/assets/hotel-engine.js?v=12" not in (ROOT/"en/hotels/finder/index.html").read_text(encoding="utf-8"):
         errors.append("Hotel Fit v12 cache bust missing")
     if errors: raise SystemExit("Closure QA failed:\n- "+"\n- ".join(errors))
