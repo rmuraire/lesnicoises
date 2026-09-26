@@ -67,12 +67,7 @@ def download_image(url: str, target: Path, required: bool = True) -> bool:
 def materialize_visual_assets() -> None:
     # Force known-working local assets into new production paths so the deploy
     # cannot depend on whether an older binary happened to have been synced.
-    copies = {
-        ROOT / "assets/editorial/fondation-maeght-waterborough.webp":
-            ROOT / "assets/editorial/home-fondation-maeght.webp",
-        ROOT / "assets/editorial/iles-lerins.jpg":
-            ROOT / "assets/editorial/what-to-book-lerins.jpg",
-    }
+    copies = {}
     for src, dst in copies.items():
         if not src.exists():
             raise RuntimeError(f"Missing source visual: {src.relative_to(ROOT)}")
@@ -101,11 +96,11 @@ def patch_home_visuals() -> None:
         original = text
         text = text.replace(
             "/assets/editorial/fondation-maeght-waterborough.webp",
-            "/assets/editorial/home-fondation-maeght.webp",
+            "/assets/editorial/fondation-maeght-waterborough.webp",
         )
         text = re.sub(
             r'https://cdn\.pixabay\.com/photo/2019/03/25/18/26/sculpture-4080986_1280\.jpg',
-            "/assets/editorial/home-fondation-maeght.webp",
+            "/assets/editorial/fondation-maeght-waterborough.webp",
             text,
         )
         # The Maeght card sits high enough on the homepage to load immediately.
@@ -135,7 +130,7 @@ def patch_booking_lerins() -> None:
                 pattern = r'(<div class="place"><div class="address">CANNES[^<]*LÉRINS</div><h3>[^<]*</h3>)'
             figure = (
                 r'\1<figure class="booking-highlight-visual" data-final-lerins-visual="true">'
-                f'<img src="/assets/editorial/what-to-book-lerins.jpg" alt="{alt}" loading="lazy" decoding="async">'
+                f'<img src="/assets/editorial/iles-lerins.jpg" alt="{alt}" loading="lazy" decoding="async">'
                 f'<figcaption>{caption}</figcaption></figure>'
             )
             text, n = re.subn(pattern, figure, text, count=1, flags=re.I)
@@ -145,7 +140,7 @@ def patch_booking_lerins() -> None:
                 if h:
                     text = text[:h.end()] + (
                         f'<figure class="booking-highlight-visual" data-final-lerins-visual="true">'
-                        f'<img src="/assets/editorial/what-to-book-lerins.jpg" alt="{alt}" loading="lazy" decoding="async">'
+                        f'<img src="/assets/editorial/iles-lerins.jpg" alt="{alt}" loading="lazy" decoding="async">'
                         f'<figcaption>{caption}</figcaption></figure>'
                     ) + text[h.end():]
         save(rel, text, original)
@@ -344,12 +339,35 @@ def patch_css_and_versions() -> None:
 }
 '''
     hub_css = r'''
-/* Core hub title parity 2026-09-26 */
+/* Core hub full layout parity 2026-09-26 */
+.core-hub-final .article-hero,
+.core-hub-final .page-hero{
+  padding:clamp(54px,6vw,78px) 0 clamp(38px,4vw,52px)!important;
+  background:var(--paper,#fffdf8)!important;
+  border-bottom:1px solid rgba(20,33,61,.14)!important;
+}
+.core-hub-final .article-hero>.wrap,
+.core-hub-final .page-hero>.wrap{
+  width:min(calc(100% - 2 * var(--gutter,24px)),1180px)!important;
+  margin:0 auto!important;
+}
+.core-hub-final .article-hero .eyebrow,
+.core-hub-final .page-hero .eyebrow{
+  margin:0 0 18px!important;
+  color:var(--coral,#d86c4e)!important;
+  font-family:"Inter",Arial,sans-serif!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.16em!important;
+  line-height:1.2!important;
+  text-transform:uppercase!important;
+}
 .core-hub-final .article-hero h1,
 .core-hub-final .page-hero h1{
-  max-width:15ch!important;
+  max-width:14ch!important;
+  margin:0!important;
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(48px,5.7vw,76px)!important;
+  font-size:clamp(46px,5.35vw,72px)!important;
   font-weight:500!important;
   letter-spacing:-.045em!important;
   line-height:.98!important;
@@ -357,16 +375,36 @@ def patch_css_and_versions() -> None:
 }
 .core-hub-final .article-deck,
 .core-hub-final .lead{
-  max-width:830px!important;
+  max-width:820px!important;
+  margin:22px 0 0!important;
+  color:var(--ink-soft,#43506a)!important;
   font-family:"Inter",Arial,sans-serif!important;
-  font-size:clamp(18px,1.8vw,24px)!important;
-  line-height:1.5!important;
+  font-size:clamp(18px,1.65vw,23px)!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.48!important;
 }
+.core-hub-final .article-meta{margin-top:22px!important}
+.core-hub-final .v3-section,
+.core-hub-final .section{scroll-margin-top:90px}
 @media(max-width:650px){
+  .core-hub-final .article-hero,
+  .core-hub-final .page-hero{padding:42px 0 32px!important}
+  .core-hub-final .article-hero .eyebrow,
+  .core-hub-final .page-hero .eyebrow{margin-bottom:14px!important}
   .core-hub-final .article-hero h1,
-  .core-hub-final .page-hero h1{font-size:clamp(40px,11.5vw,56px)!important;line-height:1!important}
+  .core-hub-final .page-hero h1{
+    max-width:12ch!important;
+    font-size:clamp(38px,11vw,52px)!important;
+    line-height:1!important
+  }
   .core-hub-final .article-deck,
-  .core-hub-final .lead{font-size:20px!important;line-height:1.42!important}
+  .core-hub-final .lead{
+    max-width:100%!important;
+    margin-top:18px!important;
+    font-size:19px!important;
+    line-height:1.42!important
+  }
 }
 '''
     site_extra = r'''
@@ -469,7 +507,7 @@ def validate() -> None:
             errors.append(f"missing final visual asset {rel}")
 
     checks = {
-        "index.html": ("/assets/editorial/home-fondation-maeght.webp", "core-hub-final") if False else ("/assets/editorial/home-fondation-maeght.webp",),
+        "index.html": ("/assets/editorial/fondation-maeght-waterborough.webp", "core-hub-final") if False else ("/assets/editorial/fondation-maeght-waterborough.webp",),
         "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.0"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
