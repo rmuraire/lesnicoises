@@ -76,10 +76,8 @@ def materialize_visual_assets() -> None:
         print(f"Copied visual {dst.relative_to(ROOT)}")
 
     beaches = {
-        "baie-des-fourmis-commons.jpg": ("Baie des fourmis.jpg", True),
-        "petite-afrique-commons.jpg": ("20220622 160624 Beaulieu sur Mer.jpg", True),
-        "mala-commons.jpg": ("Plage de la Mala au cap d'Ail.JPG", True),
-        "fossettes-commons.jpg": ("Anse des Fossettes (St-Jean-Cap-Ferrat).jpg", True),
+        "mala-2016-commons.jpg": ("Plage Mala, Cap d'Ail - panoramio.jpg", True),
+        "fossettes-alt-commons.jpg": ("Cap-Ferrat les Fossettes.jpg", True),
     }
     for out, (filename, required) in beaches.items():
         download_image(wiki_thumb(filename), ROOT / "assets/editorial/beaches" / out, required=required)
@@ -157,29 +155,29 @@ def patch_beach_visuals() -> None:
     passable_src = "/assets/editorial/beaches/passable-pexels.jpg?v=20260926c" if passable_local.exists() else "/assets/editorial/cap-ferrat-cove.jpg"
     data = {
         "Baie des Fourmis": (
-            "/assets/editorial/beaches/baie-des-fourmis-commons.jpg?v=20260926c",
+            "/assets/editorial/beaches/baie-des-fourmis-final.jpg?v=20260926-final",
             "Baie des Fourmis and Villa Kérylos in Beaulieu-sur-Mer",
-            '<a href="https://commons.wikimedia.org/wiki/File:Baie_des_fourmis.jpg" target="_blank" rel="noopener">Wisi eu / Wikimedia Commons · CC0</a>',
+            "Andrei Antipov / Depositphotos",
         ),
         "Petite Afrique": (
-            "/assets/editorial/beaches/petite-afrique-commons.jpg?v=20260926c",
+            "/assets/editorial/beaches/petite-afrique-final.jpg?v=20260926-final",
             "Petite Afrique beach in Beaulieu-sur-Mer",
-            '<a href="https://commons.wikimedia.org/wiki/File:20220622_160624_Beaulieu_sur_Mer.jpg" target="_blank" rel="noopener">Indigo&amp;fushia / Wikimedia Commons · CC BY-SA 4.0</a>',
+            "J. Kelagopian",
         ),
         "Les Fossettes": (
-            "/assets/editorial/beaches/fossettes-commons.jpg?v=20260926c",
+            "/assets/editorial/beaches/fossettes-alt-commons.jpg?v=20260926-final",
             "Les Fossettes cove in Saint-Jean-Cap-Ferrat",
-            '<a href="https://commons.wikimedia.org/wiki/File:Anse_des_Fossettes_(St-Jean-Cap-Ferrat).jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
+            '<a href="https://commons.wikimedia.org/wiki/File:Cap-Ferrat_les_Fossettes.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
         ),
         "Passable": (
-            passable_src,
+            passable_src.replace("?v=20260926c", "") + ("?v=20260926-final" if passable_local.exists() else ""),
             "Passable beach on Cap-Ferrat",
             '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>' if passable_local.exists() else "Mametas archive",
         ),
         "Plage Mala": (
-            "/assets/editorial/beaches/mala-commons.jpg?v=20260926c",
+            "/assets/editorial/beaches/mala-2016-commons.jpg?v=20260926-final",
             "Plage Mala in Cap-d’Ail",
-            '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_la_Mala_au_cap_d%27Ail.JPG" target="_blank" rel="noopener">Gilbert Bochenek / Wikimedia Commons · public domain</a>',
+            '<a href="https://commons.wikimedia.org/wiki/File:Plage_Mala,_Cap_d%27Ail_-_panoramio.jpg" target="_blank" rel="noopener">Corinne Potet / Wikimedia Commons · CC BY 3.0</a>',
         ),
     }
     for rel in ("en/beaches/around-nice/index.html", "plages/autour-de-nice/index.html"):
@@ -499,10 +497,10 @@ def validate() -> None:
     errors: list[str] = []
     required_assets = (
         "assets/editorial/iles-lerins.jpg",
-        "assets/editorial/beaches/baie-des-fourmis-commons.jpg",
-        "assets/editorial/beaches/petite-afrique-commons.jpg",
-        "assets/editorial/beaches/mala-commons.jpg",
-        "assets/editorial/beaches/fossettes-commons.jpg",
+        "assets/editorial/beaches/baie-des-fourmis-final.jpg",
+        "assets/editorial/beaches/petite-afrique-final.jpg",
+        "assets/editorial/beaches/mala-2016-commons.jpg",
+        "assets/editorial/beaches/fossettes-alt-commons.jpg",
     )
     for rel in required_assets:
         p = ROOT / rel
@@ -512,7 +510,7 @@ def validate() -> None:
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
         "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.3"),
-        "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
+        "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-alt-commons.jpg", "mala-2016-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
         "en/hotels/finder/index.html": ("/assets/hotel-engine.css?v=8", "/assets/hotel-engine.js?v=13"),
