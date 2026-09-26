@@ -473,8 +473,11 @@ def patch_css_and_versions() -> None:
   }
 }
 '''
-    ensure_css("assets/site.css", "/* Final cross-template header parity 2026-09-26 */", common_header + hub_css + site_extra)
-    ensure_css("assets/v3.css", "/* Final cross-template header parity 2026-09-26 */", common_header + hub_css)
+    ensure_css("assets/site.css", "/* Final cross-template header parity 2026-09-26 */", common_header)
+    ensure_css("assets/v3.css", "/* Final cross-template header parity 2026-09-26 */", common_header)
+    ensure_css("assets/site.css", "/* Core hub full layout parity 2026-09-26 */", hub_css)
+    ensure_css("assets/v3.css", "/* Core hub full layout parity 2026-09-26 */", hub_css)
+    ensure_css("assets/site.css", "/* Practical ownership / Checked separation 2026-09-26 */", site_extra)
     ensure_css("assets/riviera-chooser.css", "/* Touch-stable Riviera Fit choices 2026-09-26 */", fit_riviera)
     ensure_css("assets/hotel-engine.css", "/* Touch-stable Hotel Fit choices 2026-09-26 */", fit_hotel)
 
@@ -483,8 +486,8 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.1', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.1', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.2', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.2', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=6', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
@@ -508,7 +511,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("/assets/editorial/fondation-maeght-waterborough.webp", "core-hub-final") if False else ("/assets/editorial/fondation-maeght-waterborough.webp",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.1"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.2"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),

@@ -615,3 +615,24 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .destination-reality-grid>div:nth-child(odd){border-right:1px solid var(--line)}
   .destination-reality-grid>div:nth-last-child(-n+2){border-bottom:0}
 }
+
+
+/* V3 SOURCE-MATERIALIZED CLOSURE 2026-09-26 */
+.site-header,.v3-header{border-bottom:1px solid rgba(20,33,61,.14)!important;background:#fffdf8!important}
+.header-inner,.v3-header-inner{width:min(100%,1440px)!important;max-width:none!important;min-height:82px!important;margin:0 auto!important;padding:14px clamp(18px,3vw,48px)!important;display:flex!important;align-items:center!important;gap:30px!important}
+.brand,.v3-brand{display:inline-flex!important;flex-direction:column!important;flex:0 0 auto!important;text-decoration:none!important}
+.brand-name,.v3-brand-name{font-family:"Fraunces",Georgia,serif!important;font-size:clamp(28px,3vw,40px)!important;font-weight:600!important;letter-spacing:-.05em!important;line-height:.9!important}
+.brand-sub,.v3-brand-line{display:block!important;margin-top:8px!important;color:#176f83!important;font-family:"Fraunces",Georgia,serif!important;font-size:10px!important;font-style:italic!important;font-weight:400!important;letter-spacing:.04em!important;line-height:1!important}
+.primary-nav,.v3-nav{margin-left:auto!important}.primary-nav ul,.v3-nav ul{display:flex!important;align-items:center!important;gap:clamp(16px,2.2vw,32px)!important;margin:0!important;padding:0!important;list-style:none!important}
+.primary-nav a,.v3-nav a,.header-inner>.lang-switch a,.v3-header-inner>.lang-switch a{font-family:"Inter",Arial,sans-serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:.12em!important;text-transform:uppercase!important}
+.core-hub-final .article-hero,.core-hub-final .page-hero{padding:clamp(54px,6vw,78px) 0 clamp(38px,4vw,52px)!important;background:var(--paper,#fffdf8)!important;border-bottom:1px solid rgba(20,33,61,.14)!important}
+.core-hub-final .article-hero>.wrap,.core-hub-final .page-hero>.wrap{width:min(calc(100% - 48px),1180px)!important;margin:0 auto!important}
+.core-hub-final .article-hero .eyebrow,.core-hub-final .page-hero .eyebrow{margin:0 0 18px!important;color:var(--coral,#d86c4e)!important;font-family:"Inter",Arial,sans-serif!important;font-size:10px!important;font-weight:800!important;letter-spacing:.16em!important;line-height:1.2!important;text-transform:uppercase!important}
+.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:14ch!important;margin:0!important;font-family:"Fraunces",Georgia,serif!important;font-size:clamp(46px,5.35vw,72px)!important;font-weight:500!important;letter-spacing:-.045em!important;line-height:.98!important;text-transform:none!important}
+.core-hub-final .article-deck,.core-hub-final .lead{max-width:820px!important;margin:22px 0 0!important;font-family:"Inter",Arial,sans-serif!important;font-size:clamp(18px,1.65vw,23px)!important;font-weight:400!important;letter-spacing:0!important;line-height:1.48!important}
+.booking-highlight-visual{margin:20px 0 24px!important;overflow:hidden!important}.booking-highlight-visual img{display:block!important;width:100%!important;aspect-ratio:16/8.5!important;object-fit:cover!important}
+.beach-place-visual{margin:16px 0 20px!important;overflow:hidden!important}.beach-place-visual img{display:block!important;width:100%!important;aspect-ratio:16/8.5!important;object-fit:cover!important}
+.booking-highlight-visual figcaption,.beach-place-visual figcaption{margin-top:6px!important;color:#5f6570!important;font-size:9px!important;line-height:1.45!important}
+@media(max-width:1080px){.header-inner,.v3-header-inner{min-height:68px!important;padding-top:10px!important;padding-bottom:10px!important}}
+@media(max-width:650px){.core-hub-final .article-hero,.core-hub-final .page-hero{padding:42px 0 32px!important}.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:12ch!important;font-size:clamp(38px,11vw,52px)!important;line-height:1!important}.core-hub-final .article-deck,.core-hub-final .lead{max-width:100%!important;margin-top:18px!important;font-size:19px!important;line-height:1.42!important}}
+
