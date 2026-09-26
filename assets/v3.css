@@ -699,3 +699,35 @@ button { color: inherit; font: inherit; }
 @media(max-width:1080px){.header-inner,.v3-header-inner{min-height:68px!important;padding-top:10px!important;padding-bottom:10px!important}}
 @media(max-width:650px){.core-hub-final .article-hero,.core-hub-final .page-hero{padding:42px 0 32px!important}.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:12ch!important;font-size:clamp(38px,11vw,52px)!important;line-height:1!important}.core-hub-final .article-deck,.core-hub-final .lead{max-width:100%!important;margin-top:18px!important;font-size:clamp(20px,6.1vw,24px)!important;line-height:1.42!important}}
 
+
+
+/* Final subtitle typography parity 2026-09-26 */
+.article-deck,
+.article .standfirst,
+.hotel-detail .standfirst,
+.culture-detail .standfirst,
+.page-hero .lead{
+  max-width:820px!important;
+  color:var(--navy-soft,var(--ink-soft,#43506a))!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(20px,2vw,27px)!important;
+  font-weight:400!important;
+  letter-spacing:-.012em!important;
+  line-height:1.45!important;
+}
+.article-hero .article-deck,
+.page-hero .lead{margin:22px 0 0!important}
+.article .standfirst,
+.hotel-detail .standfirst,
+.culture-detail .standfirst{margin-top:22px!important;margin-bottom:34px!important}
+@media(max-width:650px){
+  .article-deck,
+  .article .standfirst,
+  .hotel-detail .standfirst,
+  .culture-detail .standfirst,
+  .page-hero .lead{
+    max-width:100%!important;
+    font-size:clamp(20px,6.1vw,24px)!important;
+    line-height:1.42!important
+  }
+}
