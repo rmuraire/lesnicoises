@@ -209,11 +209,11 @@ def main() -> int:
             '{ label: "Pratique", href: "/pratique/" }',
         ),
         "index.html": (
-            '/assets/v3.css?v=2.3',
+            '/assets/v3.css?v=2.4',
             '/assets/v3.js?v=0.9',
         ),
         "fr/index.html": (
-            '/assets/v3.css?v=2.3',
+            '/assets/v3.css?v=2.4',
             '/assets/v3.js?v=0.9',
         ),
         "assets/site.css": (

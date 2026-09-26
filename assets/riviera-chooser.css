@@ -58,3 +58,32 @@
   .chooser-reality dl div:last-child{border-bottom:0}
   .chooser-alt-grid{grid-template-columns:1fr}
 }
+
+/* Final Riviera Fit editorial prose parity 2026-09-26 */
+.chooser-page-intro .article-deck{
+  max-width:820px!important;
+  font-family:var(--serif)!important;
+  font-size:clamp(20px,2vw,27px)!important;
+  font-weight:400!important;
+  letter-spacing:-.012em!important;
+  line-height:1.45!important;
+}
+.chooser-result-head>p:not(.eyebrow):not(.chooser-profile){
+  max-width:820px!important;
+  color:var(--ink)!important;
+  font-family:var(--serif)!important;
+  font-size:clamp(20px,1.9vw,26px)!important;
+  font-weight:400!important;
+  letter-spacing:-.012em!important;
+  line-height:1.42!important;
+}
+.chooser-result-head .chooser-lead{margin-top:18px!important}
+.chooser-result-head .chooser-pace{margin-top:18px!important;padding-top:17px!important;line-height:1.42!important}
+.chooser-result-head .chooser-pace strong{font-weight:600!important}
+@media(max-width:800px){
+  .chooser-page-intro .article-deck,
+  .chooser-result-head>p:not(.eyebrow):not(.chooser-profile){
+    font-size:20px!important;
+    line-height:1.42!important;
+  }
+}

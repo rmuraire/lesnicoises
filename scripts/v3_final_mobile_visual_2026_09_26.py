@@ -154,20 +154,20 @@ def beach_figure(src: str, alt: str, credit_html: str) -> str:
 
 def patch_beach_visuals() -> None:
     passable_local = ROOT / "assets/editorial/beaches/passable-pexels.jpg"
-    passable_src = "/assets/editorial/beaches/passable-pexels.jpg" if passable_local.exists() else "/assets/editorial/cap-ferrat-cove.jpg"
+    passable_src = "/assets/editorial/beaches/passable-pexels.jpg?v=20260926c" if passable_local.exists() else "/assets/editorial/cap-ferrat-cove.jpg"
     data = {
         "Baie des Fourmis": (
-            "/assets/editorial/beaches/baie-des-fourmis-commons.jpg",
+            "/assets/editorial/beaches/baie-des-fourmis-commons.jpg?v=20260926c",
             "Baie des Fourmis and Villa Kérylos in Beaulieu-sur-Mer",
             '<a href="https://commons.wikimedia.org/wiki/File:Baie_des_fourmis.jpg" target="_blank" rel="noopener">Wisi eu / Wikimedia Commons · CC0</a>',
         ),
         "Petite Afrique": (
-            "/assets/editorial/beaches/petite-afrique-commons.jpg",
+            "/assets/editorial/beaches/petite-afrique-commons.jpg?v=20260926c",
             "Petite Afrique beach in Beaulieu-sur-Mer",
             '<a href="https://commons.wikimedia.org/wiki/File:20220622_160624_Beaulieu_sur_Mer.jpg" target="_blank" rel="noopener">Indigo&amp;fushia / Wikimedia Commons · CC BY-SA 4.0</a>',
         ),
         "Les Fossettes": (
-            "/assets/editorial/beaches/fossettes-commons.jpg",
+            "/assets/editorial/beaches/fossettes-commons.jpg?v=20260926c",
             "Les Fossettes cove in Saint-Jean-Cap-Ferrat",
             '<a href="https://commons.wikimedia.org/wiki/File:Anse_des_Fossettes_(St-Jean-Cap-Ferrat).jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
         ),
@@ -177,7 +177,7 @@ def patch_beach_visuals() -> None:
             '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>' if passable_local.exists() else "Mametas archive",
         ),
         "Plage Mala": (
-            "/assets/editorial/beaches/mala-commons.jpg",
+            "/assets/editorial/beaches/mala-commons.jpg?v=20260926c",
             "Plage Mala in Cap-d’Ail",
             '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_la_Mala_au_cap_d%27Ail.JPG" target="_blank" rel="noopener">Gilbert Bochenek / Wikimedia Commons · public domain</a>',
         ),
@@ -378,11 +378,12 @@ def patch_css_and_versions() -> None:
   max-width:820px!important;
   margin:22px 0 0!important;
   color:var(--ink-soft,#43506a)!important;
-  font-family:"Inter",Arial,sans-serif!important;
-  font-size:clamp(18px,1.65vw,23px)!important;
+  color:var(--ink-soft,#43506a)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(20px,2vw,27px)!important;
   font-weight:400!important;
-  letter-spacing:0!important;
-  line-height:1.48!important;
+  letter-spacing:-.012em!important;
+  line-height:1.45!important;
 }
 .core-hub-final .article-meta{margin-top:22px!important}
 .core-hub-final .v3-section,
@@ -402,7 +403,7 @@ def patch_css_and_versions() -> None:
   .core-hub-final .lead{
     max-width:100%!important;
     margin-top:18px!important;
-    font-size:19px!important;
+    font-size:clamp(20px,6.1vw,24px)!important;
     line-height:1.42!important
   }
 }
@@ -486,9 +487,9 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.2', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.3', text)
-        text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=6', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.3', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.4', text)
+        text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=7', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
         text = re.sub(r'/assets/hotel-engine\.js(?:\?v=[^"]+)?', '/assets/hotel-engine.js?v=13', text)
@@ -510,7 +511,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.2"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.3"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
