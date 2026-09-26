@@ -10,7 +10,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: mametas-riviera-font-hotfix
+  group: mametas-production-v3-final
   cancel-in-progress: true
 
 jobs:
@@ -186,7 +186,6 @@ jobs:
       - name: Deploy changed public files to OVH
         env:
           BEFORE_SHA: ${{ github.event.before }}
-          MAMETAS_FORCE_FILES: assets/riviera-chooser.css;en/riviera-fit/index.html;riviera-fit/index.html;en/riviera-chooser/index.html;riviera-chooser/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
