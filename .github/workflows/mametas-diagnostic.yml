@@ -9,29 +9,27 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: DNS and dual-stack probe
+      - name: Inspect live rendered source contracts
         shell: bash
         run: |
-          set -x
-          echo "=== DNS ==="
-          getent ahosts www.mametas.com || true
-          dig +short A www.mametas.com || true
-          dig +short AAAA www.mametas.com || true
-          echo "=== IPv4 HOME ==="
-          curl -4 -sS -L -D /tmp/h4 -o /tmp/b4 --max-time 30 https://www.mametas.com/ || true
-          cat /tmp/h4 || true
-          grep -oE '/assets/v3\.css\?v=[^" ]+' /tmp/b4 | head || true
-          grep -o 'fondation-maeght-waterborough.webp' /tmp/b4 | head || true
-          grep -o 'home-experience-card' /tmp/b4 | head || true
-          echo "=== IPv6 HOME ==="
-          curl -6 -sS -L -D /tmp/h6 -o /tmp/b6 --max-time 30 https://www.mametas.com/ || true
-          cat /tmp/h6 || true
-          grep -oE '/assets/v3\.css\?v=[^" ]+' /tmp/b6 | head || true
-          grep -o 'fondation-maeght-waterborough.webp' /tmp/b6 | head || true
-          grep -o 'home-experience-card' /tmp/b6 | head || true
-          echo "=== IPv4 BEACH PAGE ==="
-          curl -4 -sS -L -o /tmp/beach4 --max-time 30 https://www.mametas.com/en/beaches/around-nice/ || true
-          grep -o 'petite-afrique-commons.jpg\|passable-pexels.jpg\|mala-commons.jpg' /tmp/beach4 | sort -u || true
-          echo "=== IPv6 BEACH PAGE ==="
-          curl -6 -sS -L -o /tmp/beach6 --max-time 30 https://www.mametas.com/en/beaches/around-nice/ || true
-          grep -o 'petite-afrique-commons.jpg\|passable-pexels.jpg\|mala-commons.jpg' /tmp/beach6 | sort -u || true
+          set -e
+          curl -4 -sS -L --max-time 30 https://www.mametas.com/ -o /tmp/home
+          curl -4 -sS -L --max-time 30 https://www.mametas.com/en/beaches/around-nice/ -o /tmp/beach
+          curl -4 -sS -L --max-time 30 'https://www.mametas.com/assets/v3.css?v=2.2' -o /tmp/v3
+          curl -4 -sS -L --max-time 30 'https://www.mametas.com/assets/site.css?v=25.2' -o /tmp/site
+          python - <<'PY'
+          from pathlib import Path
+          for label,path,terms in [
+            ("HOME","/tmp/home",["Fondation Maeght","fondation-maeght-waterborough.webp","home-experience-card","base-card--culture"]),
+            ("BEACH","/tmp/beach",["Baie des Fourmis","Petite Afrique","Les Fossettes","Passable","Plage Mala","beach-place-visual"]),
+            ("V3CSS","/tmp/v3",["V3 SOURCE-MATERIALIZED CLOSURE","home-experience-card","base-card--culture",".core-hub-final"]),
+            ("SITECSS","/tmp/site",["V3 SOURCE-MATERIALIZED CLOSURE","beach-place-visual",".core-hub-final","Canonical header parity"]),
+          ]:
+            s=Path(path).read_text(errors="replace")
+            print("\n====",label,"====")
+            for term in terms:
+              i=s.find(term)
+              print("\n--",term,"@",i)
+              if i>=0:
+                print(s[max(0,i-1000):i+3000])
+          PY
