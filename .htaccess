@@ -32,3 +32,18 @@ RewriteRule ^riviera-chooser/?$ /riviera-fit/ [R=301,L]
 RewriteRule ^riviera-chooser/index\.html$ /riviera-fit/ [R=301,L]
 RewriteRule ^en/riviera-chooser/?$ /en/riviera-fit/ [R=301,L]
 RewriteRule ^en/riviera-chooser/index\.html$ /en/riviera-fit/ [R=301,L]
+
+
+# V3 closure cache policy — public HTML/CSS/JS must revalidate.
+# This prevents OVH/proxy/browser layers from serving a previous generated build
+# after a successful deployment. Static images keep only a short cache while V3 closes.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:html?|css|js)$">
+    Header always set Cache-Control "no-cache, no-store, must-revalidate"
+    Header always set Pragma "no-cache"
+    Header always set Expires "0"
+  </FilesMatch>
+  <FilesMatch "\.(?:webp|avif|png|jpe?g|svg)$">
+    Header always set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+</IfModule>
