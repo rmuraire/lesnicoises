@@ -40,7 +40,7 @@ def ensure_css(rel: str, marker: str, css: str) -> None:
         text += "\n\n" + marker + "\n" + css.strip() + "\n"
     save(rel, text, original)
 
-def wiki_thumb(filename: str, width: int = 1600) -> str:
+def wiki_thumb(filename: str, width: int = 1280) -> str:
     canon = filename.replace(" ", "_")
     digest = hashlib.md5(canon.encode("utf-8")).hexdigest()
     quoted = urllib.parse.quote(canon, safe="_()-")
