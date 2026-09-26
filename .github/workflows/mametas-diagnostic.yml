@@ -1,0 +1,37 @@
+name: Mametas network diagnostic
+on:
+  push:
+    branches:
+      - mametas-diagnostic
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS and dual-stack probe
+        shell: bash
+        run: |
+          set -x
+          echo "=== DNS ==="
+          getent ahosts www.mametas.com || true
+          dig +short A www.mametas.com || true
+          dig +short AAAA www.mametas.com || true
+          echo "=== IPv4 HOME ==="
+          curl -4 -sS -L -D /tmp/h4 -o /tmp/b4 --max-time 30 https://www.mametas.com/ || true
+          cat /tmp/h4 || true
+          grep -oE '/assets/v3\.css\?v=[^" ]+' /tmp/b4 | head || true
+          grep -o 'fondation-maeght-waterborough.webp' /tmp/b4 | head || true
+          grep -o 'home-experience-card' /tmp/b4 | head || true
+          echo "=== IPv6 HOME ==="
+          curl -6 -sS -L -D /tmp/h6 -o /tmp/b6 --max-time 30 https://www.mametas.com/ || true
+          cat /tmp/h6 || true
+          grep -oE '/assets/v3\.css\?v=[^" ]+' /tmp/b6 | head || true
+          grep -o 'fondation-maeght-waterborough.webp' /tmp/b6 | head || true
+          grep -o 'home-experience-card' /tmp/b6 | head || true
+          echo "=== IPv4 BEACH PAGE ==="
+          curl -4 -sS -L -o /tmp/beach4 --max-time 30 https://www.mametas.com/en/beaches/around-nice/ || true
+          grep -o 'petite-afrique-commons.jpg\|passable-pexels.jpg\|mala-commons.jpg' /tmp/beach4 | sort -u || true
+          echo "=== IPv6 BEACH PAGE ==="
+          curl -6 -sS -L -o /tmp/beach6 --max-time 30 https://www.mametas.com/en/beaches/around-nice/ || true
+          grep -o 'petite-afrique-commons.jpg\|passable-pexels.jpg\|mala-commons.jpg' /tmp/beach6 | sort -u || true
