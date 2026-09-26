@@ -1,35 +1,19 @@
 name: Mametas network diagnostic
 on:
   push:
-    branches:
-      - mametas-diagnostic
+    branches: [mametas-diagnostic]
 permissions:
   contents: read
 jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect live rendered source contracts
+      - name: Hash live beach assets
         shell: bash
         run: |
           set -e
-          curl -4 -sS -L --max-time 30 https://www.mametas.com/ -o /tmp/home
-          curl -4 -sS -L --max-time 30 https://www.mametas.com/en/beaches/around-nice/ -o /tmp/beach
-          curl -4 -sS -L --max-time 30 'https://www.mametas.com/assets/v3.css?v=2.2' -o /tmp/v3
-          curl -4 -sS -L --max-time 30 'https://www.mametas.com/assets/site.css?v=25.2' -o /tmp/site
-          python - <<'PY'
-          from pathlib import Path
-          for label,path,terms in [
-            ("HOME","/tmp/home",["Fondation Maeght","fondation-maeght-waterborough.webp","home-experience-card","base-card--culture"]),
-            ("BEACH","/tmp/beach",["Baie des Fourmis","Petite Afrique","Les Fossettes","Passable","Plage Mala","beach-place-visual"]),
-            ("V3CSS","/tmp/v3",["V3 SOURCE-MATERIALIZED CLOSURE","home-experience-card","base-card--culture",".core-hub-final"]),
-            ("SITECSS","/tmp/site",["V3 SOURCE-MATERIALIZED CLOSURE","beach-place-visual",".core-hub-final","Canonical header parity"]),
-          ]:
-            s=Path(path).read_text(errors="replace")
-            print("\n====",label,"====")
-            for term in terms:
-              i=s.find(term)
-              print("\n--",term,"@",i)
-              if i>=0:
-                print(s[max(0,i-1000):i+3000])
-          PY
+          for f in baie-des-fourmis-commons.jpg petite-afrique-commons.jpg fossettes-commons.jpg mala-commons.jpg passable-pexels.jpg; do
+            curl -4 -sS -L --max-time 30 "https://www.mametas.com/assets/editorial/beaches/$f" -o "/tmp/$f"
+            echo "$f $(wc -c < /tmp/$f) bytes $(sha256sum /tmp/$f | cut -d' ' -f1)"
+            file "/tmp/$f"
+          done
