@@ -105,7 +105,7 @@ def patch_home_visuals() -> None:
         )
         # The Maeght card sits high enough on the homepage to load immediately.
         text = re.sub(
-            r'(<img src="/assets/editorial/home-fondation-maeght\.webp"[^>]*?)loading="lazy"',
+            r'(<img src="/assets/editorial/fondation-maeght-waterborough\.webp"[^>]*?)loading="lazy"',
             r'\1loading="eager"',
             text,
         )
@@ -483,8 +483,8 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.0', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.0', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.1', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.1', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=6', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
@@ -494,8 +494,8 @@ def patch_css_and_versions() -> None:
 def validate() -> None:
     errors: list[str] = []
     required_assets = (
-        "assets/editorial/home-fondation-maeght.webp",
-        "assets/editorial/what-to-book-lerins.jpg",
+        "assets/editorial/fondation-maeght-waterborough.webp",
+        "assets/editorial/iles-lerins.jpg",
         "assets/editorial/beaches/baie-des-fourmis-commons.jpg",
         "assets/editorial/beaches/petite-afrique-commons.jpg",
         "assets/editorial/beaches/mala-commons.jpg",
@@ -508,7 +508,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("/assets/editorial/fondation-maeght-waterborough.webp", "core-hub-final") if False else ("/assets/editorial/fondation-maeght-waterborough.webp",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.0"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.1"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
