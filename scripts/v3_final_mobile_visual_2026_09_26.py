@@ -95,12 +95,12 @@ def patch_home_visuals() -> None:
         text = p.read_text(encoding="utf-8")
         original = text
         text = text.replace(
-            "/assets/editorial/fondation-maeght-waterborough.webp",
-            "/assets/editorial/fondation-maeght-waterborough.webp",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
         )
         text = re.sub(
             r'https://cdn\.pixabay\.com/photo/2019/03/25/18/26/sculpture-4080986_1280\.jpg',
-            "/assets/editorial/fondation-maeght-waterborough.webp",
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
             text,
         )
         # The Maeght card sits high enough on the homepage to load immediately.
@@ -487,7 +487,7 @@ def patch_css_and_versions() -> None:
         text = p.read_text(encoding="utf-8")
         original = text
         text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.2', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.2', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.3', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=6', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
@@ -497,7 +497,6 @@ def patch_css_and_versions() -> None:
 def validate() -> None:
     errors: list[str] = []
     required_assets = (
-        "assets/editorial/fondation-maeght-waterborough.webp",
         "assets/editorial/iles-lerins.jpg",
         "assets/editorial/beaches/baie-des-fourmis-commons.jpg",
         "assets/editorial/beaches/petite-afrique-commons.jpg",
@@ -510,7 +509,7 @@ def validate() -> None:
             errors.append(f"missing final visual asset {rel}")
 
     checks = {
-        "index.html": ("/assets/editorial/fondation-maeght-waterborough.webp", "core-hub-final") if False else ("/assets/editorial/fondation-maeght-waterborough.webp",),
+        "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
         "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.2"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-commons.jpg", "petite-afrique-commons.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
