@@ -399,7 +399,7 @@ jobs:
               print("mametas.com is reachable (HTTP 200)")
           PY
 
-      - name: Check public V1 release pages
+      - name: Check final public release pages
         run: |
           python - <<'PY'
           import os
@@ -422,9 +422,9 @@ jobs:
                   'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
-                  'Things worth knowing before you arrive',
-                  'Rules that save time',
-                  'Train or bus?',
+                  'What is changing on the Riviera now.',
+                  'Looking for the practical stuff?',
+                  'September 2026',
               ),
               f"https://www.mametas.com/en/about/?deploy={sha}": (
                   'about-mameta-2026-09-18.webp',
