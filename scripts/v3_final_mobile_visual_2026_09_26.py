@@ -76,8 +76,8 @@ def materialize_visual_assets() -> None:
         print(f"Copied visual {dst.relative_to(ROOT)}")
 
     beaches = {
-        "mala-2016-commons.jpg": ("Plage Mala, Cap d'Ail - panoramio.jpg", True),
-        "fossettes-alt-commons.jpg": ("Cap-Ferrat les Fossettes.jpg", True),
+        "mala-commons.jpg": ("Plage Mala, Cap d'Ail - panoramio.jpg", True),
+        "fossettes-commons.jpg": ("Cap-Ferrat les Fossettes.jpg", True),
     }
     for out, (filename, required) in beaches.items():
         download_image(wiki_thumb(filename), ROOT / "assets/editorial/beaches" / out, required=required)
@@ -165,7 +165,7 @@ def patch_beach_visuals() -> None:
             "J. Kelagopian",
         ),
         "Les Fossettes": (
-            "/assets/editorial/beaches/fossettes-alt-commons.jpg?v=20260926-final",
+            "/assets/editorial/beaches/fossettes-commons.jpg?v=20260926-final",
             "Les Fossettes cove in Saint-Jean-Cap-Ferrat",
             '<a href="https://commons.wikimedia.org/wiki/File:Cap-Ferrat_les_Fossettes.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
         ),
@@ -175,7 +175,7 @@ def patch_beach_visuals() -> None:
             '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>' if passable_local.exists() else "Mametas archive",
         ),
         "Plage Mala": (
-            "/assets/editorial/beaches/mala-2016-commons.jpg?v=20260926-final",
+            "/assets/editorial/beaches/mala-commons.jpg?v=20260926-final",
             "Plage Mala in Cap-d’Ail",
             '<a href="https://commons.wikimedia.org/wiki/File:Plage_Mala,_Cap_d%27Ail_-_panoramio.jpg" target="_blank" rel="noopener">Corinne Potet / Wikimedia Commons · CC BY 3.0</a>',
         ),
@@ -499,8 +499,8 @@ def validate() -> None:
         "assets/editorial/iles-lerins.jpg",
         "assets/editorial/beaches/baie-des-fourmis-final.jpg",
         "assets/editorial/beaches/petite-afrique-final.jpg",
-        "assets/editorial/beaches/mala-2016-commons.jpg",
-        "assets/editorial/beaches/fossettes-alt-commons.jpg",
+        "assets/editorial/beaches/mala-commons.jpg",
+        "assets/editorial/beaches/fossettes-commons.jpg",
     )
     for rel in required_assets:
         p = ROOT / rel
@@ -510,7 +510,7 @@ def validate() -> None:
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
         "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.3"),
-        "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-alt-commons.jpg", "mala-2016-commons.jpg"),
+        "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
         "en/hotels/finder/index.html": ("/assets/hotel-engine.css?v=8", "/assets/hotel-engine.js?v=13"),
