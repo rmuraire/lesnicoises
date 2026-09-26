@@ -440,6 +440,39 @@ def patch_css_and_versions() -> None:
 .gay-stay-method{margin:20px 0 28px!important;padding:16px 18px;border-left:3px solid #d86c4e;background:rgba(216,108,78,.045)}
 @media(max-width:800px){.gay-stay-grid{grid-template-columns:1fr}.gay-stay-pick{padding:19px}}
 '''
+
+    subtitle_css = r'''
+/* Final subtitle typography parity 2026-09-26 */
+.article-deck,
+.article .standfirst,
+.hotel-detail .standfirst,
+.culture-detail .standfirst,
+.page-hero .lead{
+  max-width:820px!important;
+  color:var(--navy-soft,var(--ink-soft,#43506a))!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(20px,2vw,27px)!important;
+  font-weight:400!important;
+  letter-spacing:-.012em!important;
+  line-height:1.45!important;
+}
+.article-hero .article-deck,
+.page-hero .lead{margin:22px 0 0!important}
+.article .standfirst,
+.hotel-detail .standfirst,
+.culture-detail .standfirst{margin-top:22px!important;margin-bottom:34px!important}
+@media(max-width:650px){
+  .article-deck,
+  .article .standfirst,
+  .hotel-detail .standfirst,
+  .culture-detail .standfirst,
+  .page-hero .lead{
+    max-width:100%!important;
+    font-size:clamp(20px,6.1vw,24px)!important;
+    line-height:1.42!important
+  }
+}
+'''
     fit_riviera = r'''
 /* Touch-stable Riviera Fit choices 2026-09-26 */
 .chooser-options button.is-active,.chooser-options button[aria-pressed="true"]{background:var(--blue)!important;border-color:var(--blue)!important;color:var(--white)!important}
@@ -476,6 +509,8 @@ def patch_css_and_versions() -> None:
     ensure_css("assets/v3.css", "/* Final cross-template header parity 2026-09-26 */", common_header)
     ensure_css("assets/site.css", "/* Core hub full layout parity 2026-09-26 */", hub_css)
     ensure_css("assets/v3.css", "/* Core hub full layout parity 2026-09-26 */", hub_css)
+    ensure_css("assets/site.css", "/* Final subtitle typography parity 2026-09-26 */", subtitle_css)
+    ensure_css("assets/v3.css", "/* Final subtitle typography parity 2026-09-26 */", subtitle_css)
     ensure_css("assets/site.css", "/* Practical ownership / Checked separation 2026-09-26 */", site_extra)
     ensure_css("assets/riviera-chooser.css", "/* Touch-stable Riviera Fit choices 2026-09-26 */", fit_riviera)
     ensure_css("assets/hotel-engine.css", "/* Touch-stable Hotel Fit choices 2026-09-26 */", fit_hotel)
@@ -485,8 +520,8 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.3', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.4', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.4', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.5', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=8', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
@@ -509,7 +544,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.3"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.4"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
