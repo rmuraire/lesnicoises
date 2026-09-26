@@ -402,45 +402,62 @@ jobs:
       - name: Check final CSS parity and Maeght asset
         run: |
           python - <<'PY'
-          import os
           from urllib.request import Request, urlopen
-          sha = os.environ.get("GITHUB_SHA", "release")
+
+          # IMPORTANT: these are the exact public URLs a visitor opens.
+          # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
-              f"https://www.mametas.com/plan/?deploy={sha}": ("core-hub-final", "/assets/v3.css?v=2.1"),
-              f"https://www.mametas.com/en/riviera-guide/?deploy={sha}": ("core-hub-final", "/assets/v3.css?v=2.1"),
-              f"https://www.mametas.com/en/hotels/?deploy={sha}": ("core-hub-final",),
-              f"https://www.mametas.com/en/explore/?deploy={sha}": ("core-hub-final", "/assets/v3.css?v=2.1"),
-              f"https://www.mametas.com/en/practical/?deploy={sha}": ("core-hub-final",),
-              f"https://www.mametas.com/?deploy={sha}": ("/assets/editorial/fondation-maeght-waterborough.webp",),
+              "https://www.mametas.com/": (
+                  "/assets/editorial/fondation-maeght-waterborough.webp",
+                  "/assets/v3.css?v=2.1",
+              ),
+              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.1"),
+              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.1"),
+              "https://www.mametas.com/en/hotels/": ("core-hub-final",),
+              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.1"),
+              "https://www.mametas.com/en/practical/": ("core-hub-final",),
           }
           for url, needles in pages.items():
-              req = Request(url, headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
+              req = Request(url, headers={
+                  "User-Agent":"MametasDeployCheck/1.0",
+                  "Cache-Control":"no-cache, no-store, must-revalidate",
+                  "Pragma":"no-cache",
+              })
               with urlopen(req, timeout=30) as response:
                   body = response.read().decode("utf-8", errors="replace")
                   missing = [n for n in needles if n not in body]
                   if missing:
-                      raise SystemExit(f"{url} missing final parity markers: {missing}")
-                  print(f"Final parity page check passed: {url}")
+                      raise SystemExit(f"{url} PUBLIC URL IS STALE OR INCOMPLETE: {missing}")
+                  cc=response.headers.get("Cache-Control","")
+                  print(f"Public parity page check passed: {url} | Cache-Control={cc}")
 
           for css_url, marker in (
-              (f"https://www.mametas.com/assets/v3.css?v=2.1&deploy={sha}", "Core hub full layout parity 2026-09-26"),
-              (f"https://www.mametas.com/assets/site.css?v=25.1&deploy={sha}", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/v3.css?v=2.1", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/site.css?v=25.1", "Core hub full layout parity 2026-09-26"),
           ):
-              req = Request(css_url, headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
+              req = Request(css_url, headers={
+                  "User-Agent":"MametasDeployCheck/1.0",
+                  "Cache-Control":"no-cache, no-store, must-revalidate",
+                  "Pragma":"no-cache",
+              })
               with urlopen(req, timeout=30) as response:
                   body=response.read().decode("utf-8", errors="replace")
                   if marker not in body:
-                      raise SystemExit(f"{css_url} missing CSS parity marker")
-                  print(f"Final parity CSS check passed: {css_url}")
+                      raise SystemExit(f"{css_url} PUBLIC CSS IS STALE: missing parity marker")
+                  print(f"Public parity CSS check passed: {css_url} | Cache-Control={response.headers.get('Cache-Control','')}")
 
-          img_url=f"https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp?deploy={sha}"
-          req=Request(img_url, headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
+          img_url="https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp"
+          req=Request(img_url, headers={
+              "User-Agent":"MametasDeployCheck/1.0",
+              "Cache-Control":"no-cache, no-store, must-revalidate",
+              "Pragma":"no-cache",
+          })
           with urlopen(req, timeout=30) as response:
               data=response.read()
               ctype=response.headers.get("Content-Type","")
               if response.status != 200 or len(data) < 5000 or not ctype.startswith("image/"):
-                  raise SystemExit(f"Maeght asset invalid: status={response.status} type={ctype} bytes={len(data)}")
-              print(f"Maeght asset check passed: {len(data)} bytes")
+                  raise SystemExit(f"Maeght public asset invalid: status={response.status} type={ctype} bytes={len(data)}")
+              print(f"Maeght public asset check passed: {len(data)} bytes | Cache-Control={response.headers.get('Cache-Control','')}")
           PY
 
       - name: Check final public release pages
