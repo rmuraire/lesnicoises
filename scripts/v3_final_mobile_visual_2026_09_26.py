@@ -916,6 +916,7 @@ def validate() -> None:
         "assets/editorial/beaches/petite-afrique-final.jpg",
         "assets/editorial/beaches/mala-commons.jpg",
         "assets/editorial/beaches/fossettes-commons.jpg",
+        "assets/editorial/beaches/antibes-gravette-deposit.webp",
     )
     for rel in required_assets:
         p = ROOT / rel
@@ -953,6 +954,36 @@ def validate() -> None:
         errors.append("site.css final header parity missing")
     if "Final cross-template header parity 2026-09-26" not in (ROOT/"assets/v3.css").read_text(encoding="utf-8"):
         errors.append("v3.css final header parity missing")
+    if "Final V3 closure polish 2026-09-27" not in (ROOT/"assets/site.css").read_text(encoding="utf-8"):
+        errors.append("site.css final closure polish missing")
+    if "Final V3 closure polish 2026-09-27" not in (ROOT/"assets/v3.css").read_text(encoding="utf-8"):
+        errors.append("v3.css final closure polish missing")
+
+    closure_checks = {
+        "en/about/index.html": ("Best-in-class Riviera recommendations",),
+        "en/beaches/index.html": ("antibes-gravette-deposit.webp",),
+        "en/beaches/antibes/index.html": ("antibes-gravette-deposit.webp",),
+        "en/beaches/nice/index.html": ("nice-riviera.jpg?v=20260927-final",),
+        "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg?v=20260927-final",),
+        "en/culture/fondation-maeght/index.html": ("https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",),
+        "index.html": ('>Pichoun</a>',),
+    }
+    for rel, needles in closure_checks.items():
+        text = (ROOT/rel).read_text(encoding="utf-8")
+        for needle in needles:
+            if needle not in text:
+                errors.append(f"{rel}: missing final closure marker {needle!r}")
+
+    for p in ROOT.rglob("*.html"):
+        text = p.read_text(encoding="utf-8")
+        if "https://www.mametas.comhttps://" in text:
+            errors.append(f"{p.relative_to(ROOT)}: malformed concatenated absolute URL remains")
+        is_fr = bool(re.search(r'<html[^>]+lang="fr"', text, flags=re.I))
+        bad_plan = ('href="/#plan">Plan</a>', 'href="/en/riviera-fit/">Plan</a>', 'href="/plan/five-days-nice-no-car/">Plan</a>') if not is_fr else ('href="/riviera-fit/">Planifier</a>',)
+        bad_stay = ('href="/stay/nice/">Stay</a>',) if not is_fr else ('href="/fr/dormir/nice/">Dormir</a>',)
+        for bad in bad_plan + bad_stay:
+            if bad in text:
+                errors.append(f"{p.relative_to(ROOT)}: stale hub navigation {bad}")
 
     if errors:
         raise SystemExit("Final mobile + visual closure failed:\n- " + "\n- ".join(errors))
