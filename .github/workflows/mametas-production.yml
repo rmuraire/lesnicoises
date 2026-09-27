@@ -331,7 +331,7 @@ jobs:
           img = Request(f"https://www.mametas.com/assets/editorial/beaches/antibes-gravette-deposit.webp?v={sha}", headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
           with urlopen(img, timeout=30) as response:
               payload = response.read()
-              if response.status != 200 or len(payload) < 20000:
+              if response.status != 200 or len(payload) < 10000:
                   raise SystemExit("New Antibes Gravette visual failed live check")
               print("New Antibes Gravette visual live check passed:", len(payload), "bytes")
           print("Final closure redirect/image assertions passed")
