@@ -904,8 +904,29 @@ def patch_final_closure_2026_09_27() -> None:
         if rel == "index.html":
             text = text.replace('title="Mini Niçois lexicon">pitchoun</a>', 'title="Mini Niçois lexicon">Pichoun</a>')
 
-        # Generic guard against the malformed Maeght share URL found in external QA.
+        # Generic guard against malformed concatenated absolute URLs.
         text = text.replace("https://www.mametas.comhttps://", "https://")
+
+        # Fondation Maeght: force a stable local social image after every generator.
+        if rel in ("en/culture/fondation-maeght/index.html", "culture/fondation-maeght/index.html"):
+            maeght_og = "https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp"
+            if re.search(r'<meta[^>]+property="og:image"[^>]*>', text, flags=re.I):
+                text = re.sub(
+                    r'<meta[^>]+property="og:image"[^>]*>',
+                    f'<meta property="og:image" content="{maeght_og}">',
+                    text, count=1, flags=re.I
+                )
+            else:
+                text = text.replace("</head>", f'<meta property="og:image" content="{maeght_og}"></head>', 1)
+            if re.search(r'<meta[^>]+name="twitter:image"[^>]*>', text, flags=re.I):
+                text = re.sub(
+                    r'<meta[^>]+name="twitter:image"[^>]*>',
+                    f'<meta name="twitter:image" content="{maeght_og}">',
+                    text, count=1, flags=re.I
+                )
+            else:
+                text = text.replace("</head>", f'<meta name="twitter:image" content="{maeght_og}"></head>', 1)
+
         save(rel, text, original)
 
 def validate() -> None:
