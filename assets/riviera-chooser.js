@@ -397,7 +397,7 @@
           {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
         ],
         menton:[
-          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'Une base rationnelle à l’est quand la chambre n’est pas l’événement principal.'},
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'Un point de chute rationnel à l’est quand la chambre n’est pas l’événement principal.'},
           {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://expedia.com/affiliates/monaco-hotels-hotel-napoleon.IbOR18k',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
           {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://expedia.com/affiliates/monaco-hotels-villa-genesis.4oRKrZj',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
         ],

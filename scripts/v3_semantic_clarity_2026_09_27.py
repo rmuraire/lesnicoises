@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import html
 import re
 from pathlib import Path
 
@@ -12,39 +13,139 @@ def save(path: Path, text: str, original: str) -> None:
         path.write_text(text, encoding="utf-8")
         changed.append(path.relative_to(ROOT).as_posix())
 
-def patch_html() -> None:
-    fr_replacements = [
+def visible_text(html_text: str) -> str:
+    text = re.sub(r'<script\b[^>]*>[\s\S]*?</script>', ' ', html_text, flags=re.I)
+    text = re.sub(r'<style\b[^>]*>[\s\S]*?</style>', ' ', text, flags=re.I)
+    text = re.sub(r'<[^>]+>', ' ', text)
+    return re.sub(r'\s+', ' ', html.unescape(text)).strip()
+
+def rewrite_visible(html_text: str, lang: str) -> str:
+    parts = re.split(r'(<[^>]+>)', html_text)
+    out = []
+    in_script = False
+    in_style = False
+    in_anchor = False
+
+    structural_fr = [
+        ("Cinq questions. Une base.", "Cinq questions. Un point de chute."),
+        ("UNE BASE RECOMMANDÉE", "UN POINT DE CHUTE RECOMMANDÉ"),
+        ("Une base recommandée", "Un point de chute recommandé"),
+        ("Choisir la base", "Choisir le point de chute"),
         ("Choisir sa base", "Choisir son point de chute"),
-        ("Choisissez la base.", "Choisissez votre point de chute."),
-        ("Votre base décide", "Votre point de chute décide"),
-        ("votre base décide", "votre point de chute décide"),
+        ("Choisissez la bonne base", "Choisissez le bon point de chute"),
+        ("Choisissez votre base", "Choisissez votre point de chute"),
+        ("Base choisie ?", "Point de chute choisi ?"),
+        ("BASE INTENTIONNELLE", "POINT DE CHUTE INTENTIONNEL"),
+        ("Meilleure première base", "Meilleur premier point de chute"),
+        ("meilleure première base", "meilleur premier point de chute"),
         ("notre meilleure base polyvalente", "notre meilleur point de chute polyvalent"),
         ("notre base par défaut", "notre point de chute par défaut"),
         ("la base polyvalente", "le point de chute polyvalent"),
-        ("une base plus lente", "un point de chute plus lent"),
-        ("une base plus douce", "un point de chute plus doux"),
-        ("une base centrale", "un point de chute central"),
-        ("une base rationnelle", "un point de chute rationnel"),
-        ("une base intentionnelle", "un point de chute intentionnel"),
-        ("cette base", "ce point de chute"),
-        ("même base", "même point de chute"),
-        ("votre base", "votre point de chute"),
-        ("notre base", "notre point de chute"),
-        ("comme base", "comme point de chute"),
-        ("de la base", "du point de chute"),
-        ("Au-delà de votre base", "Au-delà de votre point de chute"),
-        ("quitter sa base", "quitter son point de chute"),
-        ("quitter votre base", "quitter votre point de chute"),
-        ("Comparer les bases", "Comparer les villes"),
-        ("comparez les bases", "comparez les villes"),
-        ("Voir toutes les bases", "Comparer toutes les villes"),
-        ("bases à comparer", "villes à comparer"),
-        ("Choisir une base", "Choisir un point de chute"),
-        ("choisir une base", "choisir un point de chute"),
-        ("une deuxième base", "un deuxième point de chute"),
-        ("une vraie base", "un vrai point de chute"),
+        ("Base calme à l’est", "Ville calme à l’est"),
+        ("Cinq jours, base Nice", "Cinq jours, Nice comme point de chute"),
+        ("Dans quelle base dormez-vous ?", "Dans quelle ville dormez-vous ?"),
+        ("PAR BASE", "PAR VILLE"),
+        ("COMPRENDRE LA BASE", "COMPRENDRE LA VILLE"),
+        ("COMMENT LES BASES DIFFÈRENT", "COMMENT LES VILLES DIFFÈRENT"),
+        ("LA BASE TIENT TOUJOURS ?", "LA VILLE VOUS CONVIENT TOUJOURS ?"),
+        ("Au-delà de votre base", "Au-delà de votre ville"),
+        ("AU-DELÀ DE LA BASE", "AU-DELÀ DE LA VILLE"),
+        ("Pourquoi cette base", "Pourquoi cette ville"),
+        ("Pourquoi pas les autres bases", "Pourquoi pas les autres villes"),
+        ("Voir le guide de la base", "Voir le guide de cette ville"),
+        ("Trois niveaux. Même base.", "Trois niveaux. Même ville."),
+        ("Une fois la base choisie", "Une fois la ville choisie"),
+        ("La base est décidée ?", "La ville est décidée ?"),
+        ("La base change", "La ville change"),
     ]
 
+    def replace_word_case(text: str, pattern: str, lower: str, title: str, upper: str) -> str:
+        def repl(m):
+            s = m.group(0)
+            if s.isupper():
+                return upper
+            if s[:1].isupper():
+                return title
+            return lower
+        return re.sub(pattern, repl, text, flags=re.I)
+
+    for part in parts:
+        if part.startswith("<"):
+            low = part.lower()
+            if re.match(r'<script\b', low):
+                in_script = True
+            elif re.match(r'</script\b', low):
+                in_script = False
+            elif re.match(r'<style\b', low):
+                in_style = True
+            elif re.match(r'</style\b', low):
+                in_style = False
+            elif re.match(r'<a\b', low):
+                in_anchor = True
+            elif re.match(r'</a\b', low):
+                in_anchor = False
+            out.append(part)
+            continue
+
+        if in_script or in_style:
+            out.append(part)
+            continue
+
+        text = part
+        if lang == "fr":
+            for old, new in structural_fr:
+                text = text.replace(old, new)
+
+            # Natural prose: once the canonical concept has been introduced as
+            # "point de chute", ordinary sentences simply say ville/villes.
+            text = re.sub(r'\bbase\s+Nice\b', 'Nice comme point de chute', text, flags=re.I)
+            text = re.sub(r'\bbase\s+Cannes\b', 'Cannes comme point de chute', text, flags=re.I)
+            text = re.sub(r'\bbase\s+Antibes\b', 'Antibes comme point de chute', text, flags=re.I)
+            text = re.sub(r'\bbase\s+Menton\b', 'Menton comme point de chute', text, flags=re.I)
+            text = re.sub(r'\bbase\s+Monaco\b', 'Monaco comme point de chute', text, flags=re.I)
+            text = replace_word_case(text, r'\bbases\b', 'villes', 'Villes', 'VILLES')
+            text = replace_word_case(text, r'\bbase\b', 'ville', 'Ville', 'VILLE')
+
+            # Dialect never carries functional meaning. Keep only Pichoun and Mèfi.
+            text = re.sub(r'\bcagades?\b', lambda m: 'erreurs' if m.group(0).lower().endswith('s') else 'erreur', text, flags=re.I)
+            text = re.sub(r'\bDégun\b', 'Personne', text, flags=re.I)
+            text = re.sub(r'\bGari\b', '', text, flags=re.I)
+            text = re.sub(r'\bpitchoun\b', 'Pichoun', text, flags=re.I)
+
+            if not in_anchor:
+                text = re.sub(
+                    r'\bPichoun\b',
+                    '<a class="dialect-inline" href="/lexique/#pichoun" title="Petit lexique niçois">Pichoun</a>',
+                    text
+                )
+                text = re.sub(
+                    r'\bMèfi\b(?!\s*[—-])',
+                    '<a class="dialect-inline" href="/lexique/#mefi">Mèfi</a> — attention',
+                    text,
+                    flags=re.I
+                )
+        else:
+            text = re.sub(r'\bcagades?\b', lambda m: 'mistakes' if m.group(0).lower().endswith('s') else 'mistake', text, flags=re.I)
+            text = re.sub(r'\bGari\b', '', text, flags=re.I)
+            text = re.sub(r'\bpitchoun\b', 'Pichoun', text, flags=re.I)
+            if not in_anchor:
+                text = re.sub(
+                    r'\bPichoun\b',
+                    '<a class="dialect-inline" href="/en/lexicon/#pichoun">Pichoun</a>',
+                    text
+                )
+                text = re.sub(
+                    r'\bMèfi\b(?!\s*[—-])',
+                    '<a class="dialect-inline" href="/en/lexicon/#mefi">Mèfi</a> — watch out',
+                    text,
+                    flags=re.I
+                )
+
+        out.append(text)
+
+    return "".join(out)
+
+def patch_html() -> None:
     for path in ROOT.rglob("*.html"):
         rel = path.relative_to(ROOT).as_posix()
         text = path.read_text(encoding="utf-8")
@@ -62,40 +163,22 @@ def patch_html() -> None:
                           lambda m: f'<a{m.group(1)}href="/pratique/"{m.group(2)}>Pratique</a>', text)
             text = text.replace("<h2>Planifier</h2>", "<h2>Préparer</h2>")
             text = text.replace("Right Now", "En ce moment")
-
-            for old, new in fr_replacements:
-                text = text.replace(old, new)
-
-            text = text.replace("Faites fonctionner le voyage sans cagade",
-                                "Faites fonctionner le voyage sans complications inutiles")
-            text = text.replace("Arriver sans cagade", "Arriver sans accroc")
-            text = text.replace("Dégun n’a besoin de ça.", "Personne n’a besoin de ça.")
-            text = text.replace("Dégun n'a besoin de ça.", "Personne n'a besoin de ça.")
-            text = text.replace(", gari.", ".").replace(", gari", "")
             text = re.sub(r'>Reality Check<', '>À savoir<', text, flags=re.I)
             text = re.sub(r'>Mobilité<', '>Déplacements<', text)
             text = re.sub(r'>Pression budget<', '>Budget<', text)
             text = re.sub(r'>Friction<', '>Logistique<', text)
             text = text.replace("Ce que cette base implique vraiment", "Ce que ce choix implique vraiment")
             text = text.replace("Ce que ce point de chute implique vraiment", "Ce que ce choix implique vraiment")
-            text = re.sub(r'>(MÈFI|Mèfi)<',
-                          r'><a class="dialect-inline" href="/lexique/#mefi">\1</a> — ATTENTION<', text)
         else:
             text = re.sub(r'<a([^>]*?)href="/en/good-finds/"([^>]*)>Now</a>',
                           lambda m: f'<a{m.group(1)}href="/en/practical/"{m.group(2)}>Practical</a>', text)
-            text = text.replace("Make the trip work without the cagades",
-                                "Make the trip work without avoidable mistakes")
-            text = text.replace("Arrive without a cagade", "Arrive smoothly")
-            text = text.replace(", gari.", ".").replace(", gari", "")
             text = re.sub(r'>Mobility<', '>Getting around<', text)
             text = re.sub(r'>Budget pressure<', '>Budget<', text)
             text = re.sub(r'>Friction<', '>Logistics<', text)
             text = text.replace("What this base really implies", "What this choice really implies")
             text = text.replace("What this choice really means", "What this choice really implies")
-            text = re.sub(r'>(MÈFI|Mèfi)<',
-                          r'><a class="dialect-inline" href="/en/lexicon/#mefi">\1</a> — WATCH OUT<', text)
 
-        text = re.sub(r'>(pitchoun)<', '>Pichoun<', text, flags=re.I)
+        text = rewrite_visible(text, "fr" if is_fr else "en")
 
         if rel in ("en/riviera-fit/index.html","en/riviera-chooser/index.html","en/riviera-guide/index.html"):
             if "the town you’ll sleep in each night" not in text:
@@ -111,9 +194,9 @@ def patch_html() -> None:
                 if not n:
                     text = text.replace("</header>", note+"</header>", 1)
 
-        text = re.sub(r'/assets/site\.js(?:\?v=[^"]+)?', '/assets/site.js?v=1.2', text)
-        text = re.sub(r'/assets/v3\.js(?:\?v=[^"]+)?', '/assets/v3.js?v=1.1', text)
-        text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=12', text)
+        text = re.sub(r'/assets/site\.js(?:\?v=[^"]+)?', '/assets/site.js?v=1.3', text)
+        text = re.sub(r'/assets/v3\.js(?:\?v=[^"]+)?', '/assets/v3.js?v=1.2', text)
+        text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=13', text)
         save(path, text, original)
 
 def validate() -> None:
@@ -130,6 +213,38 @@ def validate() -> None:
                    "mobility:'Getting around'","friction:'Logistics'"):
         if needle not in chooser:
             errors.append(f"chooser missing {needle}")
+
+    # Exhaustive visible-text guard: French pages must no longer require the
+    # visitor to understand "base", nor legacy dialect beyond Pichoun / Mèfi.
+    for path in ROOT.rglob("*.html"):
+        raw = path.read_text(encoding="utf-8")
+        is_fr = bool(re.search(r'<html[^>]+lang="fr"', raw, re.I))
+        vis = visible_text(raw)
+        rel = path.relative_to(ROOT).as_posix()
+        if is_fr:
+            for pattern, label in (
+                (r'\bbases?\b', "base/bases"),
+                (r'\bDégun\b', "Dégun"),
+                (r'\bGari\b', "Gari"),
+                (r'\bcagades?\b', "cagade"),
+            ):
+                m = re.search(pattern, vis, re.I)
+                if m:
+                    context = vis[max(0,m.start()-80):m.end()+120]
+                    errors.append(f"{rel}: visible {label}: {context}")
+            for raw_pattern, label in (
+                (r'>\s*Reality Check\s*<', "Reality Check FR"),
+                (r'>\s*Pression budget\s*<', "Pression budget"),
+                (r'>\s*Friction\s*<', "Friction label"),
+            ):
+                if re.search(raw_pattern, raw, re.I):
+                    errors.append(f"{rel}: legacy label {label}")
+        else:
+            for pattern, label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
+                m = re.search(pattern, vis, re.I)
+                if m:
+                    context = vis[max(0,m.start()-80):m.end()+120]
+                    errors.append(f"{rel}: visible EN {label}: {context}")
 
     checks = {
         "fr/index.html": ("Préparer", "Destinations"),
@@ -148,8 +263,8 @@ def validate() -> None:
                 errors.append(f"{rel} missing {needle}")
 
     if errors:
-        raise SystemExit("Semantic clarity failed:\n- " + "\n- ".join(errors))
-    print("Semantic clarity validation passed")
+        raise SystemExit("Semantic clarity failed:\n- " + "\n- ".join(errors[:80]))
+    print("Semantic clarity validation passed: all FR visible base/bases and legacy dialect residues removed")
 
 def main() -> int:
     patch_html()
