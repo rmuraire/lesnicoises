@@ -294,7 +294,7 @@ jobs:
                   "baie-des-fourmis-final.jpg?v=20260927-final",
               ),
               f"https://www.mametas.com/en/culture/fondation-maeght/?deploy={sha}": (
-                  'content="https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp" property="og:image"',
+                  "https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",
               ),
               f"https://www.mametas.com/?deploy={sha}": (
                   'title="Mini Niçois lexicon">Pichoun</a>',
