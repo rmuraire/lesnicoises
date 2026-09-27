@@ -701,12 +701,15 @@ jobs:
               vis = re.sub(r'\s+', ' ', html.unescape(vis)).strip()
               issues=[]
               if lang.startswith("fr"):
+                  preserve_dialect = urlsplit(url).path.rstrip("/") == "/lexique"
                   for pattern,label in (
                       (r'\bbases?\b',"base/bases"),
                       (r'\bDégun\b',"Dégun"),
                       (r'\bGari\b',"Gari"),
                       (r'\bcagades?\b',"cagade"),
                   ):
+                      if preserve_dialect and label in ("Dégun","Gari","cagade"):
+                          continue
                       mm=re.search(pattern,vis,re.I)
                       if mm:
                           issues.append(f"{url}: visible {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
@@ -718,6 +721,8 @@ jobs:
                       if re.search(raw,body,re.I):
                           issues.append(f"{url}: legacy FR label {label}")
               elif lang.startswith("en"):
+                  if urlsplit(url).path.rstrip("/") == "/en/lexicon":
+                      return issues
                   for pattern,label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
                       mm=re.search(pattern,vis,re.I)
                       if mm:
