@@ -520,8 +520,8 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.5', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.6', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.6', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.7', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=8', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
@@ -695,6 +695,219 @@ def patch_final_user_polish_2026_09_27() -> None:
         raise RuntimeError("Consent settings footer anchor missing")
     save("assets/consent.js", text, original)
 
+
+def patch_final_closure_2026_09_27() -> None:
+    closure_css = r'''
+/* Final V3 closure polish 2026-09-27 */
+.destination-reality-head span{
+  color:#d86c4e!important;
+}
+.destination-reality-cta a{
+  color:var(--ink,#14213d)!important;
+  border-bottom:0!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#d86c4e!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:4px!important;
+}
+.hotel-choice-grid{
+  align-items:start!important;
+}
+.hotel-choice-card{
+  height:auto!important;
+  min-height:0!important;
+  align-self:start!important;
+}
+.hotel-choice-copy{
+  height:auto!important;
+  min-height:0!important;
+  padding-bottom:16px!important;
+}
+.hotel-choice-copy .catch{
+  margin-top:12px!important;
+}
+@media(max-width:700px){
+  .explore-harmonised .base-card-content,
+  .explore-product-polished .base-card-content{
+    inset:auto 18px 18px!important;
+    padding:0!important;
+  }
+  .explore-harmonised .base-card h3,
+  .explore-product-polished .base-card h3{
+    font-size:24px!important;
+    line-height:1.05!important;
+  }
+  .explore-harmonised .base-card p,
+  .explore-product-polished .base-card p{
+    font-size:11px!important;
+    line-height:1.45!important;
+  }
+}
+'''
+    ensure_css("assets/site.css", "/* Final V3 closure polish 2026-09-27 */", closure_css)
+    ensure_css("assets/v3.css", "/* Final V3 closure polish 2026-09-27 */", closure_css)
+
+    # About: expertise first. Remove the fictional-character line from the hero.
+    about_copy = {
+        "en/about/index.html": (
+            "Best-in-class Riviera recommendations, with a Niçois point of view.",
+            "Local knowledge, documented sources and a clear editorial filter. Mametas is built to make fewer, better recommendations — and to explain the trade-offs behind them."
+        ),
+        "a-propos/index.html": (
+            "Des recommandations Riviera au niveau des meilleurs guides, avec un regard niçois.",
+            "Connaissance locale, sources documentées et filtre éditorial clair. Mametas préfère moins de recommandations, mais de meilleures recommandations — avec les compromis expliqués."
+        ),
+    }
+    for rel, (title, lead) in about_copy.items():
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text = re.sub(
+            r'(<section class="page-hero">.*?<p class="eyebrow">.*?</p>)<h1>.*?</h1><p class="lead">.*?</p>',
+            lambda m: m.group(1) + f'<h1>{title}</h1><p class="lead">{lead}</p>',
+            text, count=1, flags=re.S
+        )
+        save(rel, text, original)
+
+    # Explore: mobile copy must breathe inside the four image tiles.
+    for rel in ("en/explore/index.html", "explore/index.html"):
+        p = ROOT / rel
+        if p.exists():
+            text = p.read_text(encoding="utf-8")
+            original = text
+            text = add_body_class(text, "explore-mobile-air")
+            save(rel, text, original)
+
+    # Beach landing: use the newly supplied Gravette image only for the Sand tile,
+    # keeping the Family tile different so the same table does not repeat itself.
+    def replace_tile_image(text: str, kicker: str, src: str, alt: str) -> str:
+        patt = re.compile(r'(<a class="beach-decision[^"]*"[^>]*>.*?</a>)', re.S)
+        pos = 0
+        out = []
+        changed_one = False
+        for m in patt.finditer(text):
+            block = m.group(1)
+            out.append(text[pos:m.start()])
+            if (not changed_one) and f'<span class="kicker">{kicker}</span>' in block:
+                block = re.sub(
+                    r'(<span class="beach-decision-media"><img src=")[^"]+(" alt=")[^"]+(")',
+                    lambda mm: mm.group(1) + src + mm.group(2) + alt + mm.group(3),
+                    block, count=1
+                )
+                changed_one = True
+            out.append(block)
+            pos = m.end()
+        out.append(text[pos:])
+        return "".join(out)
+
+    for rel, kicker, alt in (
+        ("en/beaches/index.html", "Sand", "La Gravette sandy beach beside Old Antibes"),
+        ("plages/index.html", "Sable", "Plage de la Gravette au pied du Vieil Antibes"),
+    ):
+        p = ROOT / rel
+        if p.exists():
+            text = p.read_text(encoding="utf-8")
+            original = text
+            text = replace_tile_image(
+                text, kicker,
+                "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+                alt
+            )
+            save(rel, text, original)
+
+    # Child beach pages: align the page hero with the refreshed landing visuals.
+    beach_heroes = {
+        "en/beaches/antibes/index.html": (
+            "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+            "La Gravette sandy beach beside Old Antibes",
+        ),
+        "plages/antibes/index.html": (
+            "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+            "Plage de la Gravette au pied du Vieil Antibes",
+        ),
+        "en/beaches/nice/index.html": (
+            "/assets/editorial/nice-riviera.jpg?v=20260927-final",
+            "Nice beach and the Baie des Anges",
+        ),
+        "plages/nice/index.html": (
+            "/assets/editorial/nice-riviera.jpg?v=20260927-final",
+            "Plage de Nice et Baie des Anges",
+        ),
+        "en/beaches/around-nice/index.html": (
+            "/assets/editorial/beaches/baie-des-fourmis-final.jpg?v=20260927-final",
+            "Baie des Fourmis in Beaulieu-sur-Mer",
+        ),
+        "plages/autour-de-nice/index.html": (
+            "/assets/editorial/beaches/baie-des-fourmis-final.jpg?v=20260927-final",
+            "Baie des Fourmis à Beaulieu-sur-Mer",
+        ),
+    }
+    for rel, (src, alt) in beach_heroes.items():
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text = re.sub(
+            r'(<figure class="culture-hero-media"><img)[^>]*>',
+            lambda m: f'{m.group(1)} alt="{alt}" loading="eager" src="{src}"/>',
+            text, count=1, flags=re.S
+        )
+        absolute = "https://www.mametas.com" + src.split("?")[0]
+        text = re.sub(r'(<meta[^>]+property="og:image"[^>]+content=")[^"]+(")', lambda m: m.group(1)+absolute+m.group(2), text, count=1)
+        text = re.sub(r'(<meta[^>]+name="twitter:image"[^>]+content=")[^"]+(")', lambda m: m.group(1)+absolute+m.group(2), text, count=1)
+        save(rel, text, original)
+
+    # Navigation hygiene. The visible labels Plan / Stay must always lead to the hubs.
+    # This also cleans stale static markup even though site.js/v3.js rebuild mobile nav.
+    for p in ROOT.rglob("*.html"):
+        rel = p.relative_to(ROOT).as_posix()
+        text = p.read_text(encoding="utf-8")
+        original = text
+        is_fr = bool(re.search(r'<html[^>]+lang="fr"', text, flags=re.I))
+        plan_hub = "/fr/planifier/" if is_fr else "/plan/"
+        stay_hub = "/hotels/" if is_fr else "/en/hotels/"
+
+        # Exact navigation labels only; contextual links such as "Five days, no car" stay untouched.
+        labels_plan = ("Planifier", "Plan")
+        labels_stay = ("Dormir", "Stay")
+        for label in labels_plan:
+            text = re.sub(
+                rf'<a([^>]*?)href="[^"]*"([^>]*)>{re.escape(label)}</a>',
+                lambda m: f'<a{m.group(1)}href="{plan_hub}"{m.group(2)}>{label}</a>',
+                text
+            )
+        for label in labels_stay:
+            text = re.sub(
+                rf'<a([^>]*?)href="[^"]*"([^>]*)>{re.escape(label)}</a>',
+                lambda m: f'<a{m.group(1)}href="{stay_hub}"{m.group(2)}>{label}</a>',
+                text
+            )
+        if not is_fr:
+            text = re.sub(
+                r'<li><a([^>]*)href="/en/riviera-fit/"([^>]*)>Riviera Fit</a></li>',
+                lambda m: f'<li><a{m.group(1)}href="/plan/"{m.group(2)}>Plan</a></li>',
+                text
+            )
+            text = text.replace('href="/en/hotels/nice/"', 'href="/stay/nice/"')
+        else:
+            text = re.sub(
+                r'<li><a([^>]*)href="/riviera-fit/"([^>]*)>Riviera Fit</a></li>',
+                lambda m: f'<li><a{m.group(1)}href="/fr/planifier/"{m.group(2)}>Planifier</a></li>',
+                text
+            )
+            text = text.replace('href="/hotels/nice/"', 'href="/fr/dormir/nice/"')
+
+        # Isolated spelling fix on the EN homepage.
+        if rel == "index.html":
+            text = text.replace('title="Mini Niçois lexicon">pitchoun</a>', 'title="Mini Niçois lexicon">Pichoun</a>')
+
+        # Generic guard against the malformed Maeght share URL found in external QA.
+        text = text.replace("https://www.mametas.comhttps://", "https://")
+        save(rel, text, original)
+
 def validate() -> None:
     errors: list[str] = []
     required_assets = (
@@ -711,7 +924,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.5"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.6"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
@@ -753,6 +966,7 @@ def main() -> int:
     patch_core_hubs_and_practical()
     patch_gay_stays()
     patch_final_user_polish_2026_09_27()
+    patch_final_closure_2026_09_27()
     patch_css_and_versions()
     validate()
     print(f"Final mobile + visual closure passed; changed {len(changed)} text file(s).")
