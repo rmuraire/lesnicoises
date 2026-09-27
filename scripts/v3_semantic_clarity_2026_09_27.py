@@ -96,6 +96,11 @@ def rewrite_visible(html_text: str, lang: str) -> str:
             for old, new in structural_fr:
                 text = text.replace(old, new)
 
+            # Standardise the four decision criteria wherever they appear as visible copy.
+            text = text.replace("Reality Check", "À savoir")
+            text = text.replace("Pression budget", "Budget")
+            text = text.replace("Friction", "Logistique")
+
             # Natural prose: once the canonical concept has been introduced as
             # "point de chute", ordinary sentences simply say ville/villes.
             text = re.sub(r'\bbase\s+Nice\b', 'Nice comme point de chute', text, flags=re.I)
