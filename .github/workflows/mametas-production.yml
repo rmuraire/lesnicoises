@@ -230,7 +230,7 @@ jobs:
               f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": ("harmonisation-without-car-visual", "next-decisions-compact"),
               f"https://www.mametas.com/en/good-finds/train-or-bus/?deploy={sha}": ("harmonisation-train-visual", "next-decisions-compact"),
               f"https://www.mametas.com/en/good-finds/nice-in-the-rain/?deploy={sha}": ("harmonisation-rain-visuals", "rain-day-flow", "rain-logistics-6"),
-              f"https://www.mametas.com/en/beaches/?deploy={sha}": ("beach-harmonised", "beach-visual-pair", "baie-des-fourmis-final.jpg", "mala-commons.jpg", "petite-afrique-final.jpg", "nice-beach-umbrellas.webp"),
+              f"https://www.mametas.com/en/beaches/?deploy={sha}": ("beach-harmonised", "beach-decision-grid", "antibes-gravette-deposit.webp", "baie-des-fourmis-final.jpg", "mala-commons.jpg", "petite-afrique-final.jpg", "nice-beach-umbrellas.webp"),
           }
           for url, needles in checks.items():
               req = Request(url, headers={"User-Agent": "MametasDeployCheck/1.0", "Cache-Control": "no-cache"})
