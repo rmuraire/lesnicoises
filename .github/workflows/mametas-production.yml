@@ -194,7 +194,7 @@ jobs:
 
       - name: Re-sync critical static assets
         env:
-          MAMETAS_FORCE_FILES: .htaccess;assets/site.css;assets/site.js;assets/v3.css;assets/v3.js;riviera-fit/index.html;en/riviera-fit/index.html;riviera-guide/index.html;bons-plans/index.html;en/good-finds/index.html;assets/hotel-engine.js;assets/hotel-finder-nice.json;fr/planifier/cinq-jours-nice-sans-voiture/index.html;riviera-guide/monaco/index.html;riviera-guide/menton/index.html;en/day-trips/index.html;sitemap-hotels-batch2.xml;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/fondation-maeght-waterborough.webp;assets/editorial/beaches/baie-des-fourmis-final.jpg;assets/editorial/beaches/petite-afrique-final.jpg;assets/editorial/beaches/mala-commons.jpg;assets/editorial/beaches/fossettes-commons.jpg;assets/editorial/beaches/passable-pexels.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif;index.html;fr/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;cote-dazur-gay/index.html;en/gay-french-riviera/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html;assets/editorial/mametas-explore-restaurants-salad.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-1.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-2.webp;assets/hotels/hotel-beau-rivage/hero.webp;assets/hotels/hotel-beau-rivage/gallery-1.webp;assets/hotels/hotel-beau-rivage/gallery-2.webp;assets/hotels/boscolo-nice-hotel-and-spa/hero.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-1.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-2.webp;assets/hotels/le-negresco/hero.jpg;assets/riviera-chooser.css;assets/riviera-chooser.js;en/riviera-chooser/index.html;riviera-chooser/index.html;sitemap.xml;methode/index.html;en/method/index.html;lexique/index.html;en/lexicon/index.html;plages/index.html;en/beaches/index.html;plages/nice/index.html;en/beaches/nice/index.html;plages/autour-de-nice/index.html;en/beaches/around-nice/index.html;plages/antibes/index.html;en/beaches/antibes/index.html;plages/saint-tropez/index.html;en/beaches/saint-tropez/index.html;bons-plans/transfert-aeroport-nice/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/septembre-2026/index.html;en/good-finds/september-2026/index.html;a-propos/index.html;en/about/index.html;plan/five-days-nice-no-car/index.html;hotels/finder/index.html;en/hotels/finder/index.html;plages/cannes/index.html;escapades/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;hotels/antibes/index.html;en/hotels/antibes/index.html;hotels/villefranche-sur-mer/index.html;en/hotels/villefranche-sur-mer/index.html;hotels/beaulieu-sur-mer/index.html;en/hotels/beaulieu-sur-mer/index.html;culture/musee-matisse/index.html;en/culture/matisse-museum/index.html;culture/fondation-maeght/index.html;en/culture/fondation-maeght/index.html;culture/musee-picasso-antibes/index.html;en/culture/picasso-museum-antibes/index.html;culture/villa-ephrussi/index.html;en/culture/villa-ephrussi/index.html;assets/hotels/v3/hotel-splendid-cannes/hero.jpg;assets/hotels/v3/traverse-des-artistes/hero.jpg;assets/hotels/v3/hotel-la-regence/hero.jpg;assets/hotels/v3/hotel-la-flore/hero.jpg;assets/hotels/v3/la-reserve-de-beaulieu/hero.jpg;assets/hotels/v3/brise-marine/hero.jpg;assets/hotels/v3/canopy-cannes/hero.jpg;assets/hotels/v3/gray-d-albion/hero.jpg;assets/hotels/v3/mondrian-cannes/hero.jpg;assets/hotels/v3/le-versailles/hero.jpg;assets/hotels/v3/fairmont-monte-carlo/hero.jpg;assets/hotels/v3/columbus-monte-carlo/hero.jpg;assets/hotels/v3/riva-art-spa/hero.jpg;assets/hotels/v3/princess-richmond/hero.jpg;riviera-guide/nice/index.html;en/riviera-guide/nice/index.html;riviera-guide/antibes/index.html;en/riviera-guide/antibes/index.html;culture/villa-kerylos/index.html;en/culture/villa-kerylos/index.html;culture/musee-oceanographique-monaco/index.html;en/culture/oceanographic-museum-monaco/index.html;presse/index.html;en/press/index.html;plan/index.html;fr/planifier/index.html;en/practical/index.html;pratique/index.html;hotels/index.html;en/hotels/index.html;explore/index.html;en/explore/index.html;en/riviera-guide/index.html;en/hotels/without-a-car/index.html;hotels/sans-voiture/index.html;en/good-finds/riviera-mistakes/index.html;bons-plans/erreurs-riviera/index.html;en/good-finds/what-to-book/index.html;bons-plans/que-reserver/index.html;en/good-finds/train-or-bus/index.html;bons-plans/train-ou-bus/index.html;en/good-finds/nice-in-the-rain/index.html;bons-plans/nice-quand-il-pleut/index.html;plan/real-budget/index.html;fr/planifier/budget-reel/index.html;plan/car-or-no-car/index.html;fr/planifier/voiture-ou-pas/index.html;plan/when-to-go/index.html;fr/planifier/quand-partir/index.html;plan/three-days-riviera/index.html;fr/planifier/trois-jours-cote-d-azur/index.html;plan/seven-days-riviera/index.html;fr/planifier/sept-jours-cote-d-azur/index.html;en/explore/2-3-hours/index.html;explore/2-3-heures/index.html;en/practical/weather-by-season/index.html;pratique/climat-saisons/index.html
+          MAMETAS_FORCE_FILES: .htaccess;assets/site.css;assets/site.js;assets/v3.css;assets/v3.js;assets/consent.js;assets/editorial-layer.js;riviera-fit/index.html;en/riviera-fit/index.html;riviera-guide/index.html;bons-plans/index.html;en/good-finds/index.html;assets/hotel-engine.js;assets/hotel-finder-nice.json;fr/planifier/cinq-jours-nice-sans-voiture/index.html;riviera-guide/monaco/index.html;riviera-guide/menton/index.html;en/day-trips/index.html;sitemap-hotels-batch2.xml;assets/editorial/about-mameta-2026-09-18.webp;assets/hotel-batch.css;assets/hotel-engine.css;assets/hotel-engine.js;assets/hotels/batch-sprite.jpg;assets/hotels/batch-sprite-2026-09-13.jpg;assets/editorial/iles-lerins.jpg;assets/editorial/fondation-maeght-waterborough.webp;assets/editorial/beaches/baie-des-fourmis-final.jpg;assets/editorial/beaches/petite-afrique-final.jpg;assets/editorial/beaches/mala-commons.jpg;assets/editorial/beaches/fossettes-commons.jpg;assets/editorial/beaches/passable-pexels.jpg;assets/editorial/culture-musee-matisse.webp;assets/editorial/culture-musee-picasso-antibes.webp;assets/activity-affiliates.css;assets/editorial/activity-nice-castle-hill.avif;assets/editorial/activity-eze-monaco.avif;assets/editorial/activity-cannes-antibes-saint-paul.avif;assets/editorial/activity-villefranche-cap-ferrat-boat.avif;assets/editorial/activity-saint-tropez-boat.avif;index.html;fr/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;cote-dazur-gay/index.html;en/gay-french-riviera/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html;assets/editorial/mametas-explore-restaurants-salad.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/hero.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-1.webp;assets/hotels/hotel-le-grimaldi-by-happyculture/gallery-2.webp;assets/hotels/hotel-beau-rivage/hero.webp;assets/hotels/hotel-beau-rivage/gallery-1.webp;assets/hotels/hotel-beau-rivage/gallery-2.webp;assets/hotels/boscolo-nice-hotel-and-spa/hero.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-1.webp;assets/hotels/boscolo-nice-hotel-and-spa/gallery-2.webp;assets/hotels/le-negresco/hero.jpg;assets/riviera-chooser.css;assets/riviera-chooser.js;en/riviera-chooser/index.html;riviera-chooser/index.html;sitemap.xml;methode/index.html;en/method/index.html;lexique/index.html;en/lexicon/index.html;plages/index.html;en/beaches/index.html;plages/nice/index.html;en/beaches/nice/index.html;plages/autour-de-nice/index.html;en/beaches/around-nice/index.html;plages/antibes/index.html;en/beaches/antibes/index.html;plages/saint-tropez/index.html;en/beaches/saint-tropez/index.html;bons-plans/transfert-aeroport-nice/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/septembre-2026/index.html;en/good-finds/september-2026/index.html;a-propos/index.html;en/about/index.html;plan/five-days-nice-no-car/index.html;hotels/finder/index.html;en/hotels/finder/index.html;plages/cannes/index.html;escapades/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;hotels/antibes/index.html;en/hotels/antibes/index.html;hotels/villefranche-sur-mer/index.html;en/hotels/villefranche-sur-mer/index.html;hotels/beaulieu-sur-mer/index.html;en/hotels/beaulieu-sur-mer/index.html;culture/musee-matisse/index.html;en/culture/matisse-museum/index.html;culture/fondation-maeght/index.html;en/culture/fondation-maeght/index.html;culture/musee-picasso-antibes/index.html;en/culture/picasso-museum-antibes/index.html;culture/villa-ephrussi/index.html;en/culture/villa-ephrussi/index.html;assets/hotels/v3/hotel-splendid-cannes/hero.jpg;assets/hotels/v3/traverse-des-artistes/hero.jpg;assets/hotels/v3/hotel-la-regence/hero.jpg;assets/hotels/v3/hotel-la-flore/hero.jpg;assets/hotels/v3/la-reserve-de-beaulieu/hero.jpg;assets/hotels/v3/brise-marine/hero.jpg;assets/hotels/v3/canopy-cannes/hero.jpg;assets/hotels/v3/gray-d-albion/hero.jpg;assets/hotels/v3/mondrian-cannes/hero.jpg;assets/hotels/v3/le-versailles/hero.jpg;assets/hotels/v3/fairmont-monte-carlo/hero.jpg;assets/hotels/v3/columbus-monte-carlo/hero.jpg;assets/hotels/v3/riva-art-spa/hero.jpg;assets/hotels/v3/princess-richmond/hero.jpg;riviera-guide/nice/index.html;en/riviera-guide/nice/index.html;riviera-guide/antibes/index.html;en/riviera-guide/antibes/index.html;culture/villa-kerylos/index.html;en/culture/villa-kerylos/index.html;culture/musee-oceanographique-monaco/index.html;en/culture/oceanographic-museum-monaco/index.html;presse/index.html;en/press/index.html;plan/index.html;fr/planifier/index.html;en/practical/index.html;pratique/index.html;hotels/index.html;en/hotels/index.html;explore/index.html;en/explore/index.html;en/riviera-guide/index.html;en/hotels/without-a-car/index.html;hotels/sans-voiture/index.html;en/good-finds/riviera-mistakes/index.html;bons-plans/erreurs-riviera/index.html;en/good-finds/what-to-book/index.html;bons-plans/que-reserver/index.html;en/good-finds/train-or-bus/index.html;bons-plans/train-ou-bus/index.html;en/good-finds/nice-in-the-rain/index.html;bons-plans/nice-quand-il-pleut/index.html;plan/real-budget/index.html;fr/planifier/budget-reel/index.html;plan/car-or-no-car/index.html;fr/planifier/voiture-ou-pas/index.html;plan/when-to-go/index.html;fr/planifier/quand-partir/index.html;plan/three-days-riviera/index.html;fr/planifier/trois-jours-cote-d-azur/index.html;plan/seven-days-riviera/index.html;fr/planifier/sept-jours-cote-d-azur/index.html;en/explore/2-3-hours/index.html;explore/2-3-heures/index.html;en/practical/weather-by-season/index.html;pratique/climat-saisons/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -222,7 +222,7 @@ jobs:
               f"https://www.mametas.com/fr/planifier/sept-jours-cote-d-azur/?deploy={sha}": ("JOUR 7", "Choisissez une direction"),
               f"https://www.mametas.com/en/explore/2-3-hours/?deploy={sha}": ("Only got 2 or 3 hours? Good.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
-              f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("Spring", "Winter"),
+              f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("Spring", "Winter", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
               f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("Printemps", "Hiver"),
               f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card"),
               f"https://www.mametas.com/en/explore/?deploy={sha}": ("explore-harmonised", "lgbtq-banner--fifth", "phase4-short-entry"),
@@ -230,7 +230,7 @@ jobs:
               f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": ("harmonisation-without-car-visual", "next-decisions-compact"),
               f"https://www.mametas.com/en/good-finds/train-or-bus/?deploy={sha}": ("harmonisation-train-visual", "next-decisions-compact"),
               f"https://www.mametas.com/en/good-finds/nice-in-the-rain/?deploy={sha}": ("harmonisation-rain-visuals", "rain-day-flow", "rain-logistics-6"),
-              f"https://www.mametas.com/en/beaches/?deploy={sha}": ("beach-harmonised", "beach-visual-pair"),
+              f"https://www.mametas.com/en/beaches/?deploy={sha}": ("beach-harmonised", "beach-visual-pair", "baie-des-fourmis-final.jpg", "mala-commons.jpg", "petite-afrique-final.jpg", "nice-beach-umbrellas.webp"),
           }
           for url, needles in checks.items():
               req = Request(url, headers={"User-Agent": "MametasDeployCheck/1.0", "Cache-Control": "no-cache"})
@@ -242,6 +242,66 @@ jobs:
                   if missing:
                       raise SystemExit(f"{url} is missing V3 markers: {missing}")
                   print(f"V3 phase 4 / harmonisation check passed: {url}")
+          PY
+
+      - name: Check final V3 user polish
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha = os.environ.get("GITHUB_SHA", "release")
+          checks = {
+              f"https://www.mametas.com/en/about/?deploy={sha}": (
+                  "Riviera expertise, with a Niçois point of view.",
+                  "The character is invented. The recommendation is not.",
+                  "editor-links",
+                  "/assets/consent.js?v=1.1",
+              ),
+              f"https://www.mametas.com/en/hotels/?deploy={sha}": (
+                  "STEP 02 · CHOOSE THE HOTEL",
+                  "MAMETAS HOTEL FIT · INTERACTIVE TOOL",
+              ),
+              f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": (
+                  "no-car-polish",
+                  "/assets/site.css?v=25.5",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/nice/?deploy={sha}": (
+                  'class="destination-reality"',
+                  "/assets/site.css?v=25.5",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/cannes/?deploy={sha}": (
+                  'class="destination-reality"',
+                  "/assets/site.css?v=25.5",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/?deploy={sha}": (
+                  'class="destination-reality"',
+                  "/assets/site.css?v=25.5",
+              ),
+              f"https://www.mametas.com/en/riviera-guide/saint-tropez/?deploy={sha}": (
+                  'class="destination-reality"',
+                  "/assets/site.css?v=25.5",
+              ),
+          }
+          for url, needles in checks.items():
+              req = Request(url, headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
+              with urlopen(req, timeout=30) as response:
+                  body=response.read().decode("utf-8",errors="replace")
+                  missing=[n for n in needles if n not in body]
+                  if response.status != 200 or missing:
+                      raise SystemExit(f"{url} failed final polish check: status={response.status} missing={missing}")
+                  print(f"Final polish check passed: {url}")
+          for asset, needles in {
+              f"https://www.mametas.com/assets/site.css?v={sha}": ("Final user polish 2026-09-27","destination-reality{border:1px solid","no-car-polish"),
+              f"https://www.mametas.com/assets/v3.css?v={sha}": ("Final user polish 2026-09-27","explore-harmonised .base-grid","hotel-choice-copy{padding-bottom:18px"),
+              f"https://www.mametas.com/assets/editorial-layer.js?v={sha}": ("/en/riviera-guide/antibes/#what-not-to-miss","/en/riviera-guide/antibes/#cap"),
+          }.items():
+              req=Request(asset,headers={"User-Agent":"MametasDeployCheck/1.0","Cache-Control":"no-cache"})
+              with urlopen(req,timeout=30) as response:
+                  body=response.read().decode("utf-8",errors="replace")
+                  missing=[n for n in needles if n not in body]
+                  if response.status != 200 or missing:
+                      raise SystemExit(f"{asset} failed final asset check: status={response.status} missing={missing}")
+                  print(f"Final asset check passed: {asset}")
           PY
 
       - name: Check refreshed homepage and Gay Nice
@@ -409,21 +469,21 @@ jobs:
           pages = {
               "https://www.mametas.com/": (
                   "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
-                  "/assets/v3.css?v=2.5",
+                  "/assets/v3.css?v=2.6",
               ),
-              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.5"),
-              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.5"),
+              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.6"),
+              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.6"),
               "https://www.mametas.com/en/hotels/": ("core-hub-final",),
-              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.5"),
+              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.6"),
               "https://www.mametas.com/en/practical/": ("core-hub-final",),
-              "https://www.mametas.com/riviera-guide/nice/": ("/assets/site.css?v=25.4",),
-              "https://www.mametas.com/en/riviera-guide/nice/": ("/assets/site.css?v=25.4",),
-              "https://www.mametas.com/riviera-guide/cannes/": ("/assets/site.css?v=25.4",),
-              "https://www.mametas.com/en/riviera-guide/cannes/": ("/assets/site.css?v=25.4",),
-              "https://www.mametas.com/riviera-guide/antibes/": ("/assets/v3.css?v=2.5",),
-              "https://www.mametas.com/riviera-guide/monaco/": ("/assets/v3.css?v=2.5",),
-              "https://www.mametas.com/riviera-guide/menton/": ("/assets/v3.css?v=2.5",),
-              "https://www.mametas.com/riviera-guide/villefranche-cap-ferrat/": ("/assets/v3.css?v=2.5",),
+              "https://www.mametas.com/riviera-guide/nice/": ("/assets/site.css?v=25.5",),
+              "https://www.mametas.com/en/riviera-guide/nice/": ("/assets/site.css?v=25.5",),
+              "https://www.mametas.com/riviera-guide/cannes/": ("/assets/site.css?v=25.5",),
+              "https://www.mametas.com/en/riviera-guide/cannes/": ("/assets/site.css?v=25.5",),
+              "https://www.mametas.com/riviera-guide/antibes/": ("/assets/v3.css?v=2.6",),
+              "https://www.mametas.com/riviera-guide/monaco/": ("/assets/v3.css?v=2.6",),
+              "https://www.mametas.com/riviera-guide/menton/": ("/assets/v3.css?v=2.6",),
+              "https://www.mametas.com/riviera-guide/villefranche-cap-ferrat/": ("/assets/v3.css?v=2.6",),
           }
           for url, needles in pages.items():
               req = Request(url, headers={
@@ -440,8 +500,8 @@ jobs:
                   print(f"Public parity page check passed: {url} | Cache-Control={cc}")
 
           for css_url, marker in (
-              ("https://www.mametas.com/assets/v3.css?v=2.5", "Core hub full layout parity 2026-09-26"),
-              ("https://www.mametas.com/assets/site.css?v=25.4", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/v3.css?v=2.6", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/site.css?v=25.5", "Core hub full layout parity 2026-09-26"),
           ):
               req = Request(css_url, headers={
                   "User-Agent":"MametasDeployCheck/1.0",
@@ -522,11 +582,11 @@ jobs:
 
       - name: Build V3 final archive
         run: |
-          zip -qr Mametas_V3_FINAL_2026-09-26_SITE.zip . -x '.git/*' 'Mametas_V3_FINAL_2026-09-26_SITE.zip'
+          zip -qr Mametas_V3_FINAL_2026-09-27_SITE.zip . -x '.git/*' 'Mametas_V3_FINAL_2026-09-27_SITE.zip'
 
       - name: Upload V3 final archive
         uses: actions/upload-artifact@v4
         with:
-          name: Mametas_V3_FINAL_2026-09-26_SITE
-          path: Mametas_V3_FINAL_2026-09-26_SITE.zip
+          name: Mametas_V3_FINAL_2026-09-27_SITE
+          path: Mametas_V3_FINAL_2026-09-27_SITE.zip
           retention-days: 30
