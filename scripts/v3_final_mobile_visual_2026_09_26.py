@@ -7,6 +7,7 @@ import shutil
 import urllib.parse
 import urllib.request
 from pathlib import Path
+from PIL import Image, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 changed: list[str] = []
@@ -64,7 +65,22 @@ def download_image(url: str, target: Path, required: bool = True) -> bool:
             raise
         return False
 
+
+def optimize_gravette_asset() -> None:
+    """Keep the user-supplied Depositphotos Gravette visual web-friendly."""
+    target = ROOT / "assets/editorial/beaches/antibes-gravette-deposit.jpg"
+    if not target.exists():
+        raise RuntimeError(f"Missing Gravette source asset: {target.relative_to(ROOT)}")
+    tmp = target.with_name(target.stem + "-optimized.jpg")
+    with Image.open(target) as im:
+        im = ImageOps.exif_transpose(im).convert("RGB")
+        im.thumbnail((1800, 1800), Image.Resampling.LANCZOS)
+        im.save(tmp, "JPEG", quality=84, optimize=True, progressive=True)
+    tmp.replace(target)
+    print(f"Optimized {target.relative_to(ROOT)} ({target.stat().st_size} bytes)")
+
 def materialize_visual_assets() -> None:
+    optimize_gravette_asset()
     # Force known-working local assets into new production paths so the deploy
     # cannot depend on whether an older binary happened to have been synced.
     copies = {}
@@ -820,7 +836,7 @@ def patch_final_closure_2026_09_27() -> None:
             original = text
             text = replace_tile_image(
                 text, kicker,
-                "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+                "/assets/editorial/beaches/antibes-gravette-deposit.jpg?v=20260927-final",
                 alt
             )
             save(rel, text, original)
@@ -828,11 +844,11 @@ def patch_final_closure_2026_09_27() -> None:
     # Child beach pages: align the page hero with the refreshed landing visuals.
     beach_heroes = {
         "en/beaches/antibes/index.html": (
-            "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+            "/assets/editorial/beaches/antibes-gravette-deposit.jpg?v=20260927-final",
             "La Gravette sandy beach beside Old Antibes",
         ),
         "plages/antibes/index.html": (
-            "/assets/editorial/beaches/antibes-gravette-deposit.webp?v=20260927-final",
+            "/assets/editorial/beaches/antibes-gravette-deposit.jpg?v=20260927-final",
             "Plage de la Gravette au pied du Vieil Antibes",
         ),
         "en/beaches/nice/index.html": (
@@ -945,7 +961,7 @@ def validate() -> None:
         "assets/editorial/beaches/petite-afrique-final.jpg",
         "assets/editorial/beaches/mala-commons.jpg",
         "assets/editorial/beaches/fossettes-commons.jpg",
-        "assets/editorial/beaches/antibes-gravette-deposit.webp",
+        "assets/editorial/beaches/antibes-gravette-deposit.jpg",
     )
     for rel in required_assets:
         p = ROOT / rel
@@ -990,8 +1006,8 @@ def validate() -> None:
 
     closure_checks = {
         "en/about/index.html": ("Best-in-class Riviera recommendations",),
-        "en/beaches/index.html": ("antibes-gravette-deposit.webp",),
-        "en/beaches/antibes/index.html": ("antibes-gravette-deposit.webp",),
+        "en/beaches/index.html": ("antibes-gravette-deposit.jpg",),
+        "en/beaches/antibes/index.html": ("antibes-gravette-deposit.jpg",),
         "en/beaches/nice/index.html": ("nice-riviera.jpg?v=20260927-final",),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg?v=20260927-final",),
         "en/culture/fondation-maeght/index.html": ("https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",),
