@@ -659,6 +659,85 @@ jobs:
                   print("Semantic asset check passed:", url)
           PY
 
+      - name: Exhaustive live semantic crawl
+        run: |
+          python - <<'PY'
+          import html, os, re
+          from concurrent.futures import ThreadPoolExecutor, as_completed
+          from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
+          from urllib.request import Request, urlopen
+          from xml.etree import ElementTree as ET
+
+          sha = os.environ.get("GITHUB_SHA", "release")
+          headers = {"User-Agent":"MametasSemanticCrawler/1.0","Cache-Control":"no-cache"}
+
+          def busted(url):
+              parts = urlsplit(url)
+              q = dict(parse_qsl(parts.query, keep_blank_values=True))
+              q["semantic"] = sha
+              return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(q), parts.fragment))
+
+          def fetch(url):
+              req = Request(busted(url), headers=headers)
+              with urlopen(req, timeout=30) as response:
+                  return response.status, response.read().decode("utf-8", errors="replace"), response.geturl()
+
+          sitemap_status, sitemap_body, _ = fetch("https://www.mametas.com/sitemap.xml")
+          if sitemap_status != 200:
+              raise SystemExit(f"sitemap returned {sitemap_status}")
+          root = ET.fromstring(sitemap_body)
+          ns = {"sm":"http://www.sitemaps.org/schemas/sitemap/0.9"}
+          urls = [n.text.strip() for n in root.findall(".//sm:loc", ns) if n.text and n.text.startswith("https://www.mametas.com/")]
+
+          def inspect(url):
+              status, body, final_url = fetch(url)
+              if status != 200:
+                  return [f"{url}: HTTP {status}"]
+              m = re.search(r'<html[^>]+lang=["\']([^"\']+)', body, re.I)
+              lang = (m.group(1).lower() if m else "")
+              vis = re.sub(r'<script\b[^>]*>[\s\S]*?</script>', ' ', body, flags=re.I)
+              vis = re.sub(r'<style\b[^>]*>[\s\S]*?</style>', ' ', vis, flags=re.I)
+              vis = re.sub(r'<[^>]+>', ' ', vis)
+              vis = re.sub(r'\s+', ' ', html.unescape(vis)).strip()
+              issues=[]
+              if lang.startswith("fr"):
+                  for pattern,label in (
+                      (r'\bbases?\b',"base/bases"),
+                      (r'\bDégun\b',"Dégun"),
+                      (r'\bGari\b',"Gari"),
+                      (r'\bcagades?\b',"cagade"),
+                  ):
+                      mm=re.search(pattern,vis,re.I)
+                      if mm:
+                          issues.append(f"{url}: visible {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
+                  for raw,label in (
+                      (r'>\s*Reality Check\s*<',"Reality Check"),
+                      (r'>\s*Pression budget\s*<',"Pression budget"),
+                      (r'>\s*Friction\s*<',"Friction"),
+                  ):
+                      if re.search(raw,body,re.I):
+                          issues.append(f"{url}: legacy FR label {label}")
+              elif lang.startswith("en"):
+                  for pattern,label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
+                      mm=re.search(pattern,vis,re.I)
+                      if mm:
+                          issues.append(f"{url}: visible EN {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
+              return issues
+
+          errors=[]
+          with ThreadPoolExecutor(max_workers=12) as pool:
+              futs={pool.submit(inspect,u):u for u in urls}
+              for fut in as_completed(futs):
+                  try:
+                      errors.extend(fut.result())
+                  except Exception as exc:
+                      errors.append(f"{futs[fut]}: fetch error {exc}")
+
+          if errors:
+              raise SystemExit("Live semantic crawl failed:\n- " + "\n- ".join(errors[:80]))
+          print(f"Exhaustive live semantic crawl passed on {len(urls)} sitemap URLs")
+          PY
+
       - name: Build V3 final archive
         run: |
           zip -qr Mametas_V3_FINAL_2026-09-27_SITE.zip . -x '.git/*' 'Mametas_V3_FINAL_2026-09-27_SITE.zip'
