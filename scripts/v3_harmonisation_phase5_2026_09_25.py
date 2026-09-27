@@ -234,13 +234,9 @@ def patch_beaches(rel: str, lang: str) -> None:
     text = p.read_text(encoding="utf-8")
     original = text
     text = add_body_class(text, "beach-harmonised")
-    if "beach-visual-pair" not in text:
-        if lang == "en":
-            alt1, alt2 = "La Gravette beach in Antibes", "A cove on Cap-Ferrat"
-        else:
-            alt1, alt2 = "Plage de la Gravette à Antibes", "Une crique du Cap-Ferrat"
-        pair = f'''<div class="beach-visual-pair"><figure><img src="/assets/editorial/antibes-gravette.jpg" alt="{alt1}" loading="lazy"></figure><figure><img src="/assets/editorial/cap-ferrat-cove.jpg" alt="{alt2}" loading="lazy"></figure></div>'''
-        text = text.replace('<h2 class="beach-zone-title">', pair+'<h2 class="beach-zone-title">', 1)
+    # The decision cards already carry their own visuals. Do not inject an
+    # additional two-image strip below the grid; it duplicates the same places.
+    text = re.sub(r'<div class="beach-visual-pair">.*?</div>', '', text, count=1, flags=re.S)
     save(rel, text, original)
 
 
@@ -346,8 +342,8 @@ def validate() -> None:
         "bons-plans/train-ou-bus/index.html": ("harmonisation-train-visual", "next-decisions-compact"),
         "en/good-finds/nice-in-the-rain/index.html": ("harmonisation-rain-visuals", "rain-day-flow", "rain-logistics-6"),
         "bons-plans/nice-quand-il-pleut/index.html": ("harmonisation-rain-visuals", "rain-day-flow", "rain-logistics-6"),
-        "en/beaches/index.html": ("beach-harmonised", "beach-visual-pair"),
-        "plages/index.html": ("beach-harmonised", "beach-visual-pair"),
+        "en/beaches/index.html": ("beach-harmonised", "beach-decision-grid"),
+        "plages/index.html": ("beach-harmonised", "beach-decision-grid"),
     }
     errors = []
     for rel, needles in checks.items():
