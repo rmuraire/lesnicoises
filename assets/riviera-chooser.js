@@ -288,26 +288,26 @@
     },
     fr: {
       bases: {
-        nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'La base la plus polyvalente de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
+        nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'Le point de chute le plus polyvalent de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
         cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera fonctionne mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
         antibes:{name:'Antibes / Juan-les-Pins',guide:'/riviera-guide/antibes/',hotels:'/hotels/antibes/',why:'Vieille ville, sable et gare utile : l’un des rares compromis azuréens qui ne ressemble pas à un compromis.'},
-        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme base pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
-        menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'La base plus lente à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme point de chute pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
+        menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'Le point de chute plus lent à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
         monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version intentionnelle : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
-        sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas une base centrale astucieuse. Vos réponses disent que la presqu’île est le voyage, donc Mametas la laisse gagner.'},
+        sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas un point de chute central astucieux. Vos réponses disent que la presqu’île est le voyage, donc Mametas la laisse gagner.'},
         saintpaul:{name:'Saint-Paul-de-Vence',guide:'/riviera-guide/saint-paul-de-vence/',hotels:'/hotels/saint-paul-de-vence/',why:'Un séjour volontairement intérieur pour l’art, la pierre et un rythme plus lent. Il ne gagne que lorsque la côte cesse d’être le personnage principal.'}
       },
       moodLine:{
         decide:'Vous nous avez demandé de décider. On choisit donc le séjour avec le moins de compromis inutiles.',
         sea:'On organise le voyage autour de la baignade et de la mer, pas autour d’une collection de codes postaux célèbres.',
-        food:'Les restaurants et une vraie vie le soir comptent : la base doit continuer à fonctionner une fois les excursions rentrées.',
+        food:'Les restaurants et une vraie vie le soir comptent : le point de chute doit continuer à fonctionner une fois les excursions rentrées.',
         culture:'L’art et les villages passent devant. L’accès aux bons arrêts culturels compte plus que la commodité balnéaire pure.',
         glamour:'Vous voulez le théâtre Riviera. Très bien. On refuse quand même de rendre la logistique absurde pour un lobby.',
         peace:'La beauté et le calme comptent plus que la connexion maximale. On accepte volontairement un peu moins d’efficacité.'
       },
       pace:{
-        slow:'Rythme tranquille : la base doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
-        balanced:'Rythme équilibré : la base compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
+        slow:'Rythme tranquille : le point de chute doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
+        balanced:'Rythme équilibré : le point de chute compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
         ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, et la voiture ou le train servent à couvrir davantage de Riviera intelligemment.'
       },
       priorities:{
@@ -360,8 +360,8 @@
         cannes:'Très forte pour le sable et le décor, moins efficace que Nice pour rayonner souvent vers l’est.',
         antibes:'Un excellent compromis, mais moins efficace que Nice si le séjour repose sur beaucoup d’excursions.',
         villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances ajoutent de la friction.',
-        menton:'Douce et colorée, mais très à l’est. Mauvaise base si Cannes et Antibes restent des priorités fortes.',
-        monaco:'Spectaculaire, chère et verticale. Ce n’est pas la base la plus indulgente pour un premier tour complet de la côte.',
+        menton:'Douce et colorée, mais très à l’est. Mauvais point de chute si Cannes et Antibes restent des priorités fortes.',
+        monaco:'Spectaculaire, chère et verticale. Ce n’est pas le point de chute le plus indulgent pour un premier tour complet de la côte.',
         sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le sujet.',
         saintpaul:'Formidable pour l’art et un séjour intérieur plus lent, faible pour une Riviera centrée sur la mer ou le train.'
       },
@@ -392,7 +392,7 @@
           {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://expedia.com/affiliates/antibes-hotels-hotel-belles-rives.LV3AtZi',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, le train et une base plus calme avant le théâtre hôtelier.'},
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, le train et un point de chute plus calme avant le théâtre hôtelier.'},
           {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://expedia.com/affiliates/nice-hotels-welcome-hotel.JcZAjpo',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
           {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
         ],
@@ -543,16 +543,16 @@
     var fr = lang === 'fr';
     if (profile.mood === 'glamour' && winner !== 'monaco') {
       return {base:'monaco', title:fr?'Vous êtes vraiment venu pour Monte-Carlo ?':'Really here for Monte-Carlo?',
-        body:fr?'C’est une autre décision de base, pas un simple upgrade hôtelier.':'That changes the base itself; it is not a hotel upgrade.'};
+        body:fr?'C’est un autre choix de point de chute, pas un simple upgrade hôtelier.':'That changes the base itself; it is not a hotel upgrade.'};
     }
     if (profile.mood === 'sea' && profile.days !== '3' && profile.mobility !== 'nocar' &&
         winner !== 'sainttropez' && seasonOf(profile) !== 'winter') {
       return {base:'sainttropez', title:fr?'La presqu’île est en réalité le voyage ?':'Is the peninsula actually the trip?',
-        body:fr?'Alors assumez Saint-Tropez comme base intentionnelle au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
+        body:fr?'Alors assumez Saint-Tropez comme point de chute intentionnel au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
     }
     if ((profile.mood === 'culture' || profile.mood === 'peace') && profile.days !== '3' && profile.mobility !== 'nocar' && winner !== 'saintpaul') {
       return {base:'saintpaul', title:fr?'Vous voulez vraiment quitter la côte ?':'Do you actually want to leave the coast?',
-        body:fr?'Saint-Paul devient une vraie base seulement si l’arrière-pays fait partie du séjour.':'Saint-Paul becomes a real base only when the inland Riviera is part of the stay.'};
+        body:fr?'Saint-Paul devient un vrai point de chute seulement si l’arrière-pays fait partie du séjour.':'Saint-Paul becomes a real base only when the inland Riviera is part of the stay.'};
     }
     return null;
   }
@@ -644,25 +644,25 @@
       incomplete:'Répondez aux cinq questions. Ensuite, Mametas tranche.',
       verdict:'RIVIERA FIT · LE VERDICT',
       stay:'Dormez à ',
-      whyThis:'Pourquoi cette base',
+      whyThis:'Pourquoi ce point de chute',
       whyNot:'Pourquoi pas les autres',
-      reality:'Reality Check',
-      mobility:'Mobilité',
-      budget:'Pression budget',
-      friction:'Friction',
+      reality:'À savoir',
+      mobility:'Déplacements',
+      budget:'Budget',
+      friction:'Logistique',
       seasonLabel:'Saison',
       do:'Indispensable',
       further:'Pour aller plus loin',
-      furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre base.',
+      furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre point de chute.',
       furtherAmbitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance que vous avez choisie.',
       skip:'Ce qu’on laisserait tomber',
-      hotel:'Trois niveaux. Même base.',
+      hotel:'Trois niveaux. Même point de chute.',
       hotelNote:'La catégorie est éditoriale ; les € sont des repères relatifs Mametas, jamais un tarif en temps réel.',
       allHotels:'Voir toute la sélection hôtels',
-      guide:'Voir le guide de la base',
+      guide:'Voir le guide de cette ville',
       escape:'Voir cette version',
       back:'Revenir au choix Mametas',
-      intentional:'BASE INTENTIONNELLE',
+      intentional:'POINT DE CHUTE INTENTIONNEL',
       reset:'Recommencer'
     } : {
       incomplete:'Answer all five questions. Then Mametas makes the call.',
@@ -671,9 +671,9 @@
       whyThis:'Why this base',
       whyNot:'Why not the others',
       reality:'Reality Check',
-      mobility:'Mobility',
-      budget:'Budget pressure',
-      friction:'Friction',
+      mobility:'Getting around',
+      budget:'Budget',
+      friction:'Logistics',
       seasonLabel:'Season',
       do:'The essentials',
       further:'Go further',
@@ -793,7 +793,7 @@
         var furtherCards = model.further.map(function (item, i) {
           return '<a class="chooser-further-card" href="' + esc(item.href) + '"><span>0' + (i+1) + '</span><strong>' + esc(item.label) + '</strong><small>' + esc(item.body) + '</small></a>';
         }).join('');
-        further = '<section class="chooser-further"><div class="chooser-further-head"><div><p class="eyebrow">' + (lang==='fr'?'LA RIVIERA AU-DELÀ DE LA BASE':'BEYOND THE BASE') + '</p><h3>' + labels.further + '</h3></div><p>' + (state.pace === 'ambitious' ? labels.furtherAmbitious : labels.furtherBalanced) + '</p></div><div class="chooser-further-grid">' + furtherCards + '</div></section>';
+        further = '<section class="chooser-further"><div class="chooser-further-head"><div><p class="eyebrow">' + (lang==='fr'?'LA RIVIERA AU-DELÀ DU POINT DE CHUTE':'BEYOND THE BASE') + '</p><h3>' + labels.further + '</h3></div><p>' + (state.pace === 'ambitious' ? labels.furtherAmbitious : labels.furtherBalanced) + '</p></div><div class="chooser-further-grid">' + furtherCards + '</div></section>';
       }
       var hotelCards = model.hotels.map(function (h) {
         var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
@@ -803,11 +803,11 @@
       if (!model.override && model.escape) {
         escape = '<aside class="chooser-escape"><span class="eyebrow">' + (lang==='fr'?'OPTION INTENTIONNELLE':'INTENTIONAL ALTERNATIVE') + '</span><h3>' + esc(model.escape.title) + '</h3><p>' + esc(model.escape.body) + '</p><button type="button" class="button secondary" data-chooser-escape="' + esc(model.escape.base) + '">' + labels.escape + '</button></aside>';
       } else if (model.override) {
-        escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. La base change ; le tier hôtelier, lui, restera une décision séparée.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
+        escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. Le point de chute change ; le tier hôtelier, lui, restera une décision séparée.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
       }
       out.innerHTML =
         '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><h3 class="chooser-decision-label">' + labels.whyThis + '</h3><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
-        '<section class="chooser-reality"><div><p class="eyebrow">' + labels.reality + '</p><h3>' + (lang==='fr'?'Ce que ce choix implique vraiment':'What this choice really means') + '</h3></div><dl><div><dt>' + labels.mobility + '</dt><dd>' + esc(model.reality.mobility) + '</dd></div><div><dt>' + labels.budget + '</dt><dd>' + esc(model.reality.budget) + '</dd></div><div><dt>' + labels.friction + '</dt><dd>' + esc(model.reality.friction) + '</dd></div><div><dt>' + labels.seasonLabel + '</dt><dd>' + esc(model.reality.season) + '</dd></div></dl></section>' +
+        '<section class="chooser-reality"><div><p class="eyebrow">' + labels.reality + '</p><h3>' + (lang==='fr'?'Ce que ce choix implique vraiment':'What this choice really implies') + '</h3></div><dl><div><dt>' + labels.mobility + '</dt><dd>' + esc(model.reality.mobility) + '</dd></div><div><dt>' + labels.budget + '</dt><dd>' + esc(model.reality.budget) + '</dd></div><div><dt>' + labels.friction + '</dt><dd>' + esc(model.reality.friction) + '</dd></div><div><dt>' + labels.seasonLabel + '</dt><dd>' + esc(model.reality.season) + '</dd></div></dl></section>' +
         '<section class="chooser-alternatives"><p class="eyebrow">' + labels.whyNot + '</p><div class="chooser-alt-grid">' + model.alternatives.map(function(alt){ return '<a href="' + esc(alt.guide) + '"><strong>' + esc(alt.name) + '</strong><span>' + esc(alt.whyNot) + '</span></a>'; }).join('') + '</div></section>' +
         '<div class="chooser-result-grid"><section class="chooser-do"><h3>' + labels.do + '</h3><ol>' + priorities + '</ol></section><section class="chooser-skip"><h3>' + labels.skip + '</h3><p>' + esc(model.skip) + '</p></section></div>' +
         further +

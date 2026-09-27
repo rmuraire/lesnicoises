@@ -3,7 +3,7 @@
   var path = window.location.pathname;
   var isHome = path === "/" || path === "/fr/";
   var items = isFrench ? [
-    { label: "Plan", href: "/fr/planifier/" },
+    { label: "Préparer", href: "/fr/planifier/" },
     { label: "Destinations", href: "/riviera-guide/" },
     { label: "Dormir", href: "/hotels/" },
     { label: "Explorer", href: "/explore/" },
@@ -113,7 +113,7 @@
       var allBases = document.createElement("a");
       allBases.className = "text-link all-bases-link";
       allBases.href = isFrench ? "/riviera-guide/" : "/en/riviera-guide/";
-      allBases.textContent = isFrench ? "Voir toutes les bases, Monaco et Menton compris →" : "See all bases, including Monaco and Menton →";
+      allBases.textContent = isFrench ? "Comparer toutes les villes, Monaco et Menton compris →" : "See all bases, including Monaco and Menton →";
       baseCopy.appendChild(document.createElement("br"));
       baseCopy.appendChild(allBases);
     }
@@ -142,7 +142,7 @@
     var baseLink = document.createElement("a");
     baseLink.className = "text-link base-link";
     baseLink.href = isFrench ? "/riviera-guide/" : "/en/riviera-guide/";
-    baseLink.textContent = isFrench ? "Pas encore sûr de dormir à Nice ? Comparez d’abord les bases →" : "Not sure Nice should be your base? Compare the bases first →";
+    baseLink.textContent = isFrench ? "Pas encore sûr de dormir à Nice ? Comparez d’abord les villes →" : "Not sure Nice should be your base? Compare the bases first →";
     intro.appendChild(document.createElement("br"));
     intro.appendChild(baseLink);
   }
@@ -152,7 +152,7 @@
     var next = document.createElement("section");
     next.className = "v3-section journey-next-section";
     next.innerHTML = isFrench
-      ? '<div class="wrap"><div class="section-heading"><div><p class="eyebrow">Hôtel choisi ? Très bien.</p><h2>Maintenant, organisez le séjour.</h2></div><p>Continuer à comparer des hôtels après avoir choisi le vôtre est une activité, mais pas encore des vacances.</p></div><div class="decision-grid"><a class="decision-card" href="/fr/planifier/cinq-jours-nice-sans-voiture/"><span class="decision-number">01</span><h3>Construire les journées</h3><p>Le parcours de 5 jours relie Nice aux excursions réalistes.</p><span class="text-link">Ouvrir le parcours →</span></a><a class="decision-card" href="/restaurants/"><span class="decision-number">02</span><h3>Choisir où manger</h3><p>Des adresses sélectionnées, pas un inventaire de tables.</p><span class="text-link">Voir les restaurants →</span></a><a class="decision-card" href="/bons-plans/transfert-aeroport-nice/"><span class="decision-number">03</span><h3>Arriver sans cagade</h3><p>Tram, train ou taxi depuis l’aéroport de Nice.</p><span class="text-link">Voir le transfert →</span></a></div></div>'
+      ? '<div class="wrap"><div class="section-heading"><div><p class="eyebrow">Hôtel choisi ? Très bien.</p><h2>Maintenant, organisez le séjour.</h2></div><p>Continuer à comparer des hôtels après avoir choisi le vôtre est une activité, mais pas encore des vacances.</p></div><div class="decision-grid"><a class="decision-card" href="/fr/planifier/cinq-jours-nice-sans-voiture/"><span class="decision-number">01</span><h3>Construire les journées</h3><p>Le parcours de 5 jours relie Nice aux excursions réalistes.</p><span class="text-link">Ouvrir le parcours →</span></a><a class="decision-card" href="/restaurants/"><span class="decision-number">02</span><h3>Choisir où manger</h3><p>Des adresses sélectionnées, pas un inventaire de tables.</p><span class="text-link">Voir les restaurants →</span></a><a class="decision-card" href="/bons-plans/transfert-aeroport-nice/"><span class="decision-number">03</span><h3>Arriver sans accroc</h3><p>Tram, train ou taxi depuis l’aéroport de Nice.</p><span class="text-link">Voir le transfert →</span></a></div></div>'
       : '<div class="wrap"><div class="section-heading"><div><p class="eyebrow">Hotel sorted? Good.</p><h2>Now build the trip.</h2></div><p>Continuing to compare hotels after choosing one is a hobby, not yet a holiday.</p></div><div class="decision-grid"><a class="decision-card" href="/plan/five-days-nice-no-car/"><span class="decision-number">01</span><h3>Build the days</h3><p>The 5-day plan connects Nice to realistic excursions.</p><span class="text-link">Open the plan →</span></a><a class="decision-card" href="/en/restaurants/"><span class="decision-number">02</span><h3>Choose where to eat</h3><p>Selected addresses, not a census of tables.</p><span class="text-link">See restaurants →</span></a><a class="decision-card" href="/en/good-finds/nice-airport-transfer/"><span class="decision-number">03</span><h3>Arrive without a cagade</h3><p>Tram, train or taxi from Nice Airport.</p><span class="text-link">See the transfer →</span></a></div></div>';
     main.appendChild(next);
   }
@@ -173,16 +173,16 @@
     '/hotels/nice/le-negresco/':['Promenade / Carré d’Or','Monument du front de mer · central et destination en soi','Séjour iconique où l’hôtel fait partie du voyage','Luxe'],
     '/hotels/nice/maison-albar-le-victoria/':['Jean Médecin / bord de mer','Hyper-central · mer, shopping et transports réunis','Séjour urbain luxe avec logistique minimale','Luxe'],
     '/hotels/nice/palais-de-la-mediterranee/':['Promenade / Carré d’Or','Central en bord de mer · plage et ville faciles','Séjour Riviera classique avec tout à proximité','Luxe'],
-    '/hotels/nice/villa-victoria/':['Musiciens / Carré d’Or','Central et calme · base plus paisible à pied','Séjour urbain au calme sans s’exiler','Haut de gamme'],
+    '/hotels/nice/villa-victoria/':['Musiciens / Carré d’Or','Central et calme · point de chute plus paisible à pied','Séjour urbain au calme sans s’exiler','Haut de gamme'],
     '/hotels/antibes/hotel-la-place/':['Centre / Vieil Antibes','Central · vieille ville et gare pratiques','Antibes sans voiture et courts séjours','Milieu de gamme'],
-    '/hotels/antibes/la-villa-port-antibes/':['Port Vauban / Vieil Antibes','Central côté port · idéal à pied','Antibes comme base sans sacrifier l’atmosphère','Haut de gamme'],
+    '/hotels/antibes/la-villa-port-antibes/':['Port Vauban / Vieil Antibes','Central côté port · idéal à pied','Antibes comme point de chute sans sacrifier l’atmosphère','Haut de gamme'],
     '/hotels/cap-d-antibes/cap-d-antibes-beach-hotel/':['Cap d’Antibes / bord de mer','Adresse resort · volontairement loin du centre','Séjour plage où l’hôtel est la destination','Luxe'],
     '/hotels/cap-d-antibes/la-villa-cap-d-antibes/':['Juan-les-Pins / bord du Cap','Résidentiel et balnéaire · plus calme que le centre','Piscine et plage avec la ville encore accessible','Haut de gamme'],
     '/hotels/cannes/carlton-cannes/':['Croisette','Front de mer premium · Cannes au pied de l’hôtel','Cannes iconique et séjours liés aux événements','Luxe'],
     '/hotels/cannes/hotel-martinez/':['Croisette','Front de mer premium · élégant et très praticable à pied','Plage, glamour et Cannes en période d’événement','Luxe'],
     '/hotels/cannes/le-cavendish/':['Centre / Carnot','Lisière du centre · pratique plutôt que balnéaire','Cannes à pied avec davantage de discrétion','Haut de gamme'],
     '/hotels/cannes/majestic-cannes/':['Palais / Croisette','Hyper-central · idéal pour événements et Suquet','Premier Cannes sans envie de perdre du temps en trajets','Luxe'],
-    '/hotels/eze/la-chevre-d-or/':['Èze Village','Village perché · spectaculaire et volontairement isolé','Séjour-destination plutôt que base de transport','Luxe'],
+    '/hotels/eze/la-chevre-d-or/':['Èze Village','Village perché · spectaculaire et volontairement isolé','Séjour-destination plutôt que point de chute pour rayonner','Luxe'],
     '/hotels/menton/villa-genesis/':['Borrigo / bord de mer','Résidentiel en bord de mer · calme avec centre accessible','Menton au ralenti avec priorité plage','Luxe'],
     '/hotels/monaco/hotel-de-paris-monte-carlo/':['Carré d’Or / Casino','Hyper-central Monaco · l’adresse est le sujet','Parenthèse monégasque avec tout le cérémonial à proximité','Luxe'],
     '/hotels/roquebrune-cap-martin/the-maybourne-riviera/':['Falaises de Roquebrune','Retraite panoramique · volontairement loin de la vie urbaine','Séjour centré sur l’hôtel et la vue','Luxe'],
@@ -193,7 +193,7 @@
     '/hotels/monaco/port-palace/':['Port Hercule','Central côté port · Monaco facile à pied','Premier séjour avec vue sans le cérémonial de la place du Casino','Luxe'],
     '/hotels/monaco/columbus-hotel-monte-carlo/':['Fontvieille','Monaco plus calme · loin du cœur Casino','Séjour plus posé et journées centrées sur Fontvieille','Haut de gamme'],
     '/hotels/beaulieu-sur-mer/hotel-carlton-beaulieu-sur-mer/':['Beaulieu centre / Baie des Fourmis','Central et calme · plage et gare utiles','Séjour Riviera sans voiture à l’est de Nice','Haut de gamme'],
-    '/hotels/beaulieu-sur-mer/hotel-marcellin/':['Beaulieu centre','Petit centre pratique · gare et mer faciles','Séjour simple sans voiture avec Beaulieu comme base','Milieu de gamme'],
+    '/hotels/beaulieu-sur-mer/hotel-marcellin/':['Beaulieu centre','Petit centre pratique · gare et mer faciles','Séjour simple sans voiture avec Beaulieu comme point de chute','Milieu de gamme'],
     '/hotels/saint-tropez/pastis-hotel-saint-tropez/':['Saint-Tropez / bord du centre','Retraite proche centre · plus calme que le port','Boutique-hôtel avec la ville proche mais pas sous les fenêtres','Haut de gamme'],
     '/hotels/saint-tropez/hotel-de-paris-saint-tropez/':['Centre / bord du port','Hyper-central · idéal pour Saint-Tropez à pied','Court séjour glamour sans envie de conduire','Luxe'],
     '/hotels/cannes/hotel-le-canberra/':['Rue d’Antibes / bord Croisette','Central · shopping, plage et gare gérables à pied','Cannes à pied sans l’échelle d’un palace','Haut de gamme'],

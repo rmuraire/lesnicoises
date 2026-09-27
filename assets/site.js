@@ -2,7 +2,7 @@
   var isFrench=(document.documentElement.lang||'').toLowerCase().indexOf('fr')===0;
   var path=window.location.pathname;
   var items=isFrench?[
-    {label:'Plan',href:'/fr/planifier/'},
+    {label:'Préparer',href:'/fr/planifier/'},
     {label:'Destinations',href:'/riviera-guide/'},
     {label:'Dormir',href:'/hotels/'},
     {label:'Explorer',href:'/explore/'},
@@ -119,7 +119,7 @@
     var sources=article&&article.querySelector('.sources');
     if(article && !article.querySelector('.journey-next')){
       var html=isFrench
-        ? '<strong>Ensuite, pichoun.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
+        ? '<strong>Ensuite, Pichoun.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
         : '<strong>Next, pichoun.</strong><br><a href="/stay/nice/">Choose your Nice hotel →</a> · <a href="/en/restaurants/">Choose where to eat →</a> · <a href="/en/beaches/">Choose a beach →</a> · <a href="/plan/five-days-nice-no-car/">Open the 5-day plan →</a>';
       var block=makeNote(html);
       if(sources) article.insertBefore(block,sources); else article.appendChild(block);
@@ -130,7 +130,7 @@
     var carFreeArticle=document.querySelector('main .article');
     if(carFreeArticle && !carFreeArticle.querySelector('.journey-next')){
       carFreeArticle.appendChild(makeNote(isFrench
-        ? '<strong>Faites maintenant le vrai choix.</strong><br><a href="/fr/dormir/nice/">Comparer les hôtels de Nice →</a> · <a href="/riviera-guide/villefranche-cap-ferrat/">Voir Villefranche comme base →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Voir le séjour de 5 jours sans voiture →</a>'
+        ? '<strong>Faites maintenant le vrai choix.</strong><br><a href="/fr/dormir/nice/">Comparer les hôtels de Nice →</a> · <a href="/riviera-guide/villefranche-cap-ferrat/">Voir Villefranche comme point de chute →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Voir le séjour de 5 jours sans voiture →</a>'
         : '<strong>Now make the actual choice.</strong><br><a href="/stay/nice/">Compare Nice hotels →</a> · <a href="/en/riviera-guide/villefranche-cap-ferrat/">See Villefranche as a base →</a> · <a href="/plan/five-days-nice-no-car/">See the 5-day no-car trip →</a>'
       ));
     }
@@ -157,7 +157,7 @@
       var section=document.createElement('section');
       section.className='section journey-next-hub';
       section.innerHTML=isFrench
-        ? '<div class="wrap"><div class="note"><strong>Et après le dîner ?</strong><br><a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Revenir au parcours →</a> · <a href="/explore/">Explorer plages, culture et excursions →</a> · <a href="/riviera-guide/">Comparer les bases →</a></div></div>'
+        ? '<div class="wrap"><div class="note"><strong>Et après le dîner ?</strong><br><a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Revenir au parcours →</a> · <a href="/explore/">Explorer plages, culture et excursions →</a> · <a href="/riviera-guide/">Comparer les villes →</a></div></div>'
         : '<div class="wrap"><div class="note"><strong>And after dinner?</strong><br><a href="/plan/five-days-nice-no-car/">Return to the trip plan →</a> · <a href="/en/explore/">Explore beaches, culture and day trips →</a> · <a href="/en/riviera-guide/">Compare bases →</a></div></div>';
       main.appendChild(section);
     }
