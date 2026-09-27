@@ -769,6 +769,10 @@ def patch_final_closure_2026_09_27() -> None:
             lambda m: m.group(1) + f'<h1>{title}</h1><p class="lead">{lead}</p>',
             text, count=1, flags=re.S
         )
+        # Hard negative: the superseded hero sentence must not survive anywhere
+        # in the rendered About page, even if an earlier generator duplicated it.
+        text = text.replace("<strong>The character is invented. The recommendation is not.</strong> ", "")
+        text = text.replace("The character is invented. The recommendation is not.", "")
         save(rel, text, original)
 
     # Explore: mobile copy must breathe inside the four image tiles.
