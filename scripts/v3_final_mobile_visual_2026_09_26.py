@@ -726,6 +726,10 @@ def patch_final_closure_2026_09_27() -> None:
 .hotel-choice-copy .catch{
   margin-top:12px!important;
 }
+.beach-decision-grid + .beach-zone-title{
+  margin-top:0!important;
+  padding-top:46px!important;
+}
 @media(max-width:700px){
   .explore-harmonised .base-card-content,
   .explore-product-polished .base-card-content{
