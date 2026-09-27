@@ -19,7 +19,7 @@ def visible_text(html_text: str) -> str:
     text = re.sub(r'<[^>]+>', ' ', text)
     return re.sub(r'\s+', ' ', html.unescape(text)).strip()
 
-def rewrite_visible(html_text: str, lang: str) -> str:
+def rewrite_visible(html_text: str, lang: str, preserve_dialect: bool = False) -> str:
     parts = re.split(r'(<[^>]+>)', html_text)
     out = []
     in_script = False
@@ -111,10 +111,11 @@ def rewrite_visible(html_text: str, lang: str) -> str:
             text = replace_word_case(text, r'\bbases\b', 'villes', 'Villes', 'VILLES')
             text = replace_word_case(text, r'\bbase\b', 'ville', 'Ville', 'VILLE')
 
-            # Dialect never carries functional meaning. Keep only Pichoun and Mèfi.
-            text = re.sub(r'\bcagades?\b', lambda m: 'erreurs' if m.group(0).lower().endswith('s') else 'erreur', text, flags=re.I)
-            text = re.sub(r'\bDégun\b', 'Personne', text, flags=re.I)
-            text = re.sub(r'\bGari\b', '', text, flags=re.I)
+            # Dialect never carries functional meaning outside the lexicon.
+            if not preserve_dialect:
+                text = re.sub(r'\bcagades?\b', lambda m: 'erreurs' if m.group(0).lower().endswith('s') else 'erreur', text, flags=re.I)
+                text = re.sub(r'\bDégun\b', 'Personne', text, flags=re.I)
+                text = re.sub(r'\bGari\b', '', text, flags=re.I)
             text = re.sub(r'\bpitchoun\b', 'Pichoun', text, flags=re.I)
 
             if not in_anchor:
@@ -130,8 +131,9 @@ def rewrite_visible(html_text: str, lang: str) -> str:
                     flags=re.I
                 )
         else:
-            text = re.sub(r'\bcagades?\b', lambda m: 'mistakes' if m.group(0).lower().endswith('s') else 'mistake', text, flags=re.I)
-            text = re.sub(r'\bGari\b', '', text, flags=re.I)
+            if not preserve_dialect:
+                text = re.sub(r'\bcagades?\b', lambda m: 'mistakes' if m.group(0).lower().endswith('s') else 'mistake', text, flags=re.I)
+                text = re.sub(r'\bGari\b', '', text, flags=re.I)
             text = re.sub(r'\bpitchoun\b', 'Pichoun', text, flags=re.I)
             if not in_anchor:
                 text = re.sub(
@@ -183,7 +185,11 @@ def patch_html() -> None:
             text = text.replace("What this base really implies", "What this choice really implies")
             text = text.replace("What this choice really means", "What this choice really implies")
 
-        text = rewrite_visible(text, "fr" if is_fr else "en")
+        text = rewrite_visible(
+            text,
+            "fr" if is_fr else "en",
+            preserve_dialect=rel in ("lexique/index.html", "en/lexicon/index.html")
+        )
 
         if rel in ("en/riviera-fit/index.html","en/riviera-chooser/index.html","en/riviera-guide/index.html"):
             if "the town you’ll sleep in each night" not in text:
@@ -227,12 +233,15 @@ def validate() -> None:
         vis = visible_text(raw)
         rel = path.relative_to(ROOT).as_posix()
         if is_fr:
+            preserve_dialect = rel == "lexique/index.html"
             for pattern, label in (
                 (r'\bbases?\b', "base/bases"),
                 (r'\bDégun\b', "Dégun"),
                 (r'\bGari\b', "Gari"),
                 (r'\bcagades?\b', "cagade"),
             ):
+                if preserve_dialect and label in ("Dégun", "Gari", "cagade"):
+                    continue
                 m = re.search(pattern, vis, re.I)
                 if m:
                     context = vis[max(0,m.start()-80):m.end()+120]
@@ -245,6 +254,8 @@ def validate() -> None:
                 if re.search(raw_pattern, raw, re.I):
                     errors.append(f"{rel}: legacy label {label}")
         else:
+            if rel == "en/lexicon/index.html":
+                continue
             for pattern, label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
                 m = re.search(pattern, vis, re.I)
                 if m:
