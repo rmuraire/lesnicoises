@@ -186,6 +186,18 @@ jobs:
       - name: Validate production site
         run: python scripts/validate_mametas.py
 
+      - name: Build user delivery V3 snapshot
+        run: |
+          rm -f Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
+          zip -qr Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip . -x '.git/*' 'Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip'
+
+      - name: Upload user delivery V3 snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          path: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
+          retention-days: 30
+
       - name: Deploy changed public files to OVH
         env:
           BEFORE_SHA: ${{ github.event.before }}
