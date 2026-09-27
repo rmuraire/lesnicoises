@@ -193,7 +193,7 @@ def main() -> int:
             "provider=/expedia",
             "data-menu-bound",
             "{label:'Plan',href:'/plan/'}",
-            "{label:'Plan',href:'/fr/planifier/'}",
+            "{label:'Préparer',href:'/fr/planifier/'}",
         ),
         "assets/v3.js": (
             "if (!menu && header)",
@@ -204,7 +204,7 @@ def main() -> int:
             '{ label: "Stay", href: "/en/hotels/" }',
             '{ label: "Explore", href: "/en/explore/" }',
             '{ label: "Practical", href: "/en/practical/" }',
-            '{ label: "Plan", href: "/fr/planifier/" }',
+            '{ label: "Préparer", href: "/fr/planifier/" }',
             '{ label: "Explorer", href: "/explore/" }',
             '{ label: "Pratique", href: "/pratique/" }',
         ),
