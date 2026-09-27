@@ -668,3 +668,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
     line-height:1.42!important
   }
 }
+
+
+/* Final beach spacing fix 2026-09-27 */
+.beach-decision-grid + .beach-zone-title{margin-top:0!important;padding-top:46px!important}
