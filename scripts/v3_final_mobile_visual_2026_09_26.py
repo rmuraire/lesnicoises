@@ -520,13 +520,180 @@ def patch_css_and_versions() -> None:
         rel = p.relative_to(ROOT).as_posix()
         text = p.read_text(encoding="utf-8")
         original = text
-        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.4', text)
-        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.5', text)
+        text = re.sub(r'/assets/site\.css(?:\?v=[^"]+)?', '/assets/site.css?v=25.5', text)
+        text = re.sub(r'/assets/v3\.css(?:\?v=[^"]+)?', '/assets/v3.css?v=2.6', text)
         text = re.sub(r'/assets/riviera-chooser\.css(?:\?v=[^"]+)?', '/assets/riviera-chooser.css?v=8', text)
         text = re.sub(r'/assets/hotel-engine\.css(?:\?v=[^"]+)?', '/assets/hotel-engine.css?v=8', text)
         text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=11', text)
         text = re.sub(r'/assets/hotel-engine\.js(?:\?v=[^"]+)?', '/assets/hotel-engine.js?v=13', text)
+        text = re.sub(r'/assets/consent\.js(?:\?v=[^"]+)?', '/assets/consent.js?v=1.1', text)
         save(rel, text, original)
+
+
+def patch_final_user_polish_2026_09_27() -> None:
+    def add_body_class(text: str, cls: str) -> str:
+        def repl(m):
+            attrs = m.group(1) or ""
+            cm = re.search(r'class="([^"]*)"', attrs)
+            if cm:
+                classes = cm.group(1).split()
+                if cls not in classes:
+                    classes.append(cls)
+                attrs = attrs[:cm.start(1)] + " ".join(classes) + attrs[cm.end(1):]
+            else:
+                attrs += f' class="{cls}"'
+            return "<body" + attrs + ">"
+        return re.sub(r"<body([^>]*)>", repl, text, count=1)
+
+    polish_css = r'''
+/* Final user polish 2026-09-27 */
+.explore-harmonised .base-grid{gap:0!important;background:transparent!important}
+.no-car-polish .article .standfirst{max-width:46ch!important;font-size:clamp(22px,2.15vw,28px)!important;line-height:1.38!important;margin-bottom:28px!important}
+.no-car-polish .article>p:not(.standfirst){max-width:74ch;font-size:17px;line-height:1.62}
+.destination-reality{border:1px solid var(--blue,var(--med-blue,#176f83))!important}
+.hotel-choice-copy{padding-bottom:18px!important}
+.beach-decision.has-decision-visual{padding:0;overflow:hidden}
+.beach-decision-media{display:block;width:100%;aspect-ratio:16/9;overflow:hidden;background:var(--cream-deep)}
+.beach-decision-media img{display:block;width:100%;height:100%;object-fit:cover}
+.beach-decision-body{display:flex;flex:1;flex-direction:column;padding:20px 22px 22px}
+.about-polish .page-hero .lead{max-width:42ch!important;line-height:1.36!important}
+.about-polish .editor-identity h2{max-width:980px;font-size:clamp(42px,4.6vw,64px);line-height:1.04;margin-bottom:18px}
+.about-polish .editor-identity>p{max-width:1050px;line-height:1.62}
+.editor-links{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.editor-links a{display:inline-flex;align-items:center;min-height:42px;padding:10px 13px;border:1px solid var(--line);background:rgba(255,255,255,.22);font-size:10px;font-weight:700;letter-spacing:.055em;text-transform:uppercase;text-decoration:none!important}
+.editor-links a:hover,.editor-links a:focus-visible{background:var(--cream-deep)}
+.v3-footer .privacy-links{width:min(100%,1440px);margin:12px auto 0!important;padding:0 clamp(18px,3vw,48px) 18px;justify-content:flex-end!important;font-size:10px!important}
+.site-footer .privacy-links{margin-top:14px!important;justify-content:center!important}
+.consent-settings{padding:0;border:0;background:transparent;font:inherit;cursor:pointer}
+@media(max-width:650px){
+  .editor-links{display:grid;grid-template-columns:1fr}
+  .editor-links a{justify-content:center}
+  .v3-footer .privacy-links{justify-content:flex-start!important}
+  .no-car-polish .article .standfirst{font-size:22px!important;line-height:1.4!important}
+}
+'''
+    ensure_css("assets/site.css", "/* Final user polish 2026-09-27 */", polish_css)
+    ensure_css("assets/v3.css", "/* Final user polish 2026-09-27 */", polish_css)
+
+    for rel in ("en/hotels/without-a-car/index.html", "hotels/sans-voiture/index.html"):
+        p = ROOT / rel
+        if p.exists():
+            text = p.read_text(encoding="utf-8")
+            original = text
+            text = add_body_class(text, "no-car-polish")
+            save(rel, text, original)
+
+    weather = {
+        "en/practical/weather-by-season/index.html": '''<h2>Spring</h2><p><strong>Air:</strong> roughly 17°C by day in April, rising into the mid-20s by June. <strong>Sea:</strong> around 15°C in April and about 22°C in June. Translation: spring is excellent for walking and culture; the beach can look more convincing than it feels until late May or June.</p><h2>Summer</h2><p>Expect high-20s daytime heat as the norm, with hotter spells entirely possible; the sea is usually in the low-to-mid 20s. Start long walks early, use shade intelligently and treat the things that genuinely sell out as bookings, not hopes. <a href="/en/good-finds/what-to-book/">See what to book in advance →</a></p><h2>Autumn</h2><p>September is still a sea month: water is commonly around 23°C before cooling through October. Air temperatures soften faster than the light does, which is why September can feel almost unfairly good. Later in autumn, keep an indoor plan ready. <a href="/en/good-finds/nice-in-the-rain/">Use our Nice-in-the-rain plan →</a></p><h2>Winter</h2><p>Nice, Menton and Monaco remain credible urban bases. The sea falls back towards the mid-teens, and some beach operations or seasonal addresses pause or reduce service. The useful winter strategy is culture, food, coastal light and a real indoor backup rather than pretending it is July. <a href="/en/good-finds/nice-in-the-rain/">Keep the rain plan handy →</a></p><div class="source-box"><strong>Use climate as a planning guide, not a forecast.</strong> Sea-temperature ranges are based on recent historical averages; for the actual week, check <a href="https://meteofrance.com/previsions-meteo-france/nice/06000" target="_blank" rel="nofollow noopener">Météo-France ↗</a>.</div><p class="ownership-note">To decide <em>when to go</em>, return to <a href="/plan/when-to-go/">Plan</a>. For a dated alert or current closure, use <a href="/en/good-finds/">Right Now</a>.</p>''',
+        "pratique/climat-saisons/index.html": '''<h2>Printemps</h2><p><strong>Air :</strong> environ 17°C en journée en avril, puis des valeurs qui montent vers le milieu des 20°C en juin. <strong>Mer :</strong> autour de 15°C en avril et environ 22°C en juin. En clair : excellent pour marcher et visiter ; la plage peut sembler plus convaincante qu’elle ne l’est avant fin mai ou juin.</p><h2>Été</h2><p>Comptez couramment des journées dans la haute vingtaine, avec des épisodes nettement plus chauds possibles ; la mer se situe généralement dans le bas ou le milieu des 20°C. Commencez les longues marches tôt et réservez ce qui se remplit vraiment. <a href="/bons-plans/que-reserver/">Voir ce qu’il faut réserver →</a></p><h2>Automne</h2><p>Septembre reste un mois de mer, autour de 23°C avant une baisse progressive en octobre. Plus tard, gardez un vrai plan intérieur prêt à remplacer une journée plage. <a href="/bons-plans/nice-quand-il-pleut/">Voir Nice quand il pleut →</a></p><h2>Hiver</h2><p>Nice, Menton et Monaco restent des bases urbaines crédibles. La mer revient vers le milieu des 10°C et certaines activités balnéaires ou adresses saisonnières réduisent leur fonctionnement. La bonne logique : culture, tables, lumière côtière et plan B intérieur. <a href="/bons-plans/nice-quand-il-pleut/">Garder le plan pluie sous la main →</a></p><div class="source-box"><strong>Le climat sert à planifier, pas à prévoir.</strong> Pour la semaine réelle, consultez <a href="https://meteofrance.com/previsions-meteo-france/nice/06000" target="_blank" rel="nofollow noopener">Météo-France ↗</a>.</div><p class="ownership-note">Pour décider <em>quand partir</em>, revenez dans <a href="/fr/planifier/quand-partir/">Plan</a>. Pour une alerte datée ou une fermeture du mois, consultez <a href="/bons-plans/">En ce moment</a>.</p>'''
+    }
+    for rel, body in weather.items():
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text, n = re.subn(r'(<div class="wrap article-body">).*?(</div></section>)', lambda m: m.group(1)+body+m.group(2), text, count=1, flags=re.S)
+        if n != 1:
+            raise RuntimeError(f"{rel}: weather body anchor missing")
+        save(rel, text, original)
+
+    for rel in ("en/hotels/index.html", "hotels/index.html"):
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text = re.sub(r'<a class="button hub-primary-action hub-primary-action--hotel" href="[^"]+">(?:Use Hotel Fit|Utiliser Hotel Fit)</a>', '', text, count=1)
+        save(rel, text, original)
+
+    p = ROOT / "assets/editorial-layer.js"
+    text = p.read_text(encoding="utf-8")
+    original = text
+    text = text.replace('["Old Antibes + the ramparts","Walk the old town, market area and ramparts as one sequence. This is the core of Antibes, not the warm-up.","/en/restaurants/antibes/"', '["Old Antibes + the ramparts","Walk the old town, market area and ramparts as one sequence. This is the core of Antibes, not the warm-up.","/en/riviera-guide/antibes/#what-not-to-miss"')
+    text = text.replace('["Cap d’Antibes — only with time","The Cap deserves a separate rhythm: coves, walks and hotels rather than a quick extension of the centre.","/en/beaches/antibes/"', '["Cap d’Antibes — only with time","The Cap deserves a separate rhythm: coves, walks and hotels rather than a quick extension of the centre.","/en/riviera-guide/antibes/#cap"')
+    text = text.replace('["Vieil Antibes + remparts","Faites vieille ville, marché et remparts dans un même mouvement. C’est le cœur d’Antibes, pas l’échauffement.","/restaurants/antibes/"', '["Vieil Antibes + remparts","Faites vieille ville, marché et remparts dans un même mouvement. C’est le cœur d’Antibes, pas l’échauffement.","/riviera-guide/antibes/#indispensables"')
+    text = text.replace('["Cap d’Antibes — seulement si vous avez le temps","Le Cap mérite un autre rythme : criques, promenades et hôtels plutôt qu’une extension rapide du centre.","/plages/antibes/"', '["Cap d’Antibes — seulement si vous avez le temps","Le Cap mérite un autre rythme : criques, promenades et hôtels plutôt qu’une extension rapide du centre.","/riviera-guide/antibes/#cap"')
+    save("assets/editorial-layer.js", text, original)
+
+    visual_maps = {
+        "en/beaches/index.html": {
+            "Antibes.": ("/assets/editorial/antibes-gravette.jpg","La Gravette sandy beach in Antibes"),
+            "Nice. Accept them.": ("/assets/editorial/nice-riviera.jpg","Nice pebble beach on the Mediterranean"),
+            "Marinières or Baie des Fourmis.": ("/assets/editorial/beaches/baie-des-fourmis-final.jpg?v=20260927","Baie des Fourmis in Beaulieu-sur-Mer"),
+            "Les Fossettes.": ("/assets/editorial/beaches/fossettes-commons.jpg?v=20260927","Les Fossettes cove on Cap-Ferrat"),
+            "Antibes again.": ("/assets/editorial/antibes-gravette.jpg","La Gravette beach beside Old Antibes"),
+            "Plage Mala.": ("/assets/editorial/beaches/mala-commons.jpg?v=20260927","Plage Mala at Cap-d’Ail"),
+            "Petite Afrique.": ("/assets/editorial/beaches/petite-afrique-final.jpg?v=20260927","Petite Afrique beach in Beaulieu-sur-Mer"),
+            "Ponchettes.": ("/assets/editorial/renaud/nice/nice-beach-umbrellas.webp","Ponchettes and the Nice seafront")
+        },
+        "plages/index.html": {
+            "Antibes.": ("/assets/editorial/antibes-gravette.jpg","Plage de la Gravette à Antibes"),
+            "Nice. Assumez-les.": ("/assets/editorial/nice-riviera.jpg","Plage de galets à Nice"),
+            "Marinières ou Baie des Fourmis.": ("/assets/editorial/beaches/baie-des-fourmis-final.jpg?v=20260927","Baie des Fourmis à Beaulieu-sur-Mer"),
+            "Les Fossettes.": ("/assets/editorial/beaches/fossettes-commons.jpg?v=20260927","Crique des Fossettes au Cap-Ferrat"),
+            "Antibes encore.": ("/assets/editorial/antibes-gravette.jpg","Plage de la Gravette au pied du Vieil Antibes"),
+            "Plage Mala.": ("/assets/editorial/beaches/mala-commons.jpg?v=20260927","Plage Mala à Cap-d’Ail"),
+            "Petite Afrique.": ("/assets/editorial/beaches/petite-afrique-final.jpg?v=20260927","Plage Petite Afrique à Beaulieu-sur-Mer"),
+            "Ponchettes.": ("/assets/editorial/renaud/nice/nice-beach-umbrellas.webp","Ponchettes et le bord de mer à Nice")
+        }
+    }
+    for rel, mapping in visual_maps.items():
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        for heading, (src, alt) in mapping.items():
+            pat = rf'(<a class="beach-decision"[^>]*>)(.*?<h3>{re.escape(heading)}</h3>.*?)(</a>)'
+            m = re.search(pat, text, flags=re.S)
+            if not m:
+                continue
+            if "beach-decision-media" in m.group(2):
+                continue
+            start = m.group(1).replace('class="beach-decision"', 'class="beach-decision has-decision-visual"')
+            media = f'<span class="beach-decision-media"><img src="{src}" alt="{alt}" loading="lazy"></span>'
+            repl = start + media + '<span class="beach-decision-body">' + m.group(2) + '</span>' + m.group(3)
+            text = text[:m.start()] + repl + text[m.end():]
+        save(rel, text, original)
+
+    for rel in ("en/about/index.html", "a-propos/index.html"):
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        text = p.read_text(encoding="utf-8")
+        original = text
+        text = add_body_class(text, "about-polish")
+        if rel.startswith("en/"):
+            text = re.sub(r'(<section class="page-hero">.*?<p class="eyebrow">ABOUT(?: MAMETAS)?</p>)<h1>.*?</h1><p class="lead">.*?</p>',
+                r'\1<h1>Riviera expertise, with a Niçois point of view.</h1><p class="lead"><strong>The character is invented. The recommendation is not.</strong> Mametas combines local knowledge, documented sources and an editorial point of view that is very much alive.</p>', text, count=1, flags=re.S)
+            text = re.sub(r'<p><a href="/en/method/">Read the Mametas Checked method →</a> · <a href="/en/corrections/">Corrections &(?:amp;)? updates →</a> · <a href="/en/press/">Press &(?:amp;)? professionals →</a></p>',
+                '<nav class="editor-links" aria-label="Mametas editorial information"><a href="/en/method/">Mametas Checked method →</a><a href="/en/corrections/">Corrections &amp; updates →</a><a href="/en/press/">Press &amp; professionals →</a></nav>', text, count=1)
+        else:
+            text = re.sub(r'<p><a href="/methode/">Lire la méthode Mametas Checked →</a> · <a href="/corrections/">Corrections &(?:amp;)? mises à jour →</a> · <a href="/presse/">Presse &(?:amp;)? professionnels →</a></p>',
+                '<nav class="editor-links" aria-label="Informations éditoriales Mametas"><a href="/methode/">Méthode Mametas Checked →</a><a href="/corrections/">Corrections &amp; mises à jour →</a><a href="/presse/">Presse &amp; professionnels →</a></nav>', text, count=1)
+        save(rel, text, original)
+
+    p = ROOT / "assets/consent.js"
+    text = p.read_text(encoding="utf-8")
+    original = text
+    old = '''    var links = footer.querySelector(".privacy-links") || footer;
+    links.appendChild(button);'''
+    new = '''    var links = footer.querySelector(".privacy-links");
+    var wrap = footer.querySelector(":scope > .wrap") || footer.querySelector(".wrap");
+    if(!links){
+      links = document.createElement("div");
+      links.className = "privacy-links";
+      (wrap || footer).appendChild(links);
+    }else if(wrap && links.parentElement === footer){
+      wrap.appendChild(links);
+    }
+    links.appendChild(button);'''
+    if old in text:
+        text = text.replace(old, new, 1)
+    elif "links.parentElement === footer" not in text:
+        raise RuntimeError("Consent settings footer anchor missing")
+    save("assets/consent.js", text, original)
 
 def validate() -> None:
     errors: list[str] = []
@@ -544,7 +711,7 @@ def validate() -> None:
 
     checks = {
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
-        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.4"),
+        "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.5"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
         "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
@@ -585,6 +752,7 @@ def main() -> int:
     patch_fit_touch_behavior()
     patch_core_hubs_and_practical()
     patch_gay_stays()
+    patch_final_user_polish_2026_09_27()
     patch_css_and_versions()
     validate()
     print(f"Final mobile + visual closure passed; changed {len(changed)} text file(s).")
