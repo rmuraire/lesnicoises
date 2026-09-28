@@ -637,6 +637,18 @@
     if (!root) return;
     var lang = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0 ? 'fr' : 'en';
     var state = { days:'', season:'', mobility:'', mood:'', pace:'' };
+    var lastModel = null;
+    var started = false;
+    var completed = false;
+
+    function track(name, detail) {
+      if (typeof window.gtag !== 'function') return;
+      var payload = detail || {};
+      payload.tool = 'riviera_fit';
+      payload.page_language = lang;
+      window.gtag('event', name, payload);
+    }
+
     var params = new URLSearchParams(window.location.search);
     if (['3','5','7'].indexOf(params.get('days')) >= 0) state.days = params.get('days');
 
@@ -766,6 +778,7 @@
     function render(overrideBase) {
       if (!(state.days && state.season && state.mobility && state.mood && state.pace)) return;
       var model = resultModel(state, overrideBase, lang);
+      lastModel = model;
       var out = root.querySelector('[data-chooser-result]');
       var profileLabels = lang === 'fr'
         ? {
@@ -820,8 +833,32 @@
     }
 
     root.addEventListener('click', function (event) {
+      var affiliate = event.target.closest('[data-affiliate-network][data-affiliate-hotel]');
+      if (affiliate) {
+        track('affiliate_click', {
+          affiliate_network: affiliate.getAttribute('data-affiliate-network') || '',
+          hotel_id: affiliate.getAttribute('data-affiliate-hotel') || '',
+          page_path: window.location.pathname,
+          source_tool: 'riviera_fit',
+          recommended_base: lastModel ? lastModel.baseId : ''
+        });
+        return;
+      }
+
+      var hotelFit = event.target.closest('.chooser-actions a[href*="/hotels/finder/"]');
+      if (hotelFit) {
+        track('riviera_fit_hotel_fit_click', {
+          recommended_base: lastModel ? lastModel.baseId : ''
+        });
+        return;
+      }
+
       var button = event.target.closest('[data-choice]');
       if (button) {
+        if (!started) {
+          started = true;
+          track('riviera_fit_start', { first_question: button.getAttribute('data-group') || '' });
+        }
         state[button.getAttribute('data-group')] = button.getAttribute('data-choice');
         syncButtons();
         var next = root.querySelector('[data-step]:not([hidden]) [data-choice].is-active');
@@ -832,6 +869,9 @@
       if (event.target.closest('[data-chooser-back]')) { render(null); return; }
       if (event.target.closest('[data-chooser-reset]')) {
         state = {days:'',season:'',mobility:'',mood:'',pace:''};
+        started = false;
+        completed = false;
+        lastModel = null;
         history.replaceState(null,'',window.location.pathname);
         root.querySelector('[data-chooser-result]').hidden = true;
         syncButtons();
@@ -840,7 +880,20 @@
     });
 
     var submit = root.querySelector('[data-chooser-submit]');
-    if (submit) submit.addEventListener('click', function () { render(null); });
+    if (submit) submit.addEventListener('click', function () {
+      render(null);
+      if (!completed && lastModel) {
+        completed = true;
+        track('riviera_fit_complete', {
+          days: state.days,
+          season: state.season,
+          mobility: state.mobility,
+          mood: state.mood,
+          pace: state.pace,
+          recommended_base: lastModel.baseId || ''
+        });
+      }
+    });
     syncButtons();
   }
 
