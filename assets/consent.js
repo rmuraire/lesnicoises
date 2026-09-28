@@ -12,28 +12,28 @@
     title:"Vos choix, sans détour",
     text:"Mametas utilise des outils optionnels pour mesurer l’audience et améliorer la monétisation affiliée. Vous pouvez tout accepter, tout refuser ou choisir.",
     accept:"Tout accepter",
-    reject:"Tout refuser",
+    reject:"Refuser l’optionnel",
     choose:"Choisir",
     save:"Enregistrer mes choix",
     settings:"Choix des cookies",
     privacy:"En savoir plus",
     privacyUrl:"/fr/confidentialite/",
-    analytics:"Mesure d’audience",
-    analyticsHelp:"Google Analytics nous aide à comprendre quelles pages sont réellement utiles.",
+    analytics:"Cookies de mesure d’audience",
+    analyticsHelp:"Sans accord, Analytics reste sans cookie. Avec votre accord, les cookies Analytics permettent une mesure plus complète.",
     drive:"Outils affiliés intelligents",
     driveHelp:"Travelpayouts Drive analyse le contenu et l’usage du site pour proposer ou optimiser des éléments d’affiliation."
   } : {
     title:"Your choices, no fuss",
     text:"Mametas uses optional tools for audience measurement and affiliate monetisation. You can accept all, reject all or choose.",
     accept:"Accept all",
-    reject:"Reject all",
+    reject:"Reject optional",
     choose:"Choose",
     save:"Save my choices",
     settings:"Cookie choices",
     privacy:"Learn more",
     privacyUrl:"/privacy/",
-    analytics:"Audience measurement",
-    analyticsHelp:"Google Analytics helps us understand which pages are genuinely useful.",
+    analytics:"Audience measurement cookies",
+    analyticsHelp:"Without permission, Analytics remains cookieless. With permission, Analytics cookies allow fuller measurement.",
     drive:"Smart affiliate tools",
     driveHelp:"Travelpayouts Drive analyses site content and usage to add or optimise affiliate elements."
   };
@@ -55,19 +55,45 @@
     }catch(error){}
   }
 
-  function loadAnalytics(){
+  function initialiseAnalytics(){
     if(analyticsLoaded || document.querySelector('script[data-mametas-analytics]'))return;
     analyticsLoaded = true;
+    var saved = readChoices();
+    var analyticsState = saved && saved.analytics ? "granted" : "denied";
     window.dataLayer = window.dataLayer || [];
     window.gtag = window.gtag || function(){window.dataLayer.push(arguments);};
-    window.gtag("consent","default",{analytics_storage:"granted"});
+    window.gtag("consent","default",{
+      analytics_storage:analyticsState,
+      ad_storage:"denied",
+      ad_user_data:"denied",
+      ad_personalization:"denied",
+      wait_for_update:500
+    });
+    window.gtag("set","ads_data_redaction",true);
     window.gtag("js",new Date());
-    window.gtag("config",ANALYTICS_ID,{anonymize_ip:true});
+    window.gtag("config",ANALYTICS_ID,{
+      anonymize_ip:true,
+      allow_google_signals:false,
+      allow_ad_personalization_signals:false
+    });
     var script = document.createElement("script");
     script.async = true;
     script.src = "https://www.googletagmanager.com/gtag/js?id=" + ANALYTICS_ID;
     script.setAttribute("data-mametas-analytics","true");
     document.head.appendChild(script);
+  }
+
+  function setAnalyticsConsent(granted){
+    initialiseAnalytics();
+    if(typeof window.gtag === "function"){
+      window.gtag("consent","update",{
+        analytics_storage:granted ? "granted" : "denied",
+        ad_storage:"denied",
+        ad_user_data:"denied",
+        ad_personalization:"denied"
+      });
+    }
+    if(!granted)removeAnalyticsCookies();
   }
 
   function loadDrive(){
@@ -91,8 +117,7 @@
   }
 
   function disableAnalytics(){
-    if(typeof window.gtag === "function")window.gtag("consent","update",{analytics_storage:"denied"});
-    removeAnalyticsCookies();
+    setAnalyticsConsent(false);
   }
 
   function closeBanner(){
@@ -101,8 +126,7 @@
   }
 
   function applyChoices(value){
-    if(value.analytics)loadAnalytics();
-    else disableAnalytics();
+    setAnalyticsConsent(!!value.analytics);
     if(value.drive)loadDrive();
   }
 
@@ -171,6 +195,8 @@
     if(choices)applyChoices(choices);
     else showBanner(false);
   }
+
+  initialiseAnalytics();
 
   if(document.readyState === "loading")document.addEventListener("DOMContentLoaded",initialise);
   else initialise();
