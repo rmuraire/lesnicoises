@@ -672,3 +672,14 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 
 /* Final beach spacing fix 2026-09-27 */
 .beach-decision-grid + .beach-zone-title{margin-top:0!important;padding-top:46px!important}
+
+
+/* V4 gay decision doors 2026-09-28 */
+.gay-door-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:24px 0 42px}
+.gay-door{display:flex;min-height:210px;flex-direction:column;padding:24px;border:1px solid #14213d;background:#14213d;color:#fff!important;text-decoration:none!important;transition:transform .16s ease,background .16s ease}
+.gay-door:hover,.gay-door:focus-visible{background:#1a2c50;transform:translateY(-2px)}
+.gay-door span{color:#f7c966;font:700 9px/1.35 var(--sans);letter-spacing:.15em;text-transform:uppercase}
+.gay-door strong{display:block;margin:22px 0 10px;color:#fff;font:500 29px/1.06 var(--serif)}
+.gay-door p{margin:0!important;color:rgba(255,255,255,.74)!important;font:400 13px/1.6 var(--sans)!important}
+.gay-door b{margin-top:auto;padding-top:22px;color:#f7c966;font:700 9.5px/1.35 var(--sans);letter-spacing:.1em;text-transform:uppercase}
+@media(max-width:700px){.gay-door-grid{grid-template-columns:1fr}.gay-door{min-height:180px;padding:21px}.gay-door strong{font-size:26px}}
