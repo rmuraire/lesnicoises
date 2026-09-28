@@ -27,6 +27,15 @@ def patch_gateway(rel: str, lang: str) -> None:
 <section class="gay-guide-gateway" aria-label="Choose the right Mametas gay guide"><a class="gay-guide-gateway-main" href="/en/gay-nice/"><span class="gay-guide-gateway-kicker">NICE · DETAILED GUIDE</span><h3>Mostly staying in Nice? Go deeper.</h3><p>Bars, clubs, Nice Rainbow hotels, restaurants, beach, current calendar and local resources. A short selection, with addresses and practical links.</p><span class="gay-guide-gateway-cta">Open the detailed Gay Nice guide →</span></a><a class="gay-guide-gateway-side" href="/en/gay-french-riviera/5-day-itinerary/"><span class="gay-guide-gateway-kicker">COAST · 5 DAYS</span><h3>Touring the Riviera?</h3><p>Keep Nice as the LGBTQ+ base and build the rest of the coast around it.</p><span class="gay-guide-gateway-cta">Open the five-day itinerary →</span></a></section>'''
 
     if old not in text:
+        # V4 may already have replaced the two-card gateway with a richer
+        # decision hub. Preserve that newer editorial surface instead of
+        # treating it as a pipeline error.
+        v4_markers = (
+            "/en/gay-french-riviera/where-to-stay/" if lang == "en" else "/cote-dazur-gay/ou-dormir/",
+            "/en/gay-french-riviera/beaches-without-a-car/" if lang == "en" else "/cote-dazur-gay/plages-sans-voiture/",
+        )
+        if all(marker in text for marker in v4_markers):
+            return
         raise RuntimeError(f"{rel}: gay guide gateway anchor not found")
     text = text.replace(old, new, 1)
     save(rel, text, original)
@@ -104,14 +113,19 @@ def add_css() -> None:
 def validate() -> None:
     errors = []
     gateway_checks = {
-        "cote-dazur-gay/index.html": ("gay-guide-gateway", "Ouvrir le guide gay détaillé de Nice", "Ouvrir l’itinéraire cinq jours"),
-        "en/gay-french-riviera/index.html": ("gay-guide-gateway", "Open the detailed Gay Nice guide", "Open the five-day itinerary"),
+        "cote-dazur-gay/index.html": {
+            "legacy": ("gay-guide-gateway", "Ouvrir le guide gay détaillé de Nice", "Ouvrir l’itinéraire cinq jours"),
+            "v4": ("/cote-dazur-gay/ou-dormir/", "/cote-dazur-gay/plages-sans-voiture/", "/guide-gay-nice/", "/cote-dazur-gay/itineraire-5-jours/"),
+        },
+        "en/gay-french-riviera/index.html": {
+            "legacy": ("gay-guide-gateway", "Open the detailed Gay Nice guide", "Open the five-day itinerary"),
+            "v4": ("/en/gay-french-riviera/where-to-stay/", "/en/gay-french-riviera/beaches-without-a-car/", "/en/gay-nice/", "/en/gay-french-riviera/5-day-itinerary/"),
+        },
     }
-    for rel, needles in gateway_checks.items():
+    for rel, modes in gateway_checks.items():
         text = (ROOT / rel).read_text(encoding="utf-8")
-        for needle in needles:
-            if needle not in text:
-                errors.append(f"{rel}: missing {needle!r}")
+        if not (all(n in text for n in modes["legacy"]) or all(n in text for n in modes["v4"])):
+            errors.append(f"{rel}: missing both the legacy Gay Nice gateway and the V4 decision links")
 
     for rel in ("guide-gay-nice/index.html", "en/gay-nice/index.html"):
         text = (ROOT / rel).read_text(encoding="utf-8")
