@@ -5,6 +5,15 @@
 
   var fr = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0;
   var state = { base: 'any', style: 'any', geography: 'any', mobility: 'any', budget: 'any' };
+
+  function track(name, detail) {
+    if (typeof window.gtag !== 'function') return;
+    var payload = detail || {};
+    payload.tool = 'hotel_fit';
+    payload.page_language = fr ? 'fr' : 'en';
+    window.gtag('event', name, payload);
+  }
+
   var output = root.querySelector('[data-engine-output]');
   var results = root.querySelector('[data-engine-results]');
   var summary = root.querySelector('[data-engine-summary]');
@@ -532,6 +541,15 @@
         return;
       }
       render(shortlist, !payload.wholeBase, !!payload.relaxed);
+      track('hotel_fit_shortlist', {
+        base: state.base,
+        style: state.style,
+        geography: state.geography,
+        mobility: state.mobility,
+        budget: state.budget,
+        result_count: shortlist.length,
+        relaxed: !!payload.relaxed
+      });
       output.scrollIntoView({ behavior:'smooth', block:'start' });
     }).catch(function(){
       summary.textContent = labels.none;
@@ -557,6 +575,17 @@
         summary.textContent = labels.changed;
         output.hidden = true;
       }
+    });
+  });
+
+  root.addEventListener('click', function(event){
+    var affiliate = event.target.closest('[data-affiliate-network][data-affiliate-hotel]');
+    if (!affiliate) return;
+    track('affiliate_click', {
+      affiliate_network: affiliate.getAttribute('data-affiliate-network') || '',
+      hotel_id: affiliate.getAttribute('data-affiliate-hotel') || '',
+      page_path: window.location.pathname,
+      source_tool: 'hotel_fit'
     });
   });
 
