@@ -197,8 +197,8 @@ def css() -> None:
 def validate() -> None:
     errors = []
     checks = {
-        "en/good-finds/index.html": ("RIGHT NOW", "/en/practical/", "September 2026"),
-        "bons-plans/index.html": ("EN CE MOMENT", "/pratique/", "Septembre 2026"),
+        "en/good-finds/index.html": ("RIVIERA AGENDA", "/en/practical/", "September 2026"),
+        "bons-plans/index.html": ("AGENDA DE LA RIVIERA", "/pratique/", "Septembre 2026"),
         "en/hotels/without-a-car/index.html": ('data-phase3-owner="carfree"', "/plan/", "/en/practical/", "phase3-hotel-fit"),
         "hotels/sans-voiture/index.html": ('data-phase3-owner="carfree"', "/fr/planifier/", "/pratique/", "phase3-hotel-fit"),
         "en/riviera-guide/nice/index.html": ("This section chooses the neighbourhood, not the hotel.", "/en/hotels/finder/?base=nice", "Practical airport guide"),
