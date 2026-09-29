@@ -201,6 +201,7 @@ jobs:
               "base à Nice, Villefranche": "point de chute à Nice, Villefranche",
               "une base, sans voiture": "un point de chute, sans voiture",
               "garde Nice comme base": "garde Nice comme point de chute",
+              "en faire la base solo": "en faire le point de chute solo",
           }
           for old_text,new_text in replacements.items():
               src=src.replace(old_text,new_text)
