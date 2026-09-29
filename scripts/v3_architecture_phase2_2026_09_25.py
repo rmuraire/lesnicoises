@@ -383,8 +383,8 @@ def validate() -> None:
     for rel, needles in {
         "plan/index.html": ("Build the trip before you fill the days.", "/en/riviera-fit/", "/en/practical/"),
         "fr/planifier/index.html": ("Construisez le voyage avant de remplir les journées.", "/riviera-fit/", "/pratique/"),
-        "en/practical/index.html": ("Make the trip work without the cagades.", "RIGHT NOW", "/en/good-finds/train-or-bus/"),
-        "pratique/index.html": ("Faites fonctionner le voyage sans cagade.", "RIGHT NOW", "/bons-plans/train-ou-bus/"),
+        "en/practical/index.html": ("Make the trip work without the cagades.", "RIVIERA AGENDA", "/en/good-finds/train-or-bus/"),
+        "pratique/index.html": ("Faites fonctionner le voyage sans cagade.", "AGENDA DE LA RIVIERA", "/bons-plans/train-ou-bus/"),
         "en/hotels/index.html": ("stay-base-grid", "MAMETAS HOTEL FIT"),
         "hotels/index.html": ("stay-base-grid", "MAMETAS HOTEL FIT"),
         "en/hotels/finder/index.html": ("engine-base-gate", "Riviera Fit"),
