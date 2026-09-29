@@ -188,6 +188,22 @@ jobs:
           p=Path("scripts/v4_solo_female_vertical_2026_09_29.py")
           src=p.read_text(encoding="utf-8")
           src=src.replace("s.find('class=\"lgbtq-banner\"')","s.find('class=\"lgbtq-banner')")
+          replacements = {
+              "Meilleure première base : Nice": "Meilleur premier point de chute : Nice",
+              "Choisissez la base en pensant au soir": "Choisissez le point de chute en pensant au soir",
+              "La base solo la plus facile.": "Le point de chute solo le plus simple.",
+              "c’est la base solo la plus simple": "c’est le point de chute solo le plus simple",
+              "Une base, quatre journées faciles": "Un point de chute, quatre journées faciles",
+              "Une bonne base à Cannes": "Un bon point de chute à Cannes",
+              "pas la base la plus efficace de toute la côte": "pas le point de chute le plus efficace de toute la côte",
+              "Base : Nice, 5 nuits": "Point de chute : Nice, 5 nuits",
+              "meilleure base, sécurité": "meilleur point de chute, sécurité",
+              "base à Nice, Villefranche": "point de chute à Nice, Villefranche",
+              "une base, sans voiture": "un point de chute, sans voiture",
+              "garde Nice comme base": "garde Nice comme point de chute",
+          }
+          for old_text,new_text in replacements.items():
+              src=src.replace(old_text,new_text)
           p.write_text(src,encoding="utf-8")
           PY
           python scripts/v4_solo_female_vertical_2026_09_29.py
