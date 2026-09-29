@@ -5,6 +5,7 @@
   var LEGACY_STORAGE_KEY = "mametas_analytics_consent";
   var ANALYTICS_ID = "G-9FXW5HMLWG";
   var DRIVE_SRC = "https://tp-em.com/NTcyMzE4.js?t=572318";
+  var REDDIT_PIXEL_ID = "a2_jr8g4j8mr9v5";
   var language = (document.documentElement.lang || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
   var analyticsLoaded = false;
   var driveLoaded = false;
@@ -19,7 +20,7 @@
     privacy:"En savoir plus",
     privacyUrl:"/fr/confidentialite/",
     analytics:"Cookies de mesure d’audience",
-    analyticsHelp:"Sans accord, Analytics reste sans cookie. Avec votre accord, les cookies Analytics permettent une mesure plus complète.",
+    analyticsHelp:"Sans accord, Analytics reste sans cookie. Avec votre accord, Google Analytics et, sur les visites issues de nos campagnes Reddit, le pixel Reddit peuvent mesurer plus complètement le parcours.",
     drive:"Outils affiliés intelligents",
     driveHelp:"Travelpayouts Drive analyse le contenu et l’usage du site pour proposer ou optimiser des éléments d’affiliation."
   } : {
@@ -33,7 +34,7 @@
     privacy:"Learn more",
     privacyUrl:"/privacy/",
     analytics:"Audience measurement cookies",
-    analyticsHelp:"Without permission, Analytics remains cookieless. With permission, Analytics cookies allow fuller measurement.",
+    analyticsHelp:"Without permission, Analytics remains cookieless. With permission, Google Analytics and, on visits from our Reddit campaigns, the Reddit Pixel can measure the journey more fully.",
     drive:"Smart affiliate tools",
     driveHelp:"Travelpayouts Drive analyses site content and usage to add or optimise affiliate elements."
   };
@@ -107,6 +108,35 @@
     document.head.appendChild(script);
   }
 
+  function isRedditCampaignLanding(){
+    var path = window.location.pathname.replace(/\/+$/,"/");
+    if(path !== "/en/riviera-fit/")return false;
+    try{
+      var params = new URLSearchParams(window.location.search);
+      return params.get("utm_source") === "reddit" || !!params.get("rdt_cid");
+    }catch(error){
+      return false;
+    }
+  }
+
+  function loadRedditPixel(){
+    if(!isRedditCampaignLanding() || window.rdt || document.querySelector('script[data-mametas-reddit-pixel]'))return;
+    !function(w,d){
+      if(!w.rdt){
+        var p=w.rdt=function(){p.sendEvent?p.sendEvent.apply(p,arguments):p.callQueue.push(arguments)};
+        p.callQueue=[];
+        var t=d.createElement("script");
+        t.src="https://www.redditstatic.com/ads/pixel.js?pixel_id="+REDDIT_PIXEL_ID;
+        t.async=true;
+        t.setAttribute("data-mametas-reddit-pixel","true");
+        var s=d.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(t,s);
+      }
+    }(window,document);
+    window.rdt("init",REDDIT_PIXEL_ID);
+    window.rdt("track","PageVisit");
+  }
+
   function removeAnalyticsCookies(){
     document.cookie.split(";").forEach(function(part){
       var name = part.split("=")[0].trim();
@@ -127,6 +157,7 @@
 
   function applyChoices(value){
     setAnalyticsConsent(!!value.analytics);
+    if(value.analytics)loadRedditPixel();
     if(value.drive)loadDrive();
   }
 
