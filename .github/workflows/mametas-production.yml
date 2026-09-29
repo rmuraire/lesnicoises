@@ -601,7 +601,7 @@ jobs:
                   'Five choices. A short, explained selection.',
               ),
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
-                  'What is changing on the Riviera now.',
+                  'RIVIERA AGENDA',
                   'Looking for the practical stuff?',
                   'September 2026',
               ),
