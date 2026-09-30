@@ -239,6 +239,9 @@ jobs:
       - name: Apply solo/practical layout closure
         run: python scripts/v4_solo_practical_layout_closure_2026_09_30.py
 
+      - name: Add traveller voices across guides
+        run: python scripts/v4_traveller_voices_2026_09_30.py
+
       - name: Audit Hotel Fit coverage
         run: python scripts/v3_hotel_fit_coverage_audit_2026_09_25.py
 
