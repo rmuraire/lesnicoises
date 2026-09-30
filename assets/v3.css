@@ -788,3 +788,6 @@ button { color: inherit; font: inherit; }
   .mametas-share-row{margin-top:14px}
   .mametas-share-button{padding:10px 13px;font-size:10px}
 }
+
+/* Homepage Hotel Fit traveller voice — 2026-09-30 */
+.stay-card--voice{background:#17365f;color:#fff}.stay-card--voice .stay-voice-side{min-height:210px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;background:#17365f;border-right:1px solid rgba(255,255,255,.18)}.stay-card--voice .stay-voice-side small{color:#f7c966}.stay-card--voice .stay-voice-side span{color:#f7c966;font-family:var(--serif);font-size:88px;line-height:.58}.stay-card--voice .stay-card-copy small{color:#f7c966}.stay-card--voice .stay-card-copy h3{color:#fff;font-size:26px}.stay-card--voice .stay-card-copy>p{color:rgba(255,255,255,.8)}.stay-card--voice .catch{border-top-color:rgba(255,255,255,.2)!important;color:#fff!important}.stay-card--voice .catch b{color:#f7c966!important}@media(max-width:720px){.stay-card--voice .stay-voice-side{min-height:110px}.stay-card--voice .stay-voice-side span{font-size:64px}}
