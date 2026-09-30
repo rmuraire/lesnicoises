@@ -233,6 +233,9 @@ jobs:
       - name: Apply Safety and solo female authority layer
         run: python scripts/v4_safety_solo_authority_2026_09_30.py
 
+      - name: Apply solo/practical layout closure
+        run: python scripts/v4_solo_practical_layout_closure_2026_09_30.py
+
       - name: Audit Hotel Fit coverage
         run: python scripts/v3_hotel_fit_coverage_audit_2026_09_25.py
 
