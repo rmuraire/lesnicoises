@@ -331,3 +331,121 @@
   if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded',addDialectLink);
   else addDialectLink();
 })();
+
+/* Mametas editorial sharing — 2026-09-30 */
+(function () {
+  if (window.__mametasShareReady) return;
+  window.__mametasShareReady = true;
+
+  var path = window.location.pathname;
+  var isFrench = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
+
+  function isChildOf(prefix) {
+    return path.indexOf(prefix) === 0 && path !== prefix;
+  }
+
+  function isShareable() {
+    if (
+      path === "/" || path === "/fr/" ||
+      path === "/en/riviera-fit/" || path === "/riviera-fit/" ||
+      path.indexOf("/en/hotels/") === 0 || path.indexOf("/hotels/") === 0 ||
+      path.indexOf("/stay/") === 0 || path.indexOf("/fr/dormir/") === 0
+    ) return false;
+
+    if (
+      path.indexOf("/en/solo-female-french-riviera/") === 0 ||
+      path.indexOf("/cote-dazur-femme-solo/") === 0 ||
+      path.indexOf("/en/gay-french-riviera/") === 0 ||
+      path.indexOf("/cote-dazur-gay/") === 0 ||
+      path.indexOf("/en/gay-nice/") === 0 ||
+      path.indexOf("/guide-gay-nice/") === 0
+    ) return true;
+
+    return [
+      "/en/explore/", "/explore/",
+      "/en/riviera-guide/", "/riviera-guide/",
+      "/en/good-finds/", "/bons-plans/",
+      "/en/culture/", "/culture/",
+      "/en/beaches/", "/plages/",
+      "/plan/", "/fr/planifier/",
+      "/en/practical/", "/pratique/"
+    ].some(isChildOf);
+  }
+
+  if (!isShareable()) return;
+
+  var main = document.querySelector("main");
+  var h1 = main && main.querySelector("h1");
+  if (!main || !h1 || main.querySelector("[data-mametas-share]")) return;
+
+  var canonical = document.querySelector('link[rel="canonical"]');
+  var shareUrl = canonical && canonical.href
+    ? canonical.href
+    : window.location.origin + window.location.pathname;
+  var shareTitle = h1.textContent.trim() + " — Mametas";
+
+  var row = document.createElement("div");
+  row.className = "mametas-share-row";
+  row.setAttribute("data-mametas-share", "");
+  row.innerHTML =
+    '<button class="mametas-share-button" type="button">' +
+      (isFrench ? "Partager ce guide" : "Share this guide") +
+    '</button>' +
+    '<span class="mametas-share-status" role="status" aria-live="polite"></span>';
+
+  var hero = h1.closest(".article-hero, .page-hero, .hero, .hero-copy") || h1.parentElement;
+  var anchor = hero && hero.querySelector(".article-deck, .lead, .standfirst");
+  (anchor || h1).insertAdjacentElement("afterend", row);
+
+  var button = row.querySelector(".mametas-share-button");
+  var status = row.querySelector(".mametas-share-status");
+
+  function track(method) {
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "share_guide", {
+        method: method,
+        page_path: window.location.pathname
+      });
+    }
+  }
+
+  function copied() {
+    status.textContent = isFrench ? "Lien copié" : "Link copied";
+    window.setTimeout(function () { status.textContent = ""; }, 2400);
+    track("copy_link");
+  }
+
+  function copyFallback() {
+    var input = document.createElement("textarea");
+    input.value = shareUrl;
+    input.setAttribute("readonly", "");
+    input.style.position = "fixed";
+    input.style.opacity = "0";
+    document.body.appendChild(input);
+    input.select();
+    try {
+      document.execCommand("copy");
+      copied();
+    } finally {
+      input.remove();
+    }
+  }
+
+  button.addEventListener("click", function () {
+    if (navigator.share) {
+      navigator.share({ title: shareTitle, url: shareUrl }).then(function () {
+        track("native_share");
+      }).catch(function (error) {
+        if (!error || error.name !== "AbortError") copyFallback();
+      });
+      return;
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(shareUrl).then(copied).catch(copyFallback);
+      return;
+    }
+
+    copyFallback();
+  });
+})();
