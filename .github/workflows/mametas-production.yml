@@ -233,6 +233,9 @@ jobs:
       - name: Apply Safety and solo female authority layer
         run: python scripts/v4_safety_solo_authority_2026_09_30.py
 
+      - name: Add solo traveller voices
+        run: python scripts/v4_solo_verbatims_2026_09_30.py
+
       - name: Apply solo/practical layout closure
         run: python scripts/v4_solo_practical_layout_closure_2026_09_30.py
 
