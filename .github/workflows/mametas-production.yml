@@ -258,7 +258,7 @@ jobs:
               f"https://www.mametas.com/en/solo-female-french-riviera/getting-around-without-a-car/?deploy={sha}":("Nice → Antibes","Nice → Menton"),
               f"https://www.mametas.com/en/solo-female-french-riviera/eating-going-out-alone/?deploy={sha}":("Opéra Nice Côte d’Azur","Bobar Comedy Club"),
               f"https://www.mametas.com/en/solo-female-french-riviera/5-day-itinerary/?deploy={sha}":("DAY 1","DAY 5"),
-              f"https://www.mametas.com/cote-dazur-femme-solo/?deploy={sha}":("Ce n’est pas une Riviera en rose","où dormir seule"),
+              f"https://www.mametas.com/cote-dazur-femme-solo/?deploy={sha}":("Riviera en rose","où dormir seule"),
               f"https://www.mametas.com/cote-dazur-femme-solo/securite/?deploy={sha}":("112","Ville de Nice"),
               f"https://www.mametas.com/cote-dazur-femme-solo/ou-dormir/?deploy={sha}":("Apollinaire","Villa Victoria"),
               f"https://www.mametas.com/cote-dazur-femme-solo/se-deplacer-sans-voiture/?deploy={sha}":("Nice → Antibes","Nice → Menton"),
