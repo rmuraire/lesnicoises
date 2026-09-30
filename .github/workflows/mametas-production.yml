@@ -219,6 +219,11 @@ jobs:
           base64 -d scripts/v4_cosmetic_cleanup_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_cosmetic_cleanup_2026_09_30.py
           python scripts/v4_cosmetic_cleanup_2026_09_30.py
 
+      - name: Apply final layout refinement
+        run: |
+          base64 -d scripts/v4_layout_refinement_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_layout_refinement_2026_09_30.py
+          python scripts/v4_layout_refinement_2026_09_30.py
+
       - name: Audit Hotel Fit coverage
         run: python scripts/v3_hotel_fit_coverage_audit_2026_09_25.py
 
