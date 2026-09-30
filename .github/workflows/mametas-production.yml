@@ -215,6 +215,7 @@ jobs:
           python scripts/v4_restructure_explore_practical_2026_09_30.py
 
       - name: Apply cosmetic closure
+        continue-on-error: true
         run: |
           base64 -d scripts/v4_cosmetic_cleanup_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_cosmetic_cleanup_2026_09_30.py
           python scripts/v4_cosmetic_cleanup_2026_09_30.py
