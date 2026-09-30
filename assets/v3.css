@@ -731,3 +731,20 @@ button { color: inherit; font: inherit; }
     line-height:1.42!important
   }
 }
+
+/* Explore bridge + global editorial credit parity — 2026-09-30 */
+.explore-practical-bridge .practical-bridge-inner{border-top:0!important;padding-top:0!important}
+.practical-safety-entry .practical-feature-card--safety{grid-template-columns:1fr!important}
+.practical-safety-entry .practical-feature-copy{padding:30px 34px!important}
+.article-visual figcaption,
+.booking-highlight-visual figcaption,
+.beach-place-visual figcaption,
+.beach-photo-credit{
+  margin-top:6px!important;
+  color:#5f6570!important;
+  font-size:9px!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.4!important;
+  text-transform:none!important
+}

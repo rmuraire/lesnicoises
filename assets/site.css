@@ -683,3 +683,32 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .gay-door p{margin:0!important;color:rgba(255,255,255,.74)!important;font:400 13px/1.6 var(--sans)!important}
 .gay-door b{margin-top:auto;padding-top:22px;color:#f7c966;font:700 9.5px/1.35 var(--sans);letter-spacing:.1em;text-transform:uppercase}
 @media(max-width:700px){.gay-door-grid{grid-template-columns:1fr}.gay-door{min-height:180px;padding:21px}.gay-door strong{font-size:26px}}
+
+/* Global editorial spacing + photo-credit parity — 2026-09-30 */
+.article .standfirst{margin-bottom:24px!important}
+.article .place{padding:20px 0 18px!important}
+.article .place h3{margin:0 0 6px!important}
+.article .place .why{margin:4px 0 10px!important;line-height:1.4!important}
+.article figure figcaption,
+.hotel-hero-media figcaption,
+.culture-hero-media figcaption,
+.booking-highlight-visual figcaption,
+.beach-place-visual figcaption,
+.beach-photo-credit{
+  margin-top:6px!important;
+  color:#5f6570!important;
+  font-family:var(--sans,Inter,Arial,sans-serif)!important;
+  font-size:9px!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.4!important;
+  text-transform:none!important
+}
+.solo-female-hero{margin:18px 0 30px!important}
+.solo-female-hero figcaption{margin-top:5px!important}
+.solo-research-context .research-note{margin-top:13px!important;color:rgba(255,255,255,.74)!important;font-family:var(--sans,Inter,Arial,sans-serif)!important;font-size:11px!important;line-height:1.55!important}
+.solo-research-context .research-note a{color:#fff!important}
+@media(max-width:650px){
+  .article .standfirst{margin-bottom:22px!important}
+  .article .place{padding:18px 0 16px!important}
+}

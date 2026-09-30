@@ -1,71 +1,83 @@
+# -*- coding: utf-8 -*-
 from pathlib import Path
-import re
 
-ROOT = Path(__file__).resolve().parents[1] if 'scripts' in Path(__file__).parts else Path.cwd()
-STAMP = 'safety-solo-authority-2026-09-30'
+ROOT = Path(__file__).resolve().parents[1]
 
-
-def write(path, text):
-    p = ROOT / path
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(text, encoding='utf-8')
-
-
-def patch(path, transform):
+def patch(path, func):
     p = ROOT / path
     if not p.exists():
-        print('skip missing', path)
+        print("skip missing", path)
         return
-    s = p.read_text(encoding='utf-8')
-    ns = transform(s)
+    s = p.read_text(encoding="utf-8")
+    ns = func(s)
     if ns != s:
-        p.write_text(ns, encoding='utf-8')
-        print('patched', path)
+        p.write_text(ns, encoding="utf-8")
+        print("patched", path)
     else:
-        print('unchanged', path)
+        print("unchanged", path)
 
-
-def inject_before_once(s, marker, block, token):
-    if token in s:
-        return s
-    if marker not in s:
+def before_once(s, marker, block, token):
+    if token in s or marker not in s:
         return s
     return s.replace(marker, block + marker, 1)
 
+research_en = """<div class="verdict solo-research-context" data-layer="solo-research-context-2026-09-30"><span class="label">WHY THIS GUIDE EXISTS</span><p><strong>Solo travel is usually about autonomy, not isolation.</strong> In a 2024 peer-reviewed study of 250 solo travellers, independence and flexibility were the most-cited pre-pandemic motivation (54%), while safety was one of the leading constraints (38.8%). A separate peer-reviewed study of middle-aged and senior women travelling solo found that destination choice was shaped by perceived risk, with safety and health prioritised, alongside comfort, amenities and accessibility.</p><p class="research-note">Research context, not a claim about every traveller: <a href="https://doi.org/10.1108/CBTH-01-2024-0029" target="_blank" rel="nofollow noopener">Nirkow &amp; Abbasian, 2024</a> ¬∑ <a href="https://doi.org/10.1007/s12062-024-09450-z" target="_blank" rel="nofollow noopener">Maiurro &amp; Brand√£o, 2025</a>.</p></div>"""
+research_fr = """<div class="verdict solo-research-context" data-layer="solo-research-context-2026-09-30"><span class="label">POURQUOI CE GUIDE EXISTE</span><p><strong>Voyager seule rel√®ve d'abord de l'autonomie, pas de l'isolement.</strong> Dans une √©tude √©valu√©e par les pairs publi√©e en 2024 aupr√®s de 250 voyageurs solo, l'ind√©pendance et la flexibilit√© √©taient la motivation la plus cit√©e avant la pand√©mie (54 %), tandis que la s√©curit√© faisait partie des principales contraintes (38,8 %). Une autre √©tude, centr√©e sur des femmes d'√¢ge m√ªr et seniors voyageant seules, montre que le choix de destination est influenc√© par le risque per√ßu, avec la s√©curit√© et la sant√© en priorit√©, mais aussi le confort, les √©quipements et l'accessibilit√©.</p><p class="research-note">Contexte de recherche, sans g√©n√©raliser √† toutes les voyageuses : <a href="https://doi.org/10.1108/CBTH-01-2024-0029" target="_blank" rel="nofollow noopener">Nirkow &amp; Abbasian, 2024</a> ¬∑ <a href="https://doi.org/10.1007/s12062-024-09450-z" target="_blank" rel="nofollow noopener">Maiurro &amp; Brand√£o, 2025</a>.</p></div>"""
 
-def safety_page(lang='en'):
-    en = lang == 'en'
-    if en:
-        title='French Riviera safety & emergencies: numbers, theft, fire, sea | Mametas'
-        desc='What to do if something goes wrong on the French Riviera: emergency numbers, police, medical help, fire, sea rescue, theft and digital safety.'
-        canonical='https://www.mametas.com/en/practical/safety-emergencies/'
-        fr_alt='https://www.mametas.com/pratique/securite-urgences/'
-        h1='If something goes wrong on the Riviera.'
-        deck='The numbers to save, the service to call and the next practical step - without turning a holiday into a risk manual.'
-        nav='''<header class="v3-header"><div class="v3-header-inner"><a class="v3-brand" href="/" aria-label="Mametas, home"><span class="v3-brand-name">Mametas</span><span class="v3-brand-line">They know the Riviera.</span></a><nav class="v3-nav" aria-label="Primary navigation"><ul><li><a href="/plan/">Plan</a></li><li><a href="/en/riviera-guide/">Places</a></li><li><a href="/en/hotels/">Stay</a></li><li><a href="/en/explore/">Explore</a></li><li><a href="/en/practical/" aria-current="page">Practical</a></li></ul></nav><div class="lang-switch"><a href="/pratique/securite-urgences/">FR</a><span>/</span><a href="/en/practical/safety-emergencies/" aria-current="page">EN</a></div></div></header>'''
-        content='''
-<section class="v3-section"><div class="wrap">
-<div class="section-heading"><div><p class="eyebrow">SAVE THESE FIRST</p><h2>Emergency numbers that actually matter.</h2></div><p>For immediate danger, do not search for the ‚Äúright‚Äù local office first. Use the national emergency service and let them route the call.</p></div>
-<div class="practical-core-grid">
-<div class="architecture-card"><span>EUROPEAN EMERGENCY</span><h3>112</h3><p>Police, medical or fire emergency. Free, 24/7. French authorities state that 112 operators can speak French or English.</p></div>
-<div class="architecture-card"><span>POLICE</span><h3>17</h3><p>Police or gendarmerie when rapid intervention is needed.</p></div>
-<div class="architecture-card"><span>MEDICAL</span><h3>15</h3><p>SAMU for urgent medical assistance.</p></div>
-<div class="architecture-card"><span>FIRE / RESCUE</span><h3>18</h3><p>Fire brigade, including accidents and emergencies on land.</p></div>
-<div class="architecture-card"><span>CAN'T SPEAK ALOUD</span><h3>114</h3><p>Emergency service by SMS/app for people who cannot speak or hear, including situations where speaking aloud is impossible.</p></div>
-<div class="architecture-card"><span>AT SEA</span><h3>196</h3><p>CROSS sea rescue from the coast or by phone. At sea, VHF channel 16 is the preferred contact.</p></div>
-</div></div></section>
-<section class="v3-section"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">THEFT OR ASSAULT</p><h2>Separate the emergency from the admin.</h2></div><p>If someone is in danger, call first. Paperwork comes second.</p></div>
-<div class="practical-core-grid"><div class="architecture-card"><span>STOLEN / LOST</span><h3>Phone, wallet or documents</h3><p>Block bank cards and the SIM/eSIM, secure the phone account, then report the theft to police or gendarmerie. For a non-urgent report, use the nearest police station rather than 17.</p></div><div class="architecture-card"><span>VICTIM SUPPORT</span><h3>116 006</h3><p>France Victimes support and orientation for victims of offences. In mainland France the service is free and available every day, 9:00‚Äì20:00.</p></div><div class="architecture-card"><span>WOMEN</span><h3>3919</h3><p>Violences Femmes Info: free, anonymous listening and orientation, 24/7. It is not an emergency line: use 17 or 112 for immediate danger.</p></div></div>
-</div></section>
-<section class="v3-section"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">DIGITAL BACKUP</p><h2>Lose the phone, not the trip.</h2></div><p>Before travelling, keep the hotel address, passport/ID copy, bank emergency numbers and one trusted contact available somewhere other than the phone itself.</p></div><p>French cyber-safety guidance advises avoiding sensitive transactions on public Wi-Fi where possible. If a phone disappears, secure the account and SIM quickly; do not wait until you are back at the hotel.</p></div></section>
-<section class="v3-section"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">OFFICIAL SOURCES</p><h2>Useful, not exhaustive.</h2></div><p>These are the national services most relevant to a visitor. Local offices change; national emergency numbers do not.</p></div><p><a href="https://www.service-public.fr/particuliers/actualites/A17758" target="_blank" rel="nofollow noopener">Service-Public: emergency numbers ‚Üí</a><br><a href="https://www.service-public.fr/particuliers/vosdroits/F33953" target="_blank" rel="nofollow noopener">Service-Public: police and 112/114 ‚Üí</a><br><a href="https://www.mer.gouv.fr/surveillance-et-sauvetage-en-mer" target="_blank" rel="nofollow noopener">French maritime authority: 196 and CROSS ‚Üí</a><br><a href="https://www.cybermalveillance.gouv.fr/tous-nos-contenus/bonnes-pratiques/reseaux-sociaux" target="_blank" rel="nofollow noopener">Cybermalveillance.gouv.fr: public Wi-Fi precautions ‚Üí</a></p></div></section>'''
-        footer='''<footer class="v3-footer"><div class="wrap"><div class="footer-grid"><div class="footer-brand"><span class="v3-brand-name">Mametas</span><p>Independent Riviera decisions, with the unnecessary options removed.</p></div><div class="footer-col"><h2>Decide</h2><a href="/plan/">Plan</a><a href="/en/riviera-fit/">Riviera Fit</a><a href="/en/hotels/">Stay</a></div><div class="footer-col"><h2>Understand</h2><a href="/en/riviera-guide/">Places</a><a href="/en/explore/">Explore</a><a href="/en/practical/">Practical</a></div></div><div class="footer-bottom"><span>Official sources checked September 2026.</span><span>¬© 2026 Mametas</span></div></div></footer>'''
-    else:
-        title='S√©curit√© C√¥te d‚ÄôAzur : urgences, vol, incendie, mer | Mametas'
-        desc='Que faire en cas de probl√®me sur la C√¥te d‚ÄôAzur : num√©ros d‚Äôurgence, police, aide m√©dicale, incendie, secours en mer, vol et s√©curit√© num√©rique.'
-        canonical='https://www.mametas.com/pratique/securite-urgences/'
-        fr_alt=canonical
-        h1='Si quelque chose tourne mal sur la Riviera.'
-        deck='Les num√©ros √† enregistrer, le service √† appeler et l‚Äô√©tape suivante - sans transformer les vacances en manuel de risques.'
-        nav='''<header class="v3-header"><div class="v3-header-inner"><a class="v3-brand" href="/fr/" aria-label="Mametas, accueil"><span class="v3-brand-name">Mametas</span><span class="v3-brand-line">They know the Riviera.</span>≤»="25Q!LÅ!-19ΩÕ¡Ö∏¯Ò†Ã¯ƒƒÿÄ¿¿ÿΩ†Ã¯Ò¿˘…ÖπçîÅY•ç—•µïÃÅÕ’¡¡Ω…–ÅÖπêÅΩ…•ïπ—Ö—•Ω∏ÅôΩ»ÅŸ•ç—•µÃÅΩòÅΩôôïπçïÃ∏Å%∏ÅµÖ•π±ÖπêÅ…ÖπçîÅ—°îÅÕï…Ÿ•çîÅ•ÃÅô…ïîÅÖπêÅÖŸÖ•±Öâ±îÅïŸï…‰ÅëÖ‰∞Ä¿‰Ë¿√äL»¿Ë¿¿∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘]=58ΩÕ¡Ö∏¯Ò†Ã¯Ã‰ƒ‰Ω†Ã¯Ò¿˘Y•Ω±ïπçïÃÅïµµïÃÅ%πôºËÅô…ïî∞ÅÖπΩπÂµΩ’ÃÅ±•Õ—ïπ•πúÅÖπêÅΩ…•ïπ—Ö—•Ω∏∞Ä»–º‹∏Å%–Å•ÃÅπΩ–ÅÖ∏Åïµï…ùïπç‰Å±•πîËÅ’ÕîÄƒ‹ÅΩ»Äƒƒ»ÅôΩ»Å•µµïë•Ö—îÅëÖπùï»∏Ω¿¯Ωë•ÿ¯Ωë•ÿ¯(Ωë•ÿ¯ΩÕïç—•Ω∏¯(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˘%%Q0Å	-U@Ω¿¯Ò†»˘1ΩÕîÅ—°îÅ¡°Ωπî∞ÅπΩ–Å—°îÅ—…•¿∏Ω†»¯Ωë•ÿ¯Ò¿˘	ïôΩ…îÅ—…ÖŸï±±•πú∞Å≠ïï¿Å—°îÅ°Ω—ï∞ÅÖëë…ïÕÃ∞Å¡ÖÕÕ¡Ω…–Ω%ÅçΩ¡‰∞ÅâÖπ¨Åïµï…ùïπç‰Åπ’µâï…ÃÅÖπêÅΩπîÅ—…’Õ—ïêÅçΩπ—Öç–ÅÖŸÖ•±Öâ±îÅÕΩµï›°ï…îÅΩ—°ï»Å—°Ö∏Å—°îÅ¡°ΩπîÅ•—Õï±ò∏Ω¿¯Ωë•ÿ¯Ò¿˘…ïπç†ÅçÂâï»µÕÖôï—‰Åù’•ëÖπçîÅÖëŸ•ÕïÃÅÖŸΩ•ë•πúÅÕïπÕ•—•ŸîÅ—…ÖπÕÖç—•ΩπÃÅΩ∏Å¡’â±•åÅ]§µ§Å›°ï…îÅ¡ΩÕÕ•â±î∏Å%òÅÑÅ¡°ΩπîÅë•ÕÖ¡¡ïÖ…Ã∞ÅÕïç’…îÅ—°îÅÖççΩ’π–ÅÖπêÅM%4Å≈’•ç≠±‰ÏÅëºÅπΩ–Å›Ö•–Å’π—•∞ÅÂΩ‘ÅÖ…îÅâÖç¨ÅÖ–Å—°îÅ°Ω—ï∞∏Ω¿¯Ωë•ÿ¯ΩÕïç—•Ω∏¯(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˘=%%0ÅM=UILΩ¿¯Ò†»˘UÕïô’∞∞ÅπΩ–Åï·°Ö’Õ—•Ÿî∏Ω†»¯Ωë•ÿ¯Ò¿˘Q°ïÕîÅÖ…îÅ—°îÅπÖ—•ΩπÖ∞ÅÕï…Ÿ•çïÃÅµΩÕ–Å…ï±ïŸÖπ–Å—ºÅÑÅŸ•Õ•—Ω»∏Å1ΩçÖ∞ÅΩôô•çïÃÅç°ÖπùîÏÅπÖ—•ΩπÖ∞Åïµï…ùïπç‰Åπ’µâï…ÃÅëºÅπΩ–∏Ω¿¯Ωë•ÿ¯Ò¿¯ÒÑÅ°…ïòÙâ°——¡ÃËºΩ››‹πÕï…Ÿ•çîµ¡’â±•åπô»Ω¡Ö…—•ç’±•ï…ÃΩÖç—’Ö±•—ïÃΩƒ‹‹‘‡àÅ—Ö…ùï–Ùâ}â±Öπ¨àÅ…ï∞ÙâπΩôΩ±±Ω‹ÅπΩΩ¡ïπï»à˘Mï…Ÿ•çîµA’â±•åËÅïµï…ùïπç‰Åπ’µâï…ÃÉäHΩÑ¯Òâ»¯ÒÑÅ°…ïòÙâ°——¡ÃËºΩ››‹πÕï…Ÿ•çîµ¡’â±•åπô»Ω¡Ö…—•ç’±•ï…ÃΩŸΩÕë…Ω•—ÃΩÃÃ‰‘ÃàÅ—Ö…ùï–Ùâ}â±Öπ¨àÅ…ï∞ÙâπΩôΩ±±Ω‹ÅπΩΩ¡ïπï»à˘Mï…Ÿ•çîµA’â±•åËÅ¡Ω±•çîÅÖπêÄƒƒ»ºƒƒ–ÉäHΩÑ¯Òâ»¯ÒÑÅ°…ïòÙâ°——¡ÃËºΩ››‹πµï»πùΩ’ÿπô»ΩÕ’…Ÿï•±±Öπçîµï–µÕÖ’Ÿï—Öùîµï∏µµï»àÅ—Ö…ùï–Ùâ}â±Öπ¨àÅ…ï∞ÙâπΩôΩ±±Ω‹ÅπΩΩ¡ïπï»à˘…ïπç†ÅµÖ…•—•µîÅÖ’—°Ω…•—‰ËÄƒ‰ÿÅÖπêÅI=MLÉäHΩÑ¯Òâ»¯ÒÑÅ°…ïòÙâ°——¡ÃËºΩ››‹πçÂâï…µÖ±Ÿï•±±ÖπçîπùΩ’ÿπô»Ω—Ω’ÃµπΩÃµçΩπ—ïπ’ÃΩâΩππïÃµ¡…Ö—•≈’ïÃΩ…ïÕïÖ’‡µÕΩç•Ö’‡àÅ—Ö…ùï–Ùâ}â±Öπ¨àÅ…ï∞ÙâπΩôΩ±±Ω‹ÅπΩΩ¡ïπï»à˘Ââï…µÖ±Ÿï•±±ÖπçîπùΩ’ÿπô»ËÅ¡’â±•åÅ]§µ§Å¡…ïçÖ’—•ΩπÃÉäHΩÑ¯Ω¿¯Ωë•ÿ¯ΩÕïç—•Ω∏¯úúú(ÄÄÄÄÄÄÄÅôΩΩ—ï»ÙúúúÒôΩΩ—ï»Åç±ÖÕÃÙâÿÃµôΩΩ—ï»à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâôΩΩ—ï»µù…•êà¯Òë•ÿÅç±ÖÕÃÙâôΩΩ—ï»µâ…Öπêà¯ÒÕ¡Ö∏Åç±ÖÕÃÙâÿÃµâ…ÖπêµπÖµîà˘5Öµï—ÖÃΩÕ¡Ö∏¯Ò¿˘%πëï¡ïπëïπ–ÅI•Ÿ•ï…ÑÅëïç•Õ•ΩπÃ∞Å›•—†Å—°îÅ’ππïçïÕÕÖ…‰ÅΩ¡—•ΩπÃÅ…ïµΩŸïê∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâôΩΩ—ï»µçΩ∞à¯Ò†»˘ïç•ëîΩ†»¯ÒÑÅ°…ïòÙàΩ¡±Ö∏ºà˘A±Ö∏ΩÑ¯ÒÑÅ°…ïòÙàΩï∏Ω…•Ÿ•ï…Ñµô•–ºà˘I•Ÿ•ï…ÑÅ•–ΩÑ¯ÒÑÅ°…ïòÙàΩï∏Ω°Ω—ï±Ãºà˘M—Ö‰ΩÑ¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâôΩΩ—ï»µçΩ∞à¯Ò†»˘Uπëï…Õ—ÖπêΩ†»¯ÒÑÅ°…ïòÙàΩï∏Ω…•Ÿ•ï…Ñµù’•ëîºà˘A±ÖçïÃΩÑ¯ÒÑÅ°…ïòÙàΩï∏Ωï·¡±Ω…îºà˘·¡±Ω…îΩÑ¯ÒÑÅ°…ïòÙàΩï∏Ω¡…Öç—•çÖ∞ºà˘A…Öç—•çÖ∞ΩÑ¯Ωë•ÿ¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâôΩΩ—ï»µâΩ——Ω¥à¯ÒÕ¡Ö∏˘=ôô•ç•Ö∞ÅÕΩ’…çïÃÅç°ïç≠ïêÅMï¡—ïµâï»Ä»¿»ÿ∏ΩÕ¡Ö∏¯ÒÕ¡Ö∏˚
-§Ä»¿»ÿÅ5Öµï—ÖÃΩÕ¡Ö∏¯Ωë•ÿ¯Ωë•ÿ¯ΩôΩΩ—ï»¯úúú(ÄÄÄÅï±ÕîË(ÄÄÄÄÄÄÄÅ—•—±îÙùO•ç’…•”§Å——îÅìäeÖÈ’»ÄËÅ’…ùïπçïÃ∞ÅŸΩ∞∞Å•πçïπë•î∞Åµï»ÅÅ5Öµï—ÖÃú(ÄÄÄÄÄÄÄÅëïÕåÙùE’îÅôÖ•…îÅï∏ÅçÖÃÅëîÅ¡…Ωâ≥°µîÅÕ’»Å±ÑÅ——îÅìäeÖÈ’»ÄËÅπ’∑•…ΩÃÅìäe’…ùïπçî∞Å¡Ω±•çî∞ÅÖ•ëîÅ∑•ë•çÖ±î∞Å•πçïπë•î∞ÅÕïçΩ’…ÃÅï∏Åµï»∞ÅŸΩ∞Åï–Åœ•ç’…•”§Åπ’∑•…•≈’î∏ú(ÄÄÄÄÄÄÄÅçÖπΩπ•çÖ∞Ùù°——¡ÃËºΩ››‹πµÖµï—ÖÃπçΩ¥Ω¡…Ö—•≈’îΩÕïç’…•—îµ’…ùïπçïÃºú(ÄÄÄÄÄÄÄÅô…}Ö±–ıçÖπΩπ•çÖ∞(ÄÄÄÄÄÄÄÅ†ƒÙùM§Å≈’ï±≈’îÅç°ΩÕîÅ—Ω’…πîÅµÖ∞ÅÕ’»Å±ÑÅI•Ÿ•ï…Ñ∏ú(ÄÄÄÄÄÄÄÅëïç¨Ùù1ïÃÅπ’∑•…ΩÃÉÄÅïπ…ïù•Õ—…ï»∞Å±îÅÕï…Ÿ•çîÉÄÅÖ¡¡ï±ï»Åï–Å≥äg•—Ö¡îÅÕ’•ŸÖπ—îÄ¥ÅÕÖπÃÅ—…ÖπÕôΩ…µï»Å±ïÃÅŸÖçÖπçïÃÅï∏ÅµÖπ’ï∞ÅëîÅ…•Õ≈’ïÃ∏ú(ÄÄÄÄÄÄÄÅπÖÿÙúúÒ°ïÖëï»Åç±ÖÕÃÙâÿÃµ°ïÖëï»à¯Òë•ÿÅç±ÖÕÃÙâÿÃµ°ïÖëï»µ•ππï»à¯ÒÑÅç±ÖÕÃÙâÿÃµâ…ÖπêàÅ°…ïòÙàΩô»ºàÅÖ…•Ñµ±Öâï∞Ùâ5Öµï—ÖÃ∞ÅÖçç’ï•∞à¯ÒÕ¡Ö∏Åç±ÖÕÃÙâÿÃµâ…ÖπêµπÖµîà˘5Öµï—ÖÃΩÕ¡Ö∏¯ÒÕ¡Ö∏Åç±ÖÕÃÙâÿÃµâ…Öπêµ±•πîà˘Q°ï‰Å≠πΩ‹Å—°îÅI•Ÿ•ï…Ñ∏ΩÕ¡Ö∏¯ΩÑ¯ÒπÖÿÅç±ÖÕÃÙâÿÃµπÖÿàÅÖ…•Ñµ±Öâï∞Ùâ9ÖŸ•ùÖ—•Ω∏Å¡…•πç•¡Ö±îà¯Ò’∞¯Ò±§¯ÒÑÅ°…ïòÙàΩô»Ω¡±Öπ•ô•ï»ºà˘AÀ•¡Ö…ï»ΩÑ¯Ω±§¯Ò±§¯ÒÑÅ°…ïòÙàΩ…•Ÿ•ï…Ñµù’•ëîºà˘ïÕ—•πÖ—•ΩπÃΩÑ¯Ω±§¯Ò±§¯ÒÑÅ°…ïòÙàΩ°Ω—ï±Ãºà˘Ω…µ•»ΩÑ¯Ω±§¯Ò±§¯ÒÑÅ°…ïòÙàΩï·¡±Ω…îºà˘·¡±Ω…ï»ΩÑ¯Ω±§¯Ò±§¯ÒÑÅ°…ïòÙàΩ¡…Ö—•≈’îºàÅÖ…•Ñµç’……ïπ–Ùâ¡Öùîà˘A…Ö—•≈’îΩÑ¯Ω±§¯Ω’∞¯ΩπÖÿ¯Òë•ÿÅç±ÖÕÃÙâ±ÖπúµÕ›•—ç†à¯ÒÑÅ°…ïòÙàΩ¡…Ö—•≈’îΩÕïç’…•—îµ’…ùïπçïÃºàÅÖ…•Ñµç’……ïπ–Ùâ¡Öùîà˘HΩÑ¯ÒÕ¡Ö∏¯ºΩÕ¡Ö∏¯ÒÑÅ°…ïòÙàΩï∏Ω¡…Öç—•çÖ∞ΩÕÖôï—‰µïµï…ùïπç•ïÃºà˘8ΩÑ¯Ωë•ÿ¯Ωë•ÿ¯Ω°ïÖëï»¯úú(ÄÄÄÄÄÄÄÅçΩπ—ïπ–Ùúúú(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˚ Å9I%MQIHΩ¿¯Ò†»˘1ïÃÅπ’∑•…ΩÃÅìäe’…ùïπçîÅ≈’§ÅçΩµ¡—ïπ–ÅŸ…Ö•µïπ–∏Ω†»¯Ωë•ÿ¯Ò¿˘∏ÅçÖÃÅëîÅëÖπùï»Å•µ∑•ë•Ö–∞ÅπîÅç°ï…ç°ïËÅ¡ÖÃÅìäeÖâΩ…êÅ±îÅâΩ∏ÅçΩµµ•ÕÕÖ…•Ö–Å±ΩçÖ∞ÄËÅ’—•±•ÕïËÅ±îÅÕï…Ÿ•çîÅπÖ—•ΩπÖ∞Åï–Å±Ö•ÕÕïËµ±îÅΩ…•ïπ—ï»Å≥äeÖ¡¡ï∞∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâ¡…Öç—•çÖ∞µçΩ…îµù…•êà¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘UI9ÅUI=C%99ΩÕ¡Ö∏¯Ò†Ã¯ƒƒ»Ω†Ã¯Ò¿˘AΩ±•çî∞Å’…ùïπçîÅ∑•ë•çÖ±îÅΩ‘Å•πçïπë•î∏Å…Ö—’•–∞Ä»—†º»–∏Å1ïÃÅÖ’—Ω…•”•ÃÅô…ÖªùÖ•ÕïÃÅ¡À•ç•Õïπ–Å≈’îÅ±ïÃÅΩ√•…Ö—ï’…ÃÅë‘Äƒƒ»Å¡ï’Ÿïπ–ÅÀ•¡Ωπë…îÅï∏Åô…ÖªùÖ•ÃÅΩ‘Åï∏ÅÖπù±Ö•Ã∏Ω¿¯Ωë•ÿ¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘A=1%ΩÕ¡Ö∏¯Ò†Ã¯ƒ‹Ω†Ã¯Ò¿˘AΩ±•çîÅΩ‘ÅùïπëÖ…µï…•îÅ±Ω…Õ≈◊äe’πîÅ•π—ï…Ÿïπ—•Ω∏Å…Ö¡•ëîÅïÕ–Åªé•çïÕÕÖ•…î∏Ω¿¯Ωë•ÿ¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘7%%0ΩÕ¡Ö∏¯Ò†Ã¯ƒ‘Ω†Ã¯Ò¿˘M5TÅ¡Ω’»Å’πîÅ’…ùïπçîÅ∑•ë•çÖ±î∏Ω¿¯Ωë•ÿ¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘%99%ÄºÅM=UILΩÕ¡Ö∏¯Ò†Ã¯ƒ‡Ω†Ã¯Ò¿˘MÖ¡ï’…Ãµ¡Ωµ¡•ï…Ã∞ÅπΩ—Öµµïπ–ÅÖçç•ëïπ—ÃÅï–Å’…ùïπçïÃÉÄÅ—ï……î∏Ω¿¯Ωë•ÿ¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘%5A=MM%	1ÅAI1HΩÕ¡Ö∏¯Ò†Ã¯ƒƒ–Ω†Ã¯Ò¿˘U…ùïπçîÅ¡Ö»ÅM5LΩÖ¡¿Å¡Ω’»Å±ïÃÅ¡ï…ÕΩππïÃÅ≈’§ÅπîÅ¡ï’Ÿïπ–Å¡ÖÃÅ¡Ö…±ï»ÅΩ‘Åïπ—ïπë…î∞Å‰ÅçΩµ¡…•ÃÅ±Ω…Õ≈◊äe’πîÅÕ•—’Ö—•Ω∏Å…ïπêÅ•µ¡ΩÕÕ•â±îÅëîÅ¡Ö…±ï»ÉÄÅŸΩ•‡Å°Ö’—î∏Ω¿¯Ωë•ÿ¯(Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘8Å5HΩÕ¡Ö∏¯Ò†Ã¯ƒ‰ÿΩ†Ã¯Ò¿˘MïçΩ’…ÃÅï∏Åµï»ÅI=MLÅëï¡’•ÃÅ±îÅ±•——Ω…Ö∞ÅΩ‘Å¡Ö»Å”•≥•¡°Ωπî∏Å∏Åµï»∞Å±ÑÅY!ÅçÖπÖ∞ÄƒÿÅ…ïÕ—îÅ±îÅµΩÂï∏Å¡…•Ω…•—Ö•…î∏Ω¿¯Ωë•ÿ¯(Ωë•ÿ¯Ωë•ÿ¯ΩÕïç—•Ω∏¯(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˘Y=0Å=TÅIMM%=8Ω¿¯Ò†»˘O•¡Ö…ïËÅ≥äe’…ùïπçîÅëîÅ≥äeÖëµ•π•Õ—…Ö—•ò∏Ω†»¯Ωë•ÿ¯Ò¿˘M§Å≈’ï±≈”äe’∏ÅïÕ–Åï∏ÅëÖπùï»∞ÅÖ¡¡ï±ïËÅìäeÖâΩ…ê∏Å1ïÃÅì•µÖ…ç°ïÃÅŸ•ïππïπ–ÅïπÕ’•—î∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâ¡…Öç—•çÖ∞µçΩ…îµù…•êà¯Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘Y=0ÄÄºÅAIQΩÕ¡Ö∏¯Ò†Ã˘S•≥•¡°Ωπî∞Å¡Ω…—ïôï’•±±îÅΩ‘Å¡Ö¡•ï…ÃΩ†Ã¯Ò¿˘	±Ω≈’ïËÅçÖ…—ïÃÅâÖπçÖ•…ïÃÅï–ÅM%4ΩïM%4∞Åœ•ç’…•ÕïËÅ±îÅçΩµ¡—îÅë‘Å”•≥•¡°Ωπî∞Å¡’•ÃÅì•ç±Ö…ïËÅ±îÅŸΩ∞ÉÄÅ±ÑÅ¡Ω±•çîÅΩ‘ÉÄÅ±ÑÅùïπëÖ…µï…•î∏Å!Ω…ÃÅ’…ùïπçî∞ÅçΩπ—Öç—ïËÅ±îÅçΩµµ•ÕÕÖ…•Ö–Å±îÅ¡±’ÃÅ¡…Ωç°îÅ¡±’”—–Å≈’îÅ±îÄƒ‹∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘%ÅU`ÅY%Q%5LΩÕ¡Ö∏¯Ò†Ã¯ƒƒÿÄ¿¿ÿΩ†Ã¯Ò¿˘…ÖπçîÅY•ç—•µïÃÉ•çΩ’—îÅï–ÅΩ…•ïπ—îÅ±ïÃÅŸ•ç—•µïÃÅìäe•πô…Öç—•ΩπÃ∏Å∏Å∑•—…Ω¡Ω±î∞Å±îÅÕï…Ÿ•çîÅïÕ–Åù…Ö—’•–Åï–Å©Ω•ùπÖâ±îÅ—Ω’ÃÅ±ïÃÅ©Ω’…ÃÅëîÄÂ†ÉÄÄ»¡†∏Ω¿¯Ωë•ÿ¯Òë•ÿÅç±ÖÕÃÙâÖ…ç°•—ïç—’…îµçÖ…êà¯ÒÕ¡Ö∏˘55LΩÕ¡Ö∏¯Ò†Ã¯Ã‰ƒ‰Ω†Ã¯Ò¿˘Y•Ω±ïπçïÃÅïµµïÃÅ%πôºÄËÉ•çΩ’—îÅï–ÅΩ…•ïπ—Ö—•Ω∏Åù…Ö—’•—ïÃÅï–ÅÖπΩπÂµïÃ∞Ä»—†º»–∏ÅîÅªäeïÕ–Å¡ÖÃÅ’πîÅ±•ùπîÅìäe’…ùïπçîÄËÅçΩµ¡ΩÕïËÅ±îÄƒ‹ÅΩ‘Å±îÄƒƒ»Åï∏ÅçÖÃÅëîÅëÖπùï»Å•µ∑•ë•Ö–∏Ω¿¯Ωë•ÿ¯Ωë•ÿ¯Ωë•ÿ¯ΩÕïç—•Ω∏¯(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˘A18ÅÅ9U7%I%EUΩ¿¯Ò†»˘Aï…ëïËÅ±îÅ”•≥•¡°Ωπî∞Å¡ÖÃÅ±îÅŸΩÂÖùî∏Ω†»¯Ωë•ÿ¯Ò¿˘ŸÖπ–ÅëîÅ¡Ö…—•»∞ÅùÖ…ëïËÅ≥äeÖë…ïÕÕîÅëîÅ≥äe£——ï∞∞Å’πîÅçΩ¡•îÅëïÃÅ¡Ö¡•ï…Ã∞Å±ïÃÅπ’∑•…ΩÃÅìäeΩ¡¡ΩÕ•—•Ω∏ÅâÖπçÖ•…îÅï–Å’∏ÅçΩπ—Öç–ÅëîÅçΩπô•ÖπçîÅÖ•±±ï’…ÃÅ≈’îÅëÖπÃÅ±îÅ”•≥•¡°ΩπîÅ±’§µ∑©µî∏Ω¿¯Ωë•ÿ¯Ò¿˘1ïÃÅ…ïçΩµµÖπëÖ—•ΩπÃÅô…ÖªùÖ•ÕïÃÅëîÅçÂâï…œ•ç’…•”§ÅçΩπÕï•±±ïπ–ÅìäC•Ÿ•—ï»ÅÖ’—Öπ–Å≈’îÅ¡ΩÕÕ•â±îÅ±ïÃÅΩ√•…Ö—•ΩπÃÅÕïπÕ•â±ïÃÅÕ’»Å±ïÃÅ]§µ§Å¡’â±•çÃ∏ÅM§Å±îÅ”•≥•¡°ΩπîÅë•Õ¡Ö…áπ–∞Åœ•ç’…•ÕïËÅ…Ö¡•ëïµïπ–Å±îÅçΩµ¡—îÅï–Å±ÑÅM%4∏Ω¿¯Ωë•ÿ¯ΩÕïç—•Ω∏¯(ÒÕïç—•Ω∏Åç±ÖÕÃÙâÿÃµÕïç—•Ω∏à¯Òë•ÿÅç±ÖÕÃÙâ›…Ö¿à¯Òë•ÿÅç±ÖÕÃÙâÕïç—•Ω∏µ°ïÖë•πúà¯Òë•ÿ¯Ò¿Åç±ÖÕÃÙâïÂïâ…Ω‹à˘M=UILÅ=%%11LΩ¿¯Ò†»˘U—•±î∞Å¡ÖÃÅï·°Ö’Õ—•ò∏Ω†»¯Ωë•ÿ¯Ò¿˘îÅÕΩπ–Å±ïÃÅÕï…Ÿ•çïÃÅπÖ—•ΩπÖ’‡Å±ïÃÅ¡±’ÃÅ¡ï…—•πïπ—ÃÅ¡Ω’»Å’∏ÅŸ•Õ•—ï’»∏Å1ïÃÅÖë…ïÕÕïÃÅ±ΩçÖ±ïÃÅç°Öπùïπ–ÄÏÅ±ïÃÅπ’∑•…ΩÃÅπÖ—•ΩπÖ’‡∞ÅπΩ∏∏Ω¿¯Ωë•ÿ¯Ò¿¯ÒÑÅ°…ïòÙâ°——¡ÃËºΩ››‹πÕï…Ÿ•çîµ¡’â±•åπô»Ω¡Ö…—•ç’±•ï…ÃΩÖç—’Ö±•—ïÃΩƒ‹‹‘‡àÅ—Ö…ùï–Ùâ}â±Öπ¨àÅ…ï∞ÙâπΩôΩ±±Ω‹ÅπΩΩ¡ïπï»à˘Mï…Ÿ•çîµA’â±•åÄËÅπ’∑•…ΩÃÅìäe’…ùïπçîÉäHΩÑ¯Òâ»öÜ∑üÜ€i≥ˇ√Æ¯úzõõñ'Ø˙ZÆÿú∫XûÆœÔ¢«k¢+l¸]˜˜ùÌj∏µπZûJﬁñz¢Yh¬z(•Èﬁ≠'´æ'>ÊÂâ hñ'◊]û∑]x˝¶Îjﬁ~m¶œˇ√&z∏(∫˜Î˛À´ΩË•ï©‹yÎljÎﬁµ®zyûÆ÷´ÅÎ
+friction_en = """<h2 data-layer="solo-friction-50plus-2026-09-30">If comfort matters more than proving a point</h2><p>For many experienced solo travellers - especially later in life - the useful filter is not ‚Äúcan I do it?‚Äù but ‚Äúhow much friction do I want?‚Äù Check whether the hotel has a lift, how steep the final approach is, how far it really is from the station with luggage, and whether a late dinner creates a long walk home. Build one lighter day into an ambitious itinerary. Comfort is not the opposite of independence; it often protects it.</p>"""
+friction_fr = """<h2 data-layer="solo-friction-50plus-2026-09-30">Si le confort compte plus que de se prouver quelque chose</h2><p>Pour beaucoup de voyageuses solo exp√©riment√©es - notamment avec l'√¢ge - la bonne question n'est pas ¬´ est-ce que je peux ? ¬ª, mais ¬´ combien de friction est-ce que je veux ? ¬ª. V√©rifiez l'ascenseur, la pente r√©elle vers l'h√¥tel, la distance gare-h√¥tel avec une valise et le trajet apr√®s un d√Æner tardif. Gardez une journ√©e plus l√©g√®re dans un programme ambitieux. Le confort n'est pas l'oppos√© de l'ind√©pendance ; il la prot√®ge souvent.</p>"""
+
+digital_en = """<h2 data-layer="solo-digital-safety-2026-09-30">One boring backup that earns its place</h2><p>Keep the hotel address, a copy of your ID, bank emergency numbers and one trusted contact somewhere other than the phone itself. Avoid sensitive transactions on public Wi-Fi where possible. And save the French emergency numbers before you need them. <a href="/en/practical/safety-emergencies/">Open the Riviera Safety &amp; Emergencies page ‚Üí</a></p>"""
+digital_fr = """<h2 data-layer="solo-digital-safety-2026-09-30">Le plan B ennuyeux qui m√©rite sa place</h2><p>Gardez l'adresse de l'h√¥tel, une copie de vos papiers, les num√©ros d'opposition bancaire et un contact de confiance ailleurs que dans le t√©l√©phone lui-m√™me. √âvitez les op√©rations sensibles sur les Wi-Fi publics quand c'est possible. Et enregistrez les num√©ros d'urgence fran√ßais avant d'en avoir besoin. <a href="/pratique/securite-urgences/">Ouvrir la page S√©curit√© &amp; urgences ‚Üí</a></p>"""
+
+def solo_en(s):
+    s = before_once(s, '<h2>Six useful doors</h2>', research_en + friction_en, 'solo-research-context-2026-09-30')
+    s = before_once(s, '<div class="sources"><h2>Sources checked</h2>', digital_en, 'solo-digital-safety-2026-09-30')
+    return s
+
+def solo_fr(s):
+    s = before_once(s, '<h2>Six portes utiles</h2>', research_fr + friction_fr, 'solo-research-context-2026-09-30')
+    s = before_once(s, '<div class="sources"><h2>Sources v√©rifi√©es</h2>', digital_fr, 'solo-digital-safety-2026-09-30')
+    return s
+
+practical_en = """<section class="v3-section practical-safety-entry" data-layer="safety-practical-entry-2026-09-30"><div class="wrap"><a class="practical-feature-card practical-feature-card--safety" href="/en/practical/safety-emergencies/"><span class="practical-feature-copy"><small>IF SOMETHING GOES WRONG</small><strong>Emergency numbers, theft, fire, sea rescue and the next useful step.</strong><p>Save the numbers once. Then forget this page unless you need it.</p><b>Open Safety &amp; Emergencies ‚Üí</b></span></a></div></section>
+"""
+practical_fr = """<section class="v3-section practical-safety-entry" data-layer="safety-practical-entry-2026-09-30"><div class="wrap"><a class="practical-feature-card practical-feature-card--safety" href="/pratique/securite-urgences/"><span class="practical-feature-copy"><small>SI QUELQUE CHOSE TOURNE MAL</small><strong>Urgences, vol, incendie, secours en mer et la prochaine √©tape utile.</strong><p>Enregistrez les num√©ros une fois. Puis oubliez cette page sauf si vous en avez besoin.</p><b>Ouvrir S√©curit√© &amp; urgences ‚Üí</b></span></a></div></section>
+"""
+
+def practical_patch_en(s):
+    marker = '<section class="v3-section"><div class="wrap">\n<div class="section-heading"><div><p class="eyebrow">SOURCES &amp; STUDIES</p>'
+    return before_once(s, marker, practical_en, 'safety-practical-entry-2026-09-30')
+
+def practical_patch_fr(s):
+    marker = '<section class="v3-section"><div class="wrap">\n<div class="section-heading"><div><p class="eyebrow">SOURCES &amp; √âTUDES</p>'
+    return before_once(s, marker, practical_fr, 'safety-practical-entry-2026-09-30')
+
+def safety_sub_en(s):
+    block = '<p class="mini-rule" data-layer="safety-general-link-2026-09-30">For medical, fire, sea rescue, theft and victim-support contacts beyond the solo-female context, <a href="/en/practical/safety-emergencies/">open the general Riviera Safety &amp; Emergencies page ‚Üí</a></p>\n'
+    return before_once(s, '<h2>Three things we would actually do</h2>', block, 'safety-general-link-2026-09-30')
+
+def safety_sub_fr(s):
+    block = '<p class="mini-rule" data-layer="safety-general-link-2026-09-30">Pour les contacts m√©dicaux, incendie, secours en mer, vol et aide aux victimes au-del√† du seul contexte femme solo, <a href="/pratique/securite-urgences/">ouvrez la page g√©n√©rale S√©curit√© &amp; urgences ‚Üí</a></p>\n'
+    return before_once(s, '<h2>Trois choses que nous ferions vraiment</h2>', block, 'safety-general-link-2026-09-30')
+
+patch('en/solo-female-french-riviera/index.html', solo_en)
+patch('cote-dazur-femme-solo/index.html', solo_fr)
+patch('en/practical/index.html', practical_patch_en)
+patch('pratique/index.html', practical_patch_fr)
+patch('en/solo-female-french-riviera/safety/index.html', safety_sub_en)
+patch('cote-dazur-femme-solo/securite/index.html', safety_sub_fr)
+
+sp = ROOT / 'sitemap.xml'
+if sp.exists():
+    s = sp.read_text(encoding='utf-8')
+    additions = []
+    for url in ['https://www.mametas.com/en/practical/safety-emergencies/','https://www.mametas.com/pratique/securite-urgences/']:
+        if url not in s:
+            additions.append('<url><loc>'+url+'</loc></url>')
+    if additions and '</urlset>' in s:
+        s = s.replace('</urlset>', ''.join(additions) + '</urlset>')
+        sp.write_text(s, encoding='utf-8')
+        print('patched sitemap.xml')
+
+print('safety / solo authority layer complete')
