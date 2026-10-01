@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -55,8 +56,7 @@ for rel in (
     text = path.read_text(encoding="utf-8")
     original = text
     text = inject_once(text, SHARE_CSS, "</head>")
-    text = text.replace("/assets/v3.js?v=0.7", "/assets/v3.js?v=0.8")
-    text = text.replace("/assets/riviera-chooser.js?v=9", "/assets/riviera-chooser.js?v=10")
+    text = re.sub(r'/assets/riviera-chooser\.js(?:\?v=[^"]+)?', '/assets/riviera-chooser.js?v=14', text)
     if text != original:
         path.write_text(text, encoding="utf-8")
         changed += 1
