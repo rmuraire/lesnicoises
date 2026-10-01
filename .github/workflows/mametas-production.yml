@@ -32,6 +32,9 @@ jobs:
       - name: Install deployment dependency
         run: python -m pip install --disable-pip-version-check --quiet paramiko pillow
 
+      - name: Repair Gay Riviera visual asset
+        run: python scripts/repair_gay_riviera_asset.py
+
       - name: Materialize Explore refonte assets
         run: |
           unzip -oq refonte-assets-ready-for-github.zip -d .
