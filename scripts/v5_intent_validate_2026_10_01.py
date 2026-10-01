@@ -52,6 +52,12 @@ for rel, route, alt in pairs:
     if not faq_ok: errors.append(f'{rel}: invalid FAQPage schema')
     if s.count('<table') != s.count('</table>'): errors.append(f'{rel}: table tags unbalanced')
     if s.count('<details>') != s.count('</details>'): errors.append(f'{rel}: details tags unbalanced')
+    if s.count('<ul') != s.count('</ul>'): errors.append(f'{rel}: ul tags unbalanced')
+    if '—' in s: errors.append(f'{rel}: em dash outside house style')
+    source_match=re.search(r'<div class="sources">([\s\S]*?)</div>',s)
+    if source_match:
+        hrefs=re.findall(r'href="([^"]+)"',source_match.group(1))
+        if len(hrefs) != len(set(hrefs)): errors.append(f'{rel}: duplicate source links')
 
 en=(ROOT/'en/explore/index.html').read_text(encoding='utf-8')
 fr=(ROOT/'explore/index.html').read_text(encoding='utf-8')
