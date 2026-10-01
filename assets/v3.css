@@ -749,19 +749,21 @@ button { color: inherit; font: inherit; }
   text-transform:none!important
 }
 
-/* Mametas editorial sharing — 2026-09-30 */
+/* Mametas sharing — final pass 2026-10-01 */
 .mametas-share-row{
   display:flex;
   align-items:center;
+  flex-wrap:wrap;
   gap:10px;
   margin:16px 0 2px;
+  color:inherit;
 }
 .mametas-share-button{
   appearance:none;
-  border:1px solid rgba(20,33,61,.26);
+  border:1px solid currentColor;
   border-radius:999px;
   background:transparent;
-  color:#14213d;
+  color:inherit;
   cursor:pointer;
   font-family:var(--sans,Inter,Arial,sans-serif);
   font-size:11px;
@@ -770,19 +772,23 @@ button { color: inherit; font: inherit; }
   line-height:1;
   padding:11px 15px;
   text-transform:uppercase;
-  transition:background .16s ease,border-color .16s ease,transform .16s ease;
+  transition:background .16s ease,transform .16s ease,opacity .16s ease;
 }
 .mametas-share-button:hover,
 .mametas-share-button:focus-visible{
-  background:rgba(20,33,61,.06);
-  border-color:#14213d;
+  background:rgba(127,127,127,.10);
   transform:translateY(-1px);
 }
+.mametas-share-button:focus-visible{
+  outline:2px solid currentColor;
+  outline-offset:3px;
+}
 .mametas-share-status{
-  color:#5f6570;
+  color:inherit;
   font-family:var(--sans,Inter,Arial,sans-serif);
   font-size:11px;
   line-height:1.35;
+  opacity:.72;
 }
 @media(max-width:650px){
   .mametas-share-row{margin-top:14px}

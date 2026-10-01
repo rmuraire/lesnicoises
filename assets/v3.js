@@ -332,120 +332,140 @@
   else addDialectLink();
 })();
 
-/* Mametas editorial sharing — 2026-09-30 */
+/* Mametas sharing — final pass 2026-10-01 */
 (function () {
   if (window.__mametasShareReady) return;
   window.__mametasShareReady = true;
 
-  var path = window.location.pathname;
+  var rawPath = window.location.pathname || "/";
+  var path = rawPath.endsWith("/") ? rawPath : rawPath + "/";
   var isFrench = (document.documentElement.lang || "").toLowerCase().indexOf("fr") === 0;
 
-  function isChildOf(prefix) {
-    return path.indexOf(prefix) === 0 && path !== prefix;
+  function begins(prefix) {
+    return path.indexOf(prefix) === 0;
   }
 
-  function isShareable() {
+  function isShareableEditorialPage() {
+    if (path === "/" || path === "/fr/") return false;
+
+    /* Tools get their own result-sharing treatment. */
     if (
-      path === "/" || path === "/fr/" ||
       path === "/en/riviera-fit/" || path === "/riviera-fit/" ||
-      path.indexOf("/en/hotels/") === 0 || path.indexOf("/hotels/") === 0 ||
-      path.indexOf("/stay/") === 0 || path.indexOf("/fr/dormir/") === 0
+      path === "/en/riviera-chooser/" || path === "/riviera-chooser/"
     ) return false;
 
+    /* Hotel pages are transactional rather than editorial sharing surfaces. */
     if (
-      path.indexOf("/en/solo-female-french-riviera/") === 0 ||
-      path.indexOf("/cote-dazur-femme-solo/") === 0 ||
-      path.indexOf("/en/gay-french-riviera/") === 0 ||
-      path.indexOf("/cote-dazur-gay/") === 0 ||
-      path.indexOf("/en/gay-nice/") === 0 ||
-      path.indexOf("/guide-gay-nice/") === 0
-    ) return true;
+      begins("/en/hotels/") || begins("/hotels/") ||
+      begins("/stay/") || begins("/fr/dormir/")
+    ) return false;
 
-    return [
+    var editorialRoots = [
       "/en/explore/", "/explore/",
       "/en/riviera-guide/", "/riviera-guide/",
       "/en/good-finds/", "/bons-plans/",
       "/en/culture/", "/culture/",
       "/en/beaches/", "/plages/",
+      "/en/day-trips/", "/escapades/",
       "/plan/", "/fr/planifier/",
-      "/en/practical/", "/pratique/"
-    ].some(isChildOf);
+      "/en/practical/", "/pratique/",
+      "/en/solo-female-french-riviera/", "/cote-dazur-femme-solo/",
+      "/en/gay-french-riviera/", "/cote-dazur-gay/",
+      "/en/gay-nice/", "/guide-gay-nice/"
+    ];
+
+    return editorialRoots.some(function (prefix) { return begins(prefix); });
   }
 
-  if (!isShareable()) return;
+  if (!isShareableEditorialPage()) return;
 
-  var main = document.querySelector("main");
-  var h1 = main && main.querySelector("h1");
-  if (!main || !h1 || main.querySelector("[data-mametas-share]")) return;
+  function mountShareButton() {
+    var main = document.querySelector("main");
+    var h1 = main && main.querySelector("h1");
+    if (!main || !h1 || main.querySelector("[data-mametas-share]")) return;
 
-  var canonical = document.querySelector('link[rel="canonical"]');
-  var shareUrl = canonical && canonical.href
-    ? canonical.href
-    : window.location.origin + window.location.pathname;
-  var shareTitle = h1.textContent.trim() + " — Mametas";
+    var canonical = document.querySelector('link[rel="canonical"]');
+    var shareUrl = canonical && canonical.href
+      ? canonical.href
+      : window.location.origin + window.location.pathname;
+    var shareTitle = h1.textContent.trim() + " — Mametas";
 
-  var row = document.createElement("div");
-  row.className = "mametas-share-row";
-  row.setAttribute("data-mametas-share", "");
-  row.innerHTML =
-    '<button class="mametas-share-button" type="button">' +
-      (isFrench ? "Partager ce guide" : "Share this guide") +
-    '</button>' +
-    '<span class="mametas-share-status" role="status" aria-live="polite"></span>';
+    var row = document.createElement("div");
+    row.className = "mametas-share-row";
+    row.setAttribute("data-mametas-share", "");
+    row.innerHTML =
+      '<button class="mametas-share-button" type="button" aria-label="' +
+        (isFrench ? "Partager cette page" : "Share this page") + '">' +
+        (isFrench ? "Partager ce guide" : "Share this guide") +
+      '</button>' +
+      '<span class="mametas-share-status" role="status" aria-live="polite"></span>';
 
-  var hero = h1.closest(".article-hero, .page-hero, .hero, .hero-copy") || h1.parentElement;
-  var anchor = hero && hero.querySelector(".article-deck, .lead, .standfirst");
-  (anchor || h1).insertAdjacentElement("afterend", row);
+    var hero = h1.closest(".article-hero, .page-hero, .hero, .hero-copy") || h1.parentElement;
+    var anchor = hero && hero.querySelector(".article-deck, .lead, .standfirst, .article-meta");
+    (anchor || h1).insertAdjacentElement("afterend", row);
 
-  var button = row.querySelector(".mametas-share-button");
-  var status = row.querySelector(".mametas-share-status");
+    var button = row.querySelector(".mametas-share-button");
+    var status = row.querySelector(".mametas-share-status");
 
-  function track(method) {
-    if (typeof window.gtag === "function") {
-      window.gtag("event", "share_guide", {
-        method: method,
-        page_path: window.location.pathname
-      });
+    function track(method) {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", "share_guide", {
+          method: method,
+          page_path: window.location.pathname
+        });
+      }
     }
+
+    function showStatus(message) {
+      status.textContent = message;
+      window.setTimeout(function () { status.textContent = ""; }, 2400);
+    }
+
+    function copied() {
+      showStatus(isFrench ? "Lien copié" : "Link copied");
+      track("copy_link");
+    }
+
+    function copyFallback() {
+      var input = document.createElement("textarea");
+      input.value = shareUrl;
+      input.setAttribute("readonly", "");
+      input.style.position = "fixed";
+      input.style.opacity = "0";
+      document.body.appendChild(input);
+      input.select();
+      try {
+        document.execCommand("copy");
+        copied();
+      } catch (error) {
+        showStatus(isFrench ? "Copiez le lien dans la barre d’adresse" : "Copy the link from the address bar");
+      } finally {
+        input.remove();
+      }
+    }
+
+    button.addEventListener("click", function () {
+      if (navigator.share) {
+        navigator.share({ title: shareTitle, url: shareUrl }).then(function () {
+          track("native_share");
+        }).catch(function (error) {
+          if (!error || error.name !== "AbortError") copyFallback();
+        });
+        return;
+      }
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(shareUrl).then(copied).catch(copyFallback);
+        return;
+      }
+
+      copyFallback();
+    });
   }
 
-  function copied() {
-    status.textContent = isFrench ? "Lien copié" : "Link copied";
-    window.setTimeout(function () { status.textContent = ""; }, 2400);
-    track("copy_link");
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mountShareButton, { once: true });
+  } else {
+    mountShareButton();
   }
-
-  function copyFallback() {
-    var input = document.createElement("textarea");
-    input.value = shareUrl;
-    input.setAttribute("readonly", "");
-    input.style.position = "fixed";
-    input.style.opacity = "0";
-    document.body.appendChild(input);
-    input.select();
-    try {
-      document.execCommand("copy");
-      copied();
-    } finally {
-      input.remove();
-    }
-  }
-
-  button.addEventListener("click", function () {
-    if (navigator.share) {
-      navigator.share({ title: shareTitle, url: shareUrl }).then(function () {
-        track("native_share");
-      }).catch(function (error) {
-        if (!error || error.name !== "AbortError") copyFallback();
-      });
-      return;
-    }
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(shareUrl).then(copied).catch(copyFallback);
-      return;
-    }
-
-    copyFallback();
-  });
 })();
