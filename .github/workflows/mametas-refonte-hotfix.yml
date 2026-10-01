@@ -127,7 +127,7 @@ jobs:
             "https://www.mametas.com/en/explore/french-riviera-proposal/":("refonte-2026/proposal.webp","kqzyfj.com/click-101875476-15734754"),
             "https://www.mametas.com/en/explore/living-antibes-expat/":("refonte-2026/expat-antibes.webp","kqzyfj.com/click-101875476-15734754"),
             "https://www.mametas.com/en/explore/retire-french-riviera/":("refonte-2026/retirement.webp","kqzyfj.com/click-101875476-15734754"),
-            "https://www.mametas.com/en/gay-french-riviera/":("Hotel Windsor","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/gay-french-riviera/":("Windsor","kqzyfj.com/click-101875476-15734754"),
             "https://www.mametas.com/en/solo-female-french-riviera/":("Booking.com","kqzyfj.com/click-101875476-15734754"),
           }
           for url,needles in page_checks.items():
