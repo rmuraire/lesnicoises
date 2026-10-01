@@ -263,6 +263,20 @@ jobs:
       - name: Apply V5 intent detail layout
         run: python scripts/v5_intent_layout_closure_2026_10_01.py
 
+      - name: Apply Explore intent hierarchy and affiliate refonte
+        run: |
+          base64 -d scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64 | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+          python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+
+      - name: Enforce CJ on every Booking reservation link
+        run: python scripts/booking_cj_enforce_all_2026_10_01.py
+
+      - name: Validate Explore refonte and Booking affiliation
+        run: |
+          base64 -d scripts/validate_intent_refonte_affiliation_2026_10_01.py.gz.b64 | gzip -dc > scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_booking_affiliation_2026_10_01.py
+
       - name: Add Daniel Hotel Fit homepage voice
         run: python scripts/v5_home_hotel_voice_2026_10_01.py
 
@@ -291,7 +305,7 @@ jobs:
                   return r.read().decode("utf-8","replace")
 
           consent=fetch("https://www.mametas.com/assets/consent.js?v=1.1")
-          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.1","data-mametas-share-layer"):
+          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.2","data-mametas-share-layer"):
               if token not in consent:
                   raise SystemExit(f"consent.js missing {token}")
 
@@ -300,7 +314,7 @@ jobs:
               if token not in share_js:
                   raise SystemExit(f"share.js missing {token}")
 
-          share_css=fetch("https://www.mametas.com/assets/share.css?v=1.1")
+          share_css=fetch("https://www.mametas.com/assets/share.css?v=1.2")
           for token in (".mametas-share-button",".chooser-share-row"):
               if token not in share_css:
                   raise SystemExit(f"share.css missing {token}")
@@ -326,7 +340,7 @@ jobs:
               "https://www.mametas.com/riviera-fit/?days=5&season=summer&mobility=nocar&mood=glamour&pace=balanced",
           ):
               body=fetch(url)
-              if "/assets/riviera-chooser.js?v=14" not in body or "/assets/share.css?v=1.1" not in body:
+              if "/assets/riviera-chooser.js?v=14" not in body or "/assets/share.css?v=1.2" not in body:
                   raise SystemExit(f"{url} missing final Riviera Fit Share assets")
 
           print("Mametas Share live checks passed")
