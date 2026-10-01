@@ -26,7 +26,7 @@ for rel, route, alt in pairs:
       '<header class="v3-header">','class="mobile-menu"','class="v3-footer"',
       'Mametas Checked',f'https://www.mametas.com{route}',f'https://www.mametas.com{alt}',
       '<div class="sources">','data-dense-v2="true"','class="intent-table"',
-      '"@type":"FAQPage"','class="intent-faq"','/assets/v3.css?v=2.10'
+      '"@type":"FAQPage"','class="intent-faq"','data-trend-2026="true"','/assets/v3.css?v=2.10'
     ]
     for token in required:
         if token not in s: errors.append(f'{rel}: missing {token}')
@@ -81,6 +81,8 @@ for rel in ('assets/v3.css','assets/site.css'):
         errors.append(f'{rel}: Daniel style missing')
     if 'V5 intent detail layout closure — 2026-10-01' not in css or '.intent-detail .intent-table' not in css or '.intent-detail .intent-faq' not in css:
         errors.append(f'{rel}: V5 dense detail styles missing')
+    if '.intent-detail .trend-2026' not in css or '.intent-detail .scouting-card' not in css:
+        errors.append(f'{rel}: V5 trend/scouting styles missing')
 
 if errors:
     print('\n'.join('ERROR '+e for e in errors))
