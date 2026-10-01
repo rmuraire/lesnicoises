@@ -304,6 +304,50 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
+      - name: Check V5 intent pillars live
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+
+          sha=os.environ.get("GITHUB_SHA","release")
+          paths=[
+              "/en/explore/french-riviera-honeymoon/",
+              "/explore/lune-de-miel-cote-d-azur/",
+              "/en/explore/french-riviera-babymoon/",
+              "/explore/babymoon-cote-d-azur/",
+              "/en/explore/french-riviera-proposal/",
+              "/explore/demande-en-mariage-cote-d-azur/",
+              "/en/explore/living-antibes-expat/",
+              "/explore/vivre-antibes-expatrie/",
+              "/en/explore/retire-french-riviera/",
+              "/explore/retraite-cote-d-azur/",
+          ]
+          errors=[]
+          for path in paths:
+              url=f"https://www.mametas.com{path}?deploy={sha}"
+              req=Request(url,headers={"User-Agent":"MametasReleaseCheck/1.0","Cache-Control":"no-cache"})
+              try:
+                  html=urlopen(req,timeout=20).read().decode("utf-8","replace")
+              except Exception as exc:
+                  errors.append(f"{path}: fetch failed: {exc}")
+                  continue
+              for token in ('data-dense-v2="true"','data-trend-2026="true"','class="intent-faq"','/assets/v3.css?v=2.10'):
+                  if token not in html:
+                      errors.append(f"{path}: missing {token}")
+          css_url=f"https://www.mametas.com/assets/v3.css?deploy={sha}"
+          try:
+              css=urlopen(Request(css_url,headers={"User-Agent":"MametasReleaseCheck/1.0","Cache-Control":"no-cache"}),timeout=20).read().decode("utf-8","replace")
+              for token in ('.intent-detail .intent-table','.intent-detail .intent-faq','.intent-detail .trend-2026','.intent-detail .scouting-card'):
+                  if token not in css:
+                      errors.append(f"v3.css missing {token}")
+          except Exception as exc:
+              errors.append(f"v3.css fetch failed: {exc}")
+          if errors:
+              raise SystemExit("\n".join("ERROR "+e for e in errors))
+          print("V5 intent pillars live check OK:",len(paths),"pages")
+          PY
+
       - name: Check solo female Riviera production
         run: |
           python - <<'PY'
