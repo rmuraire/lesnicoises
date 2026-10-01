@@ -1,0 +1,82 @@
+name: Mametas editorial style hotfix
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-style-hotfix.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-editorial-style-hotfix
+  cancel-in-progress: true
+
+jobs:
+  deploy-style:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Deploy editorial CSS
+        env:
+          MAMETAS_FORCE_FILES: assets/site.css;assets/v3.css
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify editorial CSS live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+
+          def fetch(url):
+              last=None
+              for _ in range(5):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasEditorialStyleCheck/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          body=r.read().decode("utf-8","replace")
+                          if r.status==200:
+                              return body
+                          last=f"HTTP {r.status}"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(3)
+              raise SystemExit(last)
+
+          for url in (
+              "https://www.mametas.com/assets/site.css?v=24.1",
+              "https://www.mametas.com/assets/v3.css?v=1.3",
+          ):
+              css=fetch(url)
+              for token in (
+                  "Editorial rhythm harmonisation",
+                  ".article-body .mini-rule",
+                  ".article-body .day-card",
+                  "font-size:clamp(30px,3.2vw,36px)",
+              ):
+                  if token not in css:
+                      raise SystemExit(f"{url} missing {token}")
+              print("Editorial CSS live:",url)
+          print("Mametas editorial style hotfix live")
+          PY
