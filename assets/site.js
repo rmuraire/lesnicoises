@@ -504,7 +504,7 @@
       return -1;
     }
     var active=activeIndex();
-    document.querySelectorAll('.v3-nav ul,.primary-nav ul,.mobile-nav ul').forEach(function(ul){
+    document.querySelectorAll('.v3-nav ul,.primary-nav ul,.mobile-nav ul,.mobile-menu nav ul').forEach(function(ul){
       ul.innerHTML='';
       items.forEach(function(item,i){
         var li=document.createElement('li');
