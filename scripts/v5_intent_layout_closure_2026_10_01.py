@@ -158,6 +158,132 @@ CSS=r'''
   font-size:14px;
   line-height:1.65;
 }
+.intent-detail .dense-v2{
+  margin-top:58px;
+  padding-top:8px;
+}
+.intent-detail .dense-intro{
+  margin:-4px 0 22px!important;
+  color:#6b6d72!important;
+  font-size:12px!important;
+  line-height:1.6!important;
+}
+.intent-detail .table-wrap{
+  width:100%;
+  margin:20px 0 36px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--line);
+  background:rgba(255,253,248,.55);
+}
+.intent-detail .intent-table{
+  width:100%;
+  min-width:660px;
+  border-collapse:collapse;
+  color:var(--ink-soft);
+  font-size:12.5px;
+  line-height:1.5;
+}
+.intent-detail .intent-table th{
+  padding:12px 14px;
+  background:var(--ink);
+  color:var(--white);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:.12em;
+  text-align:left;
+  text-transform:uppercase;
+  vertical-align:bottom;
+}
+.intent-detail .intent-table td{
+  padding:14px;
+  border-top:1px solid var(--line);
+  border-right:1px solid var(--line);
+  vertical-align:top;
+}
+.intent-detail .intent-table td:last-child,
+.intent-detail .intent-table th:last-child{
+  border-right:0;
+}
+.intent-detail .intent-table tbody tr:first-child td{
+  border-top:0;
+}
+.intent-detail .intent-table strong{
+  color:var(--ink);
+}
+.intent-detail .health-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:20px 0 34px;
+}
+.intent-detail .health-card{
+  padding:20px;
+  border:1px solid var(--line);
+  background:rgba(23,111,131,.06);
+}
+.intent-detail .health-card b{
+  display:block;
+  margin-bottom:8px;
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:18px;
+  font-weight:500;
+  line-height:1.2;
+}
+.intent-detail .health-card span{
+  display:block;
+  font-size:12px;
+  line-height:1.55;
+}
+.intent-detail .intent-faq{
+  margin:58px 0 10px;
+  padding-top:28px;
+  border-top:1px solid var(--line);
+}
+.intent-detail .intent-faq h2{
+  margin-top:0;
+}
+.intent-detail .intent-faq details{
+  border-top:1px solid var(--line);
+}
+.intent-detail .intent-faq details:last-child{
+  border-bottom:1px solid var(--line);
+}
+.intent-detail .intent-faq summary{
+  position:relative;
+  padding:17px 34px 17px 0;
+  color:var(--ink);
+  cursor:pointer;
+  font-family:var(--serif);
+  font-size:18px;
+  font-weight:500;
+  line-height:1.35;
+  list-style:none;
+}
+.intent-detail .intent-faq summary::-webkit-details-marker{
+  display:none;
+}
+.intent-detail .intent-faq summary::after{
+  content:"+";
+  position:absolute;
+  top:15px;
+  right:2px;
+  color:var(--blue-deep);
+  font-family:var(--sans);
+  font-size:20px;
+  font-weight:400;
+}
+.intent-detail .intent-faq details[open] summary::after{
+  content:"–";
+}
+.intent-detail .intent-faq details p{
+  margin:0 0 18px!important;
+  max-width:690px;
+  color:var(--ink-soft)!important;
+  font-size:14px;
+  line-height:1.68;
+}
 .intent-detail .sources{
   margin-top:58px;
   padding-top:25px;
@@ -247,6 +373,25 @@ CSS=r'''
   .intent-detail .culture-practical{
     margin:26px 0;
     padding:20px;
+  }
+  .intent-detail .health-grid{
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .intent-detail .table-wrap{
+    margin-left:calc(-1 * var(--gutter));
+    width:calc(100% + 2 * var(--gutter));
+    border-left:0;
+    border-right:0;
+  }
+  .intent-detail .intent-table{
+    min-width:620px;
+  }
+  .intent-detail .intent-faq{
+    margin-top:46px;
+  }
+  .intent-detail .intent-faq summary{
+    font-size:17px;
   }
   .intent-detail .sources{
     margin-top:46px;
