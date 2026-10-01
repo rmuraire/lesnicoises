@@ -650,7 +650,19 @@
     }
 
     var params = new URLSearchParams(window.location.search);
-    if (['3','5','7'].indexOf(params.get('days')) >= 0) state.days = params.get('days');
+    var allowedParams = {
+      days:['3','5','7'],
+      season:['winter','spring','summer','autumn'],
+      mobility:['nocar','car','either'],
+      mood:['decide','sea','food','culture','glamour','peace'],
+      pace:['slow','balanced','ambitious']
+    };
+    Object.keys(allowedParams).forEach(function (key) {
+      var value = params.get(key);
+      if (allowedParams[key].indexOf(value) >= 0) state[key] = value;
+    });
+    var requestedBase = params.get('base');
+    if (!requestedBase || !BASES[requestedBase]) requestedBase = null;
 
     var labels = lang === 'fr' ? {
       incomplete:'Répondez aux cinq questions. Ensuite, Mametas tranche.',
@@ -675,6 +687,8 @@
       escape:'Voir cette version',
       back:'Revenir au choix Mametas',
       intentional:'POINT DE CHUTE INTENTIONNEL',
+      shareResult:'Partager mon Riviera Fit',
+      shareCopied:'Lien du résultat copié',
       reset:'Recommencer'
     } : {
       incomplete:'Answer all five questions. Then Mametas makes the call.',
@@ -699,6 +713,8 @@
       escape:'Show me this version',
       back:'Back to the Mametas pick',
       intentional:'INTENTIONAL BASE',
+      shareResult:'Share my Riviera Fit',
+      shareCopied:'Result link copied',
       reset:'Start again'
     };
 
@@ -716,6 +732,69 @@
       root.querySelectorAll('[data-step]').forEach(function (step) {
         step.hidden = false;
       });
+    }
+
+    function buildShareUrl() {
+      var url = new URL(window.location.origin + window.location.pathname);
+      ['days','season','mobility','mood','pace'].forEach(function (key) {
+        if (state[key]) url.searchParams.set(key, state[key]);
+      });
+      if (lastModel && lastModel.override && lastModel.baseId) {
+        url.searchParams.set('base', lastModel.baseId);
+      }
+      return url.toString();
+    }
+
+    function showShareStatus(message) {
+      var status = root.querySelector('[data-chooser-share-status]');
+      if (!status) return;
+      status.textContent = message;
+      window.setTimeout(function () { status.textContent = ''; }, 2400);
+    }
+
+    function copyShareUrl(url) {
+      function copied() {
+        showShareStatus(labels.shareCopied);
+        track('riviera_fit_share', { method:'copy_link', recommended_base:lastModel ? lastModel.baseId : '' });
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(copied).catch(function () {
+          var input = document.createElement('textarea');
+          input.value = url;
+          input.setAttribute('readonly','');
+          input.style.position = 'fixed';
+          input.style.opacity = '0';
+          document.body.appendChild(input);
+          input.select();
+          try { document.execCommand('copy'); copied(); } finally { input.remove(); }
+        });
+        return;
+      }
+      var input = document.createElement('textarea');
+      input.value = url;
+      input.setAttribute('readonly','');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      try { document.execCommand('copy'); copied(); } finally { input.remove(); }
+    }
+
+    function shareResult() {
+      if (!lastModel) return;
+      var url = buildShareUrl();
+      var title = lang === 'fr'
+        ? 'Mon Riviera Fit Mametas : ' + lastModel.base.name
+        : 'My Mametas Riviera Fit: ' + lastModel.base.name;
+      if (navigator.share) {
+        navigator.share({ title:title, url:url }).then(function () {
+          track('riviera_fit_share', { method:'native_share', recommended_base:lastModel.baseId || '' });
+        }).catch(function (error) {
+          if (!error || error.name !== 'AbortError') copyShareUrl(url);
+        });
+        return;
+      }
+      copyShareUrl(url);
     }
 
     function hotelKey(value) {
@@ -826,6 +905,7 @@
         further +
         escape +
         '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'SÉLECTION COURTE · VOTRE HÔTEL':'SHORT SELECTION · YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + ' ' + (lang==='fr'?'Ces trois adresses sont des repères, pas une liste exhaustive.':'These three addresses are reference points, not the full list.') + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + (lang==='fr'?'/hotels/finder/?base=':'/en/hotels/finder/?base=') + esc(model.baseId === 'saintpaul' ? 'saint-paul' : (model.baseId === 'sainttropez' ? 'saint-tropez' : model.baseId)) + '">' + (lang==='fr'?'Ouvrir Hotel Fit':'Open Hotel Fit') + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
+        '<div class="chooser-share-row"><button type="button" class="mametas-share-button chooser-share-button" data-chooser-share>' + labels.shareResult + '</button><span class="mametas-share-status chooser-share-status" data-chooser-share-status role="status" aria-live="polite"></span></div>' +
         '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
       out.hidden = false;
       hydrateHotelMedia(model, out);
@@ -833,6 +913,11 @@
     }
 
     root.addEventListener('click', function (event) {
+      if (event.target.closest('[data-chooser-share]')) {
+        shareResult();
+        return;
+      }
+
       var affiliate = event.target.closest('[data-affiliate-network][data-affiliate-hotel]');
       if (affiliate) {
         track('affiliate_click', {
@@ -895,6 +980,10 @@
       }
     });
     syncButtons();
+    if (state.days && state.season && state.mobility && state.mood && state.pace) {
+      render(requestedBase);
+      completed = true;
+    }
   }
 
   function selfTest() {
