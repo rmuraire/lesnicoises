@@ -314,6 +314,9 @@ jobs:
       - name: Apply final Share surfaces
         run: python scripts/share_surface_2026_10_01.py
 
+      - name: Apply global presentation harmonisation
+        run: python scripts/v5_global_presentation_harmonisation_2026_10_01.py
+
       - name: Deploy Share assets immediately
         env:
           MAMETAS_FORCE_FILES: assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
