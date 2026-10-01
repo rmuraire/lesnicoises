@@ -26,7 +26,7 @@ for rel, route, alt in pairs:
       '<header class="v3-header">','class="mobile-menu"','class="v3-footer"',
       'Mametas Checked',f'https://www.mametas.com{route}',f'https://www.mametas.com{alt}',
       '<div class="sources">','data-layer="intent-hierarchy-refonte-2026-10-01"',
-      '"@type":"FAQPage"','class="intent-faq"','class="segment-hotel-grid"','/assets/v3.css?v=2.10'
+      '"@type":"FAQPage"','class="intent-faq"','segment-hotel-grid','/assets/v3.css?v=2.10'
     ]
     for token in required:
         if token not in s: errors.append(f'{rel}: missing {token}')
