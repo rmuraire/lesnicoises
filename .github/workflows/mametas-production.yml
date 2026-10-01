@@ -341,7 +341,7 @@ jobs:
               if "/assets/share.js?v=1.0" not in body or "/assets/share.css?v=1.0" not in body:
                   raise SystemExit(f"{url} missing share assets")
 
-          chooser=fetch("https://www.mametas.com/assets/riviera-chooser.js?v=10")
+          chooser=fetch("https://www.mametas.com/assets/riviera-chooser.js?v=14")
           for token in ("Share my Riviera Fit","Partager mon Riviera Fit","data-chooser-share","riviera_fit_share"):
               if token not in chooser:
                   raise SystemExit(f"riviera-chooser.js missing {token}")
@@ -622,7 +622,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=13",
+                  "/assets/riviera-chooser.js?v=14",
               ),
               f"https://www.mametas.com/riviera-fit/?deploy={sha}": (
                   "Cinq questions. Un point de chute. Et les compromis avec.",
@@ -630,7 +630,7 @@ jobs:
                   'data-group="mobility"',
                   'data-group="mood"',
                   'data-group="pace"',
-                  "/assets/riviera-chooser.js?v=13",
+                  "/assets/riviera-chooser.js?v=14",
               ),
           }
           for url, needles in checks.items():
@@ -849,8 +849,8 @@ jobs:
               f"https://www.mametas.com/fr/?deploy={sha}": ("Préparer", "Destinations", "Pratique"),
               f"https://www.mametas.com/riviera-guide/?deploy={sha}": ("point de chute", "c’est la ville où vous dormez chaque nuit"),
               f"https://www.mametas.com/en/riviera-guide/?deploy={sha}": ("the town you’ll sleep in each night",),
-              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ("point de chute", "/assets/riviera-chooser.js?v=13"),
-              f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": ("the town you’ll sleep in each night", "/assets/riviera-chooser.js?v=13"),
+              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ("point de chute", "/assets/riviera-chooser.js?v=14"),
+              f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": ("the town you’ll sleep in each night", "/assets/riviera-chooser.js?v=14"),
               f"https://www.mametas.com/hotels/?deploy={sha}": ("point de chute",),
           }
           for url, needles in checks.items():
