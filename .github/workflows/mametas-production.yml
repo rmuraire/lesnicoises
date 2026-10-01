@@ -280,6 +280,9 @@ jobs:
           PY
           python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
 
+      - name: Add canonical metadata to refonte hotels
+        run: python scripts/v5_refonte_hotel_canonical_patch_2026_10_01.py
+
       - name: Enforce CJ on every Booking reservation link
         run: python scripts/booking_cj_enforce_all_2026_10_01.py
 
