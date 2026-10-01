@@ -217,8 +217,19 @@
     document.head.appendChild(script);
   }
 
+  function loadStyle(href,attr){
+    if(document.querySelector('link['+attr+']'))return;
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    link.setAttribute(attr,"true");
+    document.head.appendChild(link);
+  }
+
   function initialise(){
     addSettingsControl();
+    loadStyle("/assets/share.css?v=1.1","data-mametas-share-style");
+    loadLayer("/assets/share.js?v=1.1","data-mametas-share-layer");
     loadLayer("/assets/editorial-layer.js?v=1.0","data-mametas-editorial-layer");
     loadLayer("/assets/practical-layer.js?v=1.0","data-mametas-practical-layer");
     loadLayer("/assets/journey-layer.js?v=1.0","data-mametas-journey-layer");

@@ -269,6 +269,69 @@ jobs:
       - name: Apply final Share surfaces
         run: python scripts/share_surface_2026_10_01.py
 
+      - name: Deploy Share assets immediately
+        env:
+          MAMETAS_FORCE_FILES: assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Check Share surfaces live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+
+          def fetch(url):
+              req=Request(url,headers={"User-Agent":"MametasShareCheck/1.1","Cache-Control":"no-cache, no-store"})
+              with urlopen(req,timeout=30) as r:
+                  if r.status != 200:
+                      raise SystemExit(f"{url} returned {r.status}")
+                  return r.read().decode("utf-8","replace")
+
+          consent=fetch("https://www.mametas.com/assets/consent.js?v=1.1")
+          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.1","data-mametas-share-layer"):
+              if token not in consent:
+                  raise SystemExit(f"consent.js missing {token}")
+
+          share_js=fetch("https://www.mametas.com/assets/share.js?v=1.1")
+          for token in ("Share this guide","Partager ce guide","navigator.share","share_guide"):
+              if token not in share_js:
+                  raise SystemExit(f"share.js missing {token}")
+
+          share_css=fetch("https://www.mametas.com/assets/share.css?v=1.1")
+          for token in (".mametas-share-button",".chooser-share-row"):
+              if token not in share_css:
+                  raise SystemExit(f"share.css missing {token}")
+
+          pages=(
+              "https://www.mametas.com/en/explore/",
+              "https://www.mametas.com/en/explore/french-riviera-honeymoon/",
+              "https://www.mametas.com/en/riviera-guide/monaco/",
+              "https://www.mametas.com/en/practical/safety-emergencies/",
+          )
+          for url in pages:
+              body=fetch(url)
+              if "/assets/consent.js" not in body:
+                  raise SystemExit(f"{url} does not load consent.js")
+
+          chooser=fetch("https://www.mametas.com/assets/riviera-chooser.js?v=14")
+          for token in ("Share my Riviera Fit","Partager mon Riviera Fit","data-chooser-share","riviera_fit_share"):
+              if token not in chooser:
+                  raise SystemExit(f"riviera-chooser.js missing {token}")
+
+          for url in (
+              "https://www.mametas.com/en/riviera-fit/?days=5&season=summer&mobility=nocar&mood=glamour&pace=balanced",
+              "https://www.mametas.com/riviera-fit/?days=5&season=summer&mobility=nocar&mood=glamour&pace=balanced",
+          ):
+              body=fetch(url)
+              if "/assets/riviera-chooser.js?v=14" not in body or "/assets/share.css?v=1.1" not in body:
+                  raise SystemExit(f"{url} missing final Riviera Fit Share assets")
+
+          print("Mametas Share live checks passed")
+          PY
+
       - name: Validate V5 intent release
         run: python scripts/v5_intent_validate_2026_10_01.py
 
@@ -307,47 +370,6 @@ jobs:
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
-
-      - name: Check Share surfaces live
-        run: |
-          python - <<'PY'
-          from urllib.request import Request, urlopen
-
-          def fetch(url):
-              req=Request(url,headers={"User-Agent":"MametasShareCheck/1.0","Cache-Control":"no-cache, no-store"})
-              with urlopen(req,timeout=30) as r:
-                  if r.status != 200:
-                      raise SystemExit(f"{url} returned {r.status}")
-                  return r.read().decode("utf-8","replace")
-
-          share_js=fetch("https://www.mametas.com/assets/share.js?v=1.0")
-          for token in ("Share this guide","Partager ce guide","navigator.share","share_guide"):
-              if token not in share_js:
-                  raise SystemExit(f"share.js missing {token}")
-
-          share_css=fetch("https://www.mametas.com/assets/share.css?v=1.0")
-          for token in (".mametas-share-button",".chooser-share-row"):
-              if token not in share_css:
-                  raise SystemExit(f"share.css missing {token}")
-
-          pages=(
-              "https://www.mametas.com/en/explore/",
-              "https://www.mametas.com/en/explore/french-riviera-honeymoon/",
-              "https://www.mametas.com/en/riviera-guide/monaco/",
-              "https://www.mametas.com/en/practical/safety-emergencies/",
-          )
-          for url in pages:
-              body=fetch(url)
-              if "/assets/share.js?v=1.0" not in body or "/assets/share.css?v=1.0" not in body:
-                  raise SystemExit(f"{url} missing share assets")
-
-          chooser=fetch("https://www.mametas.com/assets/riviera-chooser.js?v=14")
-          for token in ("Share my Riviera Fit","Partager mon Riviera Fit","data-chooser-share","riviera_fit_share"):
-              if token not in chooser:
-                  raise SystemExit(f"riviera-chooser.js missing {token}")
-
-          print("Mametas Share live checks passed")
-          PY
 
       - name: Check V5 intent pillars live
         run: |
