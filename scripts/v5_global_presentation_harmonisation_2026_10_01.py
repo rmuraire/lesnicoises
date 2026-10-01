@@ -182,10 +182,13 @@ def harmonise_nav(s, rel, lang):
       r'(<nav\s+class="(?:v3-nav|primary-nav)"[^>]*>)<ul>[\s\S]*?</ul>(</nav>)',
       lambda m:m.group(1)+ul+m.group(2),s,count=1
     )
-    # Mobile nav: replace the first UL inside the mobile-nav container.
-    m=re.search(r'(<div\s+class="mobile-nav"[^>]*>[\s\S]*?)(<ul>[\s\S]*?</ul>)([\s\S]*?</div>)',s)
-    if m:
-        s=s[:m.start()]+m.group(1)+ul+m.group(3)+s[m.end():]
+    # Mobile nav: support both site.css and V3 menu generations.
+    for mobile_class in ("mobile-nav","mobile-menu"):
+        pattern=r'(<div\\s+class="'+mobile_class+r'"[^>]*>[\\s\\S]*?)(<ul>[\\s\\S]*?</ul>)([\\s\\S]*?</div>)'
+        m=re.search(pattern,s)
+        if m:
+            s=s[:m.start()]+m.group(1)+ul+m.group(3)+s[m.end():]
+            break
     return s
 
 def add_class(attr, cls):
