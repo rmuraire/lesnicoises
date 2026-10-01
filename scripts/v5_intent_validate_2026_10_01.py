@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from pathlib import Path
 import re
+import json
 
 ROOT = Path(__file__).resolve().parents[1]
 pairs = [
@@ -24,7 +25,8 @@ for rel, route, alt in pairs:
     required=[
       '<header class="v3-header">','class="mobile-menu"','class="v3-footer"',
       'Mametas Checked',f'https://www.mametas.com{route}',f'https://www.mametas.com{alt}',
-      '<div class="sources">'
+      '<div class="sources">','data-dense-v2="true"','class="intent-table"',
+      '"@type":"FAQPage"','class="intent-faq"'
     ]
     for token in required:
         if token not in s: errors.append(f'{rel}: missing {token}')
@@ -35,6 +37,21 @@ for rel, route, alt in pairs:
     if not title or len(title.group(1))>65: errors.append(f'{rel}: title length')
     if not desc or len(desc.group(1))>160: errors.append(f'{rel}: description length')
     if s.count('target="_blank" rel="nofollow noopener"') < 3: errors.append(f'{rel}: too few checked sources')
+    if s.count('data-dense-v2="true"') != 1: errors.append(f'{rel}: dense block count')
+    if s.count('class="intent-table"') < 1: errors.append(f'{rel}: no signature table')
+    if s.count('<details>') < 6: errors.append(f'{rel}: fewer than 6 FAQ items')
+    scripts=re.findall(r'<script type="application/ld\+json">(.*?)</script>',s,re.S)
+    faq_ok=False
+    for raw in scripts:
+        try:
+            obj=json.loads(raw)
+            if obj.get('@type')=='FAQPage' and len(obj.get('mainEntity',[]))>=6:
+                faq_ok=True
+        except Exception:
+            pass
+    if not faq_ok: errors.append(f'{rel}: invalid FAQPage schema')
+    if s.count('<table') != s.count('</table>'): errors.append(f'{rel}: table tags unbalanced')
+    if s.count('<details>') != s.count('</details>'): errors.append(f'{rel}: details tags unbalanced')
 
 en=(ROOT/'en/explore/index.html').read_text(encoding='utf-8')
 fr=(ROOT/'explore/index.html').read_text(encoding='utf-8')
