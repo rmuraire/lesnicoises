@@ -221,8 +221,8 @@ def patch_html(p):
     s=harmonise_booking_ctas(s,lang)
 
     # Cache-bust the unified presentation layer on every generated page.
-    s=re.sub(r'/assets/site[.]css(?:[?]v=[^"]+)?','/assets/site.css?v=24.0',s)
-    s=re.sub(r'/assets/v3[.]css(?:[?]v=[^"]+)?','/assets/v3.css?v=0.8',s)
+    s=re.sub(r'/assets/site[.]css(?:[?]v=[^"]+)?','/assets/site.css?v=24.1',s)
+    s=re.sub(r'/assets/v3[.]css(?:[?]v=[^"]+)?','/assets/v3.css?v=1.3',s)
     s=re.sub(r'/assets/site[.]js(?:[?]v=[^"]+)?','/assets/site.js?v=1.4',s)
     s=re.sub(r'/assets/v3[.]js(?:[?]v=[^"]+)?','/assets/v3.js?v=0.8',s)
 
