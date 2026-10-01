@@ -259,6 +259,9 @@ jobs:
       - name: Apply V5 Explore architecture
         run: python scripts/v5_intent_explore_patch_2026_10_01.py
 
+      - name: Apply V5 intent detail layout
+        run: python scripts/v5_intent_layout_closure_2026_10_01.py
+
       - name: Add Daniel Hotel Fit homepage voice
         run: python scripts/v5_home_hotel_voice_2026_10_01.py
 
