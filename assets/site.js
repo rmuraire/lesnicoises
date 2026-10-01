@@ -483,3 +483,45 @@
     mountShareButton();
   }
 })();
+
+
+/* V5 global presentation fallback — 2026-10-01 */
+(function(){
+  if(window.__mametasPresentationHarmonised) return;
+  window.__mametasPresentationHarmonised=true;
+  function run(){
+    var fr=(document.documentElement.lang||'en').toLowerCase().indexOf('fr')===0;
+    var items=fr
+      ? [['/fr/planifier/','Préparer'],['/riviera-guide/','Destinations'],['/hotels/','Dormir'],['/explore/','Explorer'],['/pratique/','Pratique']]
+      : [['/plan/','Plan'],['/en/riviera-guide/','Places'],['/en/hotels/','Stay'],['/en/explore/','Explore'],['/en/practical/','Practical']];
+    var path=location.pathname||'/';
+    function activeIndex(){
+      if(/\/(practical|pratique|good-finds|bons-plans)\//.test(path)) return 4;
+      if(/\/(explore|gay-|cote-dazur-gay|solo-female|femme-solo)\//.test(path)) return 3;
+      if(/\/(hotels|stay|dormir)\//.test(path)) return 2;
+      if(path.indexOf('/riviera-guide/')===0 || path.indexOf('/en/riviera-guide/')===0) return 1;
+      if(/\/(plan|planifier|riviera-fit|riviera-chooser)\//.test(path)) return 0;
+      return -1;
+    }
+    var active=activeIndex();
+    document.querySelectorAll('.v3-nav ul,.primary-nav ul,.mobile-nav ul').forEach(function(ul){
+      ul.innerHTML='';
+      items.forEach(function(item,i){
+        var li=document.createElement('li');
+        var a=document.createElement('a');
+        a.href=item[0]; a.textContent=item[1];
+        if(i===active) a.setAttribute('aria-current','page');
+        li.appendChild(a); ul.appendChild(li);
+      });
+    });
+    document.querySelectorAll('a[href*="kqzyfj.com/click-101875476-15734754"]').forEach(function(a){
+      if(a.classList.contains('hotel-card-cta')) return;
+      var t=(a.textContent||'').toLowerCase();
+      if(t.indexOf('booking')>=0 || t.indexOf('check rate')>=0 || t.indexOf('voir les tarifs')>=0 || t.indexOf('rates on')>=0){
+        a.textContent=fr?'Voir les disponibilités':'Check dates';
+        a.classList.add('booking-quiet-cta');
+      }
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run,{once:true}); else run();
+})();
