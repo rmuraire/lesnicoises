@@ -1,0 +1,78 @@
+name: Mametas Gay visual hotfix
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-gay-visual-hotfix.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-gay-visual-hotfix
+  cancel-in-progress: true
+
+jobs:
+  deploy-gay-visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: python -m pip install --disable-pip-version-check --quiet paramiko pillow
+
+      - name: Validate Gay visual asset
+        run: |
+          python - <<'PY'
+          from PIL import Image
+          p="assets/editorial/refonte-2026/gay-riviera.webp"
+          im=Image.open(p)
+          im.verify()
+          im=Image.open(p)
+          print("Gay visual:", im.size, im.format)
+          if im.width < 600 or im.height < 400:
+              raise SystemExit(f"Gay visual unexpectedly small: {im.size}")
+          PY
+
+      - name: Deploy Gay visual to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/editorial/refonte-2026/gay-riviera.webp
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify Gay visual live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+          url="https://www.mametas.com/assets/editorial/refonte-2026/gay-riviera.webp?hotfix=2"
+          last=None
+          for _ in range(6):
+              try:
+                  req=Request(url,headers={"User-Agent":"MametasGayVisualCheck/1.0","Cache-Control":"no-cache","Pragma":"no-cache"})
+                  with urlopen(req,timeout=30) as r:
+                      data=r.read()
+                      ctype=r.headers.get("Content-Type","")
+                      print(r.status,ctype,len(data))
+                      if r.status==200 and len(data)>5000 and ("image/" in ctype or data[:4]==b"RIFF"):
+                          print("Gay visual live")
+                          break
+                      last=f"status={r.status} type={ctype} bytes={len(data)}"
+              except Exception as exc:
+                  last=str(exc)
+              time.sleep(3)
+          else:
+              raise SystemExit(last)
+          PY
