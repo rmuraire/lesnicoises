@@ -158,6 +158,86 @@ CSS=r'''
   font-size:14px;
   line-height:1.65;
 }
+.intent-detail .trend-2026{
+  margin:62px 0 0;
+  padding-top:34px;
+  border-top:2px solid var(--ink);
+}
+.intent-detail .trend-2026>.eyebrow{
+  margin-bottom:8px!important;
+  color:var(--blue-deep)!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  letter-spacing:.16em!important;
+  text-transform:uppercase;
+}
+.intent-detail .trend-2026>h2{
+  margin-top:0;
+}
+.intent-detail .trend-alert{
+  margin:24px 0 28px;
+  padding:24px 26px;
+  background:#f4ecdc;
+  border:1px solid rgba(20,33,61,.14);
+}
+.intent-detail .trend-alert>strong{
+  display:block;
+  margin-bottom:8px;
+  color:var(--ink);
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:500;
+  line-height:1.25;
+}
+.intent-detail .trend-alert p{
+  margin:0!important;
+  color:var(--ink-soft)!important;
+  font-size:14px;
+  line-height:1.65;
+}
+.intent-detail .scouting-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:20px 0 36px;
+}
+.intent-detail .scouting-grid:has(.scouting-card:nth-child(2):last-child){
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.intent-detail .scouting-card{
+  padding:22px;
+  border:1px solid var(--line);
+  background:rgba(255,253,248,.55);
+}
+.intent-detail .scouting-card>span{
+  display:block;
+  margin-bottom:8px;
+  color:var(--blue-deep);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.intent-detail .scouting-card h3{
+  margin:0 0 10px;
+  color:var(--ink);
+  font-size:22px;
+  line-height:1.15;
+}
+.intent-detail .scouting-card p{
+  margin:0 0 10px!important;
+  font-size:13px;
+  line-height:1.62;
+}
+.intent-detail .scouting-card p:last-child{
+  margin-bottom:0!important;
+}
+.intent-detail .scouting-card a{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
 .intent-detail .dense-v2{
   margin-top:58px;
   padding-top:8px;
@@ -372,6 +452,18 @@ CSS=r'''
   .intent-detail .note,
   .intent-detail .culture-practical{
     margin:26px 0;
+    padding:20px;
+  }
+  .intent-detail .scouting-grid,
+  .intent-detail .scouting-grid:has(.scouting-card:nth-child(2):last-child){
+    grid-template-columns:1fr;
+    gap:8px;
+  }
+  .intent-detail .trend-2026{
+    margin-top:48px;
+    padding-top:28px;
+  }
+  .intent-detail .trend-alert{
     padding:20px;
   }
   .intent-detail .health-grid{
