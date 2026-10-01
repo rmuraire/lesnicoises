@@ -1,0 +1,69 @@
+name: Mametas Share hotfix deploy
+
+on:
+  push:
+    branches:
+      - mametas-v3
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-share-hotfix-2026-10-01
+  cancel-in-progress: true
+
+jobs:
+  deploy-share:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Deploy Share assets to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify Share assets live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+
+          def fetch(url):
+              req=Request(url,headers={"User-Agent":"MametasShareHotfix/1.0","Cache-Control":"no-cache, no-store"})
+              with urlopen(req,timeout=30) as response:
+                  if response.status != 200:
+                      raise SystemExit(f"{url} returned {response.status}")
+                  return response.read().decode("utf-8","replace")
+
+          consent=fetch("https://www.mametas.com/assets/consent.js?share-hotfix=1")
+          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.1","data-mametas-share-layer"):
+              if token not in consent:
+                  raise SystemExit(f"consent.js missing {token}")
+
+          share=fetch("https://www.mametas.com/assets/share.js?share-hotfix=1")
+          for token in ("Share this guide","Partager ce guide","navigator.share","share_guide"):
+              if token not in share:
+                  raise SystemExit(f"share.js missing {token}")
+
+          chooser=fetch("https://www.mametas.com/assets/riviera-chooser.js?share-hotfix=1")
+          for token in ("Share my Riviera Fit","Partager mon Riviera Fit","data-chooser-share","riviera_fit_share","button secondary chooser-share-button"):
+              if token not in chooser:
+                  raise SystemExit(f"riviera-chooser.js missing {token}")
+
+          print("Mametas Share hotfix is live")
+          PY

@@ -905,7 +905,7 @@
         further +
         escape +
         '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'SÉLECTION COURTE · VOTRE HÔTEL':'SHORT SELECTION · YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + ' ' + (lang==='fr'?'Ces trois adresses sont des repères, pas une liste exhaustive.':'These three addresses are reference points, not the full list.') + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + (lang==='fr'?'/hotels/finder/?base=':'/en/hotels/finder/?base=') + esc(model.baseId === 'saintpaul' ? 'saint-paul' : (model.baseId === 'sainttropez' ? 'saint-tropez' : model.baseId)) + '">' + (lang==='fr'?'Ouvrir Hotel Fit':'Open Hotel Fit') + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
-        '<div class="chooser-share-row"><button type="button" class="mametas-share-button chooser-share-button" data-chooser-share>' + labels.shareResult + '</button><span class="mametas-share-status chooser-share-status" data-chooser-share-status role="status" aria-live="polite"></span></div>' +
+        '<div class="chooser-share-row"><button type="button" class="button secondary chooser-share-button" data-chooser-share>' + labels.shareResult + '</button><span class="mametas-share-status chooser-share-status" data-chooser-share-status role="status" aria-live="polite"></span></div>' +
         '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
       out.hidden = false;
       hydrateHotelMedia(model, out);
