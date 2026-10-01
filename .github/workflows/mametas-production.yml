@@ -357,7 +357,7 @@ jobs:
               f"https://www.mametas.com/fr/planifier/sept-jours-cote-d-azur/?deploy={sha}": ("JOUR 7", "Choisissez une direction"),
               f"https://www.mametas.com/en/explore/2-3-hours/?deploy={sha}": ("Only got 2 or 3 hours? Good.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
-              f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("Spring", "Winter", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
+              f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("SPRING", "WINTER", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
               f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("Printemps", "Hiver"),
               f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card", "Weather by season", "/en/french-riviera-tourism-statistics/", "Open the Riviera Agenda"),
               f"https://www.mametas.com/en/explore/?deploy={sha}": ("explore-harmonised", "lgbtq-banner--fifth", "phase4-short-entry", "Explore the Riviera your way.", "Women travelling solo", "/en/explore/2-3-hours/"),
