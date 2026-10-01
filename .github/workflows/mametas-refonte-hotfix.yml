@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: mametas-explore-refonte-2026-10-01
@@ -28,12 +29,29 @@ jobs:
           python-version: "3.12"
 
       - name: Install deployment dependency
-        run: python -m pip install --disable-pip-version-check --quiet paramiko pillow
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
 
-      - name: Materialize supplied refonte assets
+      - name: Download validated production snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          path: /tmp/mametas-refonte-artifact
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: rmuraire/lesnicoises
+          run-id: 36914504302
+
+      - name: Restore validated snapshot
         run: |
-          unzip -oq refonte-assets-ready-for-github.zip -d .
+          test -s /tmp/mametas-refonte-artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
+          unzip -oq /tmp/mametas-refonte-artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d .
           for f in \
+            en/explore/french-riviera-honeymoon/index.html \
+            en/explore/french-riviera-babymoon/index.html \
+            en/explore/french-riviera-proposal/index.html \
+            en/explore/living-antibes-expat/index.html \
+            en/explore/retire-french-riviera/index.html \
+            en/gay-french-riviera/index.html \
+            en/solo-female-french-riviera/index.html \
             assets/editorial/refonte-2026/honeymoon.webp \
             assets/editorial/refonte-2026/babymoon.webp \
             assets/editorial/refonte-2026/proposal.webp \
@@ -43,30 +61,11 @@ jobs:
             assets/hotels/refonte-2026/mercure-grimaldi.webp \
             assets/hotels/refonte-2026/riva-art-spa.webp
           do
-            test -s "$f" || { echo "Missing refonte asset: $f"; exit 1; }
+            test -s "$f" || { echo "Snapshot missing: $f"; exit 1; }
           done
-
-      - name: Rebuild Explore refonte
-        run: |
-          python scripts/v5_intent_explore_patch_2026_10_01.py
-          python scripts/v5_intent_layout_closure_2026_10_01.py
-          cat \
-            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part00 \
-            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part01 \
-            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part02 \
-            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part03 \
-            | base64 -d | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
-          python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
-          python scripts/v5_refonte_hotel_canonical_patch_2026_10_01.py
-          python scripts/booking_cj_enforce_all_2026_10_01.py
-
-      - name: Validate refonte and Booking affiliation
-        run: |
-          base64 -d scripts/validate_intent_refonte_affiliation_2026_10_01.py.gz.b64 | gzip -dc > scripts/validate_intent_refonte_affiliation_2026_10_01.py
-          python scripts/validate_intent_refonte_affiliation_2026_10_01.py
           python scripts/validate_booking_affiliation_2026_10_01.py
 
-      - name: Deploy refonte files to OVH
+      - name: Deploy validated refonte files to OVH
         env:
           MAMETAS_FORCE_FILES: >-
             assets/site.css;assets/v3.css;
@@ -108,7 +107,7 @@ jobs:
               for _ in range(6):
                   try:
                       req=Request(url,headers={
-                          "User-Agent":"MametasRefonteCheck/1.0",
+                          "User-Agent":"MametasRefonteCheck/1.1",
                           "Cache-Control":"no-cache, no-store, must-revalidate",
                           "Pragma":"no-cache",
                       })
