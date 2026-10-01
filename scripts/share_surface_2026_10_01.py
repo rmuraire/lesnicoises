@@ -4,7 +4,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 
-SHARE_CSS = '<link rel="stylesheet" href="/assets/share.css?v=1.1">'
+SHARE_CSS = '<link rel="stylesheet" href="/assets/share.css?v=1.2">'
 
 def inject_once(text: str, needle: str, before: str) -> str:
     if needle in text:
