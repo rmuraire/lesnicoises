@@ -65,10 +65,13 @@ jobs:
           done
           python scripts/validate_booking_affiliation_2026_10_01.py
 
+      - name: Apply global presentation harmonisation
+        run: python scripts/v5_global_presentation_harmonisation_2026_10_01.py
+
       - name: Deploy validated refonte files to OVH
         env:
           MAMETAS_FORCE_FILES: >-
-            assets/site.css;assets/v3.css;
+            assets/site.css;assets/v3.css;assets/site.js;assets/v3.js;
             en/explore/index.html;explore/index.html;
             en/explore/french-riviera-honeymoon/index.html;explore/lune-de-miel-cote-d-azur/index.html;
             en/explore/french-riviera-babymoon/index.html;explore/babymoon-cote-d-azur/index.html;
@@ -77,6 +80,14 @@ jobs:
             en/explore/retire-french-riviera/index.html;explore/retraite-cote-d-azur/index.html;
             en/gay-french-riviera/index.html;cote-dazur-gay/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;
             en/solo-female-french-riviera/index.html;cote-dazur-femme-solo/index.html;
+            en/solo-female-french-riviera/eating-going-out-alone/index.html;cote-dazur-femme-solo/manger-sortir-seule/index.html;
+            en/solo-female-french-riviera/where-to-stay/index.html;cote-dazur-femme-solo/ou-dormir/index.html;
+            en/solo-female-french-riviera/getting-around-without-a-car/index.html;cote-dazur-femme-solo/se-deplacer-sans-voiture/index.html;
+            en/solo-female-french-riviera/safety/index.html;cote-dazur-femme-solo/securite/index.html;
+            en/solo-female-french-riviera/5-day-itinerary/index.html;cote-dazur-femme-solo/itineraire-5-jours/index.html;
+            en/gay-french-riviera/where-to-stay/index.html;cote-dazur-gay/ou-dormir/index.html;
+            en/gay-french-riviera/beaches-without-a-car/index.html;cote-dazur-gay/plages-sans-voiture/index.html;
+            en/gay-french-riviera/5-day-itinerary/index.html;cote-dazur-gay/itineraire-5-jours/index.html;
             hotels/nice/hotel-windsor/index.html;en/hotels/nice/hotel-windsor/index.html;
             hotels/beaulieu-sur-mer/la-reserve-de-beaulieu/index.html;en/hotels/beaulieu-sur-mer/la-reserve-de-beaulieu/index.html;
             hotels/beaulieu-sur-mer/hotel-carlton/index.html;en/hotels/beaulieu-sur-mer/hotel-carlton/index.html;
@@ -85,7 +96,7 @@ jobs:
             hotels/menton/riva-art-spa/index.html;en/hotels/menton/riva-art-spa/index.html;
             assets/editorial/refonte-2026/honeymoon.webp;assets/editorial/refonte-2026/babymoon.webp;
             assets/editorial/refonte-2026/proposal.webp;assets/editorial/refonte-2026/expat-antibes.webp;
-            assets/editorial/refonte-2026/retirement.webp;assets/editorial/refonte-2026/gay-riviera.webp;
+            assets/editorial/refonte-2026/retirement.webp;assets/editorial/refonte-2026/gay-riviera.webp;assets/editorial/nice-riviera.jpg;
             assets/hotels/refonte-2026/hotel-windsor.webp;assets/hotels/refonte-2026/la-reserve-beaulieu.webp;
             assets/hotels/refonte-2026/carlton-beaulieu.webp;assets/hotels/refonte-2026/hotel-select-beaulieu.webp;
             assets/hotels/refonte-2026/mercure-grimaldi.webp;assets/hotels/refonte-2026/riva-art-spa.webp;
@@ -120,6 +131,29 @@ jobs:
                       last=str(exc)
                   time.sleep(4)
               raise SystemExit(f"{url} unavailable: {last}")
+
+          css=fetch("https://www.mametas.com/assets/site.css?v=24.0")
+          for token in ("V5 global presentation harmonisation","booking-quiet-cta","intent-faq",".sources ul"):
+              if token not in css:
+                  raise SystemExit(f"Unified site.css missing {token}")
+
+          gay_img=fetch("https://www.mametas.com/assets/editorial/refonte-2026/gay-riviera.webp",binary=True)
+          if len(gay_img)<5000:
+              raise SystemExit("Gay Riviera hero asset is not live")
+
+          solo_evening=fetch("https://www.mametas.com/en/solo-female-french-riviera/eating-going-out-alone/")
+          if "menton-evening.jpg" in solo_evening or "nice-riviera.jpg" not in solo_evening:
+              raise SystemExit("Solo evening hero is not the Nice image")
+
+          honeymoon=fetch("https://www.mametas.com/en/explore/french-riviera-honeymoon/")
+          if "Eat &amp; Do" in honeymoon or ">Eat & Do<" in honeymoon or ">Now<" in honeymoon:
+              raise SystemExit("Honeymoon still carries legacy header labels")
+          if ">Explore<" not in honeymoon or ">Practical<" not in honeymoon:
+              raise SystemExit("Honeymoon missing canonical Explore/Practical header")
+
+          gay_page=fetch("https://www.mametas.com/en/gay-french-riviera/")
+          if "refonte-2026/gay-riviera.webp" not in gay_page:
+              raise SystemExit("Gay Riviera visible hero is missing")
 
           page_checks={
             "https://www.mametas.com/en/explore/french-riviera-honeymoon/":("refonte-2026/honeymoon.webp","kqzyfj.com/click-101875476-15734754"),
