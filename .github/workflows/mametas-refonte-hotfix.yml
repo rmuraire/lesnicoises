@@ -45,6 +45,7 @@ jobs:
         run: |
           test -s /tmp/mametas-refonte-artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
           unzip -oq /tmp/mametas-refonte-artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d .
+          git checkout -- assets/site.js assets/v3.js
           for f in \
             en/explore/french-riviera-honeymoon/index.html \
             en/explore/french-riviera-babymoon/index.html \
