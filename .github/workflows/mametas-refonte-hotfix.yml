@@ -1,0 +1,174 @@
+name: Mametas Explore refonte focused deploy
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-refonte-hotfix.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-explore-refonte-2026-10-01
+  cancel-in-progress: true
+
+jobs:
+  deploy-refonte:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko pillow
+
+      - name: Materialize supplied refonte assets
+        run: |
+          unzip -oq refonte-assets-ready-for-github.zip -d .
+          for f in \
+            assets/editorial/refonte-2026/honeymoon.webp \
+            assets/editorial/refonte-2026/babymoon.webp \
+            assets/editorial/refonte-2026/proposal.webp \
+            assets/editorial/refonte-2026/expat-antibes.webp \
+            assets/editorial/refonte-2026/retirement.webp \
+            assets/hotels/refonte-2026/la-reserve-beaulieu.webp \
+            assets/hotels/refonte-2026/mercure-grimaldi.webp \
+            assets/hotels/refonte-2026/riva-art-spa.webp
+          do
+            test -s "$f" || { echo "Missing refonte asset: $f"; exit 1; }
+          done
+
+      - name: Rebuild Explore refonte
+        run: |
+          python scripts/v5_intent_explore_patch_2026_10_01.py
+          python scripts/v5_intent_layout_closure_2026_10_01.py
+          cat \
+            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part00 \
+            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part01 \
+            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part02 \
+            scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part03 \
+            | base64 -d | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+          python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+          python scripts/v5_refonte_hotel_canonical_patch_2026_10_01.py
+          python scripts/booking_cj_enforce_all_2026_10_01.py
+
+      - name: Validate refonte and Booking affiliation
+        run: |
+          base64 -d scripts/validate_intent_refonte_affiliation_2026_10_01.py.gz.b64 | gzip -dc > scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_booking_affiliation_2026_10_01.py
+
+      - name: Deploy refonte files to OVH
+        env:
+          MAMETAS_FORCE_FILES: >-
+            assets/site.css;assets/v3.css;
+            en/explore/index.html;explore/index.html;
+            en/explore/french-riviera-honeymoon/index.html;explore/lune-de-miel-cote-d-azur/index.html;
+            en/explore/french-riviera-babymoon/index.html;explore/babymoon-cote-d-azur/index.html;
+            en/explore/french-riviera-proposal/index.html;explore/demande-en-mariage-cote-d-azur/index.html;
+            en/explore/living-antibes-expat/index.html;explore/vivre-antibes-expatrie/index.html;
+            en/explore/retire-french-riviera/index.html;explore/retraite-cote-d-azur/index.html;
+            en/gay-french-riviera/index.html;cote-dazur-gay/index.html;en/gay-nice/index.html;guide-gay-nice/index.html;
+            en/solo-female-french-riviera/index.html;cote-dazur-femme-solo/index.html;
+            hotels/nice/hotel-windsor/index.html;en/hotels/nice/hotel-windsor/index.html;
+            hotels/beaulieu-sur-mer/la-reserve-de-beaulieu/index.html;en/hotels/beaulieu-sur-mer/la-reserve-de-beaulieu/index.html;
+            hotels/beaulieu-sur-mer/hotel-carlton/index.html;en/hotels/beaulieu-sur-mer/hotel-carlton/index.html;
+            hotels/beaulieu-sur-mer/hotel-select/index.html;en/hotels/beaulieu-sur-mer/hotel-select/index.html;
+            hotels/nice/mercure-nice-centre-grimaldi/index.html;en/hotels/nice/mercure-nice-centre-grimaldi/index.html;
+            hotels/menton/riva-art-spa/index.html;en/hotels/menton/riva-art-spa/index.html;
+            assets/editorial/refonte-2026/honeymoon.webp;assets/editorial/refonte-2026/babymoon.webp;
+            assets/editorial/refonte-2026/proposal.webp;assets/editorial/refonte-2026/expat-antibes.webp;
+            assets/editorial/refonte-2026/retirement.webp;assets/editorial/refonte-2026/gay-riviera.webp;
+            assets/hotels/refonte-2026/hotel-windsor.webp;assets/hotels/refonte-2026/la-reserve-beaulieu.webp;
+            assets/hotels/refonte-2026/carlton-beaulieu.webp;assets/hotels/refonte-2026/hotel-select-beaulieu.webp;
+            assets/hotels/refonte-2026/mercure-grimaldi.webp;assets/hotels/refonte-2026/riva-art-spa.webp;
+            sitemap.xml
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify Explore refonte live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import re, time
+
+          def fetch(url, binary=False):
+              last=None
+              for _ in range(6):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasRefonteCheck/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          data=r.read()
+                          if r.status == 200:
+                              return data if binary else data.decode("utf-8","replace")
+                          last=f"HTTP {r.status}"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(4)
+              raise SystemExit(f"{url} unavailable: {last}")
+
+          page_checks={
+            "https://www.mametas.com/en/explore/french-riviera-honeymoon/":("refonte-2026/honeymoon.webp","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/explore/french-riviera-babymoon/":("refonte-2026/babymoon.webp","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/explore/french-riviera-proposal/":("refonte-2026/proposal.webp","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/explore/living-antibes-expat/":("refonte-2026/expat-antibes.webp","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/explore/retire-french-riviera/":("refonte-2026/retirement.webp","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/gay-french-riviera/":("Hotel Windsor","kqzyfj.com/click-101875476-15734754"),
+            "https://www.mametas.com/en/solo-female-french-riviera/":("Booking.com","kqzyfj.com/click-101875476-15734754"),
+          }
+          for url,needles in page_checks.items():
+              body=fetch(url)
+              missing=[n for n in needles if n not in body]
+              if missing:
+                  raise SystemExit(f"{url} missing live refonte markers: {missing}")
+              if re.search(r'href=["\']https?://(?:www\.)?booking\.com/',body,re.I):
+                  raise SystemExit(f"{url} still contains a raw Booking reservation href")
+              print("Refonte page live:",url)
+
+          hotel_urls=(
+            "https://www.mametas.com/en/hotels/nice/hotel-windsor/",
+            "https://www.mametas.com/en/hotels/beaulieu-sur-mer/la-reserve-de-beaulieu/",
+            "https://www.mametas.com/en/hotels/beaulieu-sur-mer/hotel-carlton/",
+            "https://www.mametas.com/en/hotels/beaulieu-sur-mer/hotel-select/",
+            "https://www.mametas.com/en/hotels/nice/mercure-nice-centre-grimaldi/",
+            "https://www.mametas.com/en/hotels/menton/riva-art-spa/",
+          )
+          for url in hotel_urls:
+              body=fetch(url)
+              if "kqzyfj.com/click-101875476-15734754" not in body:
+                  raise SystemExit(f"{url} missing CJ Booking affiliate exit")
+              print("Affiliate hotel page live:",url)
+
+          image_urls=(
+            "https://www.mametas.com/assets/editorial/refonte-2026/honeymoon.webp",
+            "https://www.mametas.com/assets/editorial/refonte-2026/babymoon.webp",
+            "https://www.mametas.com/assets/editorial/refonte-2026/proposal.webp",
+            "https://www.mametas.com/assets/editorial/refonte-2026/expat-antibes.webp",
+            "https://www.mametas.com/assets/editorial/refonte-2026/retirement.webp",
+            "https://www.mametas.com/assets/hotels/refonte-2026/la-reserve-beaulieu.webp",
+            "https://www.mametas.com/assets/hotels/refonte-2026/mercure-grimaldi.webp",
+            "https://www.mametas.com/assets/hotels/refonte-2026/riva-art-spa.webp",
+          )
+          for url in image_urls:
+              data=fetch(url,binary=True)
+              if len(data)<5000:
+                  raise SystemExit(f"{url} too small: {len(data)} bytes")
+              print("Refonte image live:",url,len(data))
+
+          print("Mametas Explore refonte focused live verification passed")
+          PY
