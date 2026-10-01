@@ -265,7 +265,19 @@ jobs:
 
       - name: Apply Explore intent hierarchy and affiliate refonte
         run: |
-          cat             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part00             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part01             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part02             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part03             | base64 -d | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+          python - <<'PY'
+          from pathlib import Path
+          import base64, gzip, hashlib
+          prefix = Path("scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64")
+          payload = "".join((Path(str(prefix) + f".part{i:02d}")).read_text(encoding="utf-8").strip() for i in range(7))
+          expected = "3eacff6b16012f9226a5cba81e7464ee20847b853e2daef170571ead5ed56776"
+          actual = hashlib.sha256(payload.encode()).hexdigest()
+          if actual != expected:
+              raise SystemExit(f"Refonte payload checksum mismatch: {actual}")
+          raw = gzip.decompress(base64.b64decode(payload))
+          Path("scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py").write_bytes(raw)
+          print("Refonte payload verified:", len(raw), "bytes")
+          PY
           python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
 
       - name: Enforce CJ on every Booking reservation link
