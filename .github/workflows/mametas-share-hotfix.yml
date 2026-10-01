@@ -51,7 +51,7 @@ jobs:
                   return response.read().decode("utf-8","replace")
 
           consent=fetch("https://www.mametas.com/assets/consent.js?share-hotfix=1")
-          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.1","data-mametas-share-layer"):
+          for token in ("/assets/share.js?v=1.1","/assets/share.css?v=1.2","data-mametas-share-layer"):
               if token not in consent:
                   raise SystemExit(f"consent.js missing {token}")
 

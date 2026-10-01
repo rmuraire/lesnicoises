@@ -228,7 +228,7 @@
 
   function initialise(){
     addSettingsControl();
-    loadStyle("/assets/share.css?v=1.1","data-mametas-share-style");
+    loadStyle("/assets/share.css?v=1.2","data-mametas-share-style");
     loadLayer("/assets/share.js?v=1.1","data-mametas-share-layer");
     loadLayer("/assets/editorial-layer.js?v=1.0","data-mametas-editorial-layer");
     loadLayer("/assets/practical-layer.js?v=1.0","data-mametas-practical-layer");
