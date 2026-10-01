@@ -244,10 +244,10 @@ jobs:
 
       - name: Restore V5 intent release pages
         run: |
+          cp scripts/v5_release_templates/en-explore-index.html en/explore/index.html
+          cp scripts/v5_release_templates/fr-explore-index.html explore/index.html
+          cp scripts/v5_release_templates/sitemap.xml sitemap.xml
           git checkout "$GITHUB_SHA" -- \
-            en/explore/index.html \
-            explore/index.html \
-            sitemap.xml \
             en/explore/french-riviera-honeymoon/index.html \
             explore/lune-de-miel-cote-d-azur/index.html \
             en/explore/french-riviera-babymoon/index.html \
