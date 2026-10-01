@@ -265,7 +265,7 @@ jobs:
 
       - name: Apply Explore intent hierarchy and affiliate refonte
         run: |
-          base64 -d scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64 | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+          cat             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part00             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part01             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part02             scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64.part03             | base64 -d | gzip -dc > scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
           python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
 
       - name: Enforce CJ on every Booking reservation link
