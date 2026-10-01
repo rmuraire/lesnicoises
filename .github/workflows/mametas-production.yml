@@ -244,8 +244,8 @@ jobs:
 
       - name: Restore V5 intent release pages
         run: |
-          cp scripts/v5_release_templates/en-explore-index.html en/explore/index.html
-          cp scripts/v5_release_templates/fr-explore-index.html explore/index.html
+          cp scripts/v5_release_templates/en-explore-index.template en/explore/index.html
+          cp scripts/v5_release_templates/fr-explore-index.template explore/index.html
           cp scripts/v5_release_templates/sitemap.xml sitemap.xml
           git checkout "$GITHUB_SHA" -- \
             en/explore/french-riviera-honeymoon/index.html \
