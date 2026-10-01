@@ -184,8 +184,8 @@ def harmonise_nav(s, rel, lang):
     )
     # Mobile nav: support both site.css and V3 menu generations.
     for mobile_class in ("mobile-nav","mobile-menu"):
-        pattern=r'(<div\\s+class="'+mobile_class+r'"[^>]*>[\\s\\S]*?)(<ul>[\\s\\S]*?</ul>)([\\s\\S]*?</div>)'
-        m=re.search(pattern,s)
+        pattern='(<div class="'+mobile_class+'"[^>]*>.*?)(<ul>.*?</ul>)(.*?</div>)'
+        m=re.search(pattern,s,re.S)
         if m:
             s=s[:m.start()]+m.group(1)+ul+m.group(3)+s[m.end():]
             break
@@ -221,10 +221,10 @@ def patch_html(p):
     s=harmonise_booking_ctas(s,lang)
 
     # Cache-bust the unified presentation layer on every generated page.
-    s=re.sub(r'/assets/site\\.css(?:\\?v=[^"]+)?','/assets/site.css?v=24.0',s)
-    s=re.sub(r'/assets/v3\\.css(?:\\?v=[^"]+)?','/assets/v3.css?v=0.8',s)
-    s=re.sub(r'/assets/site\\.js(?:\\?v=[^"]+)?','/assets/site.js?v=1.4',s)
-    s=re.sub(r'/assets/v3\\.js(?:\\?v=[^"]+)?','/assets/v3.js?v=0.8',s)
+    s=re.sub(r'/assets/site[.]css(?:[?]v=[^"]+)?','/assets/site.css?v=24.0',s)
+    s=re.sub(r'/assets/v3[.]css(?:[?]v=[^"]+)?','/assets/v3.css?v=0.8',s)
+    s=re.sub(r'/assets/site[.]js(?:[?]v=[^"]+)?','/assets/site.js?v=1.4',s)
+    s=re.sub(r'/assets/v3[.]js(?:[?]v=[^"]+)?','/assets/v3.js?v=0.8',s)
 
     # Gay Riviera: correct social image and add a proper visible hero.
     if rel in ("en/gay-french-riviera/index.html","cote-dazur-gay/index.html"):
