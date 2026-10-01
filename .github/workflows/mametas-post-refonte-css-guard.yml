@@ -1,0 +1,110 @@
+name: Mametas post-refonte CSS guard
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-post-refonte-css-guard.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  restore-after-old-refonte:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Wait for superseded refonte run to finish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import json, os, time
+          from urllib.request import Request, urlopen
+          run_id=36928454015
+          url=f"https://api.github.com/repos/rmuraire/lesnicoises/actions/runs/{run_id}"
+          token=os.environ["GH_TOKEN"]
+          for _ in range(100):
+              req=Request(url,headers={
+                  "Authorization":f"Bearer {token}",
+                  "Accept":"application/vnd.github+json",
+                  "User-Agent":"MametasCSSGuard/1.0",
+              })
+              with urlopen(req,timeout=20) as r:
+                  data=json.load(r)
+              print("old refonte:",data["status"],data.get("conclusion"))
+              if data["status"]=="completed":
+                  break
+              time.sleep(5)
+          else:
+              raise SystemExit("Timed out waiting for superseded refonte run")
+          PY
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Download known-good CSS snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          path: /tmp/mametas-good-css
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: rmuraire/lesnicoises
+          run-id: 36914504302
+
+      - name: Restore known-good CSS
+        run: |
+          mkdir -p /tmp/mametas-good-site
+          unzip -oq /tmp/mametas-good-css/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d /tmp/mametas-good-site
+          cp /tmp/mametas-good-site/assets/site.css assets/site.css
+          cp /tmp/mametas-good-site/assets/v3.css assets/v3.css
+          test -s assets/site.css
+          test -s assets/v3.css
+
+      - name: Deploy guarded CSS
+        env:
+          MAMETAS_FORCE_FILES: assets/site.css;assets/v3.css
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify guarded CSS live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+          for url in (
+              "https://www.mametas.com/assets/site.css?guard=1",
+              "https://www.mametas.com/assets/v3.css?guard=1",
+          ):
+              last=None
+              for _ in range(6):
+                  try:
+                      req=Request(url,headers={"User-Agent":"MametasCSSGuard/1.0","Cache-Control":"no-cache","Pragma":"no-cache"})
+                      with urlopen(req,timeout=30) as r:
+                          css=r.read().decode("utf-8","replace")
+                      if "Editorial rhythm harmonisation — city/detail pages — 2026-10-01" in css:
+                          raise SystemExit(f"Unsafe city/detail hotfix still live in {url}")
+                      if len(css)>20000:
+                          print("Known-good CSS live:",url,len(css))
+                          break
+                      last=f"CSS too small: {len(css)}"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(3)
+              else:
+                  raise SystemExit(last)
+          print("Post-refonte CSS guard passed")
+          PY
