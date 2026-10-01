@@ -26,7 +26,7 @@ for rel, route, alt in pairs:
       '<header class="v3-header">','class="mobile-menu"','class="v3-footer"',
       'Mametas Checked',f'https://www.mametas.com{route}',f'https://www.mametas.com{alt}',
       '<div class="sources">','data-dense-v2="true"','class="intent-table"',
-      '"@type":"FAQPage"','class="intent-faq"'
+      '"@type":"FAQPage"','class="intent-faq"','/assets/v3.css?v=2.10'
     ]
     for token in required:
         if token not in s: errors.append(f'{rel}: missing {token}')
@@ -76,8 +76,11 @@ for rel in ('index.html','fr/index.html'):
     s=(ROOT/rel).read_text(encoding='utf-8')
     if 'home-hotel-voice-daniel-2026-03' not in s: errors.append(f'{rel}: Daniel voice missing')
 for rel in ('assets/v3.css','assets/site.css'):
-    if 'Homepage Hotel Fit traveller voice — 2026-10-01' not in (ROOT/rel).read_text(encoding='utf-8'):
+    css=(ROOT/rel).read_text(encoding='utf-8')
+    if 'Homepage Hotel Fit traveller voice — 2026-10-01' not in css:
         errors.append(f'{rel}: Daniel style missing')
+    if 'V5 intent detail layout closure — 2026-10-01' not in css or '.intent-detail .intent-table' not in css or '.intent-detail .intent-faq' not in css:
+        errors.append(f'{rel}: V5 dense detail styles missing')
 
 if errors:
     print('\n'.join('ERROR '+e for e in errors))
