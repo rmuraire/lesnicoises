@@ -420,28 +420,28 @@ jobs:
               "/explore/retraite-cote-d-azur/",
           ]
           errors=[]
-          for path in paths:
-              url=f"https://www.mametas.com{path}?deploy={sha}"
-              req=Request(url,headers={"User-Agent":"MametasReleaseCheck/1.0","Cache-Control":"no-cache"})
+          for page in paths:
+              url=f"https://www.mametas.com{page}?deploy={sha}"
+              req=Request(url,headers={"User-Agent":"MametasRefonteLive/1.0","Cache-Control":"no-cache"})
               try:
                   html=urlopen(req,timeout=20).read().decode("utf-8","replace")
               except Exception as exc:
-                  errors.append(f"{path}: fetch failed: {exc}")
+                  errors.append(f"{page}: fetch failed: {exc}")
                   continue
-              for token in ('data-dense-v2="true"','data-trend-2026="true"','class="intent-faq"','/assets/v3.css?v=2.10'):
+              for token in ('intent-hierarchy-refonte-2026-10-01','segment-hotel-grid','class="intent-faq"','/assets/v3.css?v=2.10'):
                   if token not in html:
-                      errors.append(f"{path}: missing {token}")
+                      errors.append(f"{page}: missing {token}")
           css_url=f"https://www.mametas.com/assets/v3.css?deploy={sha}"
           try:
-              css=urlopen(Request(css_url,headers={"User-Agent":"MametasReleaseCheck/1.0","Cache-Control":"no-cache"}),timeout=20).read().decode("utf-8","replace")
-              for token in ('.intent-detail .intent-table','.intent-detail .intent-faq','.intent-detail .trend-2026','.intent-detail .scouting-card'):
+              css=urlopen(Request(css_url,headers={"User-Agent":"MametasRefonteLive/1.0","Cache-Control":"no-cache"}),timeout=20).read().decode("utf-8","replace")
+              for token in ('Intent hierarchy + affiliate refonte — 2026-10-01','.segment-hotel-card','.decision-first'):
                   if token not in css:
                       errors.append(f"v3.css missing {token}")
           except Exception as exc:
               errors.append(f"v3.css fetch failed: {exc}")
           if errors:
               raise SystemExit("\n".join("ERROR "+e for e in errors))
-          print("V5 intent pillars live check OK:",len(paths),"pages")
+          print("Explore refonte live check OK:",len(paths),"pages")
           PY
 
       - name: Check solo female Riviera production
