@@ -244,9 +244,6 @@ jobs:
 
       - name: Restore V5 intent release pages
         run: |
-          cp scripts/v5_release_templates/en-explore-index.template en/explore/index.html
-          cp scripts/v5_release_templates/fr-explore-index.template explore/index.html
-          cp scripts/v5_release_templates/sitemap.xml sitemap.xml
           git checkout "$GITHUB_SHA" -- \
             en/explore/french-riviera-honeymoon/index.html \
             explore/lune-de-miel-cote-d-azur/index.html \
@@ -258,6 +255,9 @@ jobs:
             explore/vivre-antibes-expatrie/index.html \
             en/explore/retire-french-riviera/index.html \
             explore/retraite-cote-d-azur/index.html
+
+      - name: Apply V5 Explore architecture
+        run: python scripts/v5_intent_explore_patch_2026_10_01.py
 
       - name: Add Daniel Hotel Fit homepage voice
         run: python scripts/v5_home_hotel_voice_2026_10_01.py
