@@ -338,6 +338,9 @@ jobs:
       - name: Normalize hotel detail pages
         run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
 
+      - name: Apply targeted semantic cleanup
+        run: python scripts/v6_semantic_cleanup_2026_10_02.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
