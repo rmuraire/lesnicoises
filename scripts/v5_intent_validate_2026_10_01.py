@@ -23,10 +23,10 @@ for rel, route, alt in pairs:
         errors.append(f'missing {rel}'); continue
     s=p.read_text(encoding='utf-8')
     required=[
-      '<header class="v3-header">','class="mobile-menu"','class="v3-footer"',
+      'class="mametas-global-header"','class="mametas-global-mobile"','class="mametas-global-footer"',
       'Mametas Checked',f'https://www.mametas.com{route}',f'https://www.mametas.com{alt}',
       '<div class="sources">','data-layer="intent-hierarchy-refonte-2026-10-01"',
-      '"@type":"FAQPage"','class="intent-faq"','segment-hotel-grid','/assets/v3.css?v=2.10'
+      '"@type":"FAQPage"','class="intent-faq"','segment-hotel-grid','/assets/v3.css?v='
     ]
     for token in required:
         if token not in s: errors.append(f'{rel}: missing {token}')
@@ -39,7 +39,7 @@ for rel, route, alt in pairs:
     if s.count('target="_blank" rel="nofollow noopener"') < 3: errors.append(f'{rel}: too few checked sources')
     if s.count('data-layer="intent-hierarchy-refonte-2026-10-01"') != 1: errors.append(f'{rel}: refonte marker count')
     if s.count('class="segment-hotel-card"') < 2: errors.append(f'{rel}: too few hotel decision cards')
-    if s.count('<details>') < 6: errors.append(f'{rel}: fewer than 6 FAQ items')
+    if len(re.findall(r'<details\b',s)) < 6: errors.append(f'{rel}: fewer than 6 FAQ items')
     scripts=re.findall(r'<script type="application/ld\+json">(.*?)</script>',s,re.S)
     faq_ok=False
     for raw in scripts:
@@ -51,7 +51,7 @@ for rel, route, alt in pairs:
             pass
     if not faq_ok: errors.append(f'{rel}: invalid FAQPage schema')
     if s.count('<table') != s.count('</table>'): errors.append(f'{rel}: table tags unbalanced')
-    if s.count('<details>') != s.count('</details>'): errors.append(f'{rel}: details tags unbalanced')
+    if len(re.findall(r'<details\b',s)) != s.count('</details>'): errors.append(f'{rel}: details tags unbalanced')
     if s.count('<ul') != s.count('</ul>'): errors.append(f'{rel}: ul tags unbalanced')
     if '—' in s: errors.append(f'{rel}: em dash outside house style')
     source_match=re.search(r'<div class="sources">([\s\S]*?)</div>',s)
