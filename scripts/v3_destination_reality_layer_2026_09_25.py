@@ -1,51 +1,15 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# Canonical destination decision data. This is the single source used by every
-# destination Reality Check so labels and mobility wording cannot drift again.
-BASES = {
-    "nice": {
-        "fr": ("Voiture inutile pour un premier séjour", "€€ à €€€€", "Très solide toute l’année", "Faible"),
-        "en": ("No car needed for a first trip", "€€ to €€€€", "Strong year-round", "Low"),
-    },
-    "cannes": {
-        "fr": ("Très simple sans voiture", "€€ à €€€€", "Printemps à début automne", "Faible, sauf grands événements"),
-        "en": ("Very easy without a car", "€€ to €€€€", "Spring to early autumn", "Low, except during major events"),
-    },
-    "antibes": {
-        "fr": ("Oui sans voiture en ville. Le Cap demande plus.", "€€ à €€€€", "Mai à septembre pour la plage", "Faible en ville, moyenne sur le Cap"),
-        "en": ("Yes without a car in town. The Cap asks for more.", "€€ to €€€€", "May to September for beach time", "Low in town, medium on the Cap"),
-    },
-    "villefranche": {
-        "fr": ("Possible sans voiture, moins fluide que Nice", "€€ à €€€€", "Printemps et automne sont très faciles à aimer", "Moyenne : relief et correspondances"),
-        "en": ("Car-free works, less seamlessly than Nice", "€€ to €€€€", "Spring and autumn are particularly easy", "Medium: hills and transfers"),
-    },
-    "monaco": {
-        "fr": ("Sans voiture recommandé", "€€€ à €€€€", "Toute l’année, avec pics lors des grands événements", "Moyenne : relief et budget"),
-        "en": ("No car recommended", "€€€ to €€€€", "Year-round, with event-driven spikes", "Medium: hills and spend"),
-    },
-    "menton": {
-        "fr": ("Très bon sans voiture", "€ à €€€", "Très agréable hors plein été", "Faible à moyenne : vous êtes très à l’est"),
-        "en": ("Very good without a car", "€ to €€€", "Particularly good outside peak summer", "Low to medium: you are far east"),
-    },
-    "eze": {
-        "fr": ("Bus direct vers le village, ou train + correspondance", "€€ à €€€€", "Toute l’année ; tôt ou tard en haute saison", "Moyenne : Èze-sur-Mer et Èze Village sont distincts"),
-        "en": ("Direct bus to the village, or train + connection", "€€ to €€€€", "Year-round; early or late in peak season", "Medium: Èze-sur-Mer and Èze Village are different stops"),
-    },
-    "sainttropez": {
-        "fr": ("Voiture, bateau ou transferts à organiser", "€€€ à €€€€", "Mai à septembre, avec forte pression en été", "Élevée"),
-        "en": ("Car, boat or transfers need planning", "€€€ to €€€€", "May to September, with heavy summer pressure", "High"),
-    },
-    "saintpaul": {
-        "fr": ("Voiture très utile. Bus possible.", "€€ à €€€€", "Printemps et automne sont les plus souples", "Moyenne à élevée : accès intérieur"),
-        "en": ("A car is very useful. Bus is possible.", "€€ to €€€€", "Spring and autumn are the easiest", "Medium to high: inland access"),
-    },
-}
+CITY_SYSTEM_PATH = ROOT / "data/city-system-v1.json"
+CITY_SYSTEM = json.loads(CITY_SYSTEM_PATH.read_text(encoding="utf-8"))
+CITY_DATA = CITY_SYSTEM["cities"]
 
 PAGES = {
     "riviera-guide/nice/index.html": ("nice","fr","Nice"),
@@ -69,7 +33,11 @@ PAGES = {
 }
 
 def block(base: str, lang: str) -> str:
-    mobility, budget, season, friction = BASES[base][lang]
+    reality = CITY_DATA[base]["reality"][lang]
+    mobility = reality["getting_around"]
+    budget = reality["budget"]
+    season = reality["season"]
+    friction = reality["logistics"]
     if lang == "fr":
         labels = ("Déplacements", "Budget", "Saison", "Logistique")
         intro = "Ce que cette destination implique vraiment"
