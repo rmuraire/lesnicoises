@@ -193,6 +193,18 @@ def patch_home(path: Path, lang: str) -> bool:
     return False
 
 
+def _ensure_data_key(block: str, key: str) -> str:
+    if "data-mametas-city=" in block:
+        return re.sub(
+            r'data-mametas-city=["\'][^"\']+["\']',
+            f'data-mametas-city="{key}"',
+            block,
+            count=1,
+            flags=re.I,
+        )
+    return re.sub(r'<a\b', f'<a data-mametas-city="{key}"', block, count=1, flags=re.I)
+
+
 def _find_city_anchor(text: str, route: str):
     pattern = re.compile(
         rf'<a\b[^>]*href=["\']{re.escape(route)}["\'][^>]*>[\s\S]*?</a>',
@@ -241,7 +253,7 @@ def _normalize_places_card(block: str, key: str, lang: str) -> str:
     elif re.search(r'<h3\b', block, re.I):
         block = re.sub(
             r'(<h3\b)',
-            f'<span class="mametas-city-tag">{tag}</span>\1',
+            rf'<span class="mametas-city-tag">{tag}</span>\1',
             block,
             count=1,
             flags=re.I,
