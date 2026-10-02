@@ -78,6 +78,13 @@ for p in ROOT.rglob("*.html"):
         for bad in ("Mametas rule", "MAMETAS RULE", "MAMETAS SAYS", "MAMETAS HOTEL TAKE"):
             if bad in s:
                 errors.append(f"{rel}: English UI label remains on FR page ({bad})")
+        visible = re.sub(r'<script\b[^>]*>[\s\S]*?</script>', ' ', s, flags=re.I)
+        visible = re.sub(r'<style\b[^>]*>[\s\S]*?</style>', ' ', visible, flags=re.I)
+        visible = re.sub(r'<[^>]+>', ' ', visible)
+        if re.search(r'\bpoints? de chute\b', visible, re.I):
+            errors.append(f"{rel}: legacy French base term point de chute remains")
+        if "Faire Riviera Fit →" in visible:
+            errors.append(f"{rel}: legacy Riviera Fit CTA label remains")
     else:
         # English heading punctuation only: no French-style space before colon.
         for m in re.finditer(r'<h[1-3]\b[^>]*>(.*?)</h[1-3]>', s, re.S | re.I):
