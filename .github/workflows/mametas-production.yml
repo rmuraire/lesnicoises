@@ -364,7 +364,7 @@ jobs:
 
       - name: Deploy Share assets immediately
         env:
-          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css;assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
+          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css;assets/mametas-shell-v1.js;assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -827,7 +827,7 @@ jobs:
           from urllib.request import Request, urlopen
 
           checks = {
-              "https://www.mametas.com/": ("mametas-global-header", "mametas-global-footer", "/assets/mametas-shell-v1.css?v=1.0", ">Plan<", ">Places<", ">Practical<"),
+              "https://www.mametas.com/": ("mametas-global-header", "mametas-global-footer", "/assets/mametas-shell-v1.css?v=1.1", "/assets/mametas-shell-v1.js?v=1.0", ">Plan<", ">Places<", ">Practical<"),
               "https://www.mametas.com/fr/": ("mametas-global-header", "mametas-global-footer", ">Préparer<", ">Destinations<", ">Pratique<"),
               "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/": ("mametas-global-header", ">Places<", "/riviera-guide/villefranche-cap-ferrat/"),
               "https://www.mametas.com/en/riviera-guide/antibes/": ("mametas-global-header", ">Places<", "/riviera-guide/antibes/"),
