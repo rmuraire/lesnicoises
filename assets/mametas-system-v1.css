@@ -1,0 +1,296 @@
+/* Mametas Presentation System v1 — 2026-10-02
+   One late-stage system layer for type, density and editorial components.
+   Built to sit on top of the fully generated CSS, not the source CSS alone. */
+
+:root{
+  --m-space-section:clamp(48px,5vw,72px);
+  --m-space-section-mobile:38px;
+  --m-rule:rgba(20,33,61,.16);
+}
+
+/* Type scale */
+.home-page .section-heading h2,
+.core-hub-final .section-heading h2{
+  font-size:clamp(34px,3.35vw,46px)!important;
+  line-height:1.04!important;
+  letter-spacing:-.035em!important;
+}
+.core-hub-final .article-hero h1,
+.core-hub-final .page-hero h1{
+  font-size:clamp(44px,4.8vw,64px)!important;
+  line-height:1!important;
+}
+.core-hub-final .article-deck,
+.core-hub-final .lead,
+.article-deck,
+.article .standfirst,
+.hotel-detail .standfirst,
+.culture-detail .standfirst,
+.page-hero .lead{
+  font-size:clamp(18px,1.55vw,22px)!important;
+  line-height:1.48!important;
+}
+.template-polished .article-hero h1,
+.places-unified .article-hero h1{
+  font-size:clamp(44px,5.35vw,68px)!important;
+  line-height:.99!important;
+}
+.article-body h2,
+.intent-detail .article-body h2{
+  margin-top:48px!important;
+  margin-bottom:12px!important;
+  font-size:clamp(31px,3vw,37px)!important;
+  line-height:1.08!important;
+}
+.article-body h3,
+.intent-detail .article-body h3{
+  font-size:clamp(23px,2.15vw,27px)!important;
+  line-height:1.14!important;
+}
+
+/* Density */
+.home-page .v3-section,
+.core-hub-final .v3-section,
+.template-polished .v3-section,
+.intent-detail .v3-section{
+  padding-top:var(--m-space-section)!important;
+  padding-bottom:var(--m-space-section)!important;
+}
+.home-page .section-heading,
+.core-hub-final .section-heading{
+  margin-bottom:24px!important;
+  gap:clamp(20px,3vw,36px)!important;
+}
+.home-page .section-heading>p,
+.core-hub-final .section-heading>p{
+  font-size:13px!important;
+  line-height:1.55!important;
+}
+
+/* Homepage tools */
+.home-page .riviera-fit-home{
+  gap:clamp(28px,3.8vw,48px)!important;
+}
+.home-page .riviera-fit-home-copy h2{
+  max-width:13ch!important;
+  margin-bottom:14px!important;
+  font-size:clamp(38px,3.65vw,50px)!important;
+  line-height:1.01!important;
+}
+.home-page .riviera-fit-home-punch{
+  margin-bottom:12px!important;
+  font-size:clamp(18px,1.55vw,21px)!important;
+  line-height:1.25!important;
+}
+.home-page .riviera-fit-home-copy>p:not(.eyebrow):not(.riviera-fit-home-punch){
+  margin-bottom:20px!important;
+  line-height:1.6!important;
+}
+.home-page .riviera-fit-home-demo>.riviera-fit-demo-label{
+  margin:14px 16px 0!important;
+}
+.home-page .riviera-fit-home-verdict{
+  padding:16px 18px 18px!important;
+}
+.home-page .riviera-fit-home-verdict h3{
+  margin:8px 0 10px!important;
+  font-size:clamp(25px,2.45vw,34px)!important;
+}
+.home-page .stay-intro h2{
+  max-width:10ch!important;
+  margin-bottom:16px!important;
+  font-size:clamp(42px,4.6vw,58px)!important;
+  line-height:1!important;
+}
+.home-page .stay-intro p{line-height:1.62!important}
+.home-page #riviera-first-trip-edit .first-trip-card{
+  min-height:0!important;
+  padding:16px 18px!important;
+}
+.home-page #riviera-first-trip-edit .first-trip-card h3{
+  font-size:21px!important;
+  line-height:1.14!important;
+}
+.home-page #riviera-first-trip-edit .first-trip-card p{
+  line-height:1.45!important;
+}
+
+/* Hotel Fit / Stay */
+.hotels-harmonised .hub-adoption-cue-inner{
+  padding-top:15px!important;
+  padding-bottom:15px!important;
+}
+.hotels-harmonised .hub-adoption-cue strong{
+  font-size:clamp(19px,1.65vw,24px)!important;
+}
+.hotels-harmonised .hotel-fit-launch{
+  padding:clamp(44px,5vw,66px) 0!important;
+  border-top-width:2px!important;
+}
+.hotels-harmonised .hotel-fit-launch-grid{
+  gap:clamp(28px,4vw,52px)!important;
+}
+.hotels-harmonised .hotel-fit-launch h2{
+  margin-bottom:14px!important;
+  font-size:clamp(36px,4vw,52px)!important;
+  line-height:1.01!important;
+}
+.hotels-harmonised .hotel-fit-launch-punch{
+  margin-bottom:14px!important;
+  font-size:clamp(19px,1.9vw,24px)!important;
+}
+.hotels-harmonised .hotel-fit-launch-body{
+  margin-bottom:20px!important;
+  font-size:14px!important;
+  line-height:1.62!important;
+}
+.hotels-harmonised .hotel-fit-demo-priorities,
+.hotels-harmonised .hotel-fit-demo-recommendation{
+  padding:16px 18px!important;
+}
+
+/* City pages: one editorial pattern for all decision lists */
+.places-unified [data-static-editorial="true"]>h2{
+  margin-top:48px!important;
+  margin-bottom:10px!important;
+  font-size:clamp(31px,3vw,37px)!important;
+  line-height:1.08!important;
+}
+.places-unified [data-static-editorial="true"]>h2 + p{
+  margin-top:0!important;
+  margin-bottom:20px!important;
+}
+.places-unified [data-static-editorial="true"] .mini-rule,
+.places-unified .article>.mini-rule{
+  margin:0!important;
+  padding:18px 0 19px!important;
+  border:0!important;
+  border-top:1px solid var(--m-rule)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:var(--ink-soft)!important;
+  font-family:var(--sans)!important;
+  font-size:14px!important;
+  line-height:1.58!important;
+}
+.places-unified [data-static-editorial="true"] .mini-rule:last-child{
+  border-bottom:1px solid var(--m-rule)!important;
+}
+.places-unified [data-static-editorial="true"] .mini-rule strong,
+.places-unified .article>.mini-rule strong{
+  display:block!important;
+  margin:0 0 6px!important;
+  color:var(--ink)!important;
+  font-family:var(--serif)!important;
+  font-size:clamp(23px,2vw,27px)!important;
+  font-weight:500!important;
+  line-height:1.16!important;
+  letter-spacing:-.02em!important;
+  text-decoration:none!important;
+}
+.places-unified [data-static-editorial="true"] .mini-rule a,
+.places-unified [data-static-editorial="true"] .mini-rule strong a{
+  text-decoration:none!important;
+}
+
+/* Mametas rule / day cards */
+.places-unified .article-body .day-card{
+  margin:24px 0!important;
+  padding:18px 0 19px!important;
+  border:0!important;
+  border-top:1px solid var(--m-rule)!important;
+  border-bottom:1px solid var(--m-rule)!important;
+  background:transparent!important;
+}
+.places-unified .article-body .day-card .day{
+  margin-bottom:7px!important;
+  color:var(--coral)!important;
+  font-size:9px!important;
+}
+.places-unified .article-body .day-card h3{
+  margin:0 0 8px!important;
+  font-size:clamp(23px,2vw,27px)!important;
+  line-height:1.16!important;
+}
+.places-unified .article-body .day-card p{margin-bottom:8px!important}
+.places-unified .article-body .day-card p:last-child{margin-bottom:0!important}
+
+/* Hairline accent */
+.destination-reality-cta a{
+  border-bottom:1px solid var(--coral)!important;
+  text-decoration:none!important;
+  text-decoration-thickness:1px!important;
+  text-underline-offset:3px!important;
+}
+
+/* Compact secondary callouts */
+.verdict-box{padding:22px 24px!important}
+.verdict-box p{line-height:1.48!important}
+.source-box{padding-top:14px!important;padding-bottom:14px!important}
+
+@media(max-width:760px){
+  .home-page .v3-section,
+  .core-hub-final .v3-section,
+  .template-polished .v3-section,
+  .intent-detail .v3-section{
+    padding-top:var(--m-space-section-mobile)!important;
+    padding-bottom:var(--m-space-section-mobile)!important;
+  }
+  .core-hub-final .article-hero h1,
+  .core-hub-final .page-hero h1,
+  .template-polished .article-hero h1,
+  .places-unified .article-hero h1{
+    max-width:14ch!important;
+    font-size:clamp(36px,10vw,44px)!important;
+    line-height:1.02!important;
+  }
+  .core-hub-final .article-deck,
+  .core-hub-final .lead,
+  .article-deck,
+  .article .standfirst,
+  .page-hero .lead{
+    font-size:clamp(17px,4.8vw,20px)!important;
+    line-height:1.48!important;
+  }
+  .home-page .section-heading h2,
+  .core-hub-final .section-heading h2{
+    font-size:clamp(29px,8vw,35px)!important;
+    line-height:1.06!important;
+  }
+  .article-body h2,
+  .intent-detail .article-body h2,
+  .places-unified [data-static-editorial="true"]>h2{
+    margin-top:38px!important;
+    font-size:clamp(28px,7.8vw,32px)!important;
+    line-height:1.1!important;
+  }
+  .article-body h3,.intent-detail .article-body h3{font-size:22px!important}
+  .home-page .riviera-fit-home-copy h2{
+    max-width:14ch!important;
+    font-size:clamp(34px,9.8vw,41px)!important;
+  }
+  .home-page .riviera-fit-home-punch{font-size:18px!important}
+  .home-page .stay-intro h2{
+    max-width:13ch!important;
+    font-size:clamp(35px,10vw,43px)!important;
+  }
+  .hotels-harmonised .hotel-fit-launch h2{
+    font-size:clamp(32px,9vw,40px)!important;
+  }
+  .hotels-harmonised .hotel-fit-launch-punch{font-size:18px!important}
+  .places-unified [data-static-editorial="true"] .mini-rule,
+  .places-unified .article>.mini-rule{
+    padding:15px 0 16px!important;
+    font-size:14px!important;
+  }
+  .places-unified [data-static-editorial="true"] .mini-rule strong,
+  .places-unified .article>.mini-rule strong,
+  .places-unified .article-body .day-card h3{
+    font-size:22px!important;
+  }
+  .places-unified .article-body .day-card{
+    margin:20px 0!important;
+    padding:15px 0 16px!important;
+  }
+  .verdict-box{padding:18px 20px!important}
+}
