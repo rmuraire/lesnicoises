@@ -1,0 +1,220 @@
+name: Mametas presentation v1.1 live-safe deploy
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-presentation-v11-hotfix.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-presentation-v11-live-safe
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Pull current live generated files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          import time
+
+          files={
+            "assets/site.css":"https://www.mametas.com/assets/site.css?psv11=1",
+            "assets/v3.css":"https://www.mametas.com/assets/v3.css?psv11=1",
+            "index.html":"https://www.mametas.com/?psv11=1",
+            "fr/index.html":"https://www.mametas.com/fr/?psv11=1",
+            "en/hotels/index.html":"https://www.mametas.com/en/hotels/?psv11=1",
+            "hotels/index.html":"https://www.mametas.com/hotels/?psv11=1",
+            "plan/index.html":"https://www.mametas.com/plan/?psv11=1",
+            "fr/planifier/index.html":"https://www.mametas.com/fr/planifier/?psv11=1",
+            "en/riviera-guide/index.html":"https://www.mametas.com/en/riviera-guide/?psv11=1",
+            "riviera-guide/index.html":"https://www.mametas.com/riviera-guide/?psv11=1",
+            "en/good-finds/index.html":"https://www.mametas.com/en/good-finds/?psv11=1",
+            "bons-plans/index.html":"https://www.mametas.com/bons-plans/?psv11=1",
+            "en/riviera-fit/index.html":"https://www.mametas.com/en/riviera-fit/?psv11=1",
+            "riviera-fit/index.html":"https://www.mametas.com/riviera-fit/?psv11=1",
+          }
+
+          for rel,url in files.items():
+              last=None
+              for _ in range(5):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasPresentationV11/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          data=r.read()
+                          if r.status==200 and len(data)>500:
+                              p=Path(rel); p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(data)
+                              print("Pulled live:",rel,len(data))
+                              break
+                          last=f"HTTP {r.status}, {len(data)} bytes"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(2)
+              else:
+                  raise SystemExit(f"Could not pull {url}: {last}")
+          PY
+
+      - name: Apply Mametas Presentation System v1.1
+        run: python scripts/apply_mametas_system_v1.py
+
+      - name: Preflight v1.1
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          for rel,min_size in (("assets/site.css",80000),("assets/v3.css",120000)):
+              p=Path(rel); text=p.read_text(encoding="utf-8",errors="ignore")
+              if p.stat().st_size<min_size:
+                  raise SystemExit(f"{rel} unexpectedly small: {p.stat().st_size}")
+              if text.count("{")!=text.count("}"):
+                  raise SystemExit(f"{rel} has unbalanced braces")
+              for token in (
+                  "v1.1 — denser hubs",
+                  ".hesitation-compact",
+                  ".agenda-hub .page-hero h1",
+                  ".home-page .home-now-copy h2",
+                  ".places-unified #what-not-to-miss",
+                  ".plan-harmonised .fit-preview-head h3",
+              ):
+                  if token not in text:
+                      raise SystemExit(f"{rel} missing {token}")
+              print("CSS v1.1 preflight:",rel,p.stat().st_size)
+
+          plan=Path("plan/index.html").read_text(encoding="utf-8",errors="ignore")
+          for old in ("Start with the base. Everything else gets easier.","The decisions that remove options."):
+              if old in plan:
+                  raise SystemExit(f"Plan still contains redundant copy: {old}")
+          for new in ("FIRST DECISION","Choose your base.","Five questions. One recommendation."):
+              if new not in plan:
+                  raise SystemExit(f"Plan missing {new}")
+
+          places=Path("en/riviera-guide/index.html").read_text(encoding="utf-8",errors="ignore")
+          if "hesitation-compact" not in places:
+              raise SystemExit("Places hesitation section was not marked compact")
+          if 'href="/plan/"><span class="decision-number">03</span><h3>Without a car?</h3>' not in places:
+              raise SystemExit("Places Without a car numbering is not 03")
+          if 'href="/plan/five-days-nice-no-car/"><span class="decision-number">04</span><h3>Five days?</h3>' not in places:
+              raise SystemExit("Places Five days numbering is not 04")
+
+          agenda=Path("en/good-finds/index.html").read_text(encoding="utf-8",errors="ignore")
+          if 'class="agenda-hub"' not in agenda and " agenda-hub" not in agenda:
+              raise SystemExit("Agenda hub class missing")
+
+          fit=Path("en/riviera-fit/index.html").read_text(encoding="utf-8",errors="ignore")
+          if "riviera-fit-tool" not in fit:
+              raise SystemExit("Riviera Fit body class missing")
+
+          print("Mametas Presentation v1.1 preflight passed")
+          PY
+
+      - name: Deploy v1.1 to OVH
+        env:
+          MAMETAS_FORCE_FILES: >-
+            assets/site.css;assets/v3.css;
+            index.html;fr/index.html;en/hotels/index.html;hotels/index.html;
+            plan/index.html;fr/planifier/index.html;
+            en/riviera-guide/index.html;riviera-guide/index.html;
+            en/good-finds/index.html;bons-plans/index.html;
+            en/riviera-fit/index.html;riviera-fit/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify v1.1 live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+
+          def fetch(url):
+              last=None
+              for _ in range(7):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasPresentationV11Check/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          body=r.read().decode("utf-8","replace")
+                          if r.status==200:
+                              return body
+                          last=f"HTTP {r.status}"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(3)
+              raise SystemExit(f"{url}: {last}")
+
+          for url,min_len in (
+              ("https://www.mametas.com/assets/site.css?psv11check=1",80000),
+              ("https://www.mametas.com/assets/v3.css?psv11check=1",120000),
+          ):
+              css=fetch(url)
+              if len(css)<min_len:
+                  raise SystemExit(f"{url} too small: {len(css)}")
+              for token in ("v1.1 — denser hubs",".hesitation-compact",".agenda-hub .page-hero h1",".places-unified #what-not-to-miss"):
+                  if token not in css:
+                      raise SystemExit(f"{url} missing {token}")
+              print("v1.1 CSS live:",url,len(css))
+
+          plan=fetch("https://www.mametas.com/plan/?psv11check=1")
+          if "Start with the base. Everything else gets easier." in plan:
+              raise SystemExit("Old Plan adoption cue remains live")
+          for token in ("FIRST DECISION","Choose your base.","Five questions. One recommendation."):
+              if token not in plan:
+                  raise SystemExit(f"Plan live missing {token}")
+          print("Plan hierarchy live")
+
+          places=fetch("https://www.mametas.com/en/riviera-guide/?psv11check=1")
+          for token in ("hesitation-compact",'>03</span><h3>Without a car?</h3>', '>04</span><h3>Five days?</h3>'):
+              if token not in places:
+                  raise SystemExit(f"Places live missing {token}")
+          print("Places density/numbering live")
+
+          agenda=fetch("https://www.mametas.com/en/good-finds/?psv11check=1")
+          if "agenda-hub" not in agenda:
+              raise SystemExit("Agenda class not live")
+          print("Agenda hierarchy live")
+
+          fit=fetch("https://www.mametas.com/en/riviera-fit/?psv11check=1")
+          if "riviera-fit-tool" not in fit:
+              raise SystemExit("Riviera Fit class not live")
+          print("Riviera Fit hierarchy live")
+
+          for url in (
+              "https://www.mametas.com/en/riviera-guide/nice/?psv11check=1",
+              "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/?psv11check=1",
+              "https://www.mametas.com/en/riviera-guide/antibes/?psv11check=1",
+          ):
+              body=fetch(url)
+              if 'id="what-not-to-miss"' not in body:
+                  raise SystemExit(f"{url} missing shared city component")
+              print("City shared component present:",url)
+
+          print("Mametas Presentation System v1.1 is live")
+          PY
