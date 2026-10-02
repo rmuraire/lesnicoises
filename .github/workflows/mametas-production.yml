@@ -326,6 +326,12 @@ jobs:
       - name: Apply final Riviera UI v2
         run: python scripts/apply_riviera_ui_v2.py
 
+      - name: Apply V6 coherence envelope
+        run: python scripts/v6_coherence_envelope_2026_10_02.py
+
+      - name: Validate V6 coherence envelope
+        run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
       - name: Deploy Share assets immediately
         env:
           MAMETAS_FORCE_FILES: assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
