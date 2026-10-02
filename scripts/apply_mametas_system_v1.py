@@ -196,9 +196,10 @@ def normalize_city_must(path: Path, rel: str):
     else:
         raise SystemExit(f"{rel}: no safe insertion point for canonical city component")
 
-    # Guard against duplicate visible titles.
-    if text.count(cfg["must_title"]) != 1:
-        raise SystemExit(f"{rel}: expected one canonical city title, found {text.count(cfg['must_title'])}")
+    # Guard against duplicate visible titles (HTML entities included).
+    rendered_title=html.escape(cfg["must_title"])
+    if text.count(rendered_title) != 1:
+        raise SystemExit(f"{rel}: expected one canonical city title, found {text.count(rendered_title)}")
 
     write_if_changed(path,text,before,"Normalized city decision component:")
 
