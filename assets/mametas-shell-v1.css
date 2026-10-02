@@ -492,3 +492,30 @@ body.mametas-menu-open{
     display:none!important;
   }
 }
+
+
+/* Keep global header visible while menu is open — 2026-10-02 */
+.mametas-global-header{
+  z-index:300!important;
+}
+.mametas-global-mobile[open]>summary{
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  z-index:302!important;
+}
+.mametas-global-mobile[open]>.mametas-global-mobile-panel{
+  top:82px!important;
+  height:calc(100vh - 82px)!important;
+  height:calc(100dvh - 82px)!important;
+  min-height:0!important;
+  padding-top:28px!important;
+}
+@media(max-width:700px){
+  .mametas-global-mobile[open]>.mametas-global-mobile-panel{
+    top:72px!important;
+    height:calc(100vh - 72px)!important;
+    height:calc(100dvh - 72px)!important;
+    padding-top:24px!important;
+  }
+}
