@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """Validate Mametas destination-page coherence after phase 2."""
 from pathlib import Path
+import html
 import re
 
 from mametas_coherence_config import (
