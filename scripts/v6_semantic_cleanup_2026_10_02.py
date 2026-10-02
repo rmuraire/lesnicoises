@@ -38,6 +38,52 @@ def clean_english_heading_colons(text: str) -> str:
         return m.group(1) + inner + m.group(3)
     return re.sub(r'(<h[1-3]\b[^>]*>)(.*?)(</h[1-3]>)', repl, text, flags=re.S | re.I)
 
+def normalize_source_block_heading(text: str, lang: str) -> str:
+    expected = "Sources vérifiées" if lang == "fr" else "Sources checked"
+    pattern = re.compile(
+        r'<div\b[^>]*class=["\'][^"\']*sources[^"\']*["\'][^>]*>',
+        re.I,
+    )
+    pos = 0
+    while True:
+        m = pattern.search(text, pos)
+        if not m:
+            break
+        # Work only near the start of the source block; no need to parse the
+        # whole page or alter source content.
+        window_end = min(len(text), m.end() + 700)
+        window = text[m.end():window_end]
+
+        heading = re.search(r'<h[2-4]\b[^>]*>.*?</h[2-4]>', window, re.S | re.I)
+        if heading:
+            new_heading = f"<h2>{expected}</h2>"
+            abs_start = m.end() + heading.start()
+            abs_end = m.end() + heading.end()
+            text = text[:abs_start] + new_heading + text[abs_end:]
+            pos = abs_start + len(new_heading)
+            continue
+
+        strong = re.search(
+            r'<strong>\s*(?:Checked sources|Verified sources|Sources checked|Sources verified|Sources vérifiées|Sources consultées|Sources)\s*:?</strong>',
+            window,
+            re.I,
+        )
+        if strong:
+            new_heading = f"<h2>{expected}</h2>"
+            abs_start = m.end() + strong.start()
+            abs_end = m.end() + strong.end()
+            text = text[:abs_start] + new_heading + text[abs_end:]
+            pos = abs_start + len(new_heading)
+            continue
+
+        # Formal sources block with no visible heading: add one rather than
+        # leaving a generation-specific silent block.
+        insert = f"<h2>{expected}</h2>"
+        text = text[:m.end()] + insert + text[m.end():]
+        pos = m.end() + len(insert)
+    return text
+
+
 def clean_french_labels(text: str) -> str:
     text = text.replace('<span class="day">Mametas rule</span>', '<span class="day">La règle Mametas</span>')
     text = text.replace('<span class="label">MAMETAS RULE</span>', '<span class="label">LA RÈGLE MAMETAS</span>')
@@ -76,8 +122,15 @@ def main() -> None:
         lang = page_lang(text)
         if lang == "en":
             text = clean_english_heading_colons(text)
+            text = text.replace('href="/#riviera-fit"', 'href="/en/riviera-fit/"')
+            text = text.replace("href='/#riviera-fit'", "href='/en/riviera-fit/'")
         else:
             text = clean_french_labels(text)
+            text = text.replace('href="/#riviera-fit"', 'href="/riviera-fit/"')
+            text = text.replace("href='/#riviera-fit'", "href='/riviera-fit/'")
+            text = text.replace('href="/fr/#riviera-fit"', 'href="/riviera-fit/"')
+            text = text.replace("href='/fr/#riviera-fit'", "href='/riviera-fit/'")
+        text = normalize_source_block_heading(text, lang)
         if text != before:
             path.write_text(text, encoding="utf-8")
             changed.append(rel.as_posix())
