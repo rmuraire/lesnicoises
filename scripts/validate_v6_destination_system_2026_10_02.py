@@ -30,7 +30,7 @@ for slug, cfg in DESTINATIONS.items():
         name = cfg["name"][lang]
         back_href, back_label = DESTINATION_BACK[lang]
         fit_href, fit_label = RIVIERA_FIT[lang]
-        eyebrow = ("PLACES" if lang == "en" else "DESTINATIONS") + " · " + name
+        eyebrow = html.escape(("PLACES" if lang == "en" else "DESTINATIONS") + " · " + name)
 
         checks = [
             (s.count('data-destination-reality="canonical"') == 1, "canonical Reality Check count"),
