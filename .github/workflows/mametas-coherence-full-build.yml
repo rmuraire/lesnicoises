@@ -1,0 +1,362 @@
+name: Mametas coherence full-build validation
+
+on:
+  push:
+    branches:
+      - mametas-coherence-cleanup-2026-10-02-v2
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-coherence-full-build
+  cancel-in-progress: true
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko pillow
+
+      - name: Repair Gay Riviera visual asset
+        run: python scripts/repair_gay_riviera_asset.py
+
+      - name: Materialize Explore refonte assets
+        run: |
+          unzip -oq refonte-assets-ready-for-github.zip -d .
+          for f in \
+            assets/editorial/refonte-2026/honeymoon.webp \
+            assets/editorial/refonte-2026/babymoon.webp \
+            assets/editorial/refonte-2026/proposal.webp \
+            assets/editorial/refonte-2026/expat-antibes.webp \
+            assets/editorial/refonte-2026/retirement.webp \
+            assets/hotels/refonte-2026/la-reserve-beaulieu.webp \
+            assets/hotels/refonte-2026/mercure-grimaldi.webp \
+            assets/hotels/refonte-2026/riva-art-spa.webp
+          do
+            test -s "$f" || { echo "Missing refonte asset: $f"; exit 1; }
+          done
+
+      - name: Materialize Nice practical stock
+        run: python scripts/materialize_nice_pratique_stock.py
+
+      - name: Materialize Renaud Nice photos
+        run: python scripts/materialize_renaud_photos.py
+
+      - name: Materialize editorial HTML
+        run: python scripts/materialize_editorial_html.py
+
+      - name: Materialize hotel hubs
+        run: python scripts/materialize_hotel_hubs.py
+
+      - name: Add September 13 hotels
+        run: python scripts/run_hotel_expansion_2026_09_13.py
+
+      - name: Strengthen Nice hotel mid-range merchandising
+        run: python scripts/nice_hotel_merchandising_2026_09_14.py
+
+      - name: Add global hotel finder entry points
+        run: python scripts/hotel_finder_hub_pass.py
+
+      - name: Apply Mametas editorial voice
+        run: |
+          python scripts/mametas_voice_pass.py
+          python scripts/mametas_voice_hubs.py
+          python scripts/mametas_voice_second_pass.py
+
+      - name: Apply Claude audit corrections
+        run: |
+          python scripts/apply_claude_audit_2026_09_13.py
+          python scripts/audit_hotfix_2026_09_14.py
+
+      - name: Simplify affiliate blocks and hotel exits
+        run: python scripts/affiliate_and_hotel_exit_pass.py
+
+      - name: Apply Astra decision paths
+        run: python scripts/astra_ux_2026_09_16.py
+
+      - name: Keep Places decision blocks inside editorial column
+        run: python scripts/places_layout_hotfix_2026_09_16.py
+
+      - name: Repair editorial card images
+        run: python scripts/editorial_image_hotfix_2026_09_16.py
+
+      - name: Add curated GetYourGuide activities
+        run: python scripts/getyourguide_affiliate_pass.py
+
+      - name: Materialize hotel finder inventory
+        run: python scripts/materialize_hotel_finder_inventory.py
+
+      - name: Apply hotel finder logic hotfix
+        run: python scripts/hotel_finder_logic_hotfix.py
+
+      - name: Add relative hotel prices and budget filter
+        run: python scripts/hotel_price_budget_pass.py
+
+      - name: Refresh final V1 acquisition copy
+        run: python scripts/v1_release_copy_pass.py
+
+      - name: Route hotel affiliate links to Booking via CJ
+        run: python scripts/booking_cj_affiliate_pass.py
+
+      - name: Open external links in new tabs
+        run: python scripts/external_links_new_tab.py
+
+      - name: Apply final recipe polish
+        run: python scripts/final_recipe_polish_2026_09_18.py
+
+      - name: Remove AI-copy tells and long dashes
+        run: python scripts/human_copy_seo_pass_2026_09_18.py
+
+      - name: Stabilize final Astra audit fixes
+        run: python scripts/final_audit_stabilization_2026_09_18.py
+
+      - name: Apply Riviera Chooser homepage entry
+        run: python scripts/riviera_chooser_home_pass.py
+
+      - name: Enforce short-dash house style
+        run: python scripts/no_long_dash_pass.py
+
+      - name: Apply V2 closure audit fixes
+        run: python scripts/v2_closure_audit_fixes_2026_09_24.py
+
+      - name: Apply V3 product surface
+        run: python scripts/v3_product_surface_2026_09_25.py
+
+      - name: Apply V3 Hotel Fit foundation
+        run: python scripts/v3_hotel_fit_foundation_2026_09_25.py
+
+      - name: Apply V3 culture practical layer
+        run: python scripts/v3_culture_practical_layer_2026_09_25.py
+
+      - name: Apply V3 destination Reality Check
+        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+
+      - name: Apply V3 credibility layer
+        run: python scripts/v3_credibility_layer_2026_09_25.py
+
+      - name: Apply V3 Gay Nice practical layer
+        run: python scripts/v3_gay_nice_practical_layer_2026_09_25.py
+
+      - name: Apply V3 architecture phase 2
+        run: python scripts/v3_architecture_phase2_2026_09_25.py
+
+      - name: Apply V3 phase 3 content reclassification
+        run: python scripts/v3_reclassify_existing_2026_09_25.py
+
+      - name: Apply V3 homepage dispatch
+        run: python scripts/v3_homepage_dispatch_2026_09_25.py
+
+      - name: Apply V3 phase 4 reference content
+        run: python scripts/v3_phase4_reference_content_2026_09_25.py
+
+      - name: Apply V3 harmonisation and clarification
+        run: python scripts/v3_harmonisation_phase5_2026_09_25.py
+
+      - name: Final V3 copy hygiene
+        run: python scripts/no_long_dash_pass.py
+
+      - name: Validate Riviera Chooser decision engine
+        run: node assets/riviera-chooser.js --self-test
+
+      - name: Validate Claude audit corrections
+        run: python scripts/validate_claude_audit_2026_09_13.py
+
+      - name: Validate V1 release layer
+        run: python scripts/validate_v1_release.py
+
+      - name: Migrate canonical Mametas Riviera Fit route
+        run: python scripts/v3_riviera_fit_route_2026_09_25.py
+
+      - name: Apply V3 presentation polish
+        run: python scripts/v3_presentation_polish_2026_09_25.py
+
+      - name: Apply V3 UX adoption layer
+        run: python scripts/v3_adoption_layer_2026_09_25.py
+
+      - name: Apply final marginal recipe
+        run: python scripts/v3_final_marginal_recipe_2026_09_25.py
+
+      - name: Apply closure QA fixes
+        run: python scripts/v3_closure_qa_2026_09_25.py
+
+      - name: Apply final mobile and visual closure
+        run: python scripts/v3_final_mobile_visual_2026_09_26.py
+
+      - name: Apply semantic clarity closure
+        run: python scripts/v3_semantic_clarity_2026_09_27.py
+
+      - name: Apply solo female Riviera vertical
+        run: |
+          cat scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part00 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part01 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part02 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part03 | base64 -d | gzip -dc > scripts/v4_solo_female_vertical_2026_09_29.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("scripts/v4_solo_female_vertical_2026_09_29.py")
+          src=p.read_text(encoding="utf-8")
+          src=src.replace("s.find('class=\"lgbtq-banner\"')","s.find('class=\"lgbtq-banner')")
+          replacements = {
+              "Meilleure première base : Nice": "Meilleur premier point de chute : Nice",
+              "Choisissez la base en pensant au soir": "Choisissez le point de chute en pensant au soir",
+              "La base solo la plus facile.": "Le point de chute solo le plus simple.",
+              "c’est la base solo la plus simple": "c’est le point de chute solo le plus simple",
+              "Une base, quatre journées faciles": "Un point de chute, quatre journées faciles",
+              "Une bonne base à Cannes": "Un bon point de chute à Cannes",
+              "pas la base la plus efficace de toute la côte": "pas le point de chute le plus efficace de toute la côte",
+              "Base : Nice, 5 nuits": "Point de chute : Nice, 5 nuits",
+              "meilleure base, sécurité": "meilleur point de chute, sécurité",
+              "base à Nice, Villefranche": "point de chute à Nice, Villefranche",
+              "une base, sans voiture": "un point de chute, sans voiture",
+              "garde Nice comme base": "garde Nice comme point de chute",
+              "en faire la base solo": "en faire le point de chute solo",
+          }
+          for old_text,new_text in replacements.items():
+              src=src.replace(old_text,new_text)
+          p.write_text(src,encoding="utf-8")
+          PY
+          python scripts/v4_solo_female_vertical_2026_09_29.py
+
+      - name: Apply Explore and Practical clarity pass
+        run: |
+          base64 -d scripts/v4_restructure_explore_practical_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_restructure_explore_practical_2026_09_30.py
+          python scripts/v4_restructure_explore_practical_2026_09_30.py
+
+      - name: Apply cosmetic closure
+        continue-on-error: true
+        run: |
+          base64 -d scripts/v4_cosmetic_cleanup_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_cosmetic_cleanup_2026_09_30.py
+          python scripts/v4_cosmetic_cleanup_2026_09_30.py
+
+      - name: Apply final layout refinement
+        run: |
+          base64 -d scripts/v4_layout_refinement_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_layout_refinement_2026_09_30.py
+          python scripts/v4_layout_refinement_2026_09_30.py
+
+      - name: Apply Plan visual and editorial density refinement
+        run: |
+          base64 -d scripts/v4_editorial_density_plan_visual_2026_09_30.py.gz.b64 | gzip -dc > scripts/v4_editorial_density_plan_visual_2026_09_30.py
+          python scripts/v4_editorial_density_plan_visual_2026_09_30.py
+
+      - name: Apply Safety and solo female authority layer
+        run: python scripts/v4_safety_solo_authority_2026_09_30.py
+
+      - name: Add solo traveller voices
+        run: python scripts/v4_solo_verbatims_2026_09_30.py
+
+      - name: Apply solo/practical layout closure
+        run: python scripts/v4_solo_practical_layout_closure_2026_09_30.py
+
+      - name: Add traveller voices across guides
+        run: python scripts/v4_traveller_voices_2026_09_30.py
+
+      - name: Restore V5 intent release pages
+        run: |
+          git checkout "$GITHUB_SHA" -- \
+            en/explore/french-riviera-honeymoon/index.html \
+            explore/lune-de-miel-cote-d-azur/index.html \
+            en/explore/french-riviera-babymoon/index.html \
+            explore/babymoon-cote-d-azur/index.html \
+            en/explore/french-riviera-proposal/index.html \
+            explore/demande-en-mariage-cote-d-azur/index.html \
+            en/explore/living-antibes-expat/index.html \
+            explore/vivre-antibes-expatrie/index.html \
+            en/explore/retire-french-riviera/index.html \
+            explore/retraite-cote-d-azur/index.html
+
+      - name: Apply V5 Explore architecture
+        run: python scripts/v5_intent_explore_patch_2026_10_01.py
+
+      - name: Apply V5 intent detail layout
+        run: python scripts/v5_intent_layout_closure_2026_10_01.py
+
+      - name: Apply Explore intent hierarchy and affiliate refonte
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import base64, gzip, hashlib
+          prefix = Path("scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py.gz.b64")
+          payload = "".join((Path(str(prefix) + f".part{i:02d}")).read_text(encoding="utf-8").strip() for i in range(7))
+          expected = "3eacff6b16012f9226a5cba81e7464ee20847b853e2daef170571ead5ed56776"
+          actual = hashlib.sha256(payload.encode()).hexdigest()
+          if actual != expected:
+              raise SystemExit(f"Refonte payload checksum mismatch: {actual}")
+          raw = gzip.decompress(base64.b64decode(payload))
+          Path("scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py").write_bytes(raw)
+          print("Refonte payload verified:", len(raw), "bytes")
+          PY
+          python scripts/v5_intent_hierarchy_affiliate_refonte_2026_10_01.py
+
+      - name: Add canonical metadata to refonte hotels
+        run: python scripts/v5_refonte_hotel_canonical_patch_2026_10_01.py
+
+      - name: Enforce CJ on every Booking reservation link
+        run: python scripts/booking_cj_enforce_all_2026_10_01.py
+
+      - name: Validate Explore refonte and Booking affiliation
+        run: |
+          base64 -d scripts/validate_intent_refonte_affiliation_2026_10_01.py.gz.b64 | gzip -dc > scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_intent_refonte_affiliation_2026_10_01.py
+          python scripts/validate_booking_affiliation_2026_10_01.py
+
+      - name: Add Daniel Hotel Fit homepage voice
+        run: python scripts/v5_home_hotel_voice_2026_10_01.py
+
+      - name: Apply final Share surfaces
+        run: python scripts/share_surface_2026_10_01.py
+
+      - name: Apply global presentation harmonisation
+        run: python scripts/v5_global_presentation_harmonisation_2026_10_01.py
+
+      - name: Compile Mametas Presentation System v1
+        run: python scripts/apply_mametas_system_v1.py
+
+      - name: Apply final Riviera UI v2
+        run: python scripts/apply_riviera_ui_v2.py
+
+      - name: Preserve sources, checked dates and known photo credits
+        run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
+
+      - name: Apply V6 coherence envelope
+        run: python scripts/v6_coherence_envelope_2026_10_02.py
+
+      - name: Re-apply canonical destination structure
+        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+
+      - name: Normalize city-card system
+        run: python scripts/v6_city_card_system_2026_10_02.py
+
+      - name: Normalize hotel detail pages
+        run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
+
+      - name: Apply targeted semantic cleanup
+        run: python scripts/v6_semantic_cleanup_2026_10_02.py
+
+      - name: Normalize detail-family page tops
+        run: python scripts/v6_detail_family_top_normalization_2026_10_02.py
+
+      - name: Normalize content families
+        run: python scripts/v6_content_family_normalization_2026_10_02.py
+
+      - name: Normalize Plan family
+        run: python scripts/v6_plan_family_normalization_2026_10_02.py
+
+      - name: Validate V6 coherence envelope
+        run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
+      - name: Validate V6 content coherence
+        run: python scripts/validate_v6_content_coherence_2026_10_02.py
+
+      - name: Full materialized build validated
+        run: echo "Full Mametas materialization and coherence validation passed without deployment."
