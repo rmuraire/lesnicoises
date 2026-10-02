@@ -197,3 +197,201 @@
   .culture-logistics-grid{grid-template-columns:1fr}
   .culture-logistics-grid>div{border-right:0}
 }
+
+
+/* Final destination visual closure — 2026-10-02 */
+/* Keep destination pages editorial and readable rather than full-width prose. */
+body.rg-destination.rg-legacy .legacy-destination-layout{
+  width:100%;
+  max-width:960px!important;
+  grid-template-columns:170px minmax(0,750px)!important;
+  gap:30px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.rg-destination.rg-legacy .legacy-destination-sections{
+  max-width:750px!important;
+}
+body.rg-destination.rg-v3 .article-layout{
+  max-width:960px!important;
+  grid-template-columns:170px minmax(0,750px)!important;
+  gap:30px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+body.rg-destination.rg-v3 .article-body{
+  max-width:750px!important;
+  min-width:0!important;
+}
+
+/* A calmer reading rhythm on both historical page families. */
+body.rg-destination.rg-legacy .legacy-destination-section{
+  padding:18px 0 20px!important;
+}
+body.rg-destination.rg-legacy .legacy-destination-section>h2,
+body.rg-destination.rg-v3 .article-body>h2{
+  margin:0 0 9px!important;
+  padding-top:18px!important;
+  font-size:clamp(26px,2.25vw,30px)!important;
+  line-height:1.1!important;
+}
+body.rg-destination.rg-legacy .legacy-destination-section:first-child>h2{
+  padding-top:0!important;
+}
+body.rg-destination.rg-legacy .legacy-destination-section>h3,
+body.rg-destination.rg-v3 .article-body>h3{
+  margin:20px 0 6px!important;
+  font-size:20px!important;
+  line-height:1.18!important;
+}
+body.rg-destination.rg-legacy .legacy-destination-section>p,
+body.rg-destination.rg-v3 .article-body>p{
+  max-width:68ch!important;
+  margin-bottom:13px!important;
+  font-size:14.5px!important;
+  line-height:1.58!important;
+}
+
+/* The canonical shortlist should read as an edited list, not loose word-processing text. */
+body.rg-destination .city-must-list{
+  max-width:750px!important;
+  margin-top:24px!important;
+}
+body.rg-destination .city-must-list>h2{
+  margin-bottom:5px!important;
+  font-size:29px!important;
+}
+body.rg-destination .city-must-intro{
+  margin-bottom:12px!important;
+  font-size:12.5px!important;
+}
+body.rg-destination .city-must-item{
+  grid-template-columns:minmax(155px,.72fr) minmax(0,1.28fr)!important;
+  gap:18px!important;
+  padding:12px 0 13px!important;
+}
+body.rg-destination .city-must-item h3{
+  font-size:20px!important;
+  line-height:1.15!important;
+}
+body.rg-destination .city-must-item p{
+  font-size:13px!important;
+  line-height:1.48!important;
+}
+
+/* Supporting decision blocks: compact, visually intentional, and clearly secondary. */
+body.rg-destination .practical-decision-layer[data-static-editorial="true"]{
+  max-width:750px!important;
+  margin:24px 0!important;
+  padding:16px 18px!important;
+  border:1px solid var(--mg-line,rgba(20,33,61,.16))!important;
+  border-left:3px solid var(--mg-accent,#b9903f)!important;
+  background:rgba(255,253,248,.62)!important;
+}
+body.rg-destination .practical-decision-layer[data-static-editorial="true"]>h2{
+  margin:0 0 8px!important;
+  padding:0!important;
+  border:0!important;
+  color:var(--mg-accent,#b9903f)!important;
+  font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.14em!important;
+  line-height:1.35!important;
+  text-transform:uppercase!important;
+}
+body.rg-destination .practical-decision-layer[data-static-editorial="true"]>.mini-rule{
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+}
+
+/* One compact next-step card instead of a floating heading + paragraph + raw links. */
+body.rg-destination #mametas-next-decision[data-static-editorial="true"]{
+  max-width:750px!important;
+  margin:24px 0 28px!important;
+  padding:17px 18px!important;
+  border:1px solid var(--mg-line,rgba(20,33,61,.16))!important;
+  background:rgba(255,253,248,.78)!important;
+}
+body.rg-destination #mametas-next-decision h2,
+body.rg-destination #mametas-next-decision>span,
+body.rg-destination #mametas-next-decision .label{
+  margin:0 0 8px!important;
+  color:var(--mg-accent,#b9903f)!important;
+  font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.14em!important;
+  line-height:1.35!important;
+  text-transform:uppercase!important;
+}
+body.rg-destination #mametas-next-decision p{
+  margin:0 0 10px!important;
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+body.rg-destination #mametas-next-decision a{
+  display:inline-block!important;
+  margin:3px 16px 3px 0!important;
+  color:var(--mg-blue,#176f83)!important;
+  font-size:13px!important;
+  font-weight:700!important;
+  line-height:1.4!important;
+  text-decoration:none!important;
+  border-bottom:1px solid currentColor!important;
+  text-underline-offset:3px!important;
+}
+
+/* Keep callouts useful without letting them dominate the page. */
+body.rg-destination .verdict,
+body.rg-destination .verdict-box{
+  max-width:750px!important;
+}
+body.rg-destination .verdict p,
+body.rg-destination .verdict-box p{
+  font-size:18px!important;
+  line-height:1.45!important;
+}
+
+/* Destination sources stay quiet. */
+body.rg-destination .sources,
+body.rg-destination .source-box{
+  max-width:750px!important;
+}
+body.rg-destination .sources h2{
+  font-size:10px!important;
+  letter-spacing:.14em!important;
+}
+body.rg-destination .sources li,
+body.rg-destination .sources p,
+body.rg-destination .source-box{
+  font-size:11.5px!important;
+  line-height:1.55!important;
+}
+
+@media(max-width:900px){
+  body.rg-destination.rg-legacy .legacy-destination-layout,
+  body.rg-destination.rg-v3 .article-layout{
+    display:block!important;
+    max-width:750px!important;
+  }
+  body.rg-destination .legacy-destination-toc,
+  body.rg-destination .article-aside{
+    position:static!important;
+    margin-bottom:22px!important;
+  }
+}
+@media(max-width:650px){
+  body.rg-destination .city-must-item{
+    grid-template-columns:1fr!important;
+    gap:4px!important;
+  }
+  body.rg-destination .practical-decision-layer[data-static-editorial="true"],
+  body.rg-destination #mametas-next-decision[data-static-editorial="true"]{
+    padding:14px 15px!important;
+  }
+}
