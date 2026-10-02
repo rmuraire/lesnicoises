@@ -298,6 +298,15 @@ def patch_gay_stays() -> None:
         if not p.exists():
             continue
         text = p.read_text(encoding="utf-8")
+        # October architecture: Gay Nice only keeps three compact
+        # neighbourhood-oriented hotel cards and delegates the complete hotel
+        # decision to Where to stay. Preserve that newer ownership model.
+        if (
+            lang == "en"
+            and "<h2>Where to stay near the evening action</h2>" in text
+            and "/en/gay-french-riviera/where-to-stay/" in text
+        ):
+            continue
         original = text
         text, n = re.subn(pattern, gay_stay_block(lang), text, count=1, flags=re.S)
         if n != 1:
@@ -972,7 +981,7 @@ def validate() -> None:
         "index.html": ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG", "core-hub-final") if False else ("https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",),
         "en/good-finds/what-to-book/index.html": ('data-final-lerins-visual="true"', "/assets/site.css?v=25.6"),
         "en/beaches/around-nice/index.html": ("baie-des-fourmis-final.jpg", "petite-afrique-final.jpg", "fossettes-commons.jpg", "mala-commons.jpg"),
-        "en/gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "MAMETAS PICK · NOT LABELLED"),
+        "en/gay-nice/index.html": ("Where to stay near the evening action", "Hotel Beau Rivage", "Hôtel La Pérouse", "/en/gay-french-riviera/where-to-stay/"),
         "guide-gay-nice/index.html": ("Hôtel Windsor", "Hôtel Les Cigales", "CHOIX MAMETAS · NON LABELLISÉ"),
         "en/hotels/finder/index.html": ("/assets/hotel-engine.css?v=8", "/assets/hotel-engine.js?v=13"),
     }
