@@ -10,6 +10,38 @@ permissions:
   contents: read
 
 jobs:
+
+  practical-marker-check:
+    name: practical-marker — ${{ matrix.marker }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        marker:
+          - practical-harmonised
+          - harmonisation-practical-visual
+          - practical-extra-card
+          - Weather by season
+          - /en/french-riviera-tourism-statistics/
+          - Open the Riviera Agenda
+    steps:
+      - name: Check one Practical marker
+        env:
+          MARKER: ${{ matrix.marker }}
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          url="https://www.mametas.com/en/practical/?diag=20261002b"
+          req=Request(url,headers={"User-Agent":"MametasPracticalDiagnostic/1.0","Cache-Control":"no-cache, no-store","Pragma":"no-cache"})
+          with urlopen(req,timeout=30) as response:
+              body=response.read().decode("utf-8","replace")
+              marker=os.environ["MARKER"]
+              if marker not in body:
+                  raise SystemExit(f"missing {marker}")
+              print("PASS",marker)
+          PY
+
   live-check:
     name: live-check — ${{ matrix.key }}
     runs-on: ubuntu-latest
