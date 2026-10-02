@@ -34,24 +34,55 @@ def normalize_old_article_top(text: str, href: str, back: str, eyebrow: str) -> 
     )
     return text
 
-def normalize_comparison() -> bool:
-    path = ROOT / "en/riviera-guide/nice-or-cannes/index.html"
+COMPARISONS = {
+    "en/riviera-guide/nice-or-cannes/index.html": (
+        "/en/riviera-guide/", "← Back to Places", "FRENCH RIVIERA · NICE OR CANNES"
+    ),
+    "riviera-guide/nice-ou-cannes/index.html": (
+        "/riviera-guide/", "← Retour aux destinations", "CÔTE D’AZUR · NICE OU CANNES"
+    ),
+    "en/riviera-guide/french-riviera-or-amalfi-coast/index.html": (
+        "/en/riviera-guide/", "← Back to Places", "FRENCH RIVIERA · RIVIERA OR AMALFI"
+    ),
+    "riviera-guide/cote-dazur-ou-cote-amalfitaine/index.html": (
+        "/riviera-guide/", "← Retour aux destinations", "CÔTE D’AZUR · RIVIERA OU AMALFI"
+    ),
+}
+
+def normalize_comparison(rel: str, parent: str, back: str, eyebrow: str) -> bool:
+    path = ROOT / rel
     text = path.read_text(encoding="utf-8")
     before = text
+
     text = re.sub(
         r'<p class="breadcrumbs">.*?</p>',
-        '<a class="mametas-detail-back" href="/en/riviera-guide/">← Back to Places</a>',
+        f'<a class="mametas-detail-back" href="{parent}">{back}</a>',
         text,
         count=1,
         flags=re.S | re.I,
     )
     text = re.sub(
         r'<p class="eyebrow">.*?</p>',
-        '<p class="eyebrow mametas-detail-eyebrow">FRENCH RIVIERA · NICE OR CANNES</p>',
+        f'<p class="eyebrow mametas-detail-eyebrow">{eyebrow}</p>',
         text,
         count=1,
         flags=re.S | re.I,
     )
+    text = re.sub(
+        r'<a class="back"[^>]*>.*?</a>',
+        f'<a class="mametas-detail-back" href="{parent}">{back}</a>',
+        text,
+        count=1,
+        flags=re.S | re.I,
+    )
+    text = re.sub(
+        r'<div class="meta">.*?</div>',
+        f'<div class="meta mametas-detail-eyebrow">{eyebrow}</div>',
+        text,
+        count=1,
+        flags=re.S | re.I,
+    )
+
     if text != before:
         path.write_text(text, encoding="utf-8")
         return True
@@ -72,14 +103,14 @@ def main() -> None:
         if "mametas-detail-back" not in text or "mametas-detail-eyebrow" not in text:
             raise RuntimeError(f"{rel}: normalized detail top missing")
 
-    if normalize_comparison():
-        changed.append("en/riviera-guide/nice-or-cannes/index.html")
-
-    comp = (ROOT / "en/riviera-guide/nice-or-cannes/index.html").read_text(encoding="utf-8")
-    if '<p class="breadcrumbs">' in comp:
-        raise RuntimeError("Nice-or-Cannes: breadcrumb generation still present")
-    if "FRENCH RIVIERA · NICE OR CANNES" not in comp:
-        raise RuntimeError("Nice-or-Cannes: canonical eyebrow missing")
+    for rel, (parent, back, eyebrow) in COMPARISONS.items():
+        if normalize_comparison(rel, parent, back, eyebrow):
+            changed.append(rel)
+        comp = (ROOT / rel).read_text(encoding="utf-8")
+        if "mametas-detail-back" not in comp or "mametas-detail-eyebrow" not in comp:
+            raise RuntimeError(f"{rel}: comparison top not normalized")
+        if eyebrow not in comp:
+            raise RuntimeError(f"{rel}: comparison eyebrow missing")
 
     print(f"Detail-family top normalization passed; changed {len(changed)} pages.")
 
