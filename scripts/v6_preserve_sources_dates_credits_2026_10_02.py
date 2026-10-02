@@ -7,6 +7,7 @@ visible "checked" date on a page. It never invents a date or photo author.
 """
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -26,6 +27,21 @@ KNOWN_HERO_CREDITS = {
         "fr": "Photo : Sophie Kat",
     },
 }
+
+# Depositphotos credits are supplied explicitly in the repository metadata.
+DEPOSITPHOTO_CREDITS = {}
+deposit_meta = ROOT / "data/depositphotos-nice-pratique.json"
+if deposit_meta.exists():
+    raw = json.loads(deposit_meta.read_text(encoding="utf-8"))
+    for item in raw.get("assets", []):
+        if item.get("status") != "use" or not item.get("file") or not item.get("credit"):
+            continue
+        src = "/assets/editorial/depositphotos/nice-pratique/" + item["file"]
+        credit = item["credit"]
+        DEPOSITPHOTO_CREDITS[src] = {
+            "en": f"Photo: {credit}, Depositphotos",
+            "fr": f"Photo : {credit}, Depositphotos",
+        }
 
 def page_lang(text: str) -> str:
     m = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)', text, re.I)
@@ -131,7 +147,9 @@ def normalize_existing_figcaptions(text: str, lang: str) -> str:
     return re.sub(r'<figcaption>([\s\S]*?)</figcaption>', repl, text, flags=re.I)
 
 def add_known_hero_credit(text: str, lang: str) -> str:
-    for src, labels in KNOWN_HERO_CREDITS.items():
+    credits = dict(KNOWN_HERO_CREDITS)
+    credits.update(DEPOSITPHOTO_CREDITS)
+    for src, labels in credits.items():
         if src not in text:
             continue
         # Only add a caption when the figure containing that exact image has none.
