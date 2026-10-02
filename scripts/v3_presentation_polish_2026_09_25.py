@@ -284,7 +284,7 @@ def validate() -> None:
         "explore/index.html": ("explore-product-polished",),
         "en/good-finds/what-to-book/index.html": ("booking-visuals", "cannes-beach-sophie-kat.jpg"),
         "bons-plans/que-reserver/index.html": ("booking-visuals", "iles-de-lerins-bruno-attuyt.webp"),
-        "en/gay-nice/index.html": ("Find the right Nice hotel with Hotel Fit",),
+        "en/gay-nice/index.html": ("Where to stay near the evening action", "/en/gay-french-riviera/where-to-stay/"),
         "guide-gay-nice/index.html": ("Trouvez le bon hôtel à Nice avec Hotel Fit",),
     }
     errors: list[str] = []
