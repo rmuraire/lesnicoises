@@ -124,19 +124,62 @@ def _replace_home_base_grid(text: str, lang: str) -> str:
     )
 
 
+def _detour_section(lang: str) -> str:
+    if lang == "fr":
+        eyebrow = "AU-DELÀ DE VOTRE BASE"
+        title = "Ne collectionnez pas la Riviera. Choisissez-la."
+        intro = (
+            "Une fois votre base réglée, gardez les détours qui changent vraiment "
+            "l’ambiance du voyage, pas ceux qui ajoutent seulement une épingle."
+        )
+    else:
+        eyebrow = "BEYOND YOUR BASE"
+        title = "Do not collect the Riviera. Choose it."
+        intro = (
+            "Once your base is sorted, keep the detours that genuinely change the "
+            "trip, not the ones that merely add another pin."
+        )
+    return (
+        '<section class="v3-section mametas-detour-section"><div class="wrap">'
+        '<div class="section-heading"><div>'
+        f'<p class="eyebrow">{eyebrow}</p><h2>{title}</h2>'
+        f'</div><p>{intro}</p></div>'
+        + _home_grid(GROUPS["detour"], lang, "detour", with_id=False)
+        + '</div></section>'
+    )
+
+
 def _replace_home_detour_grid(text: str, lang: str) -> str:
     # Saint-Tropez is never in the base group, making it the safest stable
     # route marker for the detour grid.
     route = CITIES["sainttropez"]["route"][lang]
     found = _find_grid_for_route(text, route)
-    if not found:
-        raise RuntimeError(f"Home {lang}: detour city grid not found")
-    start, _end = found
-    return _replace_balanced_div(
+    if found:
+        start, _end = found
+        return _replace_balanced_div(
+            text,
+            start,
+            _home_grid(GROUPS["detour"], lang, "detour", with_id=False),
+        )
+
+    # Some historical FR homepage generations omitted the whole detour section.
+    # Recreate it from canonical city data rather than failing or reintroducing
+    # a one-off translation patch.
+    section = _detour_section(lang)
+    target_id = "explorer" if lang == "fr" else "explore"
+    marker = re.search(
+        rf'<section\b[^>]*\bid=["\']{target_id}["\'][^>]*>',
         text,
-        start,
-        _home_grid(GROUPS["detour"], lang, "detour", with_id=False),
+        re.I,
     )
+    if marker:
+        return text[:marker.start()] + section + "\n" + text[marker.start():]
+
+    main_close = text.lower().rfind("</main>")
+    if main_close >= 0:
+        return text[:main_close] + section + "\n" + text[main_close:]
+
+    raise RuntimeError(f"Home {lang}: no safe insertion point for canonical detours")
 
 
 def patch_home(path: Path, lang: str) -> bool:
