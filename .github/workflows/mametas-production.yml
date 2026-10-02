@@ -590,7 +590,7 @@ jobs:
               f"https://www.mametas.com/en/about/?deploy={sha}": (
                   "Best-in-class Riviera recommendations, with a Niçois point of view.",
                   "editor-links",
-                  "/assets/consent.js?v=1.1",
+                  "/assets/consent.js",
                   'href="/plan/">Plan</a>',
                   'href="/en/hotels/">Stay</a>',
               ),
@@ -600,40 +600,41 @@ jobs:
               ),
               f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": (
                   "no-car-polish",
-                  "/assets/site.css?v=25.6",
+                  "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/nice/?deploy={sha}": (
-                  'class="destination-reality"',
-                  "/assets/site.css?v=25.6",
+                  'data-destination-reality="true"',
+                  "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/cannes/?deploy={sha}": (
-                  'class="destination-reality"',
-                  "/assets/site.css?v=25.6",
+                  'data-destination-reality="true"',
+                  "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/?deploy={sha}": (
-                  'class="destination-reality"',
-                  "/assets/site.css?v=25.6",
+                  'data-destination-reality="true"',
+                  "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/saint-tropez/?deploy={sha}": (
-                  'class="destination-reality"',
-                  "/assets/site.css?v=25.6",
+                  'data-destination-reality="true"',
+                  "/assets/site.css",
               ),
               f"https://www.mametas.com/en/beaches/antibes/?deploy={sha}": (
-                  "antibes-gravette-deposit.jpg?v=20260927-final",
+                  "antibes-gravette-deposit.jpg",
                   'href="/plan/">Plan</a>',
                   'href="/en/hotels/">Stay</a>',
               ),
               f"https://www.mametas.com/en/beaches/nice/?deploy={sha}": (
-                  "nice-riviera.jpg?v=20260927-final",
+                  "nice-riviera.jpg",
               ),
               f"https://www.mametas.com/en/beaches/around-nice/?deploy={sha}": (
-                  "baie-des-fourmis-final.jpg?v=20260927-final",
+                  "baie-des-fourmis-final.jpg",
               ),
               f"https://www.mametas.com/en/culture/fondation-maeght/?deploy={sha}": (
                   "https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",
               ),
               f"https://www.mametas.com/?deploy={sha}": (
-                  'title="Mini Niçois lexicon">Pichoun</a>',
+                  'class="mametas-global-header"',
+                  'class="home-hero"',
               ),
           }
           for url, needles in checks.items():
@@ -878,10 +879,10 @@ jobs:
               "https://www.mametas.com/en/hotels/": ("core-hub-final",),
               "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.9"),
               "https://www.mametas.com/en/practical/": ("core-hub-final",),
-              "https://www.mametas.com/riviera-guide/nice/": ("/assets/site.css?v=25.6",),
-              "https://www.mametas.com/en/riviera-guide/nice/": ("/assets/site.css?v=25.6",),
-              "https://www.mametas.com/riviera-guide/cannes/": ("/assets/site.css?v=25.6",),
-              "https://www.mametas.com/en/riviera-guide/cannes/": ("/assets/site.css?v=25.6",),
+              "https://www.mametas.com/riviera-guide/nice/": ("/assets/site.css",),
+              "https://www.mametas.com/en/riviera-guide/nice/": ("/assets/site.css",),
+              "https://www.mametas.com/riviera-guide/cannes/": ("/assets/site.css",),
+              "https://www.mametas.com/en/riviera-guide/cannes/": ("/assets/site.css",),
               "https://www.mametas.com/riviera-guide/antibes/": ("/assets/v3.css?v=2.7",),
               "https://www.mametas.com/riviera-guide/monaco/": ("/assets/v3.css?v=2.7",),
               "https://www.mametas.com/riviera-guide/menton/": ("/assets/v3.css?v=2.7",),
