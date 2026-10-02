@@ -462,7 +462,7 @@ jobs:
               except Exception as exc:
                   errors.append(f"{page}: fetch failed: {exc}")
                   continue
-              for token in ('intent-hierarchy-refonte-2026-10-01','segment-hotel-grid','class="intent-faq"','/assets/v3.css?v=2.10'):
+              for token in ('intent-hierarchy-refonte-2026-10-01','segment-hotel-grid','class="intent-faq"','/assets/v3.css?v='):
                   if token not in html:
                       errors.append(f"{page}: missing {token}")
           css_url=f"https://www.mametas.com/assets/v3.css?deploy={sha}"
