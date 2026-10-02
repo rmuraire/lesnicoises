@@ -326,11 +326,38 @@ jobs:
       - name: Apply final Riviera UI v2
         run: python scripts/apply_riviera_ui_v2.py
 
+      - name: Preserve sources, checked dates and known photo credits
+        run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
+
       - name: Apply V6 coherence envelope
         run: python scripts/v6_coherence_envelope_2026_10_02.py
 
+      - name: Re-apply canonical destination structure
+        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+
+      - name: Normalize city-card system
+        run: python scripts/v6_city_card_system_2026_10_02.py
+
+      - name: Normalize hotel detail pages
+        run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
+
+      - name: Apply targeted semantic cleanup
+        run: python scripts/v6_semantic_cleanup_2026_10_02.py
+
+      - name: Normalize detail-family page tops
+        run: python scripts/v6_detail_family_top_normalization_2026_10_02.py
+
+      - name: Normalize content families
+        run: python scripts/v6_content_family_normalization_2026_10_02.py
+
+      - name: Normalize Plan family
+        run: python scripts/v6_plan_family_normalization_2026_10_02.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
+      - name: Validate V6 content coherence
+        run: python scripts/validate_v6_content_coherence_2026_10_02.py
 
       - name: Deploy Share assets immediately
         env:
