@@ -26,7 +26,10 @@ V3_DESTS=(
     "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
     "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
 )
-FIT_PAGES=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+FIT_PAGES=(
+    "en/riviera-fit/index.html","riviera-fit/index.html",
+    "en/riviera-chooser/index.html","riviera-chooser/index.html",
+)
 ALL_TARGETS=HUBS+LEGACY_DESTS+V3_DESTS+FIT_PAGES
 
 def add_body_classes(text: str, classes):
@@ -81,10 +84,13 @@ def patch_hub_numbering(text: str):
     )
     return text
 
-def process(rel, classes):
+def process(rel, classes, required=True):
     p=ROOT/rel
     if not p.exists():
-        raise SystemExit(f"Missing target {rel}")
+        if required:
+            raise SystemExit(f"Missing target {rel}")
+        print("Optional target not present:",rel)
+        return
     text=p.read_text(encoding="utf-8",errors="ignore")
     before=text
     text=add_stylesheet(text)
@@ -102,10 +108,12 @@ for rel in LEGACY_DESTS:
 for rel in V3_DESTS:
     process(rel,("rg-destination","rg-v3"))
 for rel in FIT_PAGES:
-    process(rel,("rg-fit",))
+    process(rel,("rg-fit",),required=False)
 
 # Guards.
 for rel in ALL_TARGETS:
+    if not (ROOT/rel).exists():
+        continue
     body=(ROOT/rel).read_text(encoding="utf-8",errors="ignore")
     if body.count("/assets/mametas-riviera-v2.css?v=2.0")!=1:
         raise SystemExit(f"{rel}: final stylesheet missing/duplicated")
