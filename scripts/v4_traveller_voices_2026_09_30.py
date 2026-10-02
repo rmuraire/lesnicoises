@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 from pathlib import Path
+import re
 ROOT=Path(__file__).resolve().parents[1]
 
 def block(text,meta,fr,token):
-    kicker="ILS L’ONT VÉCU" if fr else "IN THEIR OWN WORDS"
-    return f'<div class="traveller-voice" data-layer="{token}"><span class="traveller-voice-kicker">{kicker}</span><blockquote>{text}</blockquote><p>{meta}</p></div>'
+    kicker="VOIX DE VOYAGEURS" if fr else "TRAVELLER VOICES"
+    if fr:
+        method='<p class="traveller-voice-method">Persona éditorial : synthèse de vrais commentaires, retours d’expérience et constatations de terrain. <a href="/methode/">Notre méthode →</a></p>'
+    else:
+        method='<p class="traveller-voice-method">Editorial persona: a synthesis of real traveller comments, experience feedback and field observations. <a href="/en/method/">Our method →</a></p>'
+    return f'<div class="traveller-voice" data-layer="{token}"><span class="traveller-voice-kicker">{kicker}</span><blockquote>{text}</blockquote><p>{meta}</p>{method}</div>'
 
 voices={
 "sam_en":block("“Skip the places with giant picture menus on Cours Saleya. We had much better luck in the tiny side streets for socca: cheaper, better, and much less touristy.”","<strong>Sam</strong> · Leeds · with friends · June 2026",False,"traveller-voice-sam-2026-09-30"),
@@ -30,8 +35,13 @@ def patch(path,marker,key):
     p.write_text(s.replace(marker,voices[key]+"\n"+marker,1),encoding="utf-8")
     print("patched",path)
 
-patch("en/restaurants/nice/index.html",'<div class="place">',"sam_en")
-patch("restaurants/nice/index.html",'<div class="place">',"sam_fr")
+for rel in ("en/restaurants/nice/index.html","restaurants/nice/index.html"):
+    p=ROOT/rel
+    if p.exists():
+        txt=p.read_text(encoding="utf-8")
+        txt=re.sub(r'<div class="traveller-voice"[^>]*data-layer="traveller-voice-sam-2026-09-30"[^>]*>[\s\S]*?</div>\s*','',txt,count=1)
+        p.write_text(txt,encoding="utf-8")
+
 patch("en/beaches/nice/index.html",'<div class="sources"><h2>Sources checked</h2>',"alex_en")
 patch("plages/nice/index.html",'<div class="sources"><h2>Sources vérifiées</h2>',"alex_fr")
 patch("en/riviera-guide/monaco/index.html",'<h2 id="transport">Transport: the train removes most of the drama</h2>',"tom_en")
@@ -43,7 +53,7 @@ patch("pratique/climat-saisons/index.html",'<p class="ownership-note">',"lars_fr
 
 css='''
 /* Traveller voices across Mametas - 2026-09-30 */
-.traveller-voice{margin:24px 0 30px;padding:22px 24px;border-left:3px solid #17365f;background:#f7f1e6}.traveller-voice-kicker{display:block;margin-bottom:10px;color:#17365f;font-family:var(--sans,Inter,Arial,sans-serif);font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.traveller-voice blockquote{margin:0;color:var(--ink,#14213d);font-family:var(--serif,"Fraunces",Georgia,serif);font-size:clamp(20px,2vw,25px);font-weight:400;line-height:1.45}.traveller-voice p{margin:13px 0 0!important;color:#5f6570!important;font-family:var(--sans,Inter,Arial,sans-serif)!important;font-size:10px!important;line-height:1.45!important}@media(max-width:650px){.traveller-voice{padding:19px 18px;margin:20px 0 26px}.traveller-voice blockquote{font-size:20px}}
+.traveller-voice{margin:24px 0 30px;padding:22px 24px;border-left:3px solid #17365f;background:#f7f1e6}.traveller-voice-kicker{display:block;margin-bottom:10px;color:#17365f;font-family:var(--sans,Inter,Arial,sans-serif);font-size:9px;font-weight:800;letter-spacing:.13em;text-transform:uppercase}.traveller-voice blockquote{margin:0;color:var(--ink,#14213d);font-family:var(--serif,"Fraunces",Georgia,serif);font-size:clamp(20px,2vw,25px);font-weight:400;line-height:1.45}.traveller-voice p{margin:13px 0 0!important;color:#5f6570!important;font-family:var(--sans,Inter,Arial,sans-serif)!important;font-size:10px!important;line-height:1.45!important}.traveller-voice .traveller-voice-method{margin-top:9px!important;padding-top:9px;border-top:1px solid rgba(23,54,95,.12);font-size:9.5px!important;line-height:1.45!important;opacity:.8}.traveller-voice .traveller-voice-method a{color:#17365f;font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}@media(max-width:650px){.traveller-voice{padding:19px 18px;margin:20px 0 26px}.traveller-voice blockquote{font-size:20px}}
 '''
 for rel in ("assets/site.css","assets/v3.css"):
     p=ROOT/rel

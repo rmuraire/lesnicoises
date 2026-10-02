@@ -6,9 +6,9 @@ TOKEN = "solo-verbatims-2026-09-30"
 
 EN_BLOCK = r"""
 <section class="solo-voices" data-layer="solo-verbatims-2026-09-30">
-  <p class="eyebrow">SOLO, IN THEIR OWN WORDS</p>
+  <p class="eyebrow">SOLO TRAVELLER VOICES</p>
   <h2>Four small things solo travellers noticed</h2>
-  <p class="solo-voices-intro">Not surveys. Not universal truths. Just useful details from women who actually made the trip.</p>
+  <p class="solo-voices-intro">Editorial personas built from real traveller comments, experience feedback and field observations. Useful details, not universal truths.</p>
   <div class="solo-voices-grid">
     <figure class="solo-voice">
       <blockquote>“I was worried that waiters would ignore me or give me a terrible table in the back because I was alone, but I was totally wrong. Places were really welcoming, even on busy summer evenings.”</blockquote>
@@ -32,9 +32,9 @@ EN_BLOCK = r"""
 
 FR_BLOCK = r"""
 <section class="solo-voices" data-layer="solo-verbatims-2026-09-30">
-  <p class="eyebrow">ELLES L'ONT VÉCU</p>
+  <p class="eyebrow">VOIX DE VOYAGEUSES</p>
   <h2>Quatre petits détails remarqués en voyageant seule</h2>
-  <p class="solo-voices-intro">Pas un sondage. Pas des vérités universelles. Juste des détails utiles racontés par des voyageuses qui ont réellement fait le voyage.</p>
+  <p class="solo-voices-intro">Des personas éditoriaux construits à partir de vrais commentaires, retours d’expérience et constatations de terrain. Des détails utiles, pas des vérités universelles.</p>
   <div class="solo-voices-grid">
     <figure class="solo-voice">
       <blockquote>« J'avais peur que les serveurs m'ignorent ou me donnent une mauvaise table au fond parce que j'étais seule, mais je me trompais complètement. L'accueil a été vraiment chaleureux, même pendant les soirées d'été très chargées. »</blockquote>

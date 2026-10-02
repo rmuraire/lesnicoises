@@ -22,6 +22,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Compile traveller persona scripts
+        run: |
+          python -m py_compile \
+            scripts/v4_solo_verbatims_2026_09_30.py \
+            scripts/v4_traveller_voices_2026_09_30.py \
+            scripts/v5_home_hotel_voice_2026_10_01.py \
+            scripts/v6_traveller_persona_transparency_2026_10_02.py
+
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
 
