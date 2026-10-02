@@ -94,19 +94,38 @@ def date_label(date: str, lang: str) -> str:
 def normalize_sources(text: str, lang: str) -> str:
     heading = source_heading(lang)
 
-    text = re.sub(
-        r'(<div\b[^>]*class=["\'][^"\']*sources[^"\']*["\'][^>]*>\s*<h2\b[^>]*>)(?:Checked sources|Verified sources|Sources checked|Sources verified|Sources vérifiées|Sources consultées)(</h2>)',
-        rf'\1{heading}\2',
+    def repl(m):
+        opening, inner, closing = m.group(1), m.group(2), m.group(3)
+
+        # Any historical heading inside a formal sources container becomes the
+        # one canonical H2. Dates are kept separately by add_source_date().
+        heading_match = re.search(
+            r'<h[2-4]\\b[^>]*>[\\s\\S]*?</h[2-4]>',
+            inner,
+            re.I,
+        )
+        if heading_match:
+            old = heading_match.group(0)
+            plain_old = re.sub(r'<[^>]+>', ' ', old)
+            if re.search(r'source|sources', plain_old, re.I):
+                inner = inner[:heading_match.start()] + f'<h2>{heading}</h2>' + inner[heading_match.end():]
+            elif not re.search(rf'<h2>{re.escape(heading)}</h2>', inner, re.I):
+                inner = f'<h2>{heading}</h2>' + inner
+        else:
+            strong = re.search(r'<strong>[^<]*(?:source|sources)[^<]*</strong>', inner, re.I)
+            if strong:
+                inner = inner[:strong.start()] + f'<h2>{heading}</h2>' + inner[strong.end():]
+            else:
+                inner = f'<h2>{heading}</h2>' + inner
+
+        return opening + inner + closing
+
+    return re.sub(
+        r'(<div\\b[^>]*class=["\\'][^"\\']*sources[^"\\']*["\\'][^>]*>)([\\s\\S]*?)(</div>)',
+        repl,
         text,
         flags=re.I,
     )
-
-    if lang == "en":
-        text = re.sub(r'<strong>(?:Checked sources|Verified sources|Sources checked)\s*:</strong>', '<strong>Sources checked:</strong>', text, flags=re.I)
-    else:
-        text = re.sub(r'<strong>(?:Sources vérifiées|Sources consultées|Sources)\s*:</strong>', '<strong>Sources vérifiées :</strong>', text, flags=re.I)
-
-    return text
 
 def add_source_date(text: str, lang: str, date: str | None) -> str:
     if not date or "mametas-source-date" in text:
