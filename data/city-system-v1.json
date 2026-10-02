@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "groups": {
+    "base": ["nice", "villefranche", "antibes", "cannes", "monaco", "menton"],
+    "detour": ["eze", "saintpaul", "sainttropez"]
+  },
+  "cities": {
+    "nice": {
+      "slug": "nice",
+      "name": {"en": "Nice", "fr": "Nice"},
+      "route": {"en": "/en/riviera-guide/nice/", "fr": "/riviera-guide/nice/"},
+      "image": "/assets/editorial/nice-riviera.jpg",
+      "alt": {"en": "Nice and the Baie des Anges", "fr": "Nice et la baie des Anges"},
+      "tag": {"en": "Best first base", "fr": "Meilleure première base"},
+      "summary": {
+        "en": "It may not win every beauty contest. It keeps winning when you look at the train map.",
+        "fr": "Elle ne gagne pas tous les concours de beauté. Elle gagne souvent dès qu’on ouvre la carte des trains."
+      },
+      "reality": {
+        "en": {"getting_around": "No car needed for a first trip", "budget": "€€ to €€€€", "season": "Strong year-round", "logistics": "Low"},
+        "fr": {"getting_around": "Voiture inutile pour un premier séjour", "budget": "€€ à €€€€", "season": "Très solide toute l’année", "logistics": "Faible"}
+      }
+    },
+    "villefranche": {
+      "slug": "villefranche-cap-ferrat",
+      "name": {"en": "Villefranche & Cap-Ferrat", "fr": "Villefranche & Cap-Ferrat"},
+      "route": {"en": "/en/riviera-guide/villefranche-cap-ferrat/", "fr": "/riviera-guide/villefranche-cap-ferrat/"},
+      "image": "/assets/editorial/villefranche.jpg",
+      "alt": {"en": "Villefranche-sur-Mer harbour", "fr": "La rade de Villefranche-sur-Mer"},
+      "tag": {"en": "Best for beauty", "fr": "Pour la beauté"},
+      "summary": {
+        "en": "The bay does the seducing. The timetable asks for a little more attention.",
+        "fr": "La rade se charge de séduire. Les horaires demandent un peu plus d’attention."
+      },
+      "reality": {
+        "en": {"getting_around": "Car-free works, less seamlessly than Nice", "budget": "€€ to €€€€", "season": "Spring and autumn are particularly easy", "logistics": "Medium: hills and transfers"},
+        "fr": {"getting_around": "Possible sans voiture, moins fluide que Nice", "budget": "€€ à €€€€", "season": "Printemps et automne sont très faciles à aimer", "logistics": "Moyenne : relief et correspondances"}
+      }
+    },
+    "antibes": {
+      "slug": "antibes",
+      "name": {"en": "Antibes", "fr": "Antibes"},
+      "route": {"en": "/en/riviera-guide/antibes/", "fr": "/riviera-guide/antibes/"},
+      "image": "/assets/editorial/antibes-gravette.jpg",
+      "alt": {"en": "Antibes old town and La Gravette beach", "fr": "Antibes et la plage de la Gravette"},
+      "tag": {"en": "Best balance", "fr": "Meilleur équilibre"},
+      "summary": {
+        "en": "Old town, proper beach, less theatre than Cannes.",
+        "fr": "Vieille ville, vraie plage, moins de théâtre qu’à Cannes."
+      },
+      "reality": {
+        "en": {"getting_around": "Yes without a car in town. The Cap asks for more.", "budget": "€€ to €€€€", "season": "May to September for beach time", "logistics": "Low in town, medium on the Cap"},
+        "fr": {"getting_around": "Oui sans voiture en ville. Le Cap demande plus.", "budget": "€€ à €€€€", "season": "Mai à septembre pour la plage", "logistics": "Faible en ville, moyenne sur le Cap"}
+      }
+    },
+    "cannes": {
+      "slug": "cannes",
+      "name": {"en": "Cannes", "fr": "Cannes"},
+      "route": {"en": "/en/riviera-guide/cannes/", "fr": "/riviera-guide/cannes/"},
+      "image": "/assets/editorial/cannes-suquet-harbour.jpg",
+      "alt": {"en": "Cannes harbour and Le Suquet", "fr": "Cannes et Le Suquet"},
+      "tag": {"en": "Best for polish", "fr": "Pour le vernis"},
+      "summary": {
+        "en": "Beaches and hotels delivered with a straighter face.",
+        "fr": "Plages et hôtels servis avec un visage très sérieux."
+      },
+      "reality": {
+        "en": {"getting_around": "Very easy without a car", "budget": "€€ to €€€€", "season": "Spring to early autumn", "logistics": "Low, except during major events"},
+        "fr": {"getting_around": "Très simple sans voiture", "budget": "€€ à €€€€", "season": "Printemps à début automne", "logistics": "Faible, sauf grands événements"}
+      }
+    },
+    "monaco": {
+      "slug": "monaco",
+      "name": {"en": "Monaco", "fr": "Monaco"},
+      "route": {"en": "/en/riviera-guide/monaco/", "fr": "/riviera-guide/monaco/"},
+      "image": "/assets/editorial/monaco-harbour.jpg",
+      "alt": {"en": "Monaco harbour", "fr": "Le port de Monaco"},
+      "tag": {"en": "Best for spectacle", "fr": "Pour le spectacle"},
+      "summary": {
+        "en": "Palace, harbour and museums: very easy to visit, much more specific as a base.",
+        "fr": "Palais, port et musées : très simple à visiter, beaucoup plus spécifique comme point de chute."
+      },
+      "reality": {
+        "en": {"getting_around": "No car recommended", "budget": "€€€ to €€€€", "season": "Year-round, with event-driven spikes", "logistics": "Medium: hills and spend"},
+        "fr": {"getting_around": "Sans voiture recommandé", "budget": "€€€ à €€€€", "season": "Toute l’année, avec pics lors des grands événements", "logistics": "Moyenne : relief et budget"}
+      }
+    },
+    "menton": {
+      "slug": "menton",
+      "name": {"en": "Menton", "fr": "Menton"},
+      "route": {"en": "/en/riviera-guide/menton/", "fr": "/riviera-guide/menton/"},
+      "image": "/assets/editorial/menton-evening.jpg",
+      "alt": {"en": "Menton at evening", "fr": "Menton en soirée"},
+      "tag": {"en": "Best for a slower east", "fr": "Pour l’est plus calme"},
+      "summary": {
+        "en": "Gardens, colour and a softer eastern pace, with Italy almost within touching distance.",
+        "fr": "Jardins, couleurs et un rythme plus doux à l’est, avec l’Italie presque à portée de main."
+      },
+      "reality": {
+        "en": {"getting_around": "Very good without a car", "budget": "€ to €€€", "season": "Particularly good outside peak summer", "logistics": "Low to medium: you are far east"},
+        "fr": {"getting_around": "Très bon sans voiture", "budget": "€ à €€€", "season": "Très agréable hors plein été", "logistics": "Faible à moyenne : vous êtes très à l’est"}
+      }
+    },
+    "eze": {
+      "slug": "eze",
+      "name": {"en": "Èze", "fr": "Èze"},
+      "route": {"en": "/en/riviera-guide/eze/", "fr": "/riviera-guide/eze/"},
+      "image": "/assets/editorial/eze-village.jpg",
+      "alt": {"en": "Èze village above the Mediterranean", "fr": "Èze village perché au-dessus de la Méditerranée"},
+      "tag": {"en": "Best for the panorama", "fr": "Pour le panorama"},
+      "summary": {
+        "en": "Small, steep and spectacular. Timing matters almost as much as the view.",
+        "fr": "Petit, raide et spectaculaire. Le bon moment compte presque autant que la vue."
+      },
+      "reality": {
+        "en": {"getting_around": "Direct bus to the village, or train + connection", "budget": "€€ to €€€€", "season": "Year-round; early or late in peak season", "logistics": "Medium: Èze-sur-Mer and Èze Village are different stops"},
+        "fr": {"getting_around": "Bus direct vers le village, ou train + correspondance", "budget": "€€ à €€€€", "season": "Toute l’année ; tôt ou tard en haute saison", "logistics": "Moyenne : Èze-sur-Mer et Èze Village sont distincts"}
+      }
+    },
+    "saintpaul": {
+      "slug": "saint-paul-de-vence",
+      "name": {"en": "Saint-Paul-de-Vence", "fr": "Saint-Paul-de-Vence"},
+      "route": {"en": "/en/riviera-guide/saint-paul-de-vence/", "fr": "/riviera-guide/saint-paul-de-vence/"},
+      "image": "/assets/editorial/saint-paul-de-vence.jpg",
+      "alt": {"en": "Saint-Paul-de-Vence", "fr": "Saint-Paul-de-Vence"},
+      "tag": {"en": "Best for art inland", "fr": "Pour l’art dans les terres"},
+      "summary": {
+        "en": "Art, stone and an inland pause when the coast needs a break.",
+        "fr": "Art, pierre et pause dans les terres quand la côte a besoin de souffler."
+      },
+      "reality": {
+        "en": {"getting_around": "A car is very useful. Bus is possible.", "budget": "€€ to €€€€", "season": "Spring and autumn are the easiest", "logistics": "Medium to high: inland access"},
+        "fr": {"getting_around": "Voiture très utile. Bus possible.", "budget": "€€ à €€€€", "season": "Printemps et automne sont les plus souples", "logistics": "Moyenne à élevée : accès intérieur"}
+      }
+    },
+    "sainttropez": {
+      "slug": "saint-tropez",
+      "name": {"en": "Saint-Tropez", "fr": "Saint-Tropez"},
+      "route": {"en": "/en/riviera-guide/saint-tropez/", "fr": "/riviera-guide/saint-tropez/"},
+      "image": "/assets/editorial/saint-tropez.jpg",
+      "alt": {"en": "Saint-Tropez harbour and town", "fr": "Saint-Tropez, le port et la ville"},
+      "tag": {"en": "Only if you really want it", "fr": "Quand vous le voulez vraiment"},
+      "summary": {
+        "en": "A deliberate expedition, not something to squeeze between two train stops.",
+        "fr": "Une vraie expédition à décider, pas un arrêt à caser entre deux trains."
+      },
+      "reality": {
+        "en": {"getting_around": "Car, boat or transfers need planning", "budget": "€€€ to €€€€", "season": "May to September, with heavy summer pressure", "logistics": "High"},
+        "fr": {"getting_around": "Voiture, bateau ou transferts à organiser", "budget": "€€€ à €€€€", "season": "Mai à septembre, avec forte pression en été", "logistics": "Élevée"}
+      }
+    }
+  }
+}
