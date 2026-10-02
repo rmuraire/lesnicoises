@@ -114,6 +114,7 @@ def patch(rel: str, base: str, lang: str, town: str) -> bool:
     original = text
 
     text = normalize_top(text, lang, town)
+    text = normalize_destination_tail(text, base, lang, town)
     new = block(base, lang)
     if 'data-destination-reality="true"' in text:
         text = re.sub(
@@ -133,6 +134,63 @@ def patch(rel: str, base: str, lang: str, town: str) -> bool:
         path.write_text(text, encoding="utf-8")
         return True
     return False
+
+BASE_HOTEL_FIT = {
+    "nice": "nice",
+    "villefranche": "villefranche",
+    "antibes": "antibes",
+    "cannes": "cannes",
+    "monaco": "monaco",
+    "menton": "menton",
+}
+
+def normalize_destination_tail(text: str, base: str, lang: str, town: str) -> str:
+    if lang == "en":
+        replacements = {
+            "<h2>Next decisions</h2>": "<h2>The next decision</h2>",
+            "<h2>Your next decision</h2>": "<h2>The next decision</h2>",
+            ">YOUR NEXT DECISION<": ">THE NEXT DECISION<",
+            "<strong>Continue:</strong>": "<strong>The next decision:</strong>",
+        }
+    else:
+        replacements = {
+            "<h2>Décisions suivantes</h2>": "<h2>La prochaine décision</h2>",
+            "<h2>Votre prochaine décision</h2>": "<h2>La prochaine décision</h2>",
+            ">VOTRE PROCHAINE DÉCISION<": ">LA PROCHAINE DÉCISION<",
+            "<strong>Continuer :</strong>": "<strong>La prochaine décision :</strong>",
+            "<strong>Continuer:</strong>": "<strong>La prochaine décision :</strong>",
+        }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    # Base destinations get one predictable Hotel Fit bridge. Detours keep their
+    # destination-specific hotel wording rather than pretending they are Hotel Fit bases.
+    fit_base = BASE_HOTEL_FIT.get(base)
+    if fit_base and "destination-hotel-fit-cta" not in text:
+        if lang == "en":
+            href = f"/en/hotels/finder/?base={fit_base}"
+            label = f"Choose a hotel in {town} with Hotel Fit →"
+        else:
+            href = f"/hotels/finder/?base={fit_base}"
+            label = f"Choisir un hôtel à {town} avec Hotel Fit →"
+        cta = f'<p class="destination-hotel-fit-cta"><a href="{href}">{label}</a></p>'
+
+        # Put it before the closing decision/source layer, never in a hotel card grid.
+        anchors = [
+            re.search(r'<h2[^>]*>The next decision</h2>', text, re.I),
+            re.search(r'<h2[^>]*>La prochaine décision</h2>', text, re.I),
+            re.search(r'<div class="sources"\b', text, re.I),
+            re.search(r'<div class="source-box"[^>]*><strong>(?:The next decision|La prochaine décision)', text, re.I),
+        ]
+        target = next((m for m in anchors if m), None)
+        if target:
+            text = text[:target.start()] + cta + text[target.start():]
+        else:
+            article_close = text.lower().rfind("</article>")
+            if article_close >= 0:
+                text = text[:article_close] + cta + text[article_close:]
+    return text
+
 
 def validate_page(rel: str, lang: str, town: str) -> None:
     text = (ROOT / rel).read_text(encoding="utf-8")
@@ -155,6 +213,9 @@ def validate_page(rel: str, lang: str, town: str) -> None:
     fit = "/riviera-fit/" if lang == "fr" else "/en/riviera-fit/"
     if f'href="{fit}"' not in text:
         raise RuntimeError(f"{rel}: canonical Riviera Fit CTA missing")
+    base = PAGES[rel][0]
+    if base in BASE_HOTEL_FIT and "destination-hotel-fit-cta" not in text:
+        raise RuntimeError(f"{rel}: canonical Hotel Fit bridge missing")
 
 def main() -> int:
     changed = []
