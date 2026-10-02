@@ -78,50 +78,63 @@ def _home_grid(keys: list[str], lang: str, group: str, with_id: bool = False) ->
     return f'<div class="base-grid mametas-city-grid" data-city-group="{group}"{grid_id}>{cards}</div>'
 
 
-def _replace_home_base_grid(text: str, lang: str) -> str:
-    target_id = "places" if lang == "en" else "lieux"
-    m = re.search(
-        rf'<div\b[^>]*class=["\'][^"\']*base-grid[^"\']*["\'][^>]*\bid=["\']{target_id}["\'][^>]*>',
-        text,
+def _find_grid_for_route(text: str, route: str, start_at: int = 0):
+    """Find the nearest grid <div> that encloses a known destination route.
+
+    Historical homepage generators changed ids/classes several times; route
+    identity is more stable than presentation markup.
+    """
+    route_at = text.find(f'href="{route}"', start_at)
+    if route_at < 0:
+        route_at = text.find(f"href='{route}'", start_at)
+    if route_at < 0:
+        return None
+
+    candidates = list(re.finditer(
+        r'<div\b[^>]*class=["\'][^"\']*grid[^"\']*["\'][^>]*>',
+        text[:route_at],
         re.I,
-    )
-    if not m:
-        # Attribute order can be id before class.
-        m = re.search(
-            rf'<div\b[^>]*\bid=["\']{target_id}["\'][^>]*class=["\'][^"\']*base-grid[^"\']*["\'][^>]*>',
-            text,
-            re.I,
-        )
-    if not m:
-        raise RuntimeError(f"Home {lang}: canonical base grid not found")
+    ))
+    for m in reversed(candidates):
+        try:
+            end_text = _replace_balanced_div(text, m.start(), "__MAMETAS_GRID_SENTINEL__")
+        except RuntimeError:
+            continue
+        sentinel_at = end_text.find("__MAMETAS_GRID_SENTINEL__")
+        if sentinel_at < 0:
+            continue
+        # Recover the original balanced end by comparing suffixes.
+        suffix = end_text[sentinel_at + len("__MAMETAS_GRID_SENTINEL__"):]
+        end = len(text) - len(suffix)
+        if m.start() <= route_at < end:
+            return m.start(), end
+    return None
+
+
+def _replace_home_base_grid(text: str, lang: str) -> str:
+    route = CITIES["nice"]["route"][lang]
+    found = _find_grid_for_route(text, route)
+    if not found:
+        raise RuntimeError(f"Home {lang}: base city grid not found")
+    start, _end = found
     return _replace_balanced_div(
         text,
-        m.start(),
+        start,
         _home_grid(GROUPS["base"], lang, "base", with_id=True),
     )
 
 
 def _replace_home_detour_grid(text: str, lang: str) -> str:
-    marker = "Beyond your base" if lang == "en" else "Au-delà de votre base"
-    marker_at = text.find(marker)
-    if marker_at < 0:
-        raise RuntimeError(f"Home {lang}: detour section marker not found")
-    section_start = text.rfind("<section", 0, marker_at)
-    section_end = text.find("</section>", marker_at)
-    if section_start < 0 or section_end < 0:
-        raise RuntimeError(f"Home {lang}: detour section bounds not found")
-    section = text[section_start:section_end]
-    grid = re.search(
-        r'<div\b[^>]*class=["\'][^"\']*(?:place-grid|base-grid)[^"\']*["\'][^>]*>',
-        section,
-        re.I,
-    )
-    if not grid:
+    # Saint-Tropez is never in the base group, making it the safest stable
+    # route marker for the detour grid.
+    route = CITIES["sainttropez"]["route"][lang]
+    found = _find_grid_for_route(text, route)
+    if not found:
         raise RuntimeError(f"Home {lang}: detour city grid not found")
-    absolute_start = section_start + grid.start()
+    start, _end = found
     return _replace_balanced_div(
         text,
-        absolute_start,
+        start,
         _home_grid(GROUPS["detour"], lang, "detour", with_id=False),
     )
 
@@ -137,49 +150,58 @@ def patch_home(path: Path, lang: str) -> bool:
     return False
 
 
-def _anchor_pattern(route: str, css_class: str) -> re.Pattern:
-    return re.compile(
-        rf'<a\b(?=[^>]*class=["\'][^"\']*{re.escape(css_class)}[^"\']*["\'])(?=[^>]*href=["\']{re.escape(route)}["\'])[^>]*>[\s\S]*?</a>',
+def _find_city_anchor(text: str, route: str):
+    pattern = re.compile(
+        rf'<a\b[^>]*href=["\']{re.escape(route)}["\'][^>]*>[\s\S]*?</a>',
         re.I,
     )
+    for m in pattern.finditer(text):
+        if re.search(r'<h3\b', m.group(0), re.I):
+            return m
+    # Attribute order / formatting fallback.
+    pattern = re.compile(r'<a\b[^>]*>[\s\S]*?</a>', re.I)
+    for m in pattern.finditer(text):
+        block = m.group(0)
+        if re.search(rf'href=["\']{re.escape(route)}["\']', block, re.I) and re.search(r'<h3\b', block, re.I):
+            return m
+    return None
 
 
-def _ensure_data_key(block: str, key: str) -> str:
-    if "data-mametas-city=" in block:
-        return re.sub(
-            r'data-mametas-city=["\'][^"\']+["\']',
-            f'data-mametas-city="{key}"',
-            block,
-            count=1,
-            flags=re.I,
-        )
-    return block.replace("<a ", f'<a data-mametas-city="{key}" ', 1)
-
-
-def _normalize_en_places_card(block: str, key: str) -> str:
+def _normalize_places_card(block: str, key: str, lang: str) -> str:
     city = CITIES[key]
     block = _ensure_data_key(block, key)
-    block = re.sub(r'<h3>.*?</h3>', f'<h3>{city["name"]["en"]}</h3>', block, count=1, flags=re.S | re.I)
-    tag = city["tag"]["en"]
-    if re.search(r'<strong>.*?</strong>', block, re.S | re.I):
-        block = re.sub(r'<strong>.*?</strong>', f'<strong>{tag}.</strong>', block, count=1, flags=re.S | re.I)
-    else:
-        block = re.sub(r'<p>', f'<p><strong>{tag}.</strong> ', block, count=1, flags=re.I)
-    return block
+    block = re.sub(
+        r'<h3>.*?</h3>',
+        f'<h3>{city["name"][lang]}</h3>',
+        block,
+        count=1,
+        flags=re.S | re.I,
+    )
+    tag = city["tag"][lang]
 
-
-def _normalize_fr_places_tile(block: str, key: str) -> str:
-    city = CITIES[key]
-    block = _ensure_data_key(block, key)
-    block = re.sub(r'<h3>.*?</h3>', f'<h3>{city["name"]["fr"]}</h3>', block, count=1, flags=re.S | re.I)
-    tag = city["tag"]["fr"]
-    if re.search(r'<span class="tiny">.*?</span>', block, re.S | re.I):
+    if re.search(r'<span class=["\'][^"\']*tiny[^"\']*["\']>.*?</span>', block, re.S | re.I):
         block = re.sub(
-            r'<span class="tiny">.*?</span>',
+            r'<span class=["\'][^"\']*tiny[^"\']*["\']>.*?</span>',
             f'<span class="tiny">{tag}</span>',
             block,
             count=1,
             flags=re.S | re.I,
+        )
+    elif re.search(r'<p[^>]*>\s*<strong>.*?</strong>', block, re.S | re.I):
+        block = re.sub(
+            r'(<p[^>]*>\s*)<strong>.*?</strong>',
+            rf'\1<strong>{tag}.</strong>',
+            block,
+            count=1,
+            flags=re.S | re.I,
+        )
+    elif re.search(r'<h3\b', block, re.I):
+        block = re.sub(
+            r'(<h3\b)',
+            f'<span class="mametas-city-tag">{tag}</span>\1',
+            block,
+            count=1,
+            flags=re.I,
         )
     return block
 
@@ -189,14 +211,11 @@ def patch_places(path: Path, lang: str) -> bool:
     before = text
     for key in GROUPS["base"] + GROUPS["detour"]:
         route = CITIES[key]["route"][lang]
-        css_class = "place-card" if lang == "en" else "destination-tile"
-        pattern = _anchor_pattern(route, css_class)
-        m = pattern.search(text)
+        m = _find_city_anchor(text, route)
         if not m:
-            raise RuntimeError(f"{path}: city card not found for {key}")
-        block = m.group(0)
-        new = _normalize_en_places_card(block, key) if lang == "en" else _normalize_fr_places_tile(block, key)
-        text = text[:m.start()] + new + text[m.end():]
+            raise RuntimeError(f"{path}: city card not found for {key} ({route})")
+        block = _normalize_places_card(m.group(0), key, lang)
+        text = text[:m.start()] + block + text[m.end():]
     if text != before:
         path.write_text(text, encoding="utf-8")
         return True
