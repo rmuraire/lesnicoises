@@ -40,6 +40,20 @@ PAIR_FALLBACKS = {
     "/en/": ("/fr/", "/"),
     "/plan/": ("/fr/planifier/", "/plan/"),
     "/fr/planifier/": ("/fr/planifier/", "/plan/"),
+    "/plan/three-days-riviera/": ("/fr/planifier/trois-jours-cote-d-azur/", "/plan/three-days-riviera/"),
+    "/fr/planifier/trois-jours-cote-d-azur/": ("/fr/planifier/trois-jours-cote-d-azur/", "/plan/three-days-riviera/"),
+    "/plan/five-days-nice-no-car/": ("/fr/planifier/cinq-jours-nice-sans-voiture/", "/plan/five-days-nice-no-car/"),
+    "/fr/planifier/cinq-jours-nice-sans-voiture/": ("/fr/planifier/cinq-jours-nice-sans-voiture/", "/plan/five-days-nice-no-car/"),
+    "/plan/seven-days-riviera/": ("/fr/planifier/sept-jours-cote-d-azur/", "/plan/seven-days-riviera/"),
+    "/fr/planifier/sept-jours-cote-d-azur/": ("/fr/planifier/sept-jours-cote-d-azur/", "/plan/seven-days-riviera/"),
+    "/plan/car-or-no-car/": ("/fr/planifier/voiture-ou-pas/", "/plan/car-or-no-car/"),
+    "/fr/planifier/voiture-ou-pas/": ("/fr/planifier/voiture-ou-pas/", "/plan/car-or-no-car/"),
+    "/plan/real-budget/": ("/fr/planifier/budget-reel/", "/plan/real-budget/"),
+    "/fr/planifier/budget-reel/": ("/fr/planifier/budget-reel/", "/plan/real-budget/"),
+    "/plan/when-to-go/": ("/fr/planifier/quand-partir/", "/plan/when-to-go/"),
+    "/fr/planifier/quand-partir/": ("/fr/planifier/quand-partir/", "/plan/when-to-go/"),
+    "/en/explore/2-3-hours/": ("/explore/2-3-heures/", "/en/explore/2-3-hours/"),
+    "/explore/2-3-heures/": ("/explore/2-3-heures/", "/en/explore/2-3-hours/"),
     "/en/riviera-fit/": ("/riviera-fit/", "/en/riviera-fit/"),
     "/riviera-fit/": ("/riviera-fit/", "/en/riviera-fit/"),
     "/en/riviera-chooser/": ("/riviera-chooser/", "/en/riviera-chooser/"),
@@ -152,7 +166,32 @@ def inferred_pair(route: str):
         return (route.replace("/en/practical/", "/pratique/", 1), route)
     if route.startswith("/pratique/"):
         return (route, route.replace("/pratique/", "/en/practical/", 1))
-    return (route if not route.startswith("/en/") else "/", route if route.startswith("/en/") else "/")
+    # If no exact translation is declared, fall back to the matching section hub,
+    # never to an unrelated page. Exact hreflang metadata always wins above.
+    hub_pairs = (
+        (("/en/explore/",), "/explore/", "/en/explore/"),
+        (("/explore/",), "/explore/", "/en/explore/"),
+        (("/en/hotels/",), "/hotels/", "/en/hotels/"),
+        (("/hotels/", "/stay/", "/fr/dormir/"), "/hotels/", "/en/hotels/"),
+        (("/en/restaurants/",), "/restaurants/", "/en/restaurants/"),
+        (("/restaurants/",), "/restaurants/", "/en/restaurants/"),
+        (("/en/beaches/",), "/plages/", "/en/beaches/"),
+        (("/plages/",), "/plages/", "/en/beaches/"),
+        (("/en/culture/",), "/culture/", "/en/culture/"),
+        (("/culture/",), "/culture/", "/en/culture/"),
+        (("/en/day-trips/",), "/escapades/", "/en/day-trips/"),
+        (("/escapades/",), "/escapades/", "/en/day-trips/"),
+        (("/en/good-finds/",), "/bons-plans/", "/en/good-finds/"),
+        (("/bons-plans/",), "/bons-plans/", "/en/good-finds/"),
+        (("/en/practical/",), "/pratique/", "/en/practical/"),
+        (("/pratique/",), "/pratique/", "/en/practical/"),
+        (("/plan/",), "/fr/planifier/", "/plan/"),
+        (("/fr/planifier/",), "/fr/planifier/", "/plan/"),
+    )
+    for prefixes, fr_hub, en_hub in hub_pairs:
+        if route.startswith(prefixes):
+            return fr_hub, en_hub
+    return ("/fr/", "/")
 
 def language_links(text: str, route: str):
     alts = alternates(text)
@@ -195,6 +234,7 @@ def canonical_header(lang: str, route: str, fr_href: str, en_href: str):
     nav = nav_html(items, active)
     brand_home = "/fr/" if is_fr else "/"
     aria = "Navigation principale" if is_fr else "Primary navigation"
+    language_aria = "Langue" if is_fr else "Language"
     menu = "Menu"
     fr_current = ' aria-current="page"' if is_fr else ""
     en_current = ' aria-current="page"' if not is_fr else ""
@@ -207,7 +247,7 @@ def canonical_header(lang: str, route: str, fr_href: str, en_href: str):
         '<span class="mametas-global-brand-name">Mametas</span>'
         '<span class="mametas-global-brand-line">They know the Riviera.</span></a>'
         f'<nav class="mametas-global-nav" aria-label="{aria}">{nav}</nav>'
-        '<div class="mametas-global-lang" aria-label="Language">'
+        f'<div class="mametas-global-lang" aria-label="{language_aria}">'
         f'<a class="{"active" if is_fr else ""}" href="{html.escape(fr_href, quote=True)}"{fr_current}>FR</a>'
         '<span>/</span>'
         f'<a class="{"active" if not is_fr else ""}" href="{html.escape(en_href, quote=True)}"{en_current}>EN</a>'
@@ -248,7 +288,7 @@ def canonical_footer(lang: str):
         '<div class="mametas-global-footer-inner">'
         '<div class="mametas-global-footer-brand"><span>Mametas</span>'
         '<p>They know the Riviera.</p></div>'
-        '<div class="mametas-global-footer-col"><strong>Navigate</strong>' + nav + '</div>'
+        '<div class="mametas-global-footer-col"><strong>' + ("Navigation" if is_fr else "Navigate") + '</strong>' + nav + '</div>'
         '<div class="mametas-global-footer-col"><strong>Mametas</strong>' + about + '</div>'
         '</div>'
         f'<div class="mametas-global-footer-bottom"><span>{kicker}</span><span>© 2026 Mametas</span></div>'
