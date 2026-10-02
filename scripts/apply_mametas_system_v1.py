@@ -8,6 +8,9 @@ future rebuilds.
 """
 from pathlib import Path
 import re
+import html
+
+from scripts.materialize_editorial_html import DESTINATIONS
 
 ROOT=Path(__file__).resolve().parents[1]
 SYSTEM=ROOT/"assets/mametas-system-v1.css"
@@ -131,18 +134,74 @@ def patch_places_hub(path: Path, lang: str):
 
     write_if_changed(path,text,before,"Compacted Places hesitation block:")
 
-def patch_city_consistency(path: Path, lang: str):
-    if not path.exists():
+def canonical_city_must(cfg):
+    items=[]
+    for i,(title,desc) in enumerate(cfg["must"],1):
+        items.append(
+            '<div class="city-must-item">'
+            f'<span class="city-must-number">{i:02d}</span>'
+            '<div class="city-must-copy">'
+            f'<h3>{html.escape(title)}</h3>'
+            f'<p>{html.escape(desc)}</p>'
+            '</div></div>'
+        )
+    return (
+        f'<section id="{html.escape(cfg["must_id"],quote=True)}" '
+        'class="city-must-list" data-static-editorial="true">'
+        f'<h2>{html.escape(cfg["must_title"])}</h2>'
+        f'<p class="city-must-intro">{html.escape(cfg["must_intro"])}</p>'
+        '<div class="city-must-items">'+''.join(items)+'</div>'
+        '</section>'
+    )
+
+def normalize_city_must(path: Path, rel: str):
+    if not path.exists() or rel not in DESTINATIONS:
         return
+    cfg=DESTINATIONS[rel]
     text=path.read_text(encoding="utf-8",errors="ignore")
     before=text
-    # Nice currently lists six items while the intro says five.
-    if path.as_posix().endswith("/en/riviera-guide/nice/index.html"):
-        text=text.replace(
-            "Five things earn their place on a first visit. The rest can negotiate for your second trip.",
-            "Six things earn their place on a first visit. The rest can negotiate for your second trip."
-        )
-    write_if_changed(path,text,before,"Aligned city decision copy:")
+    must_id=re.escape(cfg["must_id"])
+    title=re.escape(cfg["must_title"])
+
+    # Remove the old static version of this one section, leaving supporting
+    # practical / next-decision layers untouched.
+    text=re.sub(
+        rf'<section id="{must_id}"[^>]*>[\s\S]*?</section>',
+        '',
+        text,
+        count=1,
+        flags=re.I
+    )
+
+    # A few V3 generations created a richer duplicate earlier in the article.
+    # Remove only the exact same titled section up to the next H2 / source layer.
+    text=re.sub(
+        rf'<h2[^>]*>\s*{title}\s*</h2>[\s\S]*?(?=<h2\b|<section class="practical-decision-layer"|<div class="sources"|<!-- MAMETAS_STATIC_DECISIONS_START -->)',
+        '',
+        text,
+        count=1,
+        flags=re.I
+    )
+
+    block=canonical_city_must(cfg)
+
+    # Prefer the existing static editorial marker so practical layers stay grouped.
+    marker='<!-- MAMETAS_STATIC_DECISIONS_START -->'
+    if marker in text:
+        text=text.replace(marker,marker+'\n'+block,1)
+    elif '<div class="sources">' in text:
+        text=text.replace('<div class="sources">',block+'\n<div class="sources">',1)
+    elif '</article>' in text:
+        text=text.replace('</article>',block+'\n</article>',1)
+    else:
+        raise SystemExit(f"{rel}: no safe insertion point for canonical city component")
+
+    # Guard against duplicate visible titles.
+    if text.count(cfg["must_title"]) != 1:
+        raise SystemExit(f"{rel}: expected one canonical city title, found {text.count(cfg['must_title'])}")
+
+    write_if_changed(path,text,before,"Normalized city decision component:")
+
 
 for rel in ("assets/site.css","assets/v3.css"):
     compile_css(ROOT/rel)
@@ -167,13 +226,9 @@ for rel in ("en/good-finds/index.html","bons-plans/index.html"):
 for rel in ("en/riviera-fit/index.html","riviera-fit/index.html","en/riviera-chooser/index.html","riviera-chooser/index.html"):
     add_body_class(ROOT/rel,"riviera-fit-tool")
 
-# City parity is CSS-driven through #what-not-to-miss, with one copy guard for Nice.
-for rel in (
-    "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
-    "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
-    "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
-):
-    patch_city_consistency(ROOT/rel,"fr" if rel.startswith("riviera-guide/") else "en")
+# Canonical city decision component across all materialized destinations.
+for rel in DESTINATIONS:
+    normalize_city_must(ROOT/rel,rel)
 
 # Guards.
 for rel in ("assets/site.css","assets/v3.css"):
@@ -182,7 +237,7 @@ for rel in ("assets/site.css","assets/v3.css"):
         raise SystemExit(f"{rel}: expected exactly one presentation-system marker")
     if UNSAFE in text:
         raise SystemExit(f"{rel}: unsafe 2026-10-01 city/detail experiment still present")
-    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".places-unified #what-not-to-miss"):
+    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".city-must-list",".city-must-item"):
         if required not in text:
             raise SystemExit(f"{rel}: missing presentation rule {required}")
 
