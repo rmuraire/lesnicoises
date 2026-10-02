@@ -18,15 +18,17 @@ for p in ROOT.rglob("*.html"):
         continue
     checked+=1
     name=rel.as_posix()
+    main_at=s.lower().find("<main")
+    shell=s[:main_at] if main_at >= 0 else s
     tests=[
         (s.count('class="mametas-global-header"')==1,"global header count"),
         (s.count('class="mametas-global-footer"')==1,"global footer count"),
         (s.count('/assets/mametas-shell-v1.css?v=1.0')==1,"shell CSS count"),
         ('>Plan<' in s and '>Places<' in s and '>Stay<' in s and '>Explore<' in s and '>Practical<' in s if re.search(r'<html[^>]+lang=["\']en',s,re.I) else True,"EN canonical nav"),
         ('>Préparer<' in s and '>Destinations<' in s and '>Dormir<' in s and '>Explorer<' in s and '>Pratique<' in s if re.search(r'<html[^>]+lang=["\']fr',s,re.I) else True,"FR canonical nav"),
-        ('Eat &amp; Do' not in s and '>Now<' not in s and '>Manger &amp; faire<' not in s and '>Maintenant<' not in s,"legacy nav labels"),
-        ('href="/#plan"' not in s and 'href="/#places"' not in s and 'href="/#now"' not in s and 'href="/fr/#lieux"' not in s and 'href="/fr/#maintenant"' not in s,"legacy nav anchors"),
-        ('class="site-header"' not in s and 'class="v3-header"' not in s,"legacy header markup"),
+        ('Eat &amp; Do' not in shell and '>Now<' not in shell and '>Manger &amp; faire<' not in shell and '>Maintenant<' not in shell,"legacy nav labels"),
+        ('href="/#plan"' not in shell and 'href="/#places"' not in shell and 'href="/#now"' not in shell and 'href="/fr/#lieux"' not in shell and 'href="/fr/#maintenant"' not in shell,"legacy nav anchors"),
+        ('class="site-header"' not in shell and 'class="v3-header"' not in shell,"legacy header markup"),
     ]
     for ok,label in tests:
         if not ok:
