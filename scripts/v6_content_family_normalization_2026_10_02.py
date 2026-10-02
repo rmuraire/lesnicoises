@@ -267,8 +267,15 @@ def first_external_official_link(text: str):
         if not href_m:
             continue
         href = href_m.group(1)
-        if href.startswith("http") and "google.com/maps" not in href:
-            return href
+        label = plain(m.group(2)).lower()
+        low = href.lower()
+        if not href.startswith("http") or "google.com/maps" in low:
+            continue
+        if any(x in low for x in ("wikimedia.org", "wikipedia.org", "pexels.com", "depositphotos.com", "instagram.com")):
+            continue
+        if label.startswith("photo"):
+            continue
+        return href
     return None
 
 def culture_practical_block(block: str, full_text: str, lang: str) -> str:
@@ -314,7 +321,9 @@ def culture_practical_block(block: str, full_text: str, lang: str) -> str:
     # no factual loss, while the surrounding component becomes consistent.
     hours_price = practical_plain or missing
 
-    official_href = first_external_official_link(content) or first_external_official_link(full_text)
+    sources = re.search(r'<div\b[^>]*class=["\'][^"\']*sources[^"\']*["\'][^>]*>[\s\S]*?</div>', full_text, re.I)
+    source_html = sources.group(0) if sources else ""
+    official_href = first_external_official_link(content) or first_external_official_link(source_html)
     if official_href:
         booking = (
             f'<a href="{official_href}" target="_blank" rel="nofollow noopener">'
