@@ -64,7 +64,7 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
     # whole build or leaving one more visual generation alive.
     h1 = re.search(r'<h1\b', text, re.I)
     main = re.search(r'<main\b[^>]*>', text, re.I)
-    if h1 and main and h1.start() > main.end():
+    if h1 and main and h1.start() >= main.end():
         segment = text[main.end():h1.start()]
         additions = []
         if "mametas-detail-back" not in segment:
