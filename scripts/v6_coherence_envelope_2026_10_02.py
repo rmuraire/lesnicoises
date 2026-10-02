@@ -311,23 +311,24 @@ def replace_shell(text: str, header: str, footer: str):
 
     prefix = text[body.end():main.start()]
 
-    # Preserve real editorial content that old pages may have placed before
-    # their header. The coherence pass removes the historical shell, not
-    # arbitrary pre-main content.
-    skip_pattern = r'<a\\b[^>]*class=["\\'][^"\\']*skip-link[^"\\']*["\\'][^>]*>[\\s\\S]*?</a>\\s*'
-    skip = re.findall(skip_pattern, prefix, flags=re.I)
-    prefix_without_skip = re.sub(skip_pattern, '', prefix, flags=re.I)
+    # Keep the accessibility skip link and preserve any editorial element that
+    # legacy pages placed before their header. Some older pages contain useful
+    # practical content there; the coherence pass must never delete it.
+    skip_re = r'<a\\b[^>]*class=["\\'][^"\\']*skip-link[^"\\']*["\\'][^>]*>[\\s\\S]*?</a>\\s*'
+    skip = re.findall(skip_re, prefix, flags=re.I)
+    prefix_without_skip = re.sub(skip_re, '', prefix, flags=re.I)
+
     legacy_header = re.search(r'<header\\b', prefix_without_skip, re.I)
     preserved = prefix_without_skip[:legacy_header.start()] if legacy_header else prefix_without_skip
     preserved = preserved.strip()
 
     clean_prefix = "".join(skip) + header
     if preserved:
-        clean_prefix += "\\n" + preserved + "\\n"
+        clean_prefix += "\n" + preserved + "\n"
+
     text = text[:body.end()] + clean_prefix + text[main.start():]
 
-    # Replace the historical footer. Validation below requires a single footer,
-    # so legacy + canonical footers can never coexist silently.
+    # Remove/replace the historical footer after main.
     footer_matches = list(re.finditer(r'<footer\\b[^>]*>[\\s\\S]*?</footer>', text, flags=re.I))
     if footer_matches:
         m = footer_matches[-1]
@@ -341,6 +342,7 @@ def replace_shell(text: str, header: str, footer: str):
             body_close = text.lower().rfind("</body>")
             if body_close >= 0:
                 text = text[:body_close] + footer + text[body_close:]
+
     return text, True
 
 def page_lang(text: str, rel: str):
