@@ -21,7 +21,8 @@ EXACT_REPLACEMENTS = {
         "Use Riviera Fit →": "Try Riviera Fit →",
     },
     "en/riviera-guide/nice/index.html": {
-        "Not yet - choose the right Nice base →": "Not yet: choose the right Nice hotel →",
+        "choose the right Nice base": "choose the right Nice hotel",
+        "Not yet - choose the right Nice hotel →": "Not yet: choose the right Nice hotel →",
         "Already booked - build the trip around it →": "Already booked: build the trip around it →",
     },
 }
