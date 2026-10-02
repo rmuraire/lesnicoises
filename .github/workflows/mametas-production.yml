@@ -560,7 +560,7 @@ jobs:
               f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("SPRING", "WINTER", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
               f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("mametas-global-header", "mametas-global-footer"),
-              f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card", "Weather by season", "/en/french-riviera-tourism-statistics/", "Open the Riviera Agenda"),
+              f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card", "/en/practical/weather-by-season/", "/en/french-riviera-tourism-statistics/", "Open the Riviera Agenda"),
               f"https://www.mametas.com/en/explore/?deploy={sha}": ("explore-harmonised", "lgbtq-banner--fifth", "phase4-short-entry", "Explore the Riviera your way.", "Women travelling solo", "/en/explore/2-3-hours/"),
               f"https://www.mametas.com/en/hotels/?deploy={sha}": ("Find the right hotel. Start with the right base.",),
               f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": ("harmonisation-without-car-visual", "next-decisions-compact"),
@@ -737,7 +737,7 @@ jobs:
                   "/assets/riviera-chooser.js?v=14",
               ),
               f"https://www.mametas.com/riviera-fit/?deploy={sha}": (
-                  "Cinq questions. Un point de chute. Et les compromis avec.",
+                  "Cinq questions. Une base. Et les compromis avec.",
                   'data-group="days"',
                   'data-group="mobility"',
                   'data-group="mood"',
@@ -990,11 +990,11 @@ jobs:
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
               f"https://www.mametas.com/fr/?deploy={sha}": ("Préparer", "Destinations", "Pratique"),
-              f"https://www.mametas.com/riviera-guide/?deploy={sha}": ("point de chute", "c’est la ville où vous dormez chaque nuit"),
+              f"https://www.mametas.com/riviera-guide/?deploy={sha}": ("base", "c’est la ville où vous dormez chaque nuit"),
               f"https://www.mametas.com/en/riviera-guide/?deploy={sha}": ("the town you’ll sleep in each night",),
-              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ("point de chute", "/assets/riviera-chooser.js?v=14"),
+              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ("Une base", "/assets/riviera-chooser.js?v=14"),
               f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": ("the town you’ll sleep in each night", "/assets/riviera-chooser.js?v=14"),
-              f"https://www.mametas.com/hotels/?deploy={sha}": ("point de chute",),
+              f"https://www.mametas.com/hotels/?deploy={sha}": ("base",),
           }
           for url, needles in checks.items():
               req=Request(url,headers={"User-Agent":"MametasSemanticCheck/1.0","Cache-Control":"no-cache"})
@@ -1067,32 +1067,19 @@ jobs:
               vis = re.sub(r'\s+', ' ', html.unescape(vis)).strip()
               issues=[]
               if lang.startswith("fr"):
-                  preserve_dialect = urlsplit(url).path.rstrip("/") == "/lexique"
-                  for pattern,label in (
-                      (r'\bbases?\b',"base/bases"),
-                      (r'\bDégun\b',"Dégun"),
-                      (r'\bGari\b',"Gari"),
-                      (r'\bcagades?\b',"cagade"),
-                  ):
-                      if preserve_dialect and label in ("Dégun","Gari","cagade"):
-                          continue
-                      mm=re.search(pattern,vis,re.I)
-                      if mm:
-                          issues.append(f"{url}: visible {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
+                  # The coherence audit keeps "base" as the single French
+                  # product term. Niçois voice words remain intentional copy.
+                  mm=re.search(r'\bpoints? de chute\b',vis,re.I)
+                  if mm:
+                      issues.append(f"{url}: legacy base vocabulary: {vis[max(0,mm.start()-70):mm.end()+110]}")
                   for raw,label in (
-                      (r'>\s*Reality Check\s*<',"Reality Check"),
                       (r'>\s*Pression budget\s*<',"Pression budget"),
                       (r'>\s*Friction\s*<',"Friction"),
+                      (r'>\s*MAMETAS HOTEL TAKE\s*<',"MAMETAS HOTEL TAKE"),
+                      (r'>\s*Mametas rule\s*<',"Mametas rule"),
                   ):
                       if re.search(raw,body,re.I):
                           issues.append(f"{url}: legacy FR label {label}")
-              elif lang.startswith("en"):
-                  if urlsplit(url).path.rstrip("/") == "/en/lexicon":
-                      return issues
-                  for pattern,label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
-                      mm=re.search(pattern,vis,re.I)
-                      if mm:
-                          issues.append(f"{url}: visible EN {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
               return issues
 
           errors=[]
