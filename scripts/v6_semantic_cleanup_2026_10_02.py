@@ -32,6 +32,12 @@ EXACT_REPLACEMENTS = {
         'href="/fr/#riviera-fit"': 'href="/riviera-fit/"',
         "Faire Riviera Fit →": "Tester Riviera Fit →",
     },
+    "index.html": {
+        '<p class="eyebrow">Right now</p>': '<p class="eyebrow">Good Finds</p>',
+    },
+    "fr/index.html": {
+        '<p class="eyebrow">En ce moment</p>': '<p class="eyebrow">Bons plans</p>',
+    },
 }
 
 def page_lang(text: str) -> str:
