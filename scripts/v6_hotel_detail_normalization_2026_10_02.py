@@ -36,6 +36,29 @@ KNOWN_CITY_LISTS_FR = {
     "antibes": "/hotels/antibes/",
 }
 
+DESTINATION_ROUTES_EN = {
+    "nice": "/en/riviera-guide/nice/",
+    "cannes": "/en/riviera-guide/cannes/",
+    "antibes": "/en/riviera-guide/antibes/",
+    "menton": "/en/riviera-guide/menton/",
+    "monaco": "/en/riviera-guide/monaco/",
+    "eze": "/en/riviera-guide/eze/",
+    "villefranche-sur-mer": "/en/riviera-guide/villefranche-cap-ferrat/",
+    "saint-jean-cap-ferrat": "/en/riviera-guide/villefranche-cap-ferrat/",
+    "saint-tropez": "/en/riviera-guide/saint-tropez/",
+}
+DESTINATION_ROUTES_FR = {
+    "nice": "/riviera-guide/nice/",
+    "cannes": "/riviera-guide/cannes/",
+    "antibes": "/riviera-guide/antibes/",
+    "menton": "/riviera-guide/menton/",
+    "monaco": "/riviera-guide/monaco/",
+    "eze": "/riviera-guide/eze/",
+    "villefranche-sur-mer": "/riviera-guide/villefranche-cap-ferrat/",
+    "saint-jean-cap-ferrat": "/riviera-guide/villefranche-cap-ferrat/",
+    "saint-tropez": "/riviera-guide/saint-tropez/",
+}
+
 def page_lang(text: str) -> str:
     m = re.search(r'<html\b[^>]*\blang=["\']([^"\']+)', text, re.I)
     return "fr" if m and m.group(1).lower().startswith("fr") else "en"
@@ -182,6 +205,42 @@ def normalize_sections(text: str, lang: str) -> str:
     return text
 
 
+def ensure_next_decision(text: str, lang: str, city_slug: str) -> str:
+    if "hotel-next-decision" in text:
+        return text
+    city = CITY_NAMES.get(city_slug, city_slug.replace("-", " ").title())
+    if lang == "fr":
+        guide = DESTINATION_ROUTES_FR.get(city_slug)
+        links = ['<a href="/hotels/finder/">Tester Hotel Fit →</a>']
+        if guide:
+            links.append(f'<a href="{guide}">Voir le guide de {city} →</a>')
+        else:
+            links.append('<a href="/hotels/">Comparer les hôtels →</a>')
+        block = (
+            '<div class="culture-practical hotel-next-decision">'
+            '<span>LA PROCHAINE DÉCISION</span><p>' + ' · '.join(links) + '</p></div>'
+        )
+    else:
+        guide = DESTINATION_ROUTES_EN.get(city_slug)
+        links = ['<a href="/en/hotels/finder/">Try Hotel Fit →</a>']
+        if guide:
+            links.append(f'<a href="{guide}">See the {city} guide →</a>')
+        else:
+            links.append('<a href="/en/hotels/">Compare hotels →</a>')
+        block = (
+            '<div class="culture-practical hotel-next-decision">'
+            '<span>THE NEXT DECISION</span><p>' + ' · '.join(links) + '</p></div>'
+        )
+
+    sources = re.search(r'<div class="sources"\b', text, re.I)
+    if sources:
+        return text[:sources.start()] + block + text[sources.start():]
+    article_close = text.lower().rfind("</article>")
+    if article_close >= 0:
+        return text[:article_close] + block + text[article_close:]
+    return text
+
+
 def validate(path: Path, text: str, lang: str) -> None:
     name = path.relative_to(ROOT).as_posix()
     if "mametas-detail-back" not in text:
@@ -190,6 +249,8 @@ def validate(path: Path, text: str, lang: str) -> None:
         raise RuntimeError(f"{name}: normalized hotel eyebrow missing")
     if lang == "fr" and "MAMETAS HOTEL TAKE" in text:
         raise RuntimeError(f"{name}: English Hotel Take eyebrow remains on FR page")
+    if "hotel-next-decision" not in text:
+        raise RuntimeError(f"{name}: next-decision block missing")
     for m in re.finditer(r'<a([^>]+)>(.*?)</a>', text, re.S | re.I):
         tag = m.group(1).lower()
         if "sponsored" not in tag:
@@ -222,6 +283,7 @@ def main():
         text = normalize_top(text, lang, city_slug)
         text = normalize_affiliate_ctas(text, lang)
         text = normalize_sections(text, lang)
+        text = ensure_next_decision(text, lang, city_slug)
         if text != before:
             path.write_text(text, encoding="utf-8")
             changed.append(path.relative_to(ROOT).as_posix())
