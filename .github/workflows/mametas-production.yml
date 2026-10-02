@@ -326,6 +326,9 @@ jobs:
       - name: Apply final Riviera UI v2
         run: python scripts/apply_riviera_ui_v2.py
 
+      - name: Preserve sources, checked dates and known photo credits
+        run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
+
       - name: Apply V6 coherence envelope
         run: python scripts/v6_coherence_envelope_2026_10_02.py
 
