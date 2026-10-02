@@ -1,0 +1,17 @@
+/* Canonical Mametas city card — 2026-10-02 */
+.mametas-city-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.place-grid .mametas-city-card{min-width:0}
+.mametas-city-card{display:flex;flex-direction:column;min-width:0;border:1px solid var(--line,rgba(22,34,61,.14));background:var(--paper,#f7f2e7);color:var(--ink,#16223d);text-decoration:none;overflow:hidden;transition:transform 160ms ease,border-color 160ms ease}
+.mametas-city-card:hover,.mametas-city-card:focus-visible{transform:translateY(-2px);border-color:rgba(22,34,61,.32)}
+.mametas-city-card-media{display:block;aspect-ratio:4/3;overflow:hidden;background:var(--paper-deep,#efe7d6)}
+.mametas-city-card-media img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 250ms ease}
+.mametas-city-card:hover .mametas-city-card-media img{transform:scale(1.015)}
+.mametas-city-card-copy{display:flex;flex:1;flex-direction:column;padding:18px}
+.mametas-city-card-copy small{color:var(--coral,#b9654a);font-size:9px;font-weight:800;letter-spacing:.13em;line-height:1.35;text-transform:uppercase}
+.mametas-city-card-copy strong{margin:8px 0 9px;font-family:var(--serif,'Fraunces',Georgia,serif);font-size:clamp(26px,2.5vw,34px);font-weight:500;letter-spacing:-.025em;line-height:1.05}
+.mametas-city-card-description{color:var(--ink-soft,#4e5967);font-size:12px;line-height:1.55}
+.mametas-city-card-mobility{margin-top:14px;padding-top:12px;border-top:1px solid var(--line,rgba(22,34,61,.14));color:var(--blue-deep,#3c7186);font-size:10px;font-weight:700;line-height:1.4}
+.mametas-city-card-cta{margin-top:auto;padding-top:16px;color:var(--ink,#16223d);font-size:9.5px;font-weight:800;letter-spacing:.1em;line-height:1.4;text-transform:uppercase}
+.home-city-detours .section-heading{margin-bottom:24px}
+@media(max-width:980px){.mametas-city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.mametas-city-grid{grid-template-columns:1fr}.mametas-city-card-copy{padding:16px}.mametas-city-card-copy strong{font-size:29px}}
