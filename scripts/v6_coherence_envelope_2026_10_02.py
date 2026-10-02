@@ -326,21 +326,22 @@ def replace_shell(text: str, header: str, footer: str):
         clean_prefix += "\n" + preserved + "\n"
     text = text[:body.end()] + clean_prefix + text[main.start():]
 
-    # Replace the historical footer. Validation below requires a single footer,
-    # so legacy + canonical footers can never coexist silently.
-    footer_matches = list(re.finditer(r'<footer\b[^>]*>[\s\S]*?</footer>', text, flags=re.I))
-    if footer_matches:
-        m = footer_matches[-1]
-        text = text[:m.start()] + footer + text[m.end():]
+    # Collapse every historical site footer after </main> to one canonical
+    # footer. Several legacy generations can coexist on the same materialised
+    # page, so replacing only the last footer is not sufficient.
+    close_main = text.lower().rfind("</main>")
+    if close_main >= 0:
+        pos = close_main + len("</main>")
+        before = text[:pos]
+        after = text[pos:]
+        after = re.sub(r'<footer\b[^>]*>[\s\S]*?</footer>\s*', '', after, flags=re.I)
+        text = before + footer + after
     else:
-        close_main = text.lower().rfind("</main>")
-        if close_main >= 0:
-            pos = close_main + len("</main>")
-            text = text[:pos] + footer + text[pos:]
-        else:
-            body_close = text.lower().rfind("</body>")
-            if body_close >= 0:
-                text = text[:body_close] + footer + text[body_close:]
+        body_close = text.lower().rfind("</body>")
+        if body_close >= 0:
+            before = text[:body_close]
+            before = re.sub(r'<footer\b[^>]*>[\s\S]*?</footer>\s*', '', before, flags=re.I)
+            text = before + footer + text[body_close:]
     return text, True
 
 def page_lang(text: str, rel: str):
