@@ -304,8 +304,8 @@ def inject_css(text: str):
     return text[:idx] + link + "\n" + text[idx:]
 
 def replace_shell(text: str, header: str, footer: str):
-    body = re.search(r'<body\\b[^>]*>', text, re.I)
-    main = re.search(r'<main\\b', text, re.I)
+    body = re.search(r'<body\b[^>]*>', text, re.I)
+    main = re.search(r'<main\b', text, re.I)
     if not body or not main or main.start() < body.end():
         return text, False
 
@@ -314,21 +314,21 @@ def replace_shell(text: str, header: str, footer: str):
     # Preserve real editorial content that old pages may have placed before
     # their header. The coherence pass removes the historical shell, not
     # arbitrary pre-main content.
-    skip_pattern = r"<a\\b[^>]*class=[\"'][^\"']*skip-link[^\"']*[\"'][^>]*>[\\s\\S]*?</a>\\s*"
+    skip_pattern = r"<a\b[^>]*class=[\"'][^\"']*skip-link[^\"']*[\"'][^>]*>[\s\S]*?</a>\s*"
     skip = re.findall(skip_pattern, prefix, flags=re.I)
     prefix_without_skip = re.sub(skip_pattern, '', prefix, flags=re.I)
-    legacy_header = re.search(r'<header\\b', prefix_without_skip, re.I)
+    legacy_header = re.search(r'<header\b', prefix_without_skip, re.I)
     preserved = prefix_without_skip[:legacy_header.start()] if legacy_header else prefix_without_skip
     preserved = preserved.strip()
 
     clean_prefix = "".join(skip) + header
     if preserved:
-        clean_prefix += "\\n" + preserved + "\\n"
+        clean_prefix += "\n" + preserved + "\n"
     text = text[:body.end()] + clean_prefix + text[main.start():]
 
     # Replace the historical footer. Validation below requires a single footer,
     # so legacy + canonical footers can never coexist silently.
-    footer_matches = list(re.finditer(r'<footer\\b[^>]*>[\\s\\S]*?</footer>', text, flags=re.I))
+    footer_matches = list(re.finditer(r'<footer\b[^>]*>[\s\S]*?</footer>', text, flags=re.I))
     if footer_matches:
         m = footer_matches[-1]
         text = text[:m.start()] + footer + text[m.end():]
