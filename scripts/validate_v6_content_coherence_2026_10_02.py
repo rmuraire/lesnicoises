@@ -147,6 +147,44 @@ for p in ROOT.rglob("index.html"):
 if hotel_checked < 10:
     errors.append(f"hotel detail guard only found {hotel_checked} pages")
 
+# 7) Home current-information naming is intentionally one system.
+if '<p class="eyebrow">Good Finds</p>' not in read("index.html"):
+    errors.append("index.html: Good Finds home section name missing")
+if '<p class="eyebrow">Bons plans</p>' not in read("fr/index.html"):
+    errors.append("fr/index.html: Bons plans home section name missing")
+
+# 8) Family-level component guards.
+restaurant_cards = 0
+culture_grids = 0
+beach_pages = 0
+for p in ROOT.rglob("index.html"):
+    rel = p.relative_to(ROOT)
+    parts = rel.parts
+    s = p.read_text(encoding="utf-8", errors="ignore")
+    rels = rel.as_posix()
+
+    if "/restaurants/" in f"/{rels}" and "<h1" in s.lower() and rels not in {"en/restaurants/index.html","restaurants/index.html"}:
+        restaurant_cards += s.count('class="restaurant-meta"')
+        # No restaurant card should regress to H2 inside a .place block.
+        for m in re.finditer(r'<div class="place"[^>]*>[\s\S]*?</div>', s, re.I):
+            if "<h2" in m.group(0).lower():
+                errors.append(f"{rel}: restaurant card heading regressed to H2")
+                break
+
+    if "/culture/" in f"/{rels}" and "<h1" in s.lower() and rels not in {"en/culture/index.html","culture/index.html","en/culture/nice/index.html","culture/nice/index.html"}:
+        culture_grids += s.count('data-culture-logistics="v1"')
+
+    if "/beaches/" in f"/{rels}" or "/plages/" in f"/{rels}":
+        if "<h1" in s.lower() and rels not in {"en/beaches/index.html","plages/index.html"}:
+            beach_pages += 1
+
+if restaurant_cards < 20:
+    errors.append(f"restaurant component guard only found {restaurant_cards} canonical card metadata rows")
+if culture_grids < 20:
+    errors.append(f"culture component guard only found {culture_grids} practical grids")
+if beach_pages < 6:
+    errors.append(f"beach component guard only found {beach_pages} detail pages")
+
 if errors:
     print("Content coherence validation failed:")
     for e in errors[:160]:
