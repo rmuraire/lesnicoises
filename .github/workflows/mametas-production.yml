@@ -332,9 +332,39 @@ jobs:
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
+      - name: Normalize destination pages
+        run: python scripts/v6_destination_normalisation_2026_10_02.py
+
+      - name: Validate destination pages
+        run: python scripts/validate_v6_destination_normalisation_2026_10_02.py
+
+      - name: Normalize city cards
+        run: python scripts/v6_city_card_normalisation_2026_10_02.py
+
+      - name: Validate city cards
+        run: python scripts/validate_v6_city_card_normalisation_2026_10_02.py
+
+      - name: Normalize detail-page tops
+        run: python scripts/v6_detail_top_normalisation_2026_10_02.py
+
+      - name: Validate detail-page tops
+        run: python scripts/validate_v6_detail_top_normalisation_2026_10_02.py
+
+      - name: Normalize CTA lexicon
+        run: python scripts/v6_cta_lexicon_2026_10_02.py
+
+      - name: Validate CTA lexicon
+        run: python scripts/validate_v6_cta_lexicon_2026_10_02.py
+
+      - name: Normalize French vocabulary
+        run: python scripts/v6_fr_vocabulary_2026_10_02.py
+
+      - name: Validate French vocabulary
+        run: python scripts/validate_v6_fr_vocabulary_2026_10_02.py
+
       - name: Deploy Share assets immediately
         env:
-          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css;assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
+          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css;assets/mametas-destination-v1.css;assets/mametas-city-card-v1.css;assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -532,7 +562,7 @@ jobs:
               f"https://www.mametas.com/en/explore/2-3-hours/?deploy={sha}": ("Only got 2 or 3 hours? Good.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("SPRING", "WINTER", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
-              f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("Printemps", "Hiver"),
+              f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("PRINTEMPS", "HIVER"),
               f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card", "Weather by season", "/en/french-riviera-tourism-statistics/", "Open the Riviera Agenda"),
               f"https://www.mametas.com/en/explore/?deploy={sha}": ("explore-harmonised", "lgbtq-banner--fifth", "phase4-short-entry", "Explore the Riviera your way.", "Women travelling solo", "/en/explore/2-3-hours/"),
               f"https://www.mametas.com/en/hotels/?deploy={sha}": ("Find the right hotel. Start with the right base.",),
