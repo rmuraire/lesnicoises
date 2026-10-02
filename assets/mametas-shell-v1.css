@@ -60,3 +60,21 @@
   .mametas-global-footer-bottom span{display:block}
   .mametas-global-footer-bottom span+span{margin-top:5px}
 }
+
+/* Shared detail-page parent link — destination normalisation */
+.mametas-detail-back{
+  display:inline-block;
+  margin:0 0 18px;
+  color:var(--mg-blue,#3c7186);
+  font-family:var(--mg-sans,'Inter',Arial,sans-serif);
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.1em;
+  line-height:1.4;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.mametas-detail-back:hover,.mametas-detail-back:focus-visible{
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
