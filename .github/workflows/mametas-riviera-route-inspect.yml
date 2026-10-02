@@ -1,0 +1,41 @@
+name: Mametas inspect Riviera Fit route
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-riviera-route-inspect.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect live Riviera Fit routes
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          urls=[
+            "https://www.mametas.com/en/riviera-chooser/",
+            "https://www.mametas.com/en/riviera-fit/",
+            "https://www.mametas.com/riviera-chooser/",
+            "https://www.mametas.com/riviera-fit/",
+          ]
+          for url in urls:
+              try:
+                  req=Request(url,headers={"User-Agent":"MametasRouteInspect/1.0","Cache-Control":"no-cache","Pragma":"no-cache"})
+                  with urlopen(req,timeout=30) as r:
+                      body=r.read().decode("utf-8","replace")
+                      print("\nURL",url)
+                      print("FINAL",r.geturl())
+                      print("STATUS",r.status,"LEN",len(body))
+                      for token in ("data-riviera-chooser","rg-fit","mametas-riviera-v2.css","Five questions. One base","RIVIERA FIT"):
+                          print(token,token in body)
+                      print("HEAD",body[:500].replace("\n"," "))
+              except Exception as exc:
+                  print("\nURL",url,"ERROR",repr(exc))
+          PY
