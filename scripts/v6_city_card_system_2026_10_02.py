@@ -1,0 +1,262 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Mametas city-card coherence pass.
+
+Uses data/city-system-v1.json as the single source of truth for:
+- base vs detour classification,
+- canonical destination names,
+- "best for" tags,
+- home-card descriptions,
+- routes and imagery.
+
+The pass is intentionally narrow: it normalizes existing city surfaces without
+turning hotel or restaurant cards into the same visual component.
+"""
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA = json.loads((ROOT / "data/city-system-v1.json").read_text(encoding="utf-8"))
+CITIES = DATA["cities"]
+GROUPS = DATA["groups"]
+
+HOME_PAGES = {
+    "index.html": "en",
+    "fr/index.html": "fr",
+}
+PLACES_PAGES = {
+    "en/riviera-guide/index.html": "en",
+    "riviera-guide/index.html": "fr",
+}
+
+
+def _replace_balanced_div(text: str, start: int, replacement: str) -> str:
+    token_re = re.compile(r"</?div\b[^>]*>", re.I)
+    depth = 0
+    end = None
+    for m in token_re.finditer(text, start):
+        token = m.group(0)
+        if token.lower().startswith("</div"):
+            depth -= 1
+            if depth == 0:
+                end = m.end()
+                break
+        else:
+            depth += 1
+    if end is None:
+        raise RuntimeError("Could not find balanced closing </div>")
+    return text[:start] + replacement + text[end:]
+
+
+def _home_card(key: str, lang: str) -> str:
+    city = CITIES[key]
+    route = city["route"][lang]
+    image = city["image"]
+    alt = city["alt"][lang]
+    tag = city["tag"][lang]
+    name = city["name"][lang]
+    summary = city["summary"][lang]
+    return (
+        f'<a class="base-card mametas-city-card" data-mametas-city="{key}" href="{route}">'
+        f'<img src="{image}" alt="{alt}" loading="lazy">'
+        '<div class="base-card-content">'
+        f'<span class="tag">{tag}</span>'
+        f'<h3>{name}</h3>'
+        f'<p>{summary}</p>'
+        '</div></a>'
+    )
+
+
+def _home_grid(keys: list[str], lang: str, group: str, with_id: bool = False) -> str:
+    grid_id = ""
+    if with_id:
+        grid_id = ' id="places"' if lang == "en" else ' id="lieux"'
+    cards = "".join(_home_card(key, lang) for key in keys)
+    return f'<div class="base-grid mametas-city-grid" data-city-group="{group}"{grid_id}>{cards}</div>'
+
+
+def _replace_home_base_grid(text: str, lang: str) -> str:
+    target_id = "places" if lang == "en" else "lieux"
+    m = re.search(
+        rf'<div\b[^>]*class=["\'][^"\']*base-grid[^"\']*["\'][^>]*\bid=["\']{target_id}["\'][^>]*>',
+        text,
+        re.I,
+    )
+    if not m:
+        # Attribute order can be id before class.
+        m = re.search(
+            rf'<div\b[^>]*\bid=["\']{target_id}["\'][^>]*class=["\'][^"\']*base-grid[^"\']*["\'][^>]*>',
+            text,
+            re.I,
+        )
+    if not m:
+        raise RuntimeError(f"Home {lang}: canonical base grid not found")
+    return _replace_balanced_div(
+        text,
+        m.start(),
+        _home_grid(GROUPS["base"], lang, "base", with_id=True),
+    )
+
+
+def _replace_home_detour_grid(text: str, lang: str) -> str:
+    marker = "Beyond your base" if lang == "en" else "Au-delà de votre base"
+    marker_at = text.find(marker)
+    if marker_at < 0:
+        raise RuntimeError(f"Home {lang}: detour section marker not found")
+    section_start = text.rfind("<section", 0, marker_at)
+    section_end = text.find("</section>", marker_at)
+    if section_start < 0 or section_end < 0:
+        raise RuntimeError(f"Home {lang}: detour section bounds not found")
+    section = text[section_start:section_end]
+    grid = re.search(
+        r'<div\b[^>]*class=["\'][^"\']*(?:place-grid|base-grid)[^"\']*["\'][^>]*>',
+        section,
+        re.I,
+    )
+    if not grid:
+        raise RuntimeError(f"Home {lang}: detour city grid not found")
+    absolute_start = section_start + grid.start()
+    return _replace_balanced_div(
+        text,
+        absolute_start,
+        _home_grid(GROUPS["detour"], lang, "detour", with_id=False),
+    )
+
+
+def patch_home(path: Path, lang: str) -> bool:
+    text = path.read_text(encoding="utf-8")
+    before = text
+    text = _replace_home_base_grid(text, lang)
+    text = _replace_home_detour_grid(text, lang)
+    if text != before:
+        path.write_text(text, encoding="utf-8")
+        return True
+    return False
+
+
+def _anchor_pattern(route: str, css_class: str) -> re.Pattern:
+    return re.compile(
+        rf'<a\b(?=[^>]*class=["\'][^"\']*{re.escape(css_class)}[^"\']*["\'])(?=[^>]*href=["\']{re.escape(route)}["\'])[^>]*>[\s\S]*?</a>',
+        re.I,
+    )
+
+
+def _ensure_data_key(block: str, key: str) -> str:
+    if "data-mametas-city=" in block:
+        return re.sub(
+            r'data-mametas-city=["\'][^"\']+["\']',
+            f'data-mametas-city="{key}"',
+            block,
+            count=1,
+            flags=re.I,
+        )
+    return block.replace("<a ", f'<a data-mametas-city="{key}" ', 1)
+
+
+def _normalize_en_places_card(block: str, key: str) -> str:
+    city = CITIES[key]
+    block = _ensure_data_key(block, key)
+    block = re.sub(r'<h3>.*?</h3>', f'<h3>{city["name"]["en"]}</h3>', block, count=1, flags=re.S | re.I)
+    tag = city["tag"]["en"]
+    if re.search(r'<strong>.*?</strong>', block, re.S | re.I):
+        block = re.sub(r'<strong>.*?</strong>', f'<strong>{tag}.</strong>', block, count=1, flags=re.S | re.I)
+    else:
+        block = re.sub(r'<p>', f'<p><strong>{tag}.</strong> ', block, count=1, flags=re.I)
+    return block
+
+
+def _normalize_fr_places_tile(block: str, key: str) -> str:
+    city = CITIES[key]
+    block = _ensure_data_key(block, key)
+    block = re.sub(r'<h3>.*?</h3>', f'<h3>{city["name"]["fr"]}</h3>', block, count=1, flags=re.S | re.I)
+    tag = city["tag"]["fr"]
+    if re.search(r'<span class="tiny">.*?</span>', block, re.S | re.I):
+        block = re.sub(
+            r'<span class="tiny">.*?</span>',
+            f'<span class="tiny">{tag}</span>',
+            block,
+            count=1,
+            flags=re.S | re.I,
+        )
+    return block
+
+
+def patch_places(path: Path, lang: str) -> bool:
+    text = path.read_text(encoding="utf-8")
+    before = text
+    for key in GROUPS["base"] + GROUPS["detour"]:
+        route = CITIES[key]["route"][lang]
+        css_class = "place-card" if lang == "en" else "destination-tile"
+        pattern = _anchor_pattern(route, css_class)
+        m = pattern.search(text)
+        if not m:
+            raise RuntimeError(f"{path}: city card not found for {key}")
+        block = m.group(0)
+        new = _normalize_en_places_card(block, key) if lang == "en" else _normalize_fr_places_tile(block, key)
+        text = text[:m.start()] + new + text[m.end():]
+    if text != before:
+        path.write_text(text, encoding="utf-8")
+        return True
+    return False
+
+
+def validate_home(path: Path, lang: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    if text.count('data-city-group="base"') != 1:
+        raise RuntimeError(f"{path}: base group missing or duplicated")
+    if text.count('data-city-group="detour"') != 1:
+        raise RuntimeError(f"{path}: detour group missing or duplicated")
+    for key in GROUPS["base"] + GROUPS["detour"]:
+        if text.count(f'data-mametas-city="{key}"') != 1:
+            raise RuntimeError(f"{path}: city {key} missing or duplicated")
+        tag = CITIES[key]["tag"][lang]
+        if tag not in text:
+            raise RuntimeError(f"{path}: canonical tag missing for {key}: {tag}")
+    # Classification regression guards from the coherence audit.
+    base_start = text.index('data-city-group="base"')
+    detour_start = text.index('data-city-group="detour"')
+    if base_start > detour_start:
+        raise RuntimeError(f"{path}: base group must precede detours")
+    segment_base = text[base_start:detour_start]
+    for key in ("monaco", "menton"):
+        if f'data-mametas-city="{key}"' not in segment_base:
+            raise RuntimeError(f"{path}: {key} must be a base")
+    segment_detour = text[detour_start:]
+    if 'data-mametas-city="eze"' not in segment_detour:
+        raise RuntimeError(f"{path}: Èze must be a detour")
+
+
+def validate_places(path: Path, lang: str) -> None:
+    text = path.read_text(encoding="utf-8")
+    for key in GROUPS["base"] + GROUPS["detour"]:
+        if text.count(f'data-mametas-city="{key}"') != 1:
+            raise RuntimeError(f"{path}: city marker missing or duplicated for {key}")
+        tag = CITIES[key]["tag"][lang]
+        if tag not in text:
+            raise RuntimeError(f"{path}: canonical tag missing for {key}: {tag}")
+
+
+def main() -> None:
+    changed = []
+    for rel, lang in HOME_PAGES.items():
+        path = ROOT / rel
+        if patch_home(path, lang):
+            changed.append(rel)
+        validate_home(path, lang)
+
+    for rel, lang in PLACES_PAGES.items():
+        path = ROOT / rel
+        if patch_places(path, lang):
+            changed.append(rel)
+        validate_places(path, lang)
+
+    print(f"City-card coherence passed; changed {len(changed)} pages.")
+    for rel in changed:
+        print("  ", rel)
+
+
+if __name__ == "__main__":
+    main()
