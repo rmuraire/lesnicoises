@@ -141,7 +141,8 @@ def normalize_existing_figcaptions(text: str, lang: str) -> str:
         if not any(creditish):
             return m.group(0)
         inner = re.sub(r'^\s*Photo\s*:\s*', '', inner, flags=re.I)
-        inner = re.sub(r'^\s*Property photo\s+', '', inner, flags=re.I)
+        inner = re.sub(r'^\s*Property (?:photo|image)(?:\s+via)?\s+', '', inner, flags=re.I)
+        inner = re.sub(r'^\s*via\s+', '', inner, flags=re.I)
         return f"<figcaption>{prefix}{inner}</figcaption>"
 
     return re.sub(r'<figcaption>([\s\S]*?)</figcaption>', repl, text, flags=re.I)
