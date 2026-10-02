@@ -1,6 +1,9 @@
 name: Mametas coherence validation
 
 on:
+  push:
+    branches:
+      - mametas-coherence-cleanup-2026-10-02-v2
   pull_request:
     branches:
       - mametas-v3
