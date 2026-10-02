@@ -9,6 +9,7 @@ future rebuilds.
 from pathlib import Path
 import re
 import html
+import unicodedata
 
 from materialize_editorial_html import DESTINATIONS
 
@@ -16,19 +17,19 @@ ROOT=Path(__file__).resolve().parents[1]
 SYSTEM=ROOT/"assets/mametas-system-v1.css"
 
 LEGACY_PLACE_DETAILS=(
+    "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
     "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
     "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
     "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
     "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
 )
-CSS_VERSION_TARGETS=(
-    *LEGACY_PLACE_DETAILS,
-    "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+V3_PLACE_DETAILS=(
     "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
     "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
     "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
     "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
 )
+CSS_VERSION_TARGETS=(*LEGACY_PLACE_DETAILS,*V3_PLACE_DETAILS)
 START="/* Mametas Presentation System v1 — 2026-10-02"
 UNSAFE="/* Editorial rhythm harmonisation — city/detail pages — 2026-10-01 */"
 
@@ -70,8 +71,8 @@ def patch_asset_versions(path: Path):
         return
     text=path.read_text(encoding="utf-8",errors="ignore")
     before=text
-    text=re.sub(r'/assets/site\.css(?:\?v=[^"\']+)?','/assets/site.css?v=24.3',text)
-    text=re.sub(r'/assets/v3\.css(?:\?v=[^"\']+)?','/assets/v3.css?v=1.4',text)
+    text=re.sub(r'/assets/site\.css(?:\?v=[^"\']+)?','/assets/site.css?v=24.4',text)
+    text=re.sub(r'/assets/v3\.css(?:\?v=[^"\']+)?','/assets/v3.css?v=1.5',text)
     write_if_changed(path,text,before,"Bumped CSS asset version:")
 
 
@@ -83,6 +84,106 @@ def patch_copy(path: Path, replacements):
     for old,new in replacements:
         text=text.replace(old,new)
     write_if_changed(path,text,before,"Updated copy:")
+
+
+def _heading_text(raw: str) -> str:
+    return html.unescape(re.sub(r'<[^>]+>','',raw)).strip()
+
+def _slugify_heading(raw: str) -> str:
+    value=unicodedata.normalize("NFKD",_heading_text(raw))
+    value=value.encode("ascii","ignore").decode("ascii").lower()
+    value=re.sub(r'[^a-z0-9]+','-',value).strip('-')
+    return value or "section"
+
+def structure_legacy_destination(path: Path, lang: str):
+    if not path.exists():
+        return
+    text=path.read_text(encoding="utf-8",errors="ignore")
+    before=text
+    if "legacy-destination-layout" in text:
+        add_body_class(path,"legacy-place-detail")
+        return
+
+    # Remove the previous canonical shortlist temporarily. It is reinserted later
+    # by normalize_city_must, inside the new reading column.
+    text=re.sub(
+        r'<section[^>]*class="[^"]*city-must-list[^"]*"[^>]*>[\s\S]*?</section>',
+        '',
+        text,
+        count=1,
+        flags=re.I
+    )
+
+    m=re.search(r'<article class="article">',text,re.I)
+    if not m:
+        return
+    close=text.find("</article>",m.end())
+    if close<0:
+        return
+
+    inner=text[m.end():close]
+    first_h2=re.search(r'<h2\b[^>]*>[\s\S]*?</h2>',inner,re.I)
+    if not first_h2:
+        return
+
+    prefix=inner[:first_h2.start()]
+    tail=inner[first_h2.start():]
+
+    # Keep generated practical/next-decision layers and sources outside the
+    # section parser so nested headings cannot corrupt the structure.
+    boundaries=[]
+    for marker in ('<!-- MAMETAS_STATIC_DECISIONS_START -->','<div class="sources">'):
+        idx=tail.find(marker)
+        if idx>=0:
+            boundaries.append(idx)
+    split_at=min(boundaries) if boundaries else len(tail)
+    main=tail[:split_at]
+    appendix=tail[split_at:]
+
+    pat=re.compile(r'(<h2(?P<attrs>[^>]*)>(?P<title>[\s\S]*?)</h2>)(?P<body>[\s\S]*?)(?=(?:<h2\b)|\Z)',re.I)
+    matches=list(pat.finditer(main))
+    if not matches:
+        return
+
+    sections=[]
+    toc=[]
+    used=set()
+    for match in matches:
+        attrs=match.group("attrs") or ""
+        raw_title=match.group("title")
+        title=_heading_text(raw_title)
+        existing=re.search(r'\bid=["\']([^"\']+)["\']',attrs,re.I)
+        if existing:
+            sid=existing.group(1)
+        else:
+            base=_slugify_heading(raw_title)
+            sid=base
+            n=2
+            while sid in used:
+                sid=f"{base}-{n}"; n+=1
+            attrs=(attrs+" "+f'id="{sid}"').rstrip()
+        used.add(sid)
+        h2=f'<h2{attrs}>{raw_title}</h2>'
+        sections.append(
+            f'<section class="legacy-destination-section">{h2}{match.group("body")}</section>'
+        )
+        low=title.lower()
+        if not any(x in low for x in ("sources checked","sources vérifiées","the next decision","la prochaine décision","la suite")):
+            toc.append((sid,title))
+
+    label="ON THIS PAGE" if lang=="en" else "DANS CETTE PAGE"
+    links=''.join(f'<li><a href="#{html.escape(sid,quote=True)}">{html.escape(title)}</a></li>' for sid,title in toc)
+    layout=(
+        '<div class="legacy-destination-layout">'
+        f'<aside class="legacy-destination-toc" aria-label="{label.title()}"><span>{label}</span><ol>{links}</ol></aside>'
+        '<div class="legacy-destination-sections">'
+        +''.join(sections)+appendix+
+        '</div></div>'
+    )
+    inner=prefix+layout
+    text=text[:m.end()]+inner+text[close:]
+    write_if_changed(path,text,before,"Structured legacy destination:")
+
 
 def patch_plan(path: Path, lang: str):
     if not path.exists():
@@ -250,11 +351,16 @@ for rel in ("en/good-finds/index.html","bons-plans/index.html"):
 for rel in ("en/riviera-fit/index.html","riviera-fit/index.html","en/riviera-chooser/index.html","riviera-chooser/index.html"):
     add_body_class(ROOT/rel,"riviera-fit-tool")
 
-# Repair the older site.css destination family without rewriting its content.
+# Give the older site.css destination family a real article architecture.
 for rel in LEGACY_PLACE_DETAILS:
+    structure_legacy_destination(ROOT/rel,"en" if rel.startswith("en/") else "fr")
     add_body_class(ROOT/rel,"legacy-place-detail")
 
-# Force browsers to pick up the presentation pass on both site.css and v3.css pages.
+# V3 pages already have a side rail; use the same section rhythm without rebuilding them.
+for rel in V3_PLACE_DETAILS:
+    add_body_class(ROOT/rel,"v3-destination-structured")
+
+# Force browsers to pick up the structural pass on both CSS families.
 for rel in CSS_VERSION_TARGETS:
     patch_asset_versions(ROOT/rel)
 
@@ -263,6 +369,7 @@ for rel in (
     "index.html","fr/index.html",
     "en/good-finds/index.html","bons-plans/index.html",
     "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+    "en/practical/index.html","pratique/index.html",
 ):
     patch_copy(ROOT/rel,[("IRONMAN","Ironman")])
 
@@ -277,7 +384,7 @@ for rel in ("assets/site.css","assets/v3.css"):
         raise SystemExit(f"{rel}: expected exactly one presentation-system marker")
     if UNSAFE in text:
         raise SystemExit(f"{rel}: unsafe 2026-10-01 city/detail experiment still present")
-    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".city-must-list",".city-must-item",".legacy-place-detail .article"):
+    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".city-must-list",".city-must-item",".legacy-destination-layout",".v3-destination-structured .article-body>h2"):
         if required not in text:
             raise SystemExit(f"{rel}: missing presentation rule {required}")
 
