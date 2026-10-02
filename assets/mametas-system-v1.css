@@ -324,6 +324,125 @@
 .legacy-place-detail .place{padding:18px 0!important}
 .legacy-place-detail .sources{margin-top:34px!important}
 
+
+/* Destination article architecture v1.2 — real structure, not a stream of blocks */
+.legacy-place-detail .article{
+  max-width:1120px!important;
+}
+.legacy-place-detail .article>.back,
+.legacy-place-detail .article>.meta,
+.legacy-place-detail .article>h1,
+.legacy-place-detail .article>.standfirst,
+.legacy-place-detail .article>.mametas-checked{
+  max-width:820px!important;
+}
+.legacy-destination-layout{
+  display:grid!important;
+  grid-template-columns:190px minmax(0,1fr)!important;
+  gap:34px!important;
+  align-items:start!important;
+  margin-top:26px!important;
+}
+.legacy-destination-toc{
+  position:sticky!important;
+  top:108px!important;
+  padding:13px 0 14px!important;
+  border-top:1px solid var(--m-rule)!important;
+  border-bottom:1px solid var(--m-rule)!important;
+}
+.legacy-destination-toc>span{
+  display:block!important;
+  margin-bottom:9px!important;
+  color:var(--coral,#d36b4f)!important;
+  font-family:var(--sans,Inter,Arial,sans-serif)!important;
+  font-size:9px!important;
+  font-weight:800!important;
+  letter-spacing:.15em!important;
+  text-transform:uppercase!important;
+}
+.legacy-destination-toc ol{
+  list-style:none!important;
+  margin:0!important;
+  padding:0!important;
+}
+.legacy-destination-toc li+li{
+  margin-top:7px!important;
+}
+.legacy-destination-toc a{
+  color:var(--ink-soft,#43506a)!important;
+  font-family:var(--sans,Inter,Arial,sans-serif)!important;
+  font-size:11.5px!important;
+  font-weight:600!important;
+  line-height:1.35!important;
+  text-decoration:none!important;
+}
+.legacy-destination-toc a:hover{
+  color:var(--ink,#14213d)!important;
+}
+.legacy-destination-sections{
+  min-width:0!important;
+}
+.legacy-destination-section{
+  padding:20px 0 22px!important;
+  border-top:1px solid var(--m-rule)!important;
+}
+.legacy-destination-section:first-child{
+  padding-top:0!important;
+  border-top:0!important;
+}
+.legacy-destination-section>h2{
+  margin:0 0 9px!important;
+  font-size:clamp(28px,2.65vw,33px)!important;
+  line-height:1.07!important;
+}
+.legacy-destination-section>h3{
+  margin-top:19px!important;
+}
+.legacy-destination-section>p{
+  margin-bottom:13px!important;
+}
+.legacy-destination-section>.verdict{
+  margin:18px 0!important;
+}
+.legacy-destination-section>.place{
+  padding:15px 0!important;
+}
+.legacy-destination-sections>.city-must-list{
+  margin-top:22px!important;
+}
+.legacy-destination-sections>.sources{
+  margin-top:26px!important;
+}
+
+/* V3 destinations already have a side rail; give the reading column the same section rhythm. */
+.v3-destination-structured .article-body>h2{
+  margin:28px 0 9px!important;
+  padding-top:22px!important;
+  border-top:1px solid var(--m-rule)!important;
+  font-size:clamp(28px,2.6vw,33px)!important;
+  line-height:1.07!important;
+}
+.v3-destination-structured .article-body>p{
+  margin-bottom:14px!important;
+  line-height:1.62!important;
+}
+.v3-destination-structured .article-body>.verdict-box{
+  margin-bottom:24px!important;
+}
+.v3-destination-structured .article-body>.day-card{
+  margin:18px 0!important;
+}
+.v3-destination-structured .article-body>.itinerary-stay-prompt{
+  margin-top:18px!important;
+  margin-bottom:24px!important;
+}
+.v3-destination-structured .article-body>.source-box{
+  margin-top:10px!important;
+}
+.v3-destination-structured .article-body>.city-must-list{
+  margin-top:24px!important;
+}
+
 /* The supporting city decision layer follows the same density. */
 .practical-decision-layer[data-static-editorial="true"]{
   margin-top:28px!important;
@@ -650,6 +769,11 @@
   .agenda-hub .page-hero h1{font-size:clamp(36px,9.5vw,43px)!important}
   .home-page .home-now-teaser{padding-top:32px!important;padding-bottom:32px!important}
   .home-page .home-now-copy h2{font-size:clamp(34px,9vw,40px)!important}
+  .legacy-destination-layout{display:block!important;margin-top:22px!important}
+  .legacy-destination-toc{display:none!important}
+  .legacy-destination-section{padding:17px 0 19px!important}
+  .legacy-destination-section>h2{font-size:26px!important}
+  .v3-destination-structured .article-body>h2{margin-top:24px!important;padding-top:18px!important;font-size:26px!important}
   .city-must-list{margin-top:26px!important}
   .city-must-item{grid-template-columns:1fr!important;gap:4px!important;padding:10px 0 11px!important}
   .city-must-item h3{font-size:20px!important}
