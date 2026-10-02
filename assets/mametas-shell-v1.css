@@ -60,3 +60,35 @@
   .mametas-global-footer-bottom span{display:block}
   .mametas-global-footer-bottom span+span{margin-top:5px}
 }
+
+
+/* Mametas detail-page top normalization — coherence audit 2026-10-02 */
+.mametas-detail-back{
+  display:inline-block;
+  margin:0 0 20px;
+  color:var(--mg-accent,var(--coral,#b9903f));
+  font-family:var(--mg-sans);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.1em;
+  line-height:1.4;
+  text-decoration:none;
+  text-transform:uppercase;
+}
+.mametas-detail-back:hover,
+.mametas-detail-back:focus-visible{
+  text-decoration:underline;
+  text-underline-offset:4px;
+}
+.mametas-detail-eyebrow{
+  color:var(--mg-accent,var(--coral,#b9903f))!important;
+  font-family:var(--mg-sans)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.16em!important;
+  line-height:1.3!important;
+  text-transform:uppercase!important;
+}
+@media(max-width:700px){
+  .mametas-detail-back{margin-bottom:16px;font-size:10px}
+}
