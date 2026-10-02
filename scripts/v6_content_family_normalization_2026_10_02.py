@@ -75,7 +75,7 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
     return text
 
 def balanced_div_end(text: str, start: int):
-    div_token = re.compile(r'</?div\\b[^>]*>', re.I)
+    div_token = re.compile(r'</?div\b[^>]*>', re.I)
     depth = 0
     for token in div_token.finditer(text, start):
         if token.group(0).lower().startswith("</div"):
