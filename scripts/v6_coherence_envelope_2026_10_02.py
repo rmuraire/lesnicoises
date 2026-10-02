@@ -12,7 +12,7 @@ import html
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SHELL_CSS = "/assets/mametas-shell-v1.css?v=1.1"
+SHELL_CSS = "/assets/mametas-shell-v1.css?v=1.2"
 SHELL_JS = "/assets/mametas-shell-v1.js?v=1.0"
 MARK = 'data-mametas-shell="v1"'
 SKIP_TOP = {
