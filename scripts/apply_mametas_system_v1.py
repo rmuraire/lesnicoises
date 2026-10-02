@@ -14,6 +14,21 @@ from materialize_editorial_html import DESTINATIONS
 
 ROOT=Path(__file__).resolve().parents[1]
 SYSTEM=ROOT/"assets/mametas-system-v1.css"
+
+LEGACY_PLACE_DETAILS=(
+    "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
+    "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
+    "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
+    "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
+)
+CSS_VERSION_TARGETS=(
+    *LEGACY_PLACE_DETAILS,
+    "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+    "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+    "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+    "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+    "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+)
 START="/* Mametas Presentation System v1 — 2026-10-02"
 UNSAFE="/* Editorial rhythm harmonisation — city/detail pages — 2026-10-01 */"
 
@@ -49,6 +64,16 @@ def add_body_class(path: Path, cls: str):
         new=tag[:-1]+f' class="{cls}">'
     text=text[:m.start()]+new+text[m.end():]
     write_if_changed(path,text,before,"Added body class:")
+
+def patch_asset_versions(path: Path):
+    if not path.exists():
+        return
+    text=path.read_text(encoding="utf-8",errors="ignore")
+    before=text
+    text=re.sub(r'/assets/site\.css(?:\?v=[^"\']+)?','/assets/site.css?v=24.3',text)
+    text=re.sub(r'/assets/v3\.css(?:\?v=[^"\']+)?','/assets/v3.css?v=1.4',text)
+    write_if_changed(path,text,before,"Bumped CSS asset version:")
+
 
 def patch_copy(path: Path, replacements):
     if not path.exists():
@@ -136,14 +161,12 @@ def patch_places_hub(path: Path, lang: str):
 
 def canonical_city_must(cfg):
     items=[]
-    for i,(title,desc) in enumerate(cfg["must"],1):
+    for title,desc in cfg["must"]:
         items.append(
             '<div class="city-must-item">'
-            f'<span class="city-must-number">{i:02d}</span>'
-            '<div class="city-must-copy">'
             f'<h3>{html.escape(title)}</h3>'
             f'<p>{html.escape(desc)}</p>'
-            '</div></div>'
+            '</div>'
         )
     return (
         f'<section id="{html.escape(cfg["must_id"],quote=True)}" '
@@ -227,6 +250,22 @@ for rel in ("en/good-finds/index.html","bons-plans/index.html"):
 for rel in ("en/riviera-fit/index.html","riviera-fit/index.html","en/riviera-chooser/index.html","riviera-chooser/index.html"):
     add_body_class(ROOT/rel,"riviera-fit-tool")
 
+# Repair the older site.css destination family without rewriting its content.
+for rel in LEGACY_PLACE_DETAILS:
+    add_body_class(ROOT/rel,"legacy-place-detail")
+
+# Force browsers to pick up the presentation pass on both site.css and v3.css pages.
+for rel in CSS_VERSION_TARGETS:
+    patch_asset_versions(ROOT/rel)
+
+# Brand/event casing: avoid the visually dominant all-caps IRONMAN treatment.
+for rel in (
+    "index.html","fr/index.html",
+    "en/good-finds/index.html","bons-plans/index.html",
+    "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+):
+    patch_copy(ROOT/rel,[("IRONMAN","Ironman")])
+
 # Canonical city decision component across all materialized destinations.
 for rel in DESTINATIONS:
     normalize_city_must(ROOT/rel,rel)
@@ -238,7 +277,7 @@ for rel in ("assets/site.css","assets/v3.css"):
         raise SystemExit(f"{rel}: expected exactly one presentation-system marker")
     if UNSAFE in text:
         raise SystemExit(f"{rel}: unsafe 2026-10-01 city/detail experiment still present")
-    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".city-must-list",".city-must-item"):
+    for required in ("hesitation-compact",".agenda-hub .page-hero h1",".city-must-list",".city-must-item",".legacy-place-detail .article"):
         if required not in text:
             raise SystemExit(f"{rel}: missing presentation rule {required}")
 
