@@ -466,7 +466,9 @@ body.rg-destination .source-box{
   margin:28px auto 0!important;
 }
 html:has(.mametas-global-mobile[open]),
-body:has(.mametas-global-mobile[open]){
+body:has(.mametas-global-mobile[open]),
+html.mametas-menu-open,
+body.mametas-menu-open{
   overflow:hidden!important;
 }
 
