@@ -40,6 +40,15 @@ def clean_english_heading_colons(text: str) -> str:
 def clean_french_labels(text: str) -> str:
     text = text.replace('<span class="day">Mametas rule</span>', '<span class="day">La règle Mametas</span>')
     text = text.replace('<span class="label">MAMETAS RULE</span>', '<span class="label">LA RÈGLE MAMETAS</span>')
+    text = text.replace('MAMETAS SAYS', 'RECO MAMETAS')
+    text = text.replace('MAMETAS TOOL', 'OUTIL MAMETAS')
+
+    # "Base" is the product vocabulary used by Riviera Fit. Older generations
+    # sometimes called the same decision a "point de chute".
+    text = text.replace('Choisir son point de chute', 'Choisir sa base')
+    text = text.replace('choisir son point de chute', 'choisir sa base')
+    text = text.replace('APRÈS LA VILLE · CHOISIR L’HÔTEL', 'APRÈS LA BASE · CHOISIR L’HÔTEL')
+    text = text.replace("APRÈS LA VILLE · CHOISIR L'HÔTEL", "APRÈS LA BASE · CHOISIR L'HÔTEL")
     return text
 
 def main() -> None:
