@@ -1,0 +1,38 @@
+name: Mametas V6 live smoke
+on:
+  push:
+    branches: [qa/v6-live-2026-10-02]
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check representative live shells
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          urls = [
+            "https://www.mametas.com/",
+            "https://www.mametas.com/en/riviera-guide/monaco/",
+            "https://www.mametas.com/en/explore/french-riviera-honeymoon/",
+            "https://www.mametas.com/en/practical/",
+            "https://www.mametas.com/en/hotels/nice/hotel-du-couvent/",
+          ]
+          for url in urls:
+              req=Request(url,headers={"User-Agent":"MametasV6LiveQA/1.0","Cache-Control":"no-cache, no-store"})
+              with urlopen(req,timeout=30) as r:
+                  body=r.read().decode("utf-8","replace")
+              assert 'class="mametas-global-header"' in body, (url,"missing global header")
+              assert 'class="mametas-global-footer"' in body, (url,"missing global footer")
+              assert body.count('class="mametas-global-header"') == 1, (url,"header count")
+              assert body.count('class="mametas-global-footer"') == 1, (url,"footer count")
+              assert '>Practical<' in body, (url,"missing Practical")
+              shell=body[:body.lower().find("<main")]
+              assert '>Now<' not in shell and 'Eat &amp; Do' not in shell, (url,"legacy nav")
+              print("OK",url)
+          PY
