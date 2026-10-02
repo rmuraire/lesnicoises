@@ -147,6 +147,57 @@ for p in ROOT.rglob("index.html"):
 if hotel_checked < 10:
     errors.append(f"hotel detail guard only found {hotel_checked} pages")
 
+# 7) Agenda/current-information naming is one system.
+agenda_expectations = {
+    "index.html": "RIVIERA AGENDA",
+    "fr/index.html": "AGENDA DE LA RIVIERA",
+    "en/good-finds/index.html": "RIVIERA AGENDA",
+    "bons-plans/index.html": "AGENDA DE LA RIVIERA",
+}
+for rel, expected in agenda_expectations.items():
+    page = read(rel)
+    if page and expected not in page:
+        errors.append(f"{rel}: canonical agenda name missing ({expected})")
+
+# 8) Restaurant cards must not repeat the compact decision metadata in .why.
+restaurant_meta_count = 0
+for p in ROOT.rglob("index.html"):
+    rel = p.relative_to(ROOT)
+    rels = rel.as_posix()
+    if "/restaurants/" not in f"/{rels}" or rels in {"en/restaurants/index.html", "restaurants/index.html"}:
+        continue
+    page = p.read_text(encoding="utf-8", errors="ignore")
+    restaurant_meta_count += page.count('class="restaurant-meta"')
+    for m in re.finditer(r'<p class="why">([\s\S]*?)</p>', page, re.I):
+        why = re.sub(r'<[^>]+>', '', m.group(1)).strip()
+        if re.match(r'^€{1,4}\s*·', why):
+            errors.append(f"{rel}: restaurant metadata duplicated inside .why")
+            break
+if restaurant_meta_count < 20:
+    errors.append(f"restaurant component guard found only {restaurant_meta_count} decision metadata rows")
+
+# 9) Culture practical grid fields must not repeat Address inside Hours & price.
+culture_grid_count = 0
+for p in ROOT.rglob("index.html"):
+    rel = p.relative_to(ROOT)
+    rels = rel.as_posix()
+    if "/culture/" not in f"/{rels}" or rels in {"en/culture/index.html", "culture/index.html", "en/culture/nice/index.html", "culture/nice/index.html"}:
+        continue
+    page = p.read_text(encoding="utf-8", errors="ignore")
+    for grid in re.finditer(r'<div class="culture-logistics-grid">([\s\S]*?)</div>\s*</div>', page, re.I):
+        culture_grid_count += 1
+        fields = {}
+        for cell in re.finditer(r'<div><b>(.*?)</b><span>([\s\S]*?)</span></div>', grid.group(1), re.I):
+            label = re.sub(r'<[^>]+>', '', cell.group(1)).strip()
+            value = re.sub(r'<[^>]+>', '', cell.group(2)).strip()
+            fields[label] = value
+        address = fields.get("Address") or fields.get("Adresse") or ""
+        hp = fields.get("Hours & price") or fields.get("Horaires & tarif") or ""
+        if address and address not in {"See official information below.", "Voir les informations officielles ci-dessous."} and address in hp:
+            errors.append(f"{rel}: culture Hours & price repeats Address")
+if culture_grid_count < 20:
+    errors.append(f"culture component guard found only {culture_grid_count} practical grids")
+
 if errors:
     print("Content coherence validation failed:")
     for e in errors[:160]:
