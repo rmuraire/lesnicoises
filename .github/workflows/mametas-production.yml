@@ -664,10 +664,10 @@ jobs:
                   'href="/riviera-fit/">Tester Riviera Fit</a>',
               ),
               f"https://www.mametas.com/en/gay-nice/?deploy={sha}": (
-                  'data-final-gay-stays="true"',
-                  "Hôtel Windsor",
-                  "Hôtel Les Cigales",
-                  "MAMETAS PICK · NOT LABELLED",
+                  "Where to stay near the evening action",
+                  "Hotel Beau Rivage",
+                  "Hôtel La Pérouse",
+                  "/en/gay-french-riviera/where-to-stay/",
               ),
               f"https://www.mametas.com/guide-gay-nice/?deploy={sha}": (
                   'data-final-gay-stays="true"',
