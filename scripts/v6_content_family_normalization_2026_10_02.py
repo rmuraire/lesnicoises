@@ -62,8 +62,8 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
     # Some older family pages have an H1 but no explicit back link / eyebrow.
     # Add the canonical pair immediately before the H1 rather than failing the
     # whole build or leaving one more visual generation alive.
-    h1 = re.search(r'<h1\\b', text, re.I)
-    main = re.search(r'<main\\b[^>]*>', text, re.I)
+    h1 = re.search(r'<h1\b', text, re.I)
+    main = re.search(r'<main\b[^>]*>', text, re.I)
     if h1 and main and h1.start() > main.end():
         segment = text[main.end():h1.start()]
         additions = []
@@ -250,7 +250,7 @@ def beach_card(block: str, lang: str) -> str:
     if "access" not in labels and "accès" not in labels:
         spot = re.search(r'<p class="spot-logistics">([\\s\\S]*?)</p>', block, re.I)
         if spot:
-            raw = re.split(r'<a\\b', spot.group(1), maxsplit=1, flags=re.I)[0]
+            raw = re.split(r'<a\b', spot.group(1), maxsplit=1, flags=re.I)[0]
             access = plain(raw)
             access = re.sub(
                 r'^(Find it\\.|Getting there\\.|Access\\.|Accès\\s*:|Y aller\\s*:|Repère\\s*:)',
