@@ -1,4 +1,4 @@
-name: Mametas destination polish live-safe deploy
+name: Mametas destination architecture live-safe deploy
 
 on:
   push:
@@ -11,13 +11,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: mametas-destination-polish-live-safe
+  group: mametas-destination-architecture-live-safe
   cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Check out Mametas
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - name: Install deployment dependency
         run: python -m pip install --disable-pip-version-check --quiet paramiko
 
-      - name: Pull current live destination files
+      - name: Pull current live destination and practical files
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -39,28 +39,37 @@ jobs:
           import time
 
           legacy=[
+            "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
             "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
             "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
             "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
             "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
           ]
+          v3=[
+            "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+            "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+            "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+            "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          ]
           files={
-            "assets/site.css":"https://www.mametas.com/assets/site.css?destpolish=1",
-            "assets/v3.css":"https://www.mametas.com/assets/v3.css?destpolish=1",
-            "index.html":"https://www.mametas.com/?destpolish=1",
-            "fr/index.html":"https://www.mametas.com/fr/?destpolish=1",
-            "en/good-finds/index.html":"https://www.mametas.com/en/good-finds/?destpolish=1",
-            "bons-plans/index.html":"https://www.mametas.com/bons-plans/?destpolish=1",
+            "assets/site.css":"https://www.mametas.com/assets/site.css?destarch=1",
+            "assets/v3.css":"https://www.mametas.com/assets/v3.css?destarch=1",
+            "index.html":"https://www.mametas.com/?destarch=1",
+            "fr/index.html":"https://www.mametas.com/fr/?destarch=1",
+            "en/good-finds/index.html":"https://www.mametas.com/en/good-finds/?destarch=1",
+            "bons-plans/index.html":"https://www.mametas.com/bons-plans/?destarch=1",
+            "en/practical/index.html":"https://www.mametas.com/en/practical/?destarch=1",
+            "pratique/index.html":"https://www.mametas.com/pratique/?destarch=1",
           }
-          for rel in list(DESTINATIONS)+legacy:
-              files[rel]="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destpolish=1"
+          for rel in list(dict.fromkeys([*legacy,*v3,*DESTINATIONS.keys()])):
+              files[rel]="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destarch=1"
 
           for rel,url in files.items():
               last=None
-              for _ in range(5):
+              for _ in range(6):
                   try:
                       req=Request(url,headers={
-                          "User-Agent":"MametasDestinationPolish/1.0",
+                          "User-Agent":"MametasDestinationArchitecture/1.0",
                           "Cache-Control":"no-cache, no-store, must-revalidate",
                           "Pragma":"no-cache",
                       })
@@ -78,10 +87,10 @@ jobs:
                   raise SystemExit(f"Could not pull {url}: {last}")
           PY
 
-      - name: Apply destination polish
+      - name: Apply destination architecture
         run: python scripts/apply_mametas_system_v1.py
 
-      - name: Preflight destination polish
+      - name: Preflight destination architecture
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -89,10 +98,17 @@ jobs:
           import html
 
           legacy=[
+            "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
             "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
             "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
             "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
             "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
+          ]
+          v3=[
+            "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+            "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+            "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+            "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
           ]
 
           for rel,min_size in (("assets/site.css",80000),("assets/v3.css",120000)):
@@ -100,43 +116,46 @@ jobs:
               if p.stat().st_size<min_size or css.count("{")!=css.count("}"):
                   raise SystemExit(f"{rel} failed size/braces preflight")
               for token in (
-                  'editorial shortlist, not cards',
-                  '.legacy-place-detail .article',
-                  'grid-template-columns:minmax(170px,.72fr)',
+                  "Destination article architecture v1.2",
+                  ".legacy-destination-layout",
+                  ".legacy-destination-toc",
+                  ".v3-destination-structured .article-body>h2",
               ):
                   if token not in css:
                       raise SystemExit(f"{rel} missing {token}")
+
+          for rel in legacy:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              for token in ("legacy-place-detail","legacy-destination-layout","legacy-destination-toc","legacy-destination-sections"):
+                  if token not in body:
+                      raise SystemExit(f"{rel}: missing {token}")
+              if body.count('class="legacy-destination-section"')<4:
+                  raise SystemExit(f"{rel}: too few structured sections")
+              if "/assets/site.css?v=24.4" not in body:
+                  raise SystemExit(f"{rel}: site.css 24.4 missing")
+
+          for rel in v3:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if "v3-destination-structured" not in body:
+                  raise SystemExit(f"{rel}: V3 structure class missing")
+              if "/assets/v3.css?v=1.5" not in body:
+                  raise SystemExit(f"{rel}: v3.css 1.5 missing")
 
           for rel,cfg in DESTINATIONS.items():
               body=Path(rel).read_text(encoding="utf-8",errors="ignore")
               rendered=html.escape(cfg["must_title"])
               if body.count(rendered)!=1:
                   raise SystemExit(f"{rel}: city title count {body.count(rendered)}")
-              if 'class="city-must-list"' not in body:
-                  raise SystemExit(f"{rel}: canonical shortlist missing")
               if body.count('class="city-must-item"')!=len(cfg["must"]):
-                  raise SystemExit(f"{rel}: wrong shortlist item count")
-              if "city-must-number" in body:
-                  raise SystemExit(f"{rel}: old numbered shortlist remains")
-              if "/assets/site.css" in body and "/assets/site.css?v=24.3" not in body:
-                  raise SystemExit(f"{rel}: site.css version not bumped")
-              if "/assets/v3.css" in body and "/assets/v3.css?v=1.4" not in body:
-                  raise SystemExit(f"{rel}: v3.css version not bumped")
+                  raise SystemExit(f"{rel}: canonical shortlist mismatch")
 
-          for rel in legacy:
-              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
-              if "legacy-place-detail" not in body:
-                  raise SystemExit(f"{rel}: legacy detail class missing")
-              if "/assets/site.css?v=24.3" not in body:
-                  raise SystemExit(f"{rel}: site.css cache-bust missing")
+          practical=Path("en/practical/index.html").read_text(encoding="utf-8",errors="ignore")
+          if "IRONMAN" in practical:
+              raise SystemExit("Practical still contains IRONMAN")
+          if "Ironman" not in practical:
+              raise SystemExit("Practical missing Ironman")
 
-          agenda=Path("en/good-finds/index.html").read_text(encoding="utf-8",errors="ignore")
-          if "IRONMAN" in agenda:
-              raise SystemExit("Agenda still contains IRONMAN")
-          if "Ironman" not in agenda:
-              raise SystemExit("Agenda missing Ironman")
-
-          print("Destination polish preflight passed")
+          print("Destination architecture preflight passed")
           PY
 
       - name: Build focused deployment list
@@ -145,24 +164,31 @@ jobs:
           import os
           from scripts.materialize_editorial_html import DESTINATIONS
           legacy=[
+            "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
             "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
             "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
             "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
             "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
           ]
-          files=[
+          v3=[
+            "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+            "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+            "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+            "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          ]
+          files=list(dict.fromkeys([
             "assets/site.css","assets/v3.css",
             "index.html","fr/index.html",
             "en/good-finds/index.html","bons-plans/index.html",
-            *list(DESTINATIONS.keys()),*legacy,
-          ]
-          files=list(dict.fromkeys(files))
+            "en/practical/index.html","pratique/index.html",
+            *legacy,*v3,*list(DESTINATIONS.keys()),
+          ]))
           with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
               fh.write("MAMETAS_FORCE_FILES="+";".join(files)+"\n")
           print("Focused files:",len(files))
           PY
 
-      - name: Deploy destination polish to OVH
+      - name: Deploy destination architecture to OVH
         env:
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
@@ -170,7 +196,7 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
-      - name: Verify destination polish live
+      - name: Verify destination architecture live
         run: |
           python - <<'PY'
           from urllib.request import Request, urlopen
@@ -178,18 +204,25 @@ jobs:
           import html, time
 
           legacy=[
+            "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
             "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
             "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
             "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
             "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
           ]
+          v3=[
+            "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+            "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+            "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+            "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          ]
 
           def fetch(url):
               last=None
-              for _ in range(8):
+              for _ in range(9):
                   try:
                       req=Request(url,headers={
-                          "User-Agent":"MametasDestinationPolishCheck/1.0",
+                          "User-Agent":"MametasDestinationArchitectureCheck/1.0",
                           "Cache-Control":"no-cache, no-store, must-revalidate",
                           "Pragma":"no-cache",
                       })
@@ -203,39 +236,42 @@ jobs:
               raise SystemExit(f"{url}: {last}")
 
           for url in (
-              "https://www.mametas.com/assets/site.css?destpolishcheck=1",
-              "https://www.mametas.com/assets/v3.css?destpolishcheck=1",
+              "https://www.mametas.com/assets/site.css?destarchcheck=1",
+              "https://www.mametas.com/assets/v3.css?destarchcheck=1",
           ):
               css=fetch(url)
-              for token in ('editorial shortlist, not cards','.legacy-place-detail .article','grid-template-columns:minmax(170px,.72fr)'):
+              for token in ("Destination article architecture v1.2",".legacy-destination-layout",".v3-destination-structured .article-body>h2"):
                   if token not in css:
                       raise SystemExit(f"{url}: missing {token}")
 
+          for rel in legacy:
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destarchcheck=1"
+              body=fetch(url)
+              for token in ("legacy-place-detail","legacy-destination-layout","legacy-destination-toc","legacy-destination-sections"):
+                  if token not in body:
+                      raise SystemExit(f"{url}: missing {token}")
+              if body.count('class="legacy-destination-section"')<4 or "/assets/site.css?v=24.4" not in body:
+                  raise SystemExit(f"{url}: structured legacy layout mismatch")
+              print("Structured legacy destination live:",url)
+
+          for rel in v3:
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destarchcheck=1"
+              body=fetch(url)
+              if "v3-destination-structured" not in body or "/assets/v3.css?v=1.5" not in body:
+                  raise SystemExit(f"{url}: V3 structure mismatch")
+              print("Structured V3 destination live:",url)
+
           for rel,cfg in DESTINATIONS.items():
-              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destpolishcheck=1"
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destarchcheck=2"
               body=fetch(url)
               rendered=html.escape(cfg["must_title"])
               if body.count(rendered)!=1 or body.count('class="city-must-item"')!=len(cfg["must"]):
-                  raise SystemExit(f"{url}: canonical shortlist mismatch")
-              if "city-must-number" in body:
-                  raise SystemExit(f"{url}: numbered shortlist still live")
-              if "/assets/site.css" in body and "/assets/site.css?v=24.3" not in body:
-                  raise SystemExit(f"{url}: site.css cache-bust missing")
-              if "/assets/v3.css" in body and "/assets/v3.css?v=1.4" not in body:
-                  raise SystemExit(f"{url}: v3.css cache-bust missing")
-              print("Shortlist live:",url)
+                  raise SystemExit(f"{url}: shortlist mismatch")
 
-          for rel in legacy:
-              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?destpolishcheck=1"
-              body=fetch(url)
-              if "legacy-place-detail" not in body or "/assets/site.css?v=24.3" not in body:
-                  raise SystemExit(f"{url}: legacy repair missing")
-              print("Legacy detail repaired:",url)
+          practical=fetch("https://www.mametas.com/en/practical/?destarchcheck=1")
+          if "IRONMAN" in practical or "Ironman" not in practical:
+              raise SystemExit("Practical Ironman casing not live")
+          print("Practical Ironman casing live")
 
-          agenda=fetch("https://www.mametas.com/en/good-finds/?destpolishcheck=1")
-          if "IRONMAN" in agenda or "Ironman" not in agenda:
-              raise SystemExit("Agenda Ironman casing not live")
-          print("Agenda Ironman casing live")
-
-          print("Mametas destination polish is live")
+          print("Mametas destination architecture is live")
           PY
