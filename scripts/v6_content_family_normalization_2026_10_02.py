@@ -58,6 +58,20 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
         f'<p class="eyebrow mametas-detail-eyebrow">{eyebrow}</p>',
         text, count=1, flags=re.S | re.I
     )
+
+    # Some old Culture / Good Finds files are minimal stubs with a bare H1.
+    # Give them the same navigation grammar instead of exempting them.
+    main = re.search(r'<main\b[^>]*>', text, re.I)
+    h1 = re.search(r'<h1\b', text, re.I)
+    if main and h1 and main.end() <= h1.start():
+        segment = text[main.end():h1.start()]
+        additions = []
+        if "mametas-detail-back" not in segment:
+            additions.append(f'<a class="mametas-detail-back" href="{parent}">{back_label}</a>')
+        if "mametas-detail-eyebrow" not in segment:
+            additions.append(f'<p class="mametas-detail-eyebrow">{eyebrow}</p>')
+        if additions:
+            text = text[:h1.start()] + "".join(additions) + text[h1.start():]
     return text
 
 def balanced_div_end(text: str, start: int):
