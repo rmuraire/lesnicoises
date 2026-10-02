@@ -326,6 +326,8 @@ def replace_shell(text: str, header: str, footer: str):
         clean_prefix += "\n" + preserved + "\n"
     text = text[:body.end()] + clean_prefix + text[main.start():]
 
+    # Replace the historical footer. Validation below requires a single footer,
+    # so legacy + canonical footers can never coexist silently.
     footer_matches = list(re.finditer(r'<footer\b[^>]*>[\s\S]*?</footer>', text, flags=re.I))
     if footer_matches:
         m = footer_matches[-1]
