@@ -1,0 +1,25 @@
+name: Mametas coherence destination branch CI
+
+on:
+  push:
+    branches:
+      - mametas-coherence-destinations-2026-10-02
+
+permissions:
+  contents: read
+
+jobs:
+  destination-system:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile coherence scripts
+        run: python -m py_compile scripts/mametas_coherence_config.py scripts/v6_destination_system_2026_10_02.py scripts/validate_v6_destination_system_2026_10_02.py
+      - name: Apply destination system to source pages
+        run: python scripts/v6_destination_system_2026_10_02.py
+      - name: Validate destination system
+        run: python scripts/validate_v6_destination_system_2026_10_02.py
