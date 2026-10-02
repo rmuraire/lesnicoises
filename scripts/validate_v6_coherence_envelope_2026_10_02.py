@@ -23,6 +23,7 @@ for p in ROOT.rglob("*.html"):
     tests=[
         (s.count('class="mametas-global-header"')==1,"global header count"),
         (s.count('class="mametas-global-footer"')==1,"global footer count"),
+        (len(re.findall(r'<footer\\b', s, re.I))==1,"single footer element"),
         (s.count('/assets/mametas-shell-v1.css?v=1.0')==1,"shell CSS count"),
         ('>Plan<' in s and '>Places<' in s and '>Stay<' in s and '>Explore<' in s and '>Practical<' in s if re.search(r'<html[^>]+lang=["\']en',s,re.I) else True,"EN canonical nav"),
         ('>Préparer<' in s and '>Destinations<' in s and '>Dormir<' in s and '>Explorer<' in s and '>Pratique<' in s if re.search(r'<html[^>]+lang=["\']fr',s,re.I) else True,"FR canonical nav"),
@@ -33,6 +34,16 @@ for p in ROOT.rglob("*.html"):
     for ok,label in tests:
         if not ok:
             errors.append(f"{name}: {label}")
+
+# Regression guard: this legacy page historically carried a real practical
+# block before its header. Shell normalisation must preserve content, not just
+# navigation chrome.
+monaco_fr = ROOT / "riviera-guide/monaco/index.html"
+if monaco_fr.exists():
+    ms = monaco_fr.read_text(encoding="utf-8", errors="ignore")
+    for marker in ("TER jusqu’à Monaco-Monte-Carlo", "Visit Monaco"):
+        if marker not in ms:
+            errors.append(f"riviera-guide/monaco/index.html: pre-main content lost ({marker})")
 
 if checked < 150:
     errors.append(f"Only {checked} public HTML pages checked; expected a full materialized site")
