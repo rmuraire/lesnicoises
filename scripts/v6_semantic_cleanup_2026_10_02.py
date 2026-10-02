@@ -89,11 +89,43 @@ def clean_french_labels(text: str) -> str:
     text = text.replace('<span class="label">MAMETAS RULE</span>', '<span class="label">LA RÈGLE MAMETAS</span>')
     text = text.replace('MAMETAS SAYS', 'RECO MAMETAS')
     text = text.replace('MAMETAS TOOL', 'OUTIL MAMETAS')
+    text = text.replace('Faire Riviera Fit →', 'Tester Riviera Fit →')
 
-    # "Base" is the product vocabulary used by Riviera Fit. Older generations
-    # sometimes called the same decision a "point de chute".
-    text = text.replace('Choisir son point de chute', 'Choisir sa base')
-    text = text.replace('choisir son point de chute', 'choisir sa base')
+    # "Base" is the one product term retained by the coherence audit. Normalize
+    # the historical "point de chute" variants with their surrounding grammar
+    # before applying the safe final catch-all.
+    replacements = (
+        ('Choisir son point de chute', 'Choisir sa base'),
+        ('choisir son point de chute', 'choisir sa base'),
+        ('Un bon point de chute', 'Une bonne base'),
+        ('un bon point de chute', 'une bonne base'),
+        ('Le meilleur point de chute', 'La meilleure base'),
+        ('le meilleur point de chute', 'la meilleure base'),
+        ('Quel point de chute', 'Quelle base'),
+        ('quel point de chute', 'quelle base'),
+        ('Un point de chute', 'Une base'),
+        ('un point de chute', 'une base'),
+        ('Le point de chute', 'La base'),
+        ('le point de chute', 'la base'),
+        ('Du point de chute', 'De la base'),
+        ('du point de chute', 'de la base'),
+        ('Au point de chute', 'À la base'),
+        ('au point de chute', 'à la base'),
+        ('Ce point de chute', 'Cette base'),
+        ('ce point de chute', 'cette base'),
+        ('Votre point de chute', 'Votre base'),
+        ('votre point de chute', 'votre base'),
+        ('Notre point de chute', 'Notre base'),
+        ('notre point de chute', 'notre base'),
+        ('Points de chute', 'Bases'),
+        ('points de chute', 'bases'),
+        ('POINTS DE CHUTE', 'BASES'),
+        ('Point de chute', 'Base'),
+        ('point de chute', 'base'),
+    )
+    for old, new in replacements:
+        text = text.replace(old, new)
+
     text = text.replace('APRÈS LA VILLE · CHOISIR L’HÔTEL', 'APRÈS LA BASE · CHOISIR L’HÔTEL')
     text = text.replace("APRÈS LA VILLE · CHOISIR L'HÔTEL", "APRÈS LA BASE · CHOISIR L'HÔTEL")
     return text
