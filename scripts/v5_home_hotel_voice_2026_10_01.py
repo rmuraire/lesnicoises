@@ -7,13 +7,13 @@ MARK = 'home-hotel-voice-daniel-2026-03'
 
 VOICES = {
     'index.html': (
-        'IN THEIR OWN WORDS',
+        'TRAVELLER VOICE',
         '“Our location in Cannes was great, but the apartment was super drafty and freezing at night, and the place felt pretty rustic. Honestly, next time we’re definitely booking a hotel with proper heating.”',
         '<strong>Daniel</strong> · Berlin · couple · March 2026',
         r'(<h2>A beautiful hotel can still be the wrong hotel\.</h2>\s*<p>.*?</p>)',
     ),
     'fr/index.html': (
-        'ILS L’ONT VÉCU',
+        'VOIX DE VOYAGEURS',
         '« Notre emplacement à Cannes était super, mais l’appartement était plein de courants d’air et glacial la nuit, et l’endroit était assez rustique. Franchement, la prochaine fois, on réservera clairement un hôtel avec un vrai chauffage. »',
         '<strong>Daniel</strong> · Berlin · en couple · mars 2026',
         r'(<h2>Un bel hôtel peut rester le mauvais hôtel\.</h2>\s*<p>.*?</p>)',
@@ -26,7 +26,8 @@ for rel, (kicker, quote, meta, pattern) in VOICES.items():
     if MARK in s:
         print('unchanged', rel)
         continue
-    block = f'''<div class="home-hotel-voice" data-home-hotel-voice="{MARK}"><span>{kicker}</span><blockquote>{quote}</blockquote><p>{meta}</p></div>'''
+    method = ('<p class="home-hotel-voice-method">Persona éditorial : synthèse de vrais commentaires, retours d’expérience et constatations de terrain. <a href="/methode/">Notre méthode →</a></p>' if rel.startswith('fr/') else '<p class="home-hotel-voice-method">Editorial persona: a synthesis of real traveller comments, experience feedback and field observations. <a href="/en/method/">Our method →</a></p>')
+    block = f'''<div class="home-hotel-voice" data-home-hotel-voice="{MARK}"><span>{kicker}</span><blockquote>{quote}</blockquote><p>{meta}</p>{method}</div>'''
     new, n = re.subn(pattern, lambda m: m.group(1) + '\n' + block, s, count=1, flags=re.S)
     if n != 1:
         raise RuntimeError(f'Hotel Fit intro not found in {rel}')
@@ -62,6 +63,20 @@ css = r'''
   color:#5f6570!important;
   font-size:10px!important;
   line-height:1.4!important;
+}
+.home-hotel-voice .home-hotel-voice-method{
+  margin-top:9px!important;
+  padding-top:9px;
+  border-top:1px solid rgba(20,33,61,.12);
+  font-size:9.5px!important;
+  line-height:1.45!important;
+  opacity:.78;
+}
+.home-hotel-voice .home-hotel-voice-method a{
+  color:#17748a;
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
 }
 @media(max-width:650px){
   .home-hotel-voice{margin:18px 0 18px;padding-top:14px}
