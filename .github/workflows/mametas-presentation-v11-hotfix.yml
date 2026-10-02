@@ -1,5 +1,5 @@
 name: Mametas presentation v1.1 live-safe deploy
-# retry 2
+# retry 3
 
 on:
   push:
@@ -55,6 +55,11 @@ jobs:
             "riviera-fit/index.html":"https://www.mametas.com/riviera-fit/?psv11=1",
           }
 
+          from scripts.materialize_editorial_html import DESTINATIONS
+          for rel in DESTINATIONS:
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?psv11=city"
+              files[rel]=url
+
           for rel,url in files.items():
               last=None
               for _ in range(5):
@@ -80,6 +85,25 @@ jobs:
 
       - name: Apply Mametas Presentation System v1.1
         run: python scripts/apply_mametas_system_v1.py
+
+      - name: Build focused deployment list
+        run: |
+          python - <<'PY'
+          import os
+          from scripts.materialize_editorial_html import DESTINATIONS
+          core=[
+            "assets/site.css","assets/v3.css",
+            "index.html","fr/index.html","en/hotels/index.html","hotels/index.html",
+            "plan/index.html","fr/planifier/index.html",
+            "en/riviera-guide/index.html","riviera-guide/index.html",
+            "en/good-finds/index.html","bons-plans/index.html",
+            "en/riviera-fit/index.html","riviera-fit/index.html",
+          ]
+          force=core+list(DESTINATIONS.keys())
+          with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
+              fh.write("MAMETAS_FORCE_FILES="+";".join(dict.fromkeys(force))+"\n")
+          print("Focused files:",len(dict.fromkeys(force)))
+          PY
 
       - name: Preflight v1.1
         run: |
@@ -128,18 +152,26 @@ jobs:
           if "riviera-fit-tool" not in fit:
               raise SystemExit("Riviera Fit body class missing")
 
+          from scripts.materialize_editorial_html import DESTINATIONS
+          for rel,cfg in DESTINATIONS.items():
+              p=Path(rel)
+              if not p.exists():
+                  raise SystemExit(f"{rel} missing after live pull")
+              body=p.read_text(encoding="utf-8",errors="ignore")
+              if 'class="city-must-list"' not in body:
+                  raise SystemExit(f"{rel} missing canonical city component")
+              if body.count(cfg["must_title"])!=1:
+                  raise SystemExit(f"{rel} has {body.count(cfg['must_title'])} copies of city title")
+              for i in range(1,len(cfg["must"])+1):
+                  if f'>{i:02d}</span>' not in body:
+                      raise SystemExit(f"{rel} missing city item {i:02d}")
+          print("Canonical city components preflight OK:",len(DESTINATIONS))
+
           print("Mametas Presentation v1.1 preflight passed")
           PY
 
       - name: Deploy v1.1 to OVH
         env:
-          MAMETAS_FORCE_FILES: >-
-            assets/site.css;assets/v3.css;
-            index.html;fr/index.html;en/hotels/index.html;hotels/index.html;
-            plan/index.html;fr/planifier/index.html;
-            en/riviera-guide/index.html;riviera-guide/index.html;
-            en/good-finds/index.html;bons-plans/index.html;
-            en/riviera-fit/index.html;riviera-fit/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -207,15 +239,15 @@ jobs:
               raise SystemExit("Riviera Fit class not live")
           print("Riviera Fit hierarchy live")
 
-          for url in (
-              "https://www.mametas.com/en/riviera-guide/nice/?psv11check=1",
-              "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/?psv11check=1",
-              "https://www.mametas.com/en/riviera-guide/antibes/?psv11check=1",
-          ):
+          from scripts.materialize_editorial_html import DESTINATIONS
+          for rel,cfg in DESTINATIONS.items():
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?psv11check=city"
               body=fetch(url)
-              if 'id="what-not-to-miss"' not in body:
-                  raise SystemExit(f"{url} missing shared city component")
-              print("City shared component present:",url)
+              if 'class="city-must-list"' not in body:
+                  raise SystemExit(f"{url} missing canonical city component")
+              if body.count(cfg["must_title"])!=1:
+                  raise SystemExit(f"{url} has {body.count(cfg['must_title'])} copies of {cfg['must_title']}")
+              print("Canonical city component live:",url)
 
           print("Mametas Presentation System v1.1 is live")
           PY
