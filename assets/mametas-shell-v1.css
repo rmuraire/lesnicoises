@@ -133,3 +133,67 @@
   }
   .mametas-plan-cover img{aspect-ratio:4/3}
 }
+
+
+/* Coherence content-family components — 2026-10-02 */
+.restaurant-meta{
+  margin:8px 0 10px;
+  color:var(--mg-blue,#176f83);
+  font-family:var(--mg-sans,Inter,Arial,sans-serif);
+  font-size:10px;
+  font-weight:750;
+  letter-spacing:.06em;
+  line-height:1.45;
+  text-transform:uppercase;
+}
+.restaurant-price-legend{margin:22px 0 28px}
+.culture-logistics{
+  margin:24px 0 28px;
+  border:1px solid var(--mg-line,rgba(20,33,61,.16));
+  background:var(--mg-paper,#fffdf8);
+}
+.culture-logistics-head{
+  padding:13px 17px;
+  border-bottom:1px solid var(--mg-line,rgba(20,33,61,.16));
+}
+.culture-logistics-head span{
+  color:var(--mg-accent,#b9903f);
+  font-family:var(--mg-sans,Inter,Arial,sans-serif);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+}
+.culture-logistics-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.culture-logistics-grid>div{
+  display:grid;
+  gap:6px;
+  padding:15px 17px;
+  border-right:1px solid var(--mg-line,rgba(20,33,61,.16));
+  border-bottom:1px solid var(--mg-line,rgba(20,33,61,.16));
+}
+.culture-logistics-grid>div:nth-child(2n){border-right:0}
+.culture-logistics-grid>div:last-child{border-bottom:0}
+.culture-logistics-grid b{
+  font-family:var(--mg-sans,Inter,Arial,sans-serif);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.culture-logistics-grid span{
+  font-size:12px;
+  line-height:1.55;
+}
+.culture-logistics-grid a{
+  color:inherit;
+  font-weight:700;
+  text-underline-offset:3px;
+}
+@media(max-width:650px){
+  .culture-logistics-grid{grid-template-columns:1fr}
+  .culture-logistics-grid>div{border-right:0}
+}
