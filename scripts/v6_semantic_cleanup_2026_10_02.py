@@ -24,6 +24,14 @@ EXACT_REPLACEMENTS = {
         "Not yet - choose the right Nice base →": "Not yet: choose the right Nice hotel →",
         "Already booked - build the trip around it →": "Already booked: build the trip around it →",
     },
+    "chiffres-tourisme-cote-dazur/index.html": {
+        'href="/fr/#riviera-fit"': 'href="/riviera-fit/"',
+        "Faire Riviera Fit →": "Tester Riviera Fit →",
+    },
+    "riviera-guide/cote-dazur-ou-cote-amalfitaine/index.html": {
+        'href="/fr/#riviera-fit"': 'href="/riviera-fit/"',
+        "Faire Riviera Fit →": "Tester Riviera Fit →",
+    },
 }
 
 def page_lang(text: str) -> str:
