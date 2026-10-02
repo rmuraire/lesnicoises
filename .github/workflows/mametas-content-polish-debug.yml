@@ -1,0 +1,35 @@
+name: Mametas content polish debug
+
+on:
+  push:
+    branches:
+      - mametas-coherence-content-polish-2026-10-02
+
+permissions:
+  contents: read
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
+      - run: python scripts/v6_coherence_envelope_2026_10_02.py
+      - run: python scripts/v3_destination_reality_layer_2026_09_25.py
+      - run: python scripts/v6_city_card_system_2026_10_02.py
+      - run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
+      - run: python scripts/v6_semantic_cleanup_2026_10_02.py
+      - run: python scripts/v6_detail_family_top_normalization_2026_10_02.py
+      - name: Debug content normalization
+        shell: bash
+        run: |
+          set +e
+          python scripts/v6_content_family_normalization_2026_10_02.py > /tmp/content-debug.txt 2>&1
+          code=$?
+          echo '### Content normalizer output' >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/content-debug.txt >> "$GITHUB_STEP_SUMMARY"
+          cat /tmp/content-debug.txt
+          exit $code
