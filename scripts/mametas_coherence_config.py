@@ -136,14 +136,14 @@ DESTINATIONS = {
         "reality": {
             "en": (
                 "No car needed. Bus reaches the village; the train stops at Èze-sur-Mer.",
-                "€ to €€€€ depending on whether you stay overnight",
-                "Year-round; go early or late in peak season",
+                "Low as a day trip; overnight can be very high",
+                "In peak season, go early or late",
                 "High: village and station are not in the same place",
             ),
             "fr": (
                 "Pas besoin de voiture. Le bus monte au village ; le train s’arrête à Èze-sur-Mer.",
-                "€ à €€€€ selon que vous y dormez ou non",
-                "Toute l’année ; tôt ou tard en haute saison",
+                "Faible en excursion ; une nuit peut coûter très cher",
+                "En haute saison, venir tôt ou tard",
                 "Élevée : le village et la gare ne sont pas au même endroit",
             ),
         },
