@@ -1,5 +1,0 @@
-Content coherence validation failed:
- - index.html: canonical agenda name missing (RIVIERA AGENDA)
- - fr/index.html: canonical agenda name missing (AGENDA DE LA RIVIERA)
- - en/good-finds/index.html: canonical agenda name missing (RIVIERA AGENDA)
- - bons-plans/index.html: canonical agenda name missing (AGENDA DE LA RIVIERA)
