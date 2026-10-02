@@ -1,0 +1,70 @@
+name: Mametas coherence validation
+
+on:
+  pull_request:
+    branches:
+      - mametas-v3
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coherence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out proposed cleanup
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Preserve source metadata
+        run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
+
+      - name: Apply global shell
+        run: python scripts/v6_coherence_envelope_2026_10_02.py
+
+      - name: Normalize destinations
+        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+
+      - name: Normalize city cards
+        run: python scripts/v6_city_card_system_2026_10_02.py
+
+      - name: Normalize hotel details
+        run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
+
+      - name: Semantic cleanup
+        run: python scripts/v6_semantic_cleanup_2026_10_02.py
+
+      - name: Normalize detail-family tops
+        run: python scripts/v6_detail_family_top_normalization_2026_10_02.py
+
+      - name: Normalize content families
+        run: python scripts/v6_content_family_normalization_2026_10_02.py
+
+      - name: Normalize Plan family
+        run: python scripts/v6_plan_family_normalization_2026_10_02.py
+
+      - name: Validate global shell
+        run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
+      - name: Guard canonical city system
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path("data/city-system-v1.json").read_text())
+          assert d["groups"]["base"] == ["nice","villefranche","antibes","cannes","monaco","menton"]
+          assert d["groups"]["detour"] == ["eze","saintpaul","sainttropez"]
+          assert len(d["cities"]) == 9
+          print("Canonical city system OK")
+          PY
+
+      - name: Guard redirected Nice hotel hub sitemap
+        run: |
+          ! grep -q '<loc>https://www.mametas.com/en/hotels/nice/</loc>' sitemap.xml
+          ! grep -q '<loc>https://www.mametas.com/hotels/nice/</loc>' sitemap.xml
