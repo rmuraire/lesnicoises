@@ -143,6 +143,45 @@ def normalize_top(text: str, lang: str, city_slug: str) -> str:
         text = text.replace("MAMETAS HOTEL TAKE ·", "HÔTEL ·")
     return text
 
+def normalize_sections(text: str, lang: str) -> str:
+    if lang == "en":
+        replacements = {
+            "Why it makes the cut": "Why we keep it",
+            "Who it is for": "Who it suits",
+            "Mèfi if...": "Mèfi — watch out if…",
+            "Mèfi if…": "Mèfi — watch out if…",
+            "Checked sources": "Sources checked",
+        }
+    else:
+        replacements = {
+            "Pourquoi il passe la sélection": "Pourquoi on le garde",
+            "Pour qui ?": "À qui il convient",
+            "Mèfi si...": "Mèfi — attention si…",
+            "Mèfi si…": "Mèfi — attention si…",
+            "Sources consultées": "Sources vérifiées",
+        }
+    for old, new in replacements.items():
+        text = text.replace(f"<h2>{old}</h2>", f"<h2>{new}</h2>")
+
+    # One facts vocabulary for every full hotel review. Keep the factual values,
+    # only normalize the four labels.
+    m = re.search(r'<div class="hotel-facts">([\s\S]*?)</div>\s*(?=<div class="verdict"|<h2|<p)', text, re.I)
+    if m:
+        block = m.group(0)
+        labels = ("Area", "Format", "Best for", "Budget") if lang == "en" else ("Zone", "Format", "Idéal pour", "Budget")
+        i = 0
+        def label_repl(match):
+            nonlocal i
+            if i >= len(labels):
+                return match.group(0)
+            out = f"<span>{labels[i]}</span>"
+            i += 1
+            return out
+        new_block = re.sub(r'<span>.*?</span>', label_repl, block, count=4, flags=re.S | re.I)
+        text = text[:m.start()] + new_block + text[m.end():]
+    return text
+
+
 def validate(path: Path, text: str, lang: str) -> None:
     name = path.relative_to(ROOT).as_posix()
     if "mametas-detail-back" not in text:
@@ -182,6 +221,7 @@ def main():
         before = text
         text = normalize_top(text, lang, city_slug)
         text = normalize_affiliate_ctas(text, lang)
+        text = normalize_sections(text, lang)
         if text != before:
             path.write_text(text, encoding="utf-8")
             changed.append(path.relative_to(ROOT).as_posix())
