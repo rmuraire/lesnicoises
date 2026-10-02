@@ -1,0 +1,248 @@
+name: Mametas Riviera UI v2 live-safe deploy
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-riviera-ui-v2-hotfix.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-riviera-ui-v2-live-safe
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Pull current live Riviera pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, urlopen
+          import time
+
+          hubs=("en/riviera-guide/index.html","riviera-guide/index.html")
+          legacy=(
+              "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+              "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
+              "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
+              "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
+              "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
+          )
+          v3=(
+              "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+              "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+              "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+              "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          )
+          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+          targets=hubs+legacy+v3+fit
+
+          for rel in targets:
+              url="https://www.mametas.com/"+rel.removesuffix("index.html")+"?rguiv2pull=1"
+              last=None
+              for _ in range(7):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasRivieraUIV2/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          data=r.read()
+                          if r.status==200 and len(data)>500:
+                              p=Path(rel); p.parent.mkdir(parents=True,exist_ok=True); p.write_bytes(data)
+                              print("Pulled",rel,len(data))
+                              break
+                          last=f"HTTP {r.status} / {len(data)} bytes"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(2)
+              else:
+                  raise SystemExit(f"Could not pull {url}: {last}")
+
+          # Structural guards before any modification.
+          for rel in legacy:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if "legacy-destination-layout" not in body or "legacy-destination-sections" not in body:
+                  raise SystemExit(f"{rel}: live legacy page does not have the expected structured article")
+          for rel in v3:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if "article-layout" not in body or "article-body" not in body:
+                  raise SystemExit(f"{rel}: live V3 page does not have the expected article layout")
+          print("Current live structures are suitable for final overlay")
+          PY
+
+      - name: Apply final Riviera UI v2
+        run: python scripts/apply_riviera_ui_v2.py
+
+      - name: Preflight final Riviera UI v2
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          css=Path("assets/mametas-riviera-v2.css").read_text(encoding="utf-8")
+          if css.count("{")!=css.count("}"):
+              raise SystemExit("Riviera v2 CSS has unbalanced braces")
+          for token in (
+              "body.rg-hub .article-hero",
+              "body.rg-destination.rg-legacy .legacy-destination-layout",
+              "body.rg-destination.rg-v3 .article-layout",
+              "body.rg-destination .city-must-item",
+              "body.rg-fit .chooser-result h2",
+          ):
+              if token not in css:
+                  raise SystemExit(f"Final CSS missing {token}")
+
+          hubs=("en/riviera-guide/index.html","riviera-guide/index.html")
+          legacy=(
+              "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+              "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
+              "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
+              "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
+              "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
+          )
+          v3=(
+              "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+              "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+              "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+              "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          )
+          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+
+          for rel in hubs:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if body.count("/assets/mametas-riviera-v2.css?v=2.0")!=1 or "rg-hub" not in body:
+                  raise SystemExit(f"{rel}: hub delivery layer missing")
+          for rel in legacy:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              for token in ("rg-destination","rg-legacy","legacy-destination-layout","/assets/mametas-riviera-v2.css?v=2.0"):
+                  if token not in body:
+                      raise SystemExit(f"{rel}: missing {token}")
+          for rel in v3:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              for token in ("rg-destination","rg-v3","article-layout","/assets/mametas-riviera-v2.css?v=2.0"):
+                  if token not in body:
+                      raise SystemExit(f"{rel}: missing {token}")
+          for rel in fit:
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if "rg-fit" not in body or body.count("/assets/mametas-riviera-v2.css?v=2.0")!=1:
+                  raise SystemExit(f"{rel}: Fit delivery layer missing")
+
+          en_hub=Path("en/riviera-guide/index.html").read_text(encoding="utf-8",errors="ignore")
+          for needle in (
+              'href="/en/hotels/without-a-car/"><span class="decision-number">03</span>',
+              'href="/plan/five-days-nice-no-car/"><span class="decision-number">04</span>',
+          ):
+              if needle not in en_hub:
+                  raise SystemExit(f"EN hub numbering not normalized: {needle}")
+
+          print("Final Riviera UI v2 preflight passed")
+          PY
+
+      - name: Build deployment list
+        run: |
+          python - <<'PY'
+          import os
+          hubs=("en/riviera-guide/index.html","riviera-guide/index.html")
+          legacy=(
+              "en/riviera-guide/nice/index.html","riviera-guide/nice/index.html",
+              "en/riviera-guide/cannes/index.html","riviera-guide/cannes/index.html",
+              "en/riviera-guide/eze/index.html","riviera-guide/eze/index.html",
+              "en/riviera-guide/saint-paul-de-vence/index.html","riviera-guide/saint-paul-de-vence/index.html",
+              "en/riviera-guide/saint-tropez/index.html","riviera-guide/saint-tropez/index.html",
+          )
+          v3=(
+              "en/riviera-guide/villefranche-cap-ferrat/index.html","riviera-guide/villefranche-cap-ferrat/index.html",
+              "en/riviera-guide/antibes/index.html","riviera-guide/antibes/index.html",
+              "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
+              "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
+          )
+          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+          files=("assets/mametas-riviera-v2.css",)+hubs+legacy+v3+fit
+          with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
+              fh.write("MAMETAS_FORCE_FILES="+";".join(files)+"\n")
+          print("Deploying",len(files),"files")
+          PY
+
+      - name: Deploy final Riviera UI v2 to OVH
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify final Riviera UI v2 live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+
+          def fetch(url):
+              last=None
+              for _ in range(10):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasRivieraUIV2Check/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          body=r.read().decode("utf-8","replace")
+                          if r.status==200:
+                              return body
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(3)
+              raise SystemExit(f"{url}: {last}")
+
+          css=fetch("https://www.mametas.com/assets/mametas-riviera-v2.css?v=2.0&check=1")
+          for token in (
+              "body.rg-destination.rg-legacy .legacy-destination-layout",
+              "body.rg-destination.rg-v3 .article-layout",
+              "body.rg-fit .chooser-result h2",
+              "font-size:clamp(40px,4.4vw,54px)",
+          ):
+              if token not in css:
+                  raise SystemExit(f"Live final CSS missing {token}")
+          print("Final CSS live",len(css))
+
+          checks={
+              "https://www.mametas.com/en/riviera-guide/?rguiv2check=1":("rg-hub","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/nice/?rguiv2check=1":("rg-destination","rg-legacy","legacy-destination-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/cannes/?rguiv2check=1":("rg-destination","rg-legacy","legacy-destination-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/eze/?rguiv2check=1":("rg-destination","rg-legacy","legacy-destination-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/?rguiv2check=1":("rg-destination","rg-legacy","legacy-destination-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/saint-tropez/?rguiv2check=1":("rg-destination","rg-legacy","legacy-destination-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/antibes/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/monaco/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-guide/menton/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
+              "https://www.mametas.com/en/riviera-chooser/?rguiv2check=1":("rg-fit","mametas-riviera-v2.css?v=2.0","data-riviera-chooser"),
+          }
+          for url,tokens in checks.items():
+              body=fetch(url)
+              missing=[t for t in tokens if t not in body]
+              if missing:
+                  raise SystemExit(f"{url} missing {missing}")
+              print("Live page OK",url)
+
+          print("Mametas Riviera UI v2 live verification passed")
+          PY
