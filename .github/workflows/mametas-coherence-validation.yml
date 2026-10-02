@@ -52,6 +52,9 @@ jobs:
       - name: Validate global shell
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
+      - name: Validate content coherence
+        run: python scripts/validate_v6_content_coherence_2026_10_02.py
+
       - name: Guard canonical city system
         run: |
           python - <<'PY'
