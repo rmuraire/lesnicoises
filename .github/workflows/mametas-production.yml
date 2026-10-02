@@ -332,6 +332,9 @@ jobs:
       - name: Re-apply canonical destination structure
         run: python scripts/v3_destination_reality_layer_2026_09_25.py
 
+      - name: Normalize city-card system
+        run: python scripts/v6_city_card_system_2026_10_02.py
+
       - name: Normalize hotel detail pages
         run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
 
