@@ -314,7 +314,7 @@ def replace_shell(text: str, header: str, footer: str):
     # Preserve real editorial content that old pages may have placed before
     # their header. The coherence pass removes the historical shell, not
     # arbitrary pre-main content.
-    skip_pattern = r'<a\\b[^>]*class=["\\'][^"\\']*skip-link[^"\\']*["\\'][^>]*>[\\s\\S]*?</a>\\s*'
+    skip_pattern = r"<a\\b[^>]*class=[\"'][^\"']*skip-link[^\"']*[\"'][^>]*>[\\s\\S]*?</a>\\s*"
     skip = re.findall(skip_pattern, prefix, flags=re.I)
     prefix_without_skip = re.sub(skip_pattern, '', prefix, flags=re.I)
     legacy_header = re.search(r'<header\\b', prefix_without_skip, re.I)
