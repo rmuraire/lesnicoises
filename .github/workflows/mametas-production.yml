@@ -329,6 +329,12 @@ jobs:
       - name: Apply V6 coherence envelope
         run: python scripts/v6_coherence_envelope_2026_10_02.py
 
+      - name: Re-apply canonical destination structure
+        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+
+      - name: Normalize hotel detail pages
+        run: python scripts/v6_hotel_detail_normalization_2026_10_02.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
