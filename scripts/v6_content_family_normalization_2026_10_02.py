@@ -487,9 +487,9 @@ def family_info(rel: Path, text: str):
         return "culture", lang, "/culture/", "← Retour à Art & Culture", "ART & CULTURE", parts[-2]
 
     if len(parts) >= 4 and parts[0] == "en" and parts[1] == "good-finds" and parts[-1] == "index.html" and parts[-2] not in PRACTICAL_GOOD_FINDS_EN:
-        return "good-finds", lang, "/en/good-finds/", "← Back to Good Finds", "GOOD FINDS", parts[-2]
+        return "good-finds", lang, "/en/good-finds/", "← Back to Riviera Agenda", "RIVIERA AGENDA", parts[-2]
     if len(parts) >= 3 and parts[0] == "bons-plans" and parts[-1] == "index.html" and parts[-2] not in PRACTICAL_GOOD_FINDS_FR:
-        return "good-finds", lang, "/bons-plans/", "← Retour aux Bons Plans", "BONS PLANS", parts[-2]
+        return "good-finds", lang, "/bons-plans/", "← Retour à l’Agenda de la Riviera", "AGENDA DE LA RIVIERA", parts[-2]
 
     return None
 
