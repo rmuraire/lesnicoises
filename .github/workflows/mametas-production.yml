@@ -350,6 +350,9 @@ jobs:
       - name: Normalize content families
         run: python scripts/v6_content_family_normalization_2026_10_02.py
 
+      - name: Normalize Plan family
+        run: python scripts/v6_plan_family_normalization_2026_10_02.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
