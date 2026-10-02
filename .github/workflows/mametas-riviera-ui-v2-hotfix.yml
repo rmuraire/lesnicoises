@@ -1,5 +1,5 @@
 name: Mametas Riviera UI v2 live-safe deploy
-# retry 2
+# retry 3
 
 on:
   push:
@@ -52,7 +52,10 @@ jobs:
               "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
               "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
           )
-          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+          fit=(
+              "en/riviera-fit/index.html","riviera-fit/index.html",
+              "en/riviera-chooser/index.html","riviera-chooser/index.html",
+          )
           targets=hubs+legacy+v3+fit
 
           for rel in targets:
@@ -125,7 +128,10 @@ jobs:
               "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
               "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
           )
-          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+          fit=(
+              "en/riviera-fit/index.html","riviera-fit/index.html",
+              "en/riviera-chooser/index.html","riviera-chooser/index.html",
+          )
 
           for rel in hubs:
               body=Path(rel).read_text(encoding="utf-8",errors="ignore")
@@ -174,7 +180,10 @@ jobs:
               "en/riviera-guide/monaco/index.html","riviera-guide/monaco/index.html",
               "en/riviera-guide/menton/index.html","riviera-guide/menton/index.html",
           )
-          fit=("en/riviera-chooser/index.html","riviera-chooser/index.html")
+          fit=(
+              "en/riviera-fit/index.html","riviera-fit/index.html",
+              "en/riviera-chooser/index.html","riviera-chooser/index.html",
+          )
           files=("assets/mametas-riviera-v2.css",)+hubs+legacy+v3+fit
           with open(os.environ["GITHUB_ENV"],"a",encoding="utf-8") as fh:
               fh.write("MAMETAS_FORCE_FILES="+";".join(files)+"\n")
@@ -235,7 +244,8 @@ jobs:
               "https://www.mametas.com/en/riviera-guide/antibes/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
               "https://www.mametas.com/en/riviera-guide/monaco/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
               "https://www.mametas.com/en/riviera-guide/menton/?rguiv2check=1":("rg-destination","rg-v3","article-layout","mametas-riviera-v2.css?v=2.0"),
-              "https://www.mametas.com/en/riviera-chooser/?rguiv2check=1":("rg-fit","mametas-riviera-v2.css?v=2.0","data-riviera-chooser"),
+              "https://www.mametas.com/en/riviera-fit/?rguiv2check=1":("rg-fit","mametas-riviera-v2.css?v=2.0","data-riviera-chooser"),
+              "https://www.mametas.com/riviera-fit/?rguiv2check=1":("rg-fit","mametas-riviera-v2.css?v=2.0","data-riviera-chooser"),
           }
           for url,tokens in checks.items():
               body=fetch(url)
