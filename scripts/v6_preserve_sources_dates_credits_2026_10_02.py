@@ -162,16 +162,18 @@ def add_known_hero_credit(text: str, lang: str) -> str:
     for src, labels in credits.items():
         if src not in text:
             continue
-        # Only add a caption when the figure containing that exact image has none.
-        fig_re = re.compile(
-            rf'<figure\b([^>]*)>(?=[\s\S]*?{re.escape(src)})([\s\S]*?)</figure>',
-            re.I,
-        )
-        m = fig_re.search(text)
-        if not m or "<figcaption" in m.group(0).lower():
-            continue
-        figure = m.group(0).replace("</figure>", f"<figcaption>{labels[lang]}</figcaption></figure>")
-        text = text[:m.start()] + figure + text[m.end():]
+        # Inspect complete figure blocks and modify only the one that actually
+        # contains the credited image. Never let a regex cross figure bounds.
+        for m in list(re.finditer(r'<figure\b[^>]*>[\s\S]*?</figure>', text, re.I)):
+            figure = m.group(0)
+            if src not in figure or "<figcaption" in figure.lower():
+                continue
+            replacement = figure.replace(
+                "</figure>",
+                f"<figcaption>{labels[lang]}</figcaption></figure>",
+            )
+            text = text[:m.start()] + replacement + text[m.end():]
+            break
     return text
 
 def main() -> None:
