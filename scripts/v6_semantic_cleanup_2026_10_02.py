@@ -125,14 +125,12 @@ def main() -> None:
             text = clean_english_heading_colons(text)
             text = text.replace('href="/#riviera-fit"', 'href="/en/riviera-fit/"')
             text = text.replace("href='/#riviera-fit'", "href='/en/riviera-fit/'")
-            if rel_path == "index.html":
-                text = text.replace("RIGHT NOW", "RIVIERA AGENDA")
-            elif rel_path == "en/good-finds/index.html":
-                text = text.replace("RIGHT NOW", "RIVIERA AGENDA")
+            if rel_path in {"index.html", "en/good-finds/index.html"}:
+                text = re.sub(r'\bRIGHT NOW\b', "RIVIERA AGENDA", text, flags=re.I)
         else:
             text = clean_french_labels(text)
             if rel_path in {"fr/index.html", "bons-plans/index.html"}:
-                text = text.replace("EN CE MOMENT", "AGENDA DE LA RIVIERA")
+                text = re.sub(r'\bEN CE MOMENT\b', "AGENDA DE LA RIVIERA", text, flags=re.I)
             text = text.replace('href="/#riviera-fit"', 'href="/riviera-fit/"')
             text = text.replace("href='/#riviera-fit'", "href='/riviera-fit/'")
             text = text.replace('href="/fr/#riviera-fit"', 'href="/riviera-fit/"')
