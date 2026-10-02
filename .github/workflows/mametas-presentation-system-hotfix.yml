@@ -1,0 +1,172 @@
+name: Mametas presentation system deploy
+
+on:
+  push:
+    branches:
+      - mametas-v3
+    paths:
+      - ".github/workflows/mametas-presentation-system-hotfix.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: mametas-presentation-system-v1
+  cancel-in-progress: true
+
+jobs:
+  deploy-presentation-system:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deployment dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Download last known-good generated site
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          path: /tmp/mametas-stable-artifact
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: rmuraire/lesnicoises
+          run-id: 36914504302
+
+      - name: Restore stable generated CSS and pilot HTML
+        run: |
+          rm -rf /tmp/mametas-stable
+          mkdir -p /tmp/mametas-stable
+          unzip -oq /tmp/mametas-stable-artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d /tmp/mametas-stable
+          test -s /tmp/mametas-stable/assets/site.css
+          test -s /tmp/mametas-stable/assets/v3.css
+          cp /tmp/mametas-stable/assets/site.css assets/site.css
+          cp /tmp/mametas-stable/assets/v3.css assets/v3.css
+          cp /tmp/mametas-stable/index.html index.html
+          cp /tmp/mametas-stable/fr/index.html fr/index.html
+          cp /tmp/mametas-stable/en/hotels/index.html en/hotels/index.html
+          cp /tmp/mametas-stable/hotels/index.html hotels/index.html
+
+      - name: Compile Mametas Presentation System v1
+        run: python scripts/apply_mametas_system_v1.py
+
+      - name: Preflight presentation system
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          checks={
+              "assets/site.css":80000,
+              "assets/v3.css":120000,
+          }
+          for rel,min_size in checks.items():
+              p=Path(rel)
+              size=p.stat().st_size
+              if size < min_size:
+                  raise SystemExit(f"{rel} unexpectedly small: {size}")
+              text=p.read_text(encoding="utf-8",errors="ignore")
+              required=(
+                  "Mametas Presentation System v1",
+                  "--m-space-section",
+                  ".places-unified [data-static-editorial=\"true\"] .mini-rule",
+                  ".home-page .riviera-fit-home-copy h2",
+                  ".hotels-harmonised .hotel-fit-launch h2",
+                  ".destination-reality-cta a",
+              )
+              missing=[x for x in required if x not in text]
+              if missing:
+                  raise SystemExit(f"{rel} missing {missing}")
+              if "Editorial rhythm harmonisation — city/detail pages — 2026-10-01" in text:
+                  raise SystemExit(f"{rel} contains unsafe rolled-back experiment")
+              print(rel,size,"bytes — preflight OK")
+
+          pages={
+              "index.html":"AFTER THE BASE · CHOOSE THE HOTEL",
+              "en/hotels/index.html":"AFTER THE BASE · CHOOSE THE HOTEL",
+              "fr/index.html":"APRÈS LA VILLE · CHOISIR L’HÔTEL",
+              "hotels/index.html":"APRÈS LA VILLE · CHOISIR L’HÔTEL",
+          }
+          for rel,needle in pages.items():
+              body=Path(rel).read_text(encoding="utf-8",errors="ignore")
+              if needle not in body:
+                  raise SystemExit(f"{rel} missing semantic journey label")
+              print(rel,"copy OK")
+          PY
+
+      - name: Deploy presentation system to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/site.css;assets/v3.css;index.html;fr/index.html;en/hotels/index.html;hotels/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify presentation system live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+          import time
+
+          def fetch(url):
+              last=None
+              for _ in range(7):
+                  try:
+                      req=Request(url,headers={
+                          "User-Agent":"MametasPresentationSystem/1.0",
+                          "Cache-Control":"no-cache, no-store, must-revalidate",
+                          "Pragma":"no-cache",
+                      })
+                      with urlopen(req,timeout=30) as r:
+                          data=r.read().decode("utf-8","replace")
+                          if r.status==200:
+                              return data
+                          last=f"HTTP {r.status}"
+                  except Exception as exc:
+                      last=str(exc)
+                  time.sleep(3)
+              raise SystemExit(f"{url}: {last}")
+
+          for url,min_len in (
+              ("https://www.mametas.com/assets/site.css?presentation-system=1",80000),
+              ("https://www.mametas.com/assets/v3.css?presentation-system=1",120000),
+          ):
+              css=fetch(url)
+              if len(css)<min_len:
+                  raise SystemExit(f"{url} too small: {len(css)}")
+              for token in (
+                  "Mametas Presentation System v1",
+                  "--m-space-section",
+                  ".places-unified [data-static-editorial=\"true\"] .mini-rule",
+                  ".destination-reality-cta a",
+              ):
+                  if token not in css:
+                      raise SystemExit(f"{url} missing {token}")
+              if "Editorial rhythm harmonisation — city/detail pages — 2026-10-01" in css:
+                  raise SystemExit(f"{url} still has unsafe experiment")
+              print("Presentation CSS live:",url,len(css))
+
+          page_checks={
+              "https://www.mametas.com/":"AFTER THE BASE · CHOOSE THE HOTEL",
+              "https://www.mametas.com/en/hotels/":"AFTER THE BASE · CHOOSE THE HOTEL",
+              "https://www.mametas.com/fr/":"APRÈS LA VILLE · CHOISIR L’HÔTEL",
+              "https://www.mametas.com/hotels/":"APRÈS LA VILLE · CHOISIR L’HÔTEL",
+              "https://www.mametas.com/en/riviera-guide/nice/":"MAMETAS_STATIC_DECISIONS_START",
+              "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/":"MAMETAS_STATIC_DECISIONS_START",
+              "https://www.mametas.com/en/riviera-guide/antibes/":"MAMETAS_STATIC_DECISIONS_START",
+          }
+          for url,needle in page_checks.items():
+              body=fetch(url)
+              if needle not in body:
+                  raise SystemExit(f"{url} missing {needle}")
+              print("Presentation page live:",url)
+
+          print("Mametas Presentation System v1 is live")
+          PY
