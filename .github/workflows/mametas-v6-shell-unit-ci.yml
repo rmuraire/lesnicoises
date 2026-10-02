@@ -1,0 +1,35 @@
+name: Mametas V6 shell unit CI
+on:
+  push:
+    branches: [fix/v6-shell-patterns-2026-10-02]
+permissions:
+  contents: read
+jobs:
+  shell-unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile V6 shell
+        run: python -m py_compile scripts/v6_coherence_envelope_2026_10_02.py
+      - name: Unit-test shell replacement
+        run: |
+          python - <<'PY'
+          import importlib.util
+          from pathlib import Path
+          p=Path("scripts/v6_coherence_envelope_2026_10_02.py")
+          spec=importlib.util.spec_from_file_location("v6",p)
+          m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+          src='''<!doctype html><html><body><a class="skip-link">Skip</a><div class="destination-practical">KEEP ME</div><header class="v3-header">OLD</header><div class="mobile-menu">OLD MOBILE</div><main>BODY</main><footer>OLD FOOTER</footer></body></html>'''
+          out,ok=m.replace_shell(src,'<header class="mametas-global-header">NEW</header>','<footer class="mametas-global-footer">NEW FOOTER</footer>')
+          assert ok
+          assert "KEEP ME" in out
+          assert "OLD FOOTER" not in out
+          assert out.count('mametas-global-footer') == 1
+          assert out.count('mametas-global-header') == 1
+          assert "<main>BODY</main>" in out
+          print("V6 shell unit test passed")
+          PY
