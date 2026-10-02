@@ -15,25 +15,25 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Inspect live city decision markup
+      - name: Check out Mametas
+        uses: actions/checkout@v4
+
+      - name: Inspect rich city generators
         run: |
-          python - <<'PY'
-          from urllib.request import Request, urlopen
-          import re
-          urls=[
-            "https://www.mametas.com/en/riviera-guide/nice/?inspect=1",
-            "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/?inspect=1",
-            "https://www.mametas.com/en/riviera-guide/antibes/?inspect=1",
-          ]
-          for url in urls:
-              req=Request(url,headers={"User-Agent":"MametasMarkupInspect/1.0","Cache-Control":"no-cache","Pragma":"no-cache"})
-              with urlopen(req,timeout=30) as r:
-                  body=r.read().decode("utf-8","replace")
-              idx=body.find("What not to miss")
-              print("\n===== "+url+" =====")
-              if idx<0:
-                  print("NO WHAT NOT TO MISS")
-                  continue
-              start=max(0,body.rfind("<h2",0,idx)-500)
-              print(body[start:idx+9000])
+          set -e
+          for src in scripts/v4_layout_refinement_2026_09_30.py.gz.b64 scripts/v4_editorial_density_plan_visual_2026_09_30.py.gz.b64; do
+            [ -f "$src" ] || continue
+            out="/tmp/$(basename "$src" .gz.b64)"
+            base64 -d "$src" | gzip -dc > "$out"
+            echo "===== $src ====="
+            python - "$out" <<'PY'
+          import sys
+          p=sys.argv[1]
+          s=open(p,encoding="utf-8",errors="ignore").read()
+          for needle in ("What not to miss in Antibes","What not to miss: Villefranche","The edit:","Old Antibes + the ramparts"):
+              i=s.find(needle)
+              if i>=0:
+                  print("\n---",needle,"---")
+                  print(s[max(0,i-4500):i+14000])
           PY
+          done
