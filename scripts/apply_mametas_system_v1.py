@@ -10,7 +10,7 @@ from pathlib import Path
 import re
 import html
 
-from scripts.materialize_editorial_html import DESTINATIONS
+from materialize_editorial_html import DESTINATIONS
 
 ROOT=Path(__file__).resolve().parents[1]
 SYSTEM=ROOT/"assets/mametas-system-v1.css"
