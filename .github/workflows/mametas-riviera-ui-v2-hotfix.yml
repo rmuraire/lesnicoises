@@ -1,4 +1,5 @@
 name: Mametas Riviera UI v2 live-safe deploy
+# retry 2
 
 on:
   push:
@@ -145,13 +146,12 @@ jobs:
               if "rg-fit" not in body or body.count("/assets/mametas-riviera-v2.css?v=2.0")!=1:
                   raise SystemExit(f"{rel}: Fit delivery layer missing")
 
+          import re
           en_hub=Path("en/riviera-guide/index.html").read_text(encoding="utf-8",errors="ignore")
-          for needle in (
-              'href="/en/hotels/without-a-car/"><span class="decision-number">03</span>',
-              'href="/plan/five-days-nice-no-car/"><span class="decision-number">04</span>',
-          ):
-              if needle not in en_hub:
-                  raise SystemExit(f"EN hub numbering not normalized: {needle}")
+          if not re.search(r'<span class="decision-number">03</span><h3>Without a car\?</h3>',en_hub):
+              raise SystemExit("EN hub Without a car numbering is not 03")
+          if not re.search(r'<span class="decision-number">04</span><h3>Five days\?</h3>',en_hub):
+              raise SystemExit("EN hub Five days numbering is not 04")
 
           print("Final Riviera UI v2 preflight passed")
           PY
