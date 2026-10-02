@@ -129,9 +129,22 @@ def validate() -> None:
 
     for rel in ("guide-gay-nice/index.html", "en/gay-nice/index.html"):
         text = (ROOT / rel).read_text(encoding="utf-8")
-        if text.count('class="gay-map-link"') < 9:
-            errors.append(f"{rel}: expected at least 9 Google Maps links")
-        for needle in ("Ramdam Bar", "Le Glam", "Club Le 6", "Le Klubber", "Côté Marais", "Davisto", "Sentimi", "Centre LGBTQIA+ Côte d’Azur", "Castel Plage"):
+        # The October content architecture makes Beaches the single owner of
+        # swimming detail. In the EN Gay Nice page Castel is intentionally
+        # reduced to a link to the dedicated beach guide, while the eight
+        # nightlife / restaurant / community addresses keep their map links.
+        new_en_architecture = (
+            rel == "en/gay-nice/index.html"
+            and "<h2>Where to stay near the evening action</h2>" in text
+            and "/en/gay-french-riviera/beaches-without-a-car/" in text
+        )
+        min_maps = 8 if new_en_architecture else 9
+        if text.count('class="gay-map-link"') < min_maps:
+            errors.append(f"{rel}: expected at least {min_maps} Google Maps links")
+        required = ["Ramdam Bar", "Le Glam", "Club Le 6", "Le Klubber", "Côté Marais", "Davisto", "Sentimi", "Centre LGBTQIA+ Côte d’Azur"]
+        if not new_en_architecture:
+            required.append("Castel Plage")
+        for needle in required:
             if needle not in text:
                 errors.append(f"{rel}: missing {needle}")
 
