@@ -100,7 +100,7 @@ def normalize_sources(text: str, lang: str) -> str:
         # Any historical heading inside a formal sources container becomes the
         # one canonical H2. Dates are kept separately by add_source_date().
         heading_match = re.search(
-            r'<h[2-4]\\b[^>]*>[\\s\\S]*?</h[2-4]>',
+            r'<h[2-4]\b[^>]*>[\s\S]*?</h[2-4]>',
             inner,
             re.I,
         )
@@ -121,7 +121,7 @@ def normalize_sources(text: str, lang: str) -> str:
         return opening + inner + closing
 
     return re.sub(
-        r'(<div\\b[^>]*class=["\\'][^"\\']*sources[^"\\']*["\\'][^>]*>)([\\s\\S]*?)(</div>)',
+        r"(<div\b[^>]*class=['\"][^'\"]*sources[^'\"]*['\"][^>]*>)([\s\S]*?)(</div>)",
         repl,
         text,
         flags=re.I,
