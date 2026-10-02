@@ -326,9 +326,15 @@ jobs:
       - name: Apply final Riviera UI v2
         run: python scripts/apply_riviera_ui_v2.py
 
+      - name: Apply V6 coherence envelope
+        run: python scripts/v6_coherence_envelope_2026_10_02.py
+
+      - name: Validate V6 coherence envelope
+        run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
       - name: Deploy Share assets immediately
         env:
-          MAMETAS_FORCE_FILES: assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
+          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css;assets/share.css;assets/share.js;assets/consent.js;assets/riviera-chooser.js;riviera-fit/index.html;en/riviera-fit/index.html
           OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
           OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
@@ -782,6 +788,37 @@ jobs:
                   if missing:
                       raise SystemExit(f"{url} is missing destination markers: {missing}")
                   print(f"Destination authority check passed: {url}")
+          PY
+
+      - name: Check V6 coherence envelope live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request, urlopen
+
+          checks = {
+              "https://www.mametas.com/": ("mametas-global-header", "mametas-global-footer", "/assets/mametas-shell-v1.css?v=1.0", ">Plan<", ">Places<", ">Practical<"),
+              "https://www.mametas.com/fr/": ("mametas-global-header", "mametas-global-footer", ">Préparer<", ">Destinations<", ">Pratique<"),
+              "https://www.mametas.com/en/riviera-guide/villefranche-cap-ferrat/": ("mametas-global-header", ">Places<", "/riviera-guide/villefranche-cap-ferrat/"),
+              "https://www.mametas.com/en/riviera-guide/antibes/": ("mametas-global-header", ">Places<", "/riviera-guide/antibes/"),
+              "https://www.mametas.com/en/explore/french-riviera-honeymoon/": ("mametas-global-header", ">Explore<", "/explore/lune-de-miel-cote-d-azur/"),
+              "https://www.mametas.com/en/beaches/nice/": ("mametas-global-header", ">Explore<", "/plages/nice/"),
+              "https://www.mametas.com/en/hotels/beaulieu-sur-mer/hotel-select/": ("mametas-global-header", "mametas-global-footer", "/hotels/beaulieu-sur-mer/hotel-select/"),
+              "https://www.mametas.com/plan/three-days-riviera/": ("mametas-global-header", ">Plan<", "/fr/planifier/trois-jours-cote-d-azur/"),
+              "https://www.mametas.com/stay/nice/": ("mametas-global-header", ">Stay<", "/fr/dormir/nice/"),
+          }
+          legacy = ('class="site-header"', 'class="v3-header"', '>Eat &amp; Do<', '>Now<', 'href="/#plan"', 'href="/#places"', 'href="/#now"')
+          for url, needles in checks.items():
+              req = Request(url, headers={"User-Agent":"MametasCoherenceCheck/1.0","Cache-Control":"no-cache, no-store","Pragma":"no-cache"})
+              with urlopen(req, timeout=30) as response:
+                  body = response.read().decode("utf-8", errors="replace")
+                  if response.status != 200:
+                      raise SystemExit(f"{url} returned HTTP {response.status}")
+                  missing = [needle for needle in needles if needle not in body]
+                  prefix = body.split("<main", 1)[0]
+                  stale = [needle for needle in legacy if needle in prefix]
+                  if missing or stale:
+                      raise SystemExit(f"{url} failed V6 coherence check: missing={missing} stale={stale}")
+                  print("V6 live shell check passed:", url)
           PY
 
       - name: Check public homepage
