@@ -1,5 +1,5 @@
 name: Mametas presentation v1.1 live-safe deploy
-# retry 4
+# retry 5
 
 on:
   push:
@@ -152,6 +152,7 @@ jobs:
           if "riviera-fit-tool" not in fit:
               raise SystemExit("Riviera Fit body class missing")
 
+          import html
           from scripts.materialize_editorial_html import DESTINATIONS
           for rel,cfg in DESTINATIONS.items():
               p=Path(rel)
@@ -160,8 +161,9 @@ jobs:
               body=p.read_text(encoding="utf-8",errors="ignore")
               if 'class="city-must-list"' not in body:
                   raise SystemExit(f"{rel} missing canonical city component")
-              if body.count(cfg["must_title"])!=1:
-                  raise SystemExit(f"{rel} has {body.count(cfg['must_title'])} copies of city title")
+              rendered=html.escape(cfg["must_title"])
+              if body.count(rendered)!=1:
+                  raise SystemExit(f"{rel} has {body.count(rendered)} copies of city title")
               for i in range(1,len(cfg["must"])+1):
                   if f'>{i:02d}</span>' not in body:
                       raise SystemExit(f"{rel} missing city item {i:02d}")
@@ -182,7 +184,7 @@ jobs:
         run: |
           python - <<'PY'
           from urllib.request import Request, urlopen
-          import time
+          import time, html
 
           def fetch(url):
               last=None
@@ -245,8 +247,9 @@ jobs:
               body=fetch(url)
               if 'class="city-must-list"' not in body:
                   raise SystemExit(f"{url} missing canonical city component")
-              if body.count(cfg["must_title"])!=1:
-                  raise SystemExit(f"{url} has {body.count(cfg['must_title'])} copies of {cfg['must_title']}")
+              rendered=html.escape(cfg["must_title"])
+              if body.count(rendered)!=1:
+                  raise SystemExit(f"{url} has {body.count(rendered)} copies of {cfg['must_title']}")
               print("Canonical city component live:",url)
 
           print("Mametas Presentation System v1.1 is live")
