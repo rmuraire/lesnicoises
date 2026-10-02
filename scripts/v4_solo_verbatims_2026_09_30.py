@@ -64,7 +64,7 @@ CSS = r"""
 .solo-voices-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
 .solo-voice{margin:0;padding:1.25rem 1.3rem;border:1px solid rgba(23,55,82,.14);border-radius:18px;background:#f7f1e6}
 .solo-voice blockquote{margin:0;font-size:1rem;line-height:1.62}
-.solo-voice figcaption{margin-top:.9rem;font-size:.82rem;line-height:1.4;opacity:.72}\n.solo-voices-method{max-width:820px;margin:1rem 0 0;font-size:.78rem;line-height:1.5;opacity:.72}.solo-voices-method a{font-weight:700;text-decoration:none;border-bottom:1px solid currentColor}
+.solo-voice figcaption{margin-top:.9rem;font-size:.82rem;line-height:1.4;opacity:.72}
 @media(max-width:760px){.solo-voices-grid{grid-template-columns:1fr}.solo-voice{padding:1.05rem 1.1rem}}
 """
 
