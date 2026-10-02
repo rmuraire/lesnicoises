@@ -62,22 +62,22 @@ def add_stylesheet(text: str):
     return text[:idx]+link+"\n"+text[idx:]
 
 def patch_hub_numbering(text: str):
-    # Stable 01/02/03/04 order in the hesitation block.
-    text=text.replace(
-        '<a class="decision-card" href="/en/hotels/without-a-car/"><span class="decision-number">02</span>',
-        '<a class="decision-card" href="/en/hotels/without-a-car/"><span class="decision-number">03</span>'
+    # Stable 01/02/03/04 order in the hesitation block, independent of href.
+    text=re.sub(
+        r'(<a class="decision-card"[^>]*><span class="decision-number">)\d+(</span><h3>Without a car\?</h3>)',
+        r'\g<1>03\g<2>', text, count=1
     )
-    text=text.replace(
-        '<a class="decision-card" href="/plan/five-days-nice-no-car/"><span class="decision-number">03</span>',
-        '<a class="decision-card" href="/plan/five-days-nice-no-car/"><span class="decision-number">04</span>'
+    text=re.sub(
+        r'(<a class="decision-card"[^>]*><span class="decision-number">)\d+(</span><h3>Five days\?</h3>)',
+        r'\g<1>04\g<2>', text, count=1
     )
-    text=text.replace(
-        '<a class="decision-card" href="/hotels/sans-voiture/"><span class="decision-number">02</span>',
-        '<a class="decision-card" href="/hotels/sans-voiture/"><span class="decision-number">03</span>'
+    text=re.sub(
+        r'(<a class="decision-card"[^>]*><span class="decision-number">)\d+(</span><h3>Sans voiture \?</h3>)',
+        r'\g<1>03\g<2>', text, count=1
     )
-    text=text.replace(
-        '<a class="decision-card" href="/fr/planifier/cinq-jours-nice-sans-voiture/"><span class="decision-number">03</span>',
-        '<a class="decision-card" href="/fr/planifier/cinq-jours-nice-sans-voiture/"><span class="decision-number">04</span>'
+    text=re.sub(
+        r'(<a class="decision-card"[^>]*><span class="decision-number">)\d+(</span><h3>Cinq jours \?</h3>)',
+        r'\g<1>04\g<2>', text, count=1
     )
     return text
 
