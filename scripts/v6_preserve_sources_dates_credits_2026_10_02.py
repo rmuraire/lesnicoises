@@ -149,6 +149,16 @@ def normalize_existing_figcaptions(text: str, lang: str) -> str:
 def add_known_hero_credit(text: str, lang: str) -> str:
     credits = dict(KNOWN_HERO_CREDITS)
     credits.update(DEPOSITPHOTO_CREDITS)
+
+    # The repository explicitly materializes this directory as Renaud's own
+    # Nice photo bundle.
+    for m in re.finditer(r'<img\b[^>]*src=["\'](/assets/editorial/renaud/nice/[^"\']+)["\'][^>]*>', text, re.I):
+        src = m.group(1)
+        credits[src] = {
+            "en": "Photo: Renaud Muraire",
+            "fr": "Photo : Renaud Muraire",
+        }
+
     for src, labels in credits.items():
         if src not in text:
             continue
