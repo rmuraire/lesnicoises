@@ -32,20 +32,36 @@ PAGES = {
     "en/riviera-guide/saint-paul-de-vence/index.html": ("saintpaul","en","Saint-Paul-de-Vence"),
 }
 
+def riviera_fit_route(lang: str) -> str:
+    """Use the route that exists at the current build stage.
+
+    This script runs twice in production: once before the canonical Riviera Fit
+    migration, and once again in the final coherence stage. The early pass must
+    keep the legacy chooser link valid for historical validators; the late pass
+    automatically switches to the canonical Riviera Fit route.
+    """
+    if lang == "fr":
+        canonical_file = ROOT / "riviera-fit/index.html"
+        return "/riviera-fit/" if canonical_file.exists() else "/riviera-chooser/"
+    canonical_file = ROOT / "en/riviera-fit/index.html"
+    return "/en/riviera-fit/" if canonical_file.exists() else "/en/riviera-chooser/"
+
+
 def block(base: str, lang: str) -> str:
     reality = CITY_DATA[base]["reality"][lang]
     mobility = reality["getting_around"]
     budget = reality["budget"]
     season = reality["season"]
     friction = reality["logistics"]
+    fit_route = riviera_fit_route(lang)
     if lang == "fr":
         labels = ("Déplacements", "Budget", "Saison", "Logistique")
         intro = "Ce que cette destination implique vraiment"
-        cta = '<a href="/riviera-fit/">Tester mon profil dans Riviera Fit →</a>'
+        cta = f'<a href="{fit_route}">Tester mon profil dans Riviera Fit →</a>'
     else:
         labels = ("Getting around", "Budget", "Season", "Logistics")
         intro = "What this destination really implies"
-        cta = '<a href="/en/riviera-fit/">Run my profile through Riviera Fit →</a>'
+        cta = f'<a href="{fit_route}">Run my profile through Riviera Fit →</a>'
     values = (mobility, budget, season, friction)
     cells = "".join(
         f'<div><b>{label}</b><span>{value}</span></div>'
@@ -210,9 +226,9 @@ def validate_page(rel: str, lang: str, town: str) -> None:
         raise RuntimeError(f"{rel}: canonical detail top missing")
     if town not in text:
         raise RuntimeError(f"{rel}: town marker missing")
-    fit = "/riviera-fit/" if lang == "fr" else "/en/riviera-fit/"
+    fit = riviera_fit_route(lang)
     if f'href="{fit}"' not in text:
-        raise RuntimeError(f"{rel}: canonical Riviera Fit CTA missing")
+        raise RuntimeError(f"{rel}: Riviera Fit CTA missing for current build stage")
     base = PAGES[rel][0]
     if base in BASE_HOTEL_FIT and "destination-hotel-fit-cta" not in text:
         raise RuntimeError(f"{rel}: canonical Hotel Fit bridge missing")
