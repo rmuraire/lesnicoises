@@ -12,7 +12,8 @@ import html
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SHELL_CSS = "/assets/mametas-shell-v1.css?v=1.0"
+SHELL_CSS = "/assets/mametas-shell-v1.css?v=1.1"
+SHELL_JS = "/assets/mametas-shell-v1.js?v=1.0"
 MARK = 'data-mametas-shell="v1"'
 SKIP_TOP = {
     ".git", ".github", "docs", "scripts", "data", "backup",
@@ -295,13 +296,20 @@ def canonical_footer(lang: str):
         '</footer>'
     )
 
-def inject_css(text: str):
+def inject_shell_assets(text: str):
     text = re.sub(r'<link[^>]+href=["\']/assets/mametas-shell-v1\.css(?:\?v=[^"\']*)?["\'][^>]*>\s*', '', text, flags=re.I)
-    link = f'<link rel="stylesheet" href="{SHELL_CSS}">'
-    idx = text.lower().rfind("</head>")
-    if idx < 0:
-        return text
-    return text[:idx] + link + "\n" + text[idx:]
+    text = re.sub(r'<script[^>]+src=["\']/assets/mametas-shell-v1\.js(?:\?v=[^"\']*)?["\'][^>]*></script>\s*', '', text, flags=re.I)
+
+    css = f'<link rel="stylesheet" href="{SHELL_CSS}">'
+    head_idx = text.lower().rfind("</head>")
+    if head_idx >= 0:
+        text = text[:head_idx] + css + "\n" + text[head_idx:]
+
+    js = f'<script defer src="{SHELL_JS}"></script>'
+    body_idx = text.lower().rfind("</body>")
+    if body_idx >= 0:
+        text = text[:body_idx] + js + "\n" + text[body_idx:]
+    return text
 
 def replace_shell(text: str, header: str, footer: str):
     body = re.search(r'<body\b[^>]*>', text, re.I)
@@ -369,7 +377,7 @@ def main():
         fr_href, en_href = language_links(text, route)
         header = canonical_header(lang, route, fr_href, en_href)
         footer = canonical_footer(lang)
-        text = inject_css(text)
+        text = inject_shell_assets(text)
         text, ok = replace_shell(text, header, footer)
         if not ok:
             skipped.append(rel)

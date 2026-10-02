@@ -395,3 +395,100 @@ body.rg-destination .source-box{
     padding:14px 15px!important;
   }
 }
+
+
+/* Global menu viewport fix — 2026-10-02 */
+/*
+  iOS/Safari and Chromium treat fixed descendants of filtered ancestors as
+  fixed to that ancestor rather than to the viewport. The global header used
+  backdrop-filter, so the full-screen menu could be visually clipped to the
+  72–82px header while its links overflowed over the page underneath.
+*/
+.mametas-global-header{
+  background:#f7f2e7!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  overflow:visible!important;
+}
+.mametas-global-mobile[open]{
+  position:relative;
+  z-index:200;
+}
+.mametas-global-mobile[open]>.mametas-global-mobile-panel{
+  position:fixed!important;
+  top:0!important;
+  right:0!important;
+  bottom:auto!important;
+  left:0!important;
+  width:100vw!important;
+  max-width:none!important;
+  height:100vh!important;
+  height:100dvh!important;
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  box-sizing:border-box!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  padding:92px clamp(24px,7vw,44px) max(32px,env(safe-area-inset-bottom))!important;
+  background:#f7f2e7!important;
+  opacity:1!important;
+  transform:none!important;
+}
+.mametas-global-mobile[open]>summary{
+  position:fixed!important;
+  top:max(20px,env(safe-area-inset-top))!important;
+  right:max(20px,env(safe-area-inset-right))!important;
+  z-index:202!important;
+  background:#f7f2e7!important;
+}
+.mametas-global-mobile-panel nav{
+  width:min(100%,720px)!important;
+  margin:0 auto!important;
+}
+.mametas-global-mobile-panel nav ul{
+  display:block!important;
+  width:100%!important;
+}
+.mametas-global-mobile-panel nav li{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+}
+.mametas-global-mobile-panel nav a{
+  display:block!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+.mametas-global-mobile-lang{
+  width:min(100%,720px);
+  margin:28px auto 0!important;
+}
+html:has(.mametas-global-mobile[open]),
+body:has(.mametas-global-mobile[open]),
+html.mametas-menu-open,
+body.mametas-menu-open{
+  overflow:hidden!important;
+}
+
+@media(min-width:701px) and (max-width:1080px){
+  .mametas-global-mobile-panel{
+    padding-top:104px!important;
+  }
+  .mametas-global-mobile-panel nav a{
+    padding:16px 0!important;
+    font-size:clamp(30px,4.1vw,42px)!important;
+  }
+}
+@media(max-width:700px){
+  .mametas-global-mobile-panel nav a{
+    padding:13px 0!important;
+    font-size:clamp(28px,8.3vw,34px)!important;
+  }
+}
+@media(min-width:1081px){
+  .mametas-global-mobile[open]{
+    display:none!important;
+  }
+}
