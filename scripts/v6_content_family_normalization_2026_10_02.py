@@ -60,6 +60,18 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
     )
     return text
 
+def balanced_div_end(text: str, start: int):
+    div_token = re.compile(r'</?div\\b[^>]*>', re.I)
+    depth = 0
+    for token in div_token.finditer(text, start):
+        if token.group(0).lower().startswith("</div"):
+            depth -= 1
+            if depth == 0:
+                return token.end()
+        else:
+            depth += 1
+    return None
+
 def transform_balanced_divs(text: str, class_name: str, transform) -> str:
     """Transform complete <div> blocks carrying class_name, including nested divs."""
     search = re.compile(
@@ -204,34 +216,41 @@ def normalize_restaurant_page(text: str, lang: str) -> str:
     return text
 
 def beach_card(block: str, lang: str) -> str:
-    block = re.sub(r'<h2([^>]*)>', r'<h3\1>', block, flags=re.I)
+    block = re.sub(r'<h2([^>]*)>', r'<h3\\1>', block, flags=re.I)
     block = re.sub(r'</h2>', '</h3>', block, flags=re.I)
 
-    facts_m = re.search(r'<div class="beach-facts">([\s\S]*?)</div>\s*(?=<p class="spot-logistics"|</div>)', block, re.I)
+    facts_start_m = re.search(r'<div class="beach-facts">', block, re.I)
+    facts_start = facts_start_m.start() if facts_start_m else None
+    facts_end = balanced_div_end(block, facts_start) if facts_start is not None else None
+    facts_html = block[facts_start:facts_end] if facts_start is not None and facts_end is not None else ""
+
     facts = []
-    if facts_m:
-        for m in re.finditer(r'<div class="beach-fact"><b>(.*?)</b><span>([\s\S]*?)</span></div>', facts_m.group(1), re.I):
+    if facts_html:
+        for m in re.finditer(r'<div class="beach-fact"><b>(.*?)</b><span>([\\s\\S]*?)</span></div>', facts_html, re.I):
             facts.append([plain(m.group(1)), m.group(2).strip()])
 
     labels = {x[0].lower(): i for i, x in enumerate(facts)}
 
-    # Derive an Access field from the card's own transport sentence, never from
-    # outside knowledge.
+    # Derive Access only from transport wording already present on the card.
     if "access" not in labels and "accès" not in labels:
-        spot = re.search(r'<p class="spot-logistics">([\s\S]*?)</p>', block, re.I)
+        spot = re.search(r'<p class="spot-logistics">([\\s\\S]*?)</p>', block, re.I)
         if spot:
-            raw = re.split(r'<a\b', spot.group(1), maxsplit=1, flags=re.I)[0]
+            raw = re.split(r'<a\\b', spot.group(1), maxsplit=1, flags=re.I)[0]
             access = plain(raw)
-            access = re.sub(r'^(Find it\.|Getting there\.|Access\.|Accès\s*:|Y aller\s*:|Repère\s*:)', '', access, flags=re.I).strip()
+            access = re.sub(
+                r'^(Find it\\.|Getting there\\.|Access\\.|Accès\\s*:|Y aller\\s*:|Repère\\s*:)',
+                '',
+                access,
+                flags=re.I,
+            ).strip()
             if len(access) >= 12:
                 facts.append(["Accès" if lang == "fr" else "Access", access])
 
-    # Cannes municipal cards sometimes split lounger + parasol. Group those
-    # existing values under one stable "2026 prices" line.
+    # Group existing Cannes lounger/parasol facts into a single 2026-price line.
     price_parts = []
     keep = []
     for label, value in facts:
-        if label.lower() in {"lounger", "parasol", "transat", "parasol"}:
+        if label.lower() in {"lounger", "parasol", "transat"}:
             price_parts.append(f"{label}: {plain(value)}")
         else:
             keep.append([label, value])
@@ -244,18 +263,21 @@ def beach_card(block: str, lang: str) -> str:
         def order(item):
             low = item[0].lower()
             return preferred.index(low) if low in preferred else len(preferred) + facts.index(item)
+
         ordered = sorted(facts, key=order)
         html = '<div class="beach-facts">' + ''.join(
             f'<div class="beach-fact"><b>{label}</b><span>{value}</span></div>'
             for label, value in ordered
         ) + '</div>'
-        if facts_m:
-            block = block[:facts_m.start()] + html + block[facts_m.end():]
+
+        if facts_start is not None and facts_end is not None:
+            block = block[:facts_start] + html + block[facts_end:]
         else:
             spot = re.search(r'<p class="spot-logistics">', block, re.I)
             if spot:
                 block = block[:spot.start()] + html + block[spot.start():]
     return block
+
 
 def normalize_beach_page(text: str, lang: str) -> str:
     return transform_balanced_divs(text, "place", lambda b: beach_card(b, lang))
