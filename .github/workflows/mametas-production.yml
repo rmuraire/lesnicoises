@@ -595,7 +595,7 @@ jobs:
                   'href="/en/hotels/">Stay</a>',
               ),
               f"https://www.mametas.com/en/hotels/?deploy={sha}": (
-                  "STEP 02 · CHOOSE THE HOTEL",
+                  "AFTER THE BASE · CHOOSE THE HOTEL",
                   "MAMETAS HOTEL FIT · INTERACTIVE TOOL",
               ),
               f"https://www.mametas.com/en/hotels/without-a-car/?deploy={sha}": (
