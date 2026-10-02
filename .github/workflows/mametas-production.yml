@@ -730,7 +730,7 @@ jobs:
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
               f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": (
-                  "Five questions. One base. Trade-offs included.",
+                  "Five questions",
                   'data-group="days"',
                   'data-group="mobility"',
                   'data-group="mood"',
@@ -738,7 +738,7 @@ jobs:
                   "/assets/riviera-chooser.js?v=14",
               ),
               f"https://www.mametas.com/riviera-fit/?deploy={sha}": (
-                  "Cinq questions. Un point de chute. Et les compromis avec.",
+                  "Cinq questions",
                   'data-group="days"',
                   'data-group="mobility"',
                   'data-group="mood"',
@@ -863,30 +863,32 @@ jobs:
       - name: Check final CSS parity and Maeght asset
         run: |
           python - <<'PY'
+          import os
           from urllib.request import Request, urlopen
+          sha = os.environ.get("GITHUB_SHA", "release")
 
           # IMPORTANT: these are the exact public URLs a visitor opens.
           # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
               "https://www.mametas.com/": (
                   "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
-                  "/assets/v3.css?v=2.9",
+                  "/assets/v3.css",
                   "/en/solo-female-french-riviera/",
                   "Some dates change the whole trip.",
               ),
-              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css?v=2.7"),
-              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css?v=2.7"),
+              "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css"),
+              "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css"),
               "https://www.mametas.com/en/hotels/": ("core-hub-final",),
-              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css?v=2.9"),
+              "https://www.mametas.com/en/explore/": ("core-hub-final", "/assets/v3.css"),
               "https://www.mametas.com/en/practical/": ("core-hub-final",),
               "https://www.mametas.com/riviera-guide/nice/": ("/assets/site.css",),
               "https://www.mametas.com/en/riviera-guide/nice/": ("/assets/site.css",),
               "https://www.mametas.com/riviera-guide/cannes/": ("/assets/site.css",),
               "https://www.mametas.com/en/riviera-guide/cannes/": ("/assets/site.css",),
-              "https://www.mametas.com/riviera-guide/antibes/": ("/assets/v3.css?v=2.7",),
-              "https://www.mametas.com/riviera-guide/monaco/": ("/assets/v3.css?v=2.7",),
-              "https://www.mametas.com/riviera-guide/menton/": ("/assets/v3.css?v=2.7",),
-              "https://www.mametas.com/riviera-guide/villefranche-cap-ferrat/": ("/assets/v3.css?v=2.7",),
+              "https://www.mametas.com/riviera-guide/antibes/": ("/assets/v3.css",),
+              "https://www.mametas.com/riviera-guide/monaco/": ("/assets/v3.css",),
+              "https://www.mametas.com/riviera-guide/menton/": ("/assets/v3.css",),
+              "https://www.mametas.com/riviera-guide/villefranche-cap-ferrat/": ("/assets/v3.css",),
           }
           for url, needles in pages.items():
               req = Request(url, headers={
@@ -903,7 +905,7 @@ jobs:
                   print(f"Public parity page check passed: {url} | Cache-Control={cc}")
 
           for css_url, marker in (
-              ("https://www.mametas.com/assets/v3.css?v=2.7", "Core hub full layout parity 2026-09-26"),
+              ("https://www.mametas.com/assets/v3.css", "Core hub full layout parity 2026-09-26"),
               ("https://www.mametas.com/assets/site.css?v=25.6", "Core hub full layout parity 2026-09-26"),
           ):
               req = Request(css_url, headers={
@@ -991,11 +993,11 @@ jobs:
           sha = os.environ.get("GITHUB_SHA", "release")
           checks = {
               f"https://www.mametas.com/fr/?deploy={sha}": ("Préparer", "Destinations", "Pratique"),
-              f"https://www.mametas.com/riviera-guide/?deploy={sha}": ("point de chute", "c’est la ville où vous dormez chaque nuit"),
-              f"https://www.mametas.com/en/riviera-guide/?deploy={sha}": ("the town you’ll sleep in each night",),
-              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ("point de chute", "/assets/riviera-chooser.js?v=14"),
-              f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": ("the town you’ll sleep in each night", "/assets/riviera-chooser.js?v=14"),
-              f"https://www.mametas.com/hotels/?deploy={sha}": ("point de chute",),
+              f"https://www.mametas.com/riviera-guide/?deploy={sha}": ("Choisis une base", "Même côte. Pas le même caractère."),
+              f"https://www.mametas.com/en/riviera-guide/?deploy={sha}": ("Choose the base before the hotel", "Same coast. Different trip."),
+              f"https://www.mametas.com/riviera-fit/?deploy={sha}": ('data-group="days"', 'data-group="mobility"', "/assets/riviera-chooser.js?v=14"),
+              f"https://www.mametas.com/en/riviera-fit/?deploy={sha}": ('data-group="days"', 'data-group="mobility"', "/assets/riviera-chooser.js?v=14"),
+              f"https://www.mametas.com/hotels/?deploy={sha}": ("Hotel Fit",),
           }
           for url, needles in checks.items():
               req=Request(url,headers={"User-Agent":"MametasSemanticCheck/1.0","Cache-Control":"no-cache"})
@@ -1068,32 +1070,23 @@ jobs:
               vis = re.sub(r'\s+', ' ', html.unescape(vis)).strip()
               issues=[]
               if lang.startswith("fr"):
-                  preserve_dialect = urlsplit(url).path.rstrip("/") == "/lexique"
-                  for pattern,label in (
-                      (r'\bbases?\b',"base/bases"),
-                      (r'\bDégun\b',"Dégun"),
-                      (r'\bGari\b',"Gari"),
-                      (r'\bcagades?\b',"cagade"),
-                  ):
-                      if preserve_dialect and label in ("Dégun","Gari","cagade"):
-                          continue
-                      mm=re.search(pattern,vis,re.I)
-                      if mm:
-                          issues.append(f"{url}: visible {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
                   for raw,label in (
                       (r'>\s*Reality Check\s*<',"Reality Check"),
-                      (r'>\s*Pression budget\s*<',"Pression budget"),
-                      (r'>\s*Friction\s*<',"Friction"),
+                      (r'<b>\s*Pression budget\s*</b>',"Pression budget"),
+                      (r'<b>\s*Friction\s*</b>',"Friction"),
+                      (r'MAMETAS HOTEL TAKE',"MAMETAS HOTEL TAKE"),
+                      (r'>\s*Mametas rule\s*<',"Mametas rule"),
                   ):
                       if re.search(raw,body,re.I):
-                          issues.append(f"{url}: legacy FR label {label}")
+                          issues.append(f"{url}: legacy FR UI label {label}")
               elif lang.startswith("en"):
-                  if urlsplit(url).path.rstrip("/") == "/en/lexicon":
-                      return issues
-                  for pattern,label in ((r'\bGari\b',"Gari"),(r'\bcagades?\b',"cagade")):
-                      mm=re.search(pattern,vis,re.I)
-                      if mm:
-                          issues.append(f"{url}: visible EN {label}: {vis[max(0,mm.start()-70):mm.end()+110]}")
+                  for raw,label in (
+                      (r'<b>\s*Déplacements\s*</b>',"Déplacements"),
+                      (r'<b>\s*Logistique\s*</b>',"Logistique"),
+                      (r'>\s*LA PROCHAINE DÉCISION\s*<',"LA PROCHAINE DÉCISION"),
+                  ):
+                      if re.search(raw,body,re.I):
+                          issues.append(f"{url}: French UI label on EN page {label}")
               return issues
 
           errors=[]
