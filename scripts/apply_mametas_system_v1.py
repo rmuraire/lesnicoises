@@ -104,12 +104,19 @@ def patch_places_hub(path: Path, lang: str):
     before=text
 
     # Mark the specific decision block for a denser treatment.
-    if lang=="en":
-        eyebrow=r'If you are still hesitating'
-    else:
-        eyebrow=r'ENCORE EN TRAIN D’HÉSITER \?'
-    pattern=rf'(<section class="v3-section)([^"]*)("><div class="wrap"><div class="section-heading"><div><p class="eyebrow">{eyebrow}</p>)'
-    text=re.sub(pattern,lambda m:m.group(1)+m.group(2)+' hesitation-compact'+m.group(3),text,count=1)
+    phrase="If you are still hesitating" if lang=="en" else "ENCORE EN TRAIN D’HÉSITER ?"
+    idx=text.find(phrase)
+    if idx>=0:
+        section_start=text.rfind("<section",0,idx)
+        tag_end=text.find(">",section_start)
+        if section_start>=0 and tag_end>section_start:
+            tag=text[section_start:tag_end+1]
+            if "v3-section" in tag and "hesitation-compact" not in tag:
+                if 'class="' in tag:
+                    newtag=re.sub(r'class="([^"]*)"',lambda m:f'class="{m.group(1)} hesitation-compact"',tag,1)
+                else:
+                    newtag=tag[:-1]+' class="hesitation-compact">'
+                text=text[:section_start]+newtag+text[tag_end+1:]
 
     # Correct the EN numbering regression visible in the decision cards.
     if lang=="en":
