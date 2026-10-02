@@ -58,10 +58,25 @@ def normalize_top(text: str, parent: str, back_label: str, eyebrow: str) -> str:
         f'<p class="eyebrow mametas-detail-eyebrow">{eyebrow}</p>',
         text, count=1, flags=re.S | re.I
     )
+
+    # Some older family pages have an H1 but no explicit back link / eyebrow.
+    # Add the canonical pair immediately before the H1 rather than failing the
+    # whole build or leaving one more visual generation alive.
+    h1 = re.search(r'<h1\\b', text, re.I)
+    main = re.search(r'<main\\b[^>]*>', text, re.I)
+    if h1 and main and h1.start() > main.end():
+        segment = text[main.end():h1.start()]
+        additions = []
+        if "mametas-detail-back" not in segment:
+            additions.append(f'<a class="mametas-detail-back" href="{parent}">{back_label}</a>')
+        if "mametas-detail-eyebrow" not in segment:
+            additions.append(f'<p class="mametas-detail-eyebrow">{eyebrow}</p>')
+        if additions:
+            text = text[:h1.start()] + "".join(additions) + text[h1.start():]
     return text
 
 def balanced_div_end(text: str, start: int):
-    div_token = re.compile(r'</?div\\b[^>]*>', re.I)
+    div_token = re.compile(r'</?div\b[^>]*>', re.I)
     depth = 0
     for token in div_token.finditer(text, start):
         if token.group(0).lower().startswith("</div"):
