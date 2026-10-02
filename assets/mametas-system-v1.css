@@ -3,8 +3,8 @@
    Built to sit on top of the fully generated CSS, not the source CSS alone. */
 
 :root{
-  --m-space-section:clamp(48px,5vw,72px);
-  --m-space-section-mobile:38px;
+  --m-space-section:clamp(38px,3.8vw,56px);
+  --m-space-section-mobile:30px;
   --m-rule:rgba(20,33,61,.16);
 }
 
@@ -228,6 +228,189 @@
 .verdict-box p{line-height:1.48!important}
 .source-box{padding-top:14px!important;padding-bottom:14px!important}
 
+
+/* v1.1 — denser hubs, explicit hierarchy, Agenda and city parity */
+
+/* Hub decisions: information should not float inside oversized cards. */
+.core-hub-final .section-heading{
+  margin-bottom:18px!important;
+}
+.core-hub-final .decision-grid,
+.plan-harmonised .architecture-grid{
+  gap:16px!important;
+}
+.core-hub-final .decision-card,
+.plan-harmonised .architecture-card{
+  min-height:0!important;
+  padding:22px 24px!important;
+}
+.core-hub-final .decision-card .decision-number,
+.plan-harmonised .architecture-card>span{
+  margin-bottom:12px!important;
+}
+.core-hub-final .decision-card h3,
+.plan-harmonised .architecture-card h3{
+  margin:0 0 10px!important;
+  font-size:clamp(27px,2.6vw,34px)!important;
+  line-height:1.05!important;
+}
+.core-hub-final .decision-card p,
+.plan-harmonised .architecture-card p{
+  margin:0 0 16px!important;
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+.core-hub-final .decision-card .text-link,
+.plan-harmonised .architecture-card b{
+  margin-top:4px!important;
+}
+
+/* Places hub: the hesitation section is a compact decision aid, not another landing page. */
+.hesitation-compact{
+  padding-top:34px!important;
+  padding-bottom:38px!important;
+}
+.hesitation-compact .section-heading h2{
+  max-width:16ch!important;
+  font-size:clamp(32px,3vw,40px)!important;
+}
+.hesitation-compact .section-heading>p{
+  max-width:46ch!important;
+}
+.hesitation-compact .decision-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+
+/* Plan: one clear hierarchy before the embedded tool. */
+.plan-harmonised .plan-riviera-fit-panel{
+  padding:24px 26px!important;
+}
+.plan-harmonised .fit-preview-head{
+  margin-bottom:18px!important;
+}
+.plan-harmonised .fit-preview-head h3{
+  margin:4px 0 7px!important;
+  font-size:clamp(27px,2.5vw,34px)!important;
+  line-height:1.05!important;
+}
+.plan-harmonised .fit-preview-head p:not(.fit-tool-label){
+  max-width:62ch!important;
+  font-size:13px!important;
+  line-height:1.5!important;
+}
+.plan-harmonised .chooser-step{
+  padding-top:18px!important;
+  padding-bottom:18px!important;
+}
+.plan-harmonised .chooser-step h2{
+  font-size:clamp(22px,2vw,27px)!important;
+  line-height:1.12!important;
+}
+.plan-harmonised .chooser-step-head p{
+  font-size:12.5px!important;
+  line-height:1.45!important;
+}
+
+/* Standalone Riviera Fit: keep the tool title clearly above question titles. */
+.riviera-fit-tool .chooser-hero h1{
+  font-size:clamp(42px,4.5vw,58px)!important;
+  line-height:1!important;
+}
+.riviera-fit-tool .chooser-step h2{
+  font-size:clamp(23px,2.2vw,28px)!important;
+  line-height:1.12!important;
+}
+.riviera-fit-tool .chooser-rule{
+  padding:18px 20px!important;
+  margin-bottom:20px!important;
+}
+
+/* Agenda escaped the first type pass: bring it into the same scale. */
+.agenda-hub .page-hero{
+  padding-top:clamp(48px,5vw,70px)!important;
+  padding-bottom:clamp(42px,4.5vw,62px)!important;
+}
+.agenda-hub .page-hero h1{
+  max-width:17ch!important;
+  font-size:clamp(44px,4.6vw,62px)!important;
+  line-height:1.01!important;
+  letter-spacing:-.035em!important;
+}
+.agenda-hub .page-hero .lead{
+  max-width:66ch!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+}
+.home-page .home-now-teaser{
+  padding-top:42px!important;
+  padding-bottom:42px!important;
+}
+.home-page .home-now-inner{
+  gap:clamp(26px,3.5vw,46px)!important;
+}
+.home-page .home-now-copy h2{
+  max-width:15ch!important;
+  margin-bottom:12px!important;
+  font-size:clamp(38px,3.7vw,50px)!important;
+  line-height:1.01!important;
+  letter-spacing:-.035em!important;
+}
+.home-page .home-now-copy>p:not(.eyebrow){
+  font-size:14px!important;
+  line-height:1.52!important;
+}
+
+/* What not to miss: exactly the same component on old site.css and V3 city pages. */
+.places-unified #what-not-to-miss{
+  width:100%!important;
+  max-width:none!important;
+  margin:40px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+.places-unified #what-not-to-miss>h2{
+  margin:0 0 8px!important;
+  font-size:clamp(31px,3vw,37px)!important;
+  line-height:1.08!important;
+}
+.places-unified #what-not-to-miss>h2+p{
+  margin:0 0 14px!important;
+  max-width:72ch!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+}
+.places-unified #what-not-to-miss .mini-rule{
+  margin:0!important;
+  padding:14px 0 15px!important;
+  border:0!important;
+  border-top:1px solid rgba(20,33,61,.16)!important;
+  border-left:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:#43506a!important;
+  font-family:var(--sans,Inter,Arial,sans-serif)!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+}
+.places-unified #what-not-to-miss .mini-rule:last-child{
+  border-bottom:1px solid rgba(20,33,61,.16)!important;
+}
+.places-unified #what-not-to-miss .mini-rule strong{
+  display:block!important;
+  margin:0 0 5px!important;
+  color:#14213d!important;
+  font-family:var(--serif,Fraunces,Georgia,serif)!important;
+  font-size:23px!important;
+  font-weight:500!important;
+  line-height:1.16!important;
+  letter-spacing:-.02em!important;
+  text-decoration:none!important;
+}
+.places-unified #what-not-to-miss .mini-rule a{
+  text-decoration:none!important;
+}
+
 @media(max-width:760px){
   .home-page .v3-section,
   .core-hub-final .v3-section,
@@ -293,4 +476,25 @@
     padding:15px 0 16px!important;
   }
   .verdict-box{padding:18px 20px!important}
+
+  .hesitation-compact{padding-top:26px!important;padding-bottom:30px!important}
+  .hesitation-compact .decision-grid{grid-template-columns:1fr!important;gap:10px!important}
+  .core-hub-final .decision-card,
+  .plan-harmonised .architecture-card{padding:17px 18px!important}
+  .core-hub-final .decision-card h3,
+  .plan-harmonised .architecture-card h3{font-size:25px!important}
+  .plan-harmonised .plan-riviera-fit-panel{padding:18px!important}
+  .plan-harmonised .fit-preview-head h3{font-size:26px!important}
+  .plan-harmonised .chooser-step{padding-top:15px!important;padding-bottom:15px!important}
+  .plan-harmonised .chooser-step h2,
+  .riviera-fit-tool .chooser-step h2{font-size:22px!important}
+  .riviera-fit-tool .chooser-hero h1{font-size:clamp(35px,9.5vw,42px)!important}
+  .agenda-hub .page-hero{padding-top:38px!important;padding-bottom:34px!important}
+  .agenda-hub .page-hero h1{font-size:clamp(36px,9.5vw,43px)!important}
+  .home-page .home-now-teaser{padding-top:32px!important;padding-bottom:32px!important}
+  .home-page .home-now-copy h2{font-size:clamp(34px,9vw,40px)!important}
+  .places-unified #what-not-to-miss{margin-top:32px!important}
+  .places-unified #what-not-to-miss>h2{font-size:29px!important}
+  .places-unified #what-not-to-miss .mini-rule{padding:12px 0 13px!important}
+  .places-unified #what-not-to-miss .mini-rule strong{font-size:21px!important}
 }
