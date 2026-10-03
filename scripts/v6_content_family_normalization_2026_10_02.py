@@ -168,11 +168,11 @@ def normalize_end_labels(text: str, lang: str) -> str:
 def restaurant_card(block: str, lang: str) -> str:
     block = re.sub(r'<h2([^>]*)>', r'<h3\1>', block, flags=re.I)
     block = re.sub(r'</h2>', '</h3>', block, flags=re.I)
-    if "restaurant-meta" in block:
-        return block
 
     address_m = re.search(r'<div class="address">([\s\S]*?)</div>', block, re.I)
     why_m = re.search(r'<p class="why">([\s\S]*?)</p>', block, re.I)
+    existing_meta_m = re.search(r'<p class="restaurant-meta">([\s\S]*?)</p>', block, re.I)
+
     address = plain(address_m.group(1)) if address_m else ""
     why = plain(why_m.group(1)) if why_m else ""
     addr_parts = [x.strip() for x in address.split("·") if x.strip()]
@@ -182,16 +182,26 @@ def restaurant_card(block: str, lang: str) -> str:
     cuisine = ""
     neighbourhood = ""
 
-    for parts in (addr_parts, why_parts):
-        for i, item in enumerate(parts):
-            if re.fullmatch(r'€{1,4}', item):
-                price = price or item
-                if i + 1 < len(parts):
-                    cuisine = cuisine or parts[i + 1]
-                if i + 2 < len(parts):
-                    candidate = parts[i + 2]
-                    if not candidate.lower().startswith(("best for", "idéal", "choose it for", "choisissez")):
-                        neighbourhood = neighbourhood or candidate
+    if existing_meta_m:
+        meta_parts = [x.strip() for x in plain(existing_meta_m.group(1)).split("·") if x.strip()]
+        if meta_parts and re.fullmatch(r'€{1,4}', meta_parts[0]):
+            price = meta_parts[0]
+            cuisine = meta_parts[1] if len(meta_parts) > 1 else ""
+            neighbourhood = meta_parts[2] if len(meta_parts) > 2 else ""
+
+    if not price:
+        for parts in (addr_parts, why_parts):
+            for i, item in enumerate(parts):
+                if re.fullmatch(r'€{1,4}', item):
+                    price = item
+                    if i + 1 < len(parts):
+                        cuisine = parts[i + 1]
+                    if i + 2 < len(parts):
+                        candidate = parts[i + 2]
+                        if not candidate.lower().startswith(("best for", "idéal", "choose it for", "choisissez")):
+                            neighbourhood = candidate
+                    break
+            if price:
                 break
 
     if not neighbourhood and len(addr_parts) >= 2:
@@ -200,11 +210,37 @@ def restaurant_card(block: str, lang: str) -> str:
             neighbourhood = tail
 
     values = [x for x in (price, cuisine, neighbourhood) if x]
-    if len(values) >= 2:
+    if len(values) >= 2 and not existing_meta_m:
         meta = '<p class="restaurant-meta">' + ' · '.join(values) + '</p>'
         h3 = re.search(r'</h3>', block, re.I)
         if h3:
             block = block[:h3.end()] + meta + block[h3.end():]
+
+    # Older cards sometimes combine the address and decision metadata. Once the
+    # decision line exists, keep the address field as an address.
+    if address_m and any(re.fullmatch(r'€{1,4}', part) for part in addr_parts):
+        first_price = next(i for i, part in enumerate(addr_parts) if re.fullmatch(r'€{1,4}', part))
+        clean_address = ' · '.join(addr_parts[:first_price]).strip()
+        if clean_address:
+            current = re.search(r'<div class="address">[\s\S]*?</div>', block, re.I)
+            if current:
+                replacement = f'<div class="address">{clean_address}</div>'
+                block = block[:current.start()] + replacement + block[current.end():]
+
+    # Nice-generation cards repeat price/cuisine/area inside .why. Preserve only
+    # the recommendation clause ("Best for …"), or remove the duplicate line.
+    why_current = re.search(r'<p class="why">([\s\S]*?)</p>', block, re.I)
+    if why_current:
+        why_text = plain(why_current.group(1))
+        why_parts_now = [x.strip() for x in why_text.split("·") if x.strip()]
+        if why_parts_now and re.fullmatch(r'€{1,4}', why_parts_now[0]):
+            keep = next(
+                (part for part in why_parts_now if part.lower().startswith(("best for:", "idéal pour", "choose it for:", "choisissez"))),
+                "",
+            )
+            replacement = f'<p class="why">{keep}</p>' if keep else ""
+            block = block[:why_current.start()] + replacement + block[why_current.end():]
+
     return block
 
 def normalize_restaurant_page(text: str, lang: str) -> str:
@@ -322,29 +358,36 @@ def culture_practical_block(block: str, full_text: str, lang: str) -> str:
     content = re.sub(r'^\s*<span>.*?</span>', '', content, flags=re.S | re.I).strip()
     practical_plain = plain(content)
 
+    segments = re.split(r'<br\s*/?>', content, flags=re.I)
+    core_plain = plain(segments[0]) if segments else practical_plain
+    access_plain = plain(' '.join(segments[1:])) if len(segments) > 1 else practical_plain
+
     if lang == "en":
         labels = ("PRACTICAL", "Address", "Getting there", "Time needed", "Hours & price", "Booking")
         missing = "See official information below."
-        access_re = r'Getting there\s*:\s*([^|]+?)(?=(?:Map|Official|$))'
+        access_re = r'Getting there\s*:\s*([^|]+?)(?=(?:Open map|Map|Official|$))'
         time_re = r'(?:Allow|Plan for)\s+(?:about\s+)?([0-9]+(?:\s*(?:to|–|-)\s*[0-9]+)?\s*(?:minutes?|hours?))'
+        time_sentence_re = r'(?:Allow|Plan for)\s+(?:about\s+)?[0-9]+(?:\s*(?:to|–|-)\s*[0-9]+)?\s*(?:minutes?|hours?)[^.]*\.?'
+        checked_re = r'Checked\s+(?:on\s+)?(?:\d{1,2}\s+)?[A-Za-z]+\s+20\d{2}\.?'
     else:
         labels = ("PRATIQUE", "Adresse", "Accès", "Temps à prévoir", "Horaires & tarif", "Réservation")
         missing = "Voir les informations officielles ci-dessous."
-        access_re = r'Accès\s*:\s*([^|]+?)(?=(?:Carte|Horaires|Infos|$))'
+        access_re = r'Accès\s*:\s*([^|]+?)(?=(?:Ouvrir la carte|Carte|Horaires|Infos|$))'
         time_re = r'Comptez\s+(?:environ\s+)?([0-9]+(?:\s*(?:à|–|-)\s*[0-9]+)?\s*(?:minutes?|heures?))'
+        time_sentence_re = r'Comptez\s+(?:environ\s+)?[0-9]+(?:\s*(?:à|–|-)\s*[0-9]+)?\s*(?:minutes?|heures?)[^.]*\.?'
+        checked_re = r'Vérifié(?:e)?\s+(?:le\s+)?(?:\d{1,2}\s+)?[A-Za-zÀ-ÿ]+\s+20\d{2}\.?'
 
     address = ""
-    # Conservative address extraction: a numbered street/quay/avenue, or Place + locality.
     address_m = re.search(
         r'\b(\d{1,3}\s+(?:rue|avenue|boulevard|quai|promenade|chemin)[^.|]{2,90}|Place\s+[A-ZÀ-ÖØ-Ý][^.|]{2,70})',
-        practical_plain,
+        core_plain,
         re.I,
     )
     if address_m:
         address = address_m.group(1).strip(" .")
 
     access = ""
-    m = re.search(access_re, practical_plain, re.I)
+    m = re.search(access_re, access_plain, re.I)
     if m:
         access = m.group(1).strip(" .")
 
@@ -353,9 +396,16 @@ def culture_practical_block(block: str, full_text: str, lang: str) -> str:
     if m:
         duration = m.group(1).strip()
 
-    # Keep the original verified practical sentence as the Hours & price value:
-    # no factual loss, while the surrounding component becomes consistent.
-    hours_price = practical_plain or missing
+    # Keep only the remaining opening / price information in this cell. The
+    # address, transport and duration have their own fields above.
+    hours_price = core_plain
+    if address:
+        hours_price = hours_price.replace(address, "", 1).strip(" .;·")
+    hours_price = re.sub(time_sentence_re, "", hours_price, flags=re.I)
+    hours_price = re.sub(checked_re, "", hours_price, flags=re.I)
+    hours_price = re.sub(r'\s+', ' ', hours_price).strip(" .;·")
+    if not hours_price:
+        hours_price = missing
 
     sources = re.search(r'<div\b[^>]*class=["\'][^"\']*sources[^"\']*["\'][^>]*>[\s\S]*?</div>', full_text, re.I)
     source_html = sources.group(0) if sources else ""
@@ -437,9 +487,9 @@ def family_info(rel: Path, text: str):
         return "culture", lang, "/culture/", "← Retour à Art & Culture", "ART & CULTURE", parts[-2]
 
     if len(parts) >= 4 and parts[0] == "en" and parts[1] == "good-finds" and parts[-1] == "index.html" and parts[-2] not in PRACTICAL_GOOD_FINDS_EN:
-        return "good-finds", lang, "/en/good-finds/", "← Back to Good Finds", "GOOD FINDS", parts[-2]
+        return "good-finds", lang, "/en/good-finds/", "← Back to Riviera Agenda", "RIVIERA AGENDA", parts[-2]
     if len(parts) >= 3 and parts[0] == "bons-plans" and parts[-1] == "index.html" and parts[-2] not in PRACTICAL_GOOD_FINDS_FR:
-        return "good-finds", lang, "/bons-plans/", "← Retour aux Bons Plans", "BONS PLANS", parts[-2]
+        return "good-finds", lang, "/bons-plans/", "← Retour à l’Agenda de la Riviera", "AGENDA DE LA RIVIERA", parts[-2]
 
     return None
 
