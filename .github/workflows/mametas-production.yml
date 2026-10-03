@@ -630,7 +630,7 @@ jobs:
                   'href="/en/hotels/">Stay</a>',
               ),
               f"https://www.mametas.com/en/beaches/nice/?deploy={sha}": (
-                  "nice-riviera.jpg",
+                  "nice-sentier-littoral.webp",
               ),
               f"https://www.mametas.com/en/beaches/around-nice/?deploy={sha}": (
                   "baie-des-fourmis-final.jpg",
