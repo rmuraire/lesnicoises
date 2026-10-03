@@ -609,19 +609,19 @@ jobs:
                   "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/nice/?deploy={sha}": (
-                  'data-destination-reality="true"',
+                  'data-destination-reality="canonical"',
                   "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/cannes/?deploy={sha}": (
-                  'data-destination-reality="true"',
+                  'data-destination-reality="canonical"',
                   "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/saint-paul-de-vence/?deploy={sha}": (
-                  'data-destination-reality="true"',
+                  'data-destination-reality="canonical"',
                   "/assets/site.css",
               ),
               f"https://www.mametas.com/en/riviera-guide/saint-tropez/?deploy={sha}": (
-                  'data-destination-reality="true"',
+                  'data-destination-reality="canonical"',
                   "/assets/site.css",
               ),
               f"https://www.mametas.com/en/beaches/antibes/?deploy={sha}": (
