@@ -37,7 +37,7 @@ jobs:
         run: python scripts/v6_coherence_envelope_2026_10_02.py
 
       - name: Normalize destinations
-        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+        run: python scripts/v6_destination_system_2026_10_02.py
 
       - name: Normalize city cards
         run: python scripts/v6_city_card_system_2026_10_02.py
@@ -59,6 +59,9 @@ jobs:
 
       - name: Validate global shell
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
+
+      - name: Validate destination system
+        run: python scripts/validate_v6_destination_system_2026_10_02.py
 
       - name: Validate content coherence
         run: python scripts/validate_v6_content_coherence_2026_10_02.py

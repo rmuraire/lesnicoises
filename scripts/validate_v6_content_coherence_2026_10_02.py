@@ -53,8 +53,8 @@ for slug, key in destination_files:
         if not s:
             errors.append(f"{rel}: missing destination page")
             continue
-        if s.count('data-destination-reality="true"') != 1:
-            errors.append(f"{rel}: Reality Check missing/duplicated")
+        if s.count('data-destination-reality="canonical"') != 1:
+            errors.append(f"{rel}: canonical Reality Check missing/duplicated")
         labels = ("Getting around","Budget","Season","Logistics") if lang=="en" else ("Déplacements","Budget","Saison","Logistique")
         for label in labels:
             if f"<b>{label}</b>" not in s:
