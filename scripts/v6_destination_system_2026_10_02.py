@@ -60,7 +60,7 @@ def normalise_top(text: str, slug: str, lang: str) -> str:
     )
     if n == 0:
         text, n = re.subn(
-            r'<a\\b[^>]*class=["\\'][^"\\']*\\bback\\b[^"\\']*["\\'][^>]*>[\\s\\S]*?</a>',
+            r"""<a\\b[^>]*class=["'][^"']*\\bback\\b[^"']*["'][^>]*>[\\s\\S]*?</a>""",
             back,
             text,
             count=1,
@@ -69,7 +69,11 @@ def normalise_top(text: str, slug: str, lang: str) -> str:
 
     if n == 0:
         # Last-resort insertion without touching body copy.
-        m = re.search(r'(<header\\b[^>]*class=["\\'][^"\\']*article-hero[^"\\']*["\\'][^>]*>\\s*<div\\b[^>]*class=["\\'][^"\\']*wrap[^"\\']*["\\'][^>]*>)', text, re.I)
+        m = re.search(
+            r"""(<header\\b[^>]*class=["'][^"']*article-hero[^"']*["'][^>]*>\\s*<div\\b[^>]*class=["'][^"']*wrap[^"']*["'][^>]*>)""",
+            text,
+            re.I,
+        )
         if m:
             text = text[:m.end()] + back + text[m.end():]
         else:
@@ -79,17 +83,17 @@ def normalise_top(text: str, slug: str, lang: str) -> str:
             text = text[:m.end()] + back + text[m.end():]
 
     eyebrow = ("PLACES" if lang == "en" else "DESTINATIONS") + " · " + name
-    if re.search(r'<p\\b[^>]*class=["\\'][^"\\']*\\beyebrow\\b', text, re.I):
+    if re.search(r"""<p\\b[^>]*class=["'][^"']*\\beyebrow\\b""", text, re.I):
         text = re.sub(
-            r'<p\\b[^>]*class=["\\'][^"\\']*\\beyebrow\\b[^"\\']*["\\'][^>]*>[\\s\\S]*?</p>',
+            r"""<p\\b[^>]*class=["'][^"']*\\beyebrow\\b[^"']*["'][^>]*>[\\s\\S]*?</p>""",
             f'<p class="eyebrow mametas-detail-eyebrow">{html.escape(eyebrow)}</p>',
             text,
             count=1,
             flags=re.I,
         )
-    elif re.search(r'<div\\b[^>]*class=["\\'][^"\\']*\\bmeta\\b', text, re.I):
+    elif re.search(r"""<div\\b[^>]*class=["'][^"']*\\bmeta\\b""", text, re.I):
         text = re.sub(
-            r'<div\\b[^>]*class=["\\'][^"\\']*\\bmeta\\b[^"\\']*["\\'][^>]*>[\\s\\S]*?</div>',
+            r"""<div\\b[^>]*class=["'][^"']*\\bmeta\\b[^"']*["'][^>]*>[\\s\\S]*?</div>""",
             f'<div class="meta mametas-detail-eyebrow">{html.escape(eyebrow)}</div>',
             text,
             count=1,
@@ -104,7 +108,13 @@ def normalise_top(text: str, slug: str, lang: str) -> str:
         text = text[:h1.start()] + f'<p class="eyebrow mametas-detail-eyebrow">{html.escape(eyebrow)}</p>' + text[h1.start():]
 
     # The old Base / No car / Best for / Checked row duplicates canonical data.
-    text = re.sub(r'<div\\b[^>]*class=["\\'][^"\\']*article-meta[^"\\']*["\\'][^>]*>[\\s\\S]*?</div>', '', text, count=1, flags=re.I)
+    text = re.sub(
+        r"""<div\\b[^>]*class=["'][^"']*article-meta[^"']*["'][^>]*>[\\s\\S]*?</div>""",
+        '',
+        text,
+        count=1,
+        flags=re.I,
+    )
     return text
 
 
