@@ -758,3 +758,16 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .mametas-share-row{margin-top:14px}
   .mametas-share-button{padding:10px 13px;font-size:10px}
 }
+
+
+/* Practical guide mobile QA — 2026-10-03 */
+@media(max-width:650px){
+  .practical-guide-page .article{padding-left:20px!important;padding-right:20px!important}
+  .practical-guide-page .article .place{padding:16px 0 14px!important}
+  .practical-guide-page .article .place h3{font-size:22px!important;line-height:1.12!important;margin:0 0 8px!important}
+  .practical-guide-page .article .place p{font-size:15.5px!important;line-height:1.62!important;margin-bottom:14px!important}
+  .practical-guide-page .article .place .address{font-size:10px!important;line-height:1.35!important;margin-bottom:8px!important}
+  .practical-guide-page .article .place .spot-logistics{font-size:11.5px!important;line-height:1.5!important;padding-top:9px!important;margin-top:10px!important}
+  .practical-guide-page .booking-highlight-visual{margin:16px 0 18px!important}
+  .practical-guide-page .booking-highlight-visual img{width:100%!important;height:auto!important;aspect-ratio:16/9!important;object-fit:cover!important}
+}
