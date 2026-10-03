@@ -332,8 +332,8 @@ jobs:
       - name: Apply V6 coherence envelope
         run: python scripts/v6_coherence_envelope_2026_10_02.py
 
-      - name: Re-apply canonical destination structure
-        run: python scripts/v3_destination_reality_layer_2026_09_25.py
+      - name: Apply V6 destination system
+        run: python scripts/v6_destination_system_2026_10_02.py
 
       - name: Normalize city-card system
         run: python scripts/v6_city_card_system_2026_10_02.py
@@ -361,6 +361,9 @@ jobs:
 
       - name: Validate V6 content coherence
         run: python scripts/validate_v6_content_coherence_2026_10_02.py
+
+      - name: Validate V6 destination system
+        run: python scripts/validate_v6_destination_system_2026_10_02.py
 
       - name: Deploy Share assets immediately
         env:
@@ -627,7 +630,7 @@ jobs:
                   'href="/en/hotels/">Stay</a>',
               ),
               f"https://www.mametas.com/en/beaches/nice/?deploy={sha}": (
-                  "nice-riviera.jpg",
+                  "nice-sentier-littoral.webp",
               ),
               f"https://www.mametas.com/en/beaches/around-nice/?deploy={sha}": (
                   "baie-des-fourmis-final.jpg",
