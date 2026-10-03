@@ -794,3 +794,46 @@ button { color: inherit; font: inherit; }
   .mametas-share-row{margin-top:14px}
   .mametas-share-button{padding:10px 13px;font-size:10px}
 }
+
+
+/* Explore child-page mobile typography parity — 2026-10-03
+   Normalize editorial body density to the rest of Mametas without changing hero/deck hierarchy. */
+@media(max-width:650px){
+  .intent-detail .article-body{
+    font-size:15.5px!important;
+    line-height:1.62!important;
+  }
+  .intent-detail .article-body > p:first-child{
+    font-family:var(--sans,Inter,Arial,sans-serif)!important;
+    font-size:15.5px!important;
+    line-height:1.62!important;
+  }
+  .intent-detail .article-body h2{
+    margin:42px 0 12px!important;
+    font-size:30px!important;
+    line-height:1.08!important;
+  }
+  .intent-detail .article-body h3{
+    margin:22px 0 8px!important;
+    font-size:22px!important;
+    line-height:1.14!important;
+  }
+  .intent-detail .article-body .place{
+    padding:16px 0 14px!important;
+  }
+  .intent-detail .article-body .place p{
+    font-size:15.5px!important;
+    line-height:1.62!important;
+    margin-bottom:12px!important;
+  }
+  .intent-detail .article-body .place .address{
+    font-size:10px!important;
+    line-height:1.35!important;
+  }
+  .intent-detail .article-body .verdict p,
+  .intent-detail .article-body .verdict-box p,
+  .intent-detail .article-body .day-card p,
+  .intent-detail .article-body .fact span{
+    line-height:1.55!important;
+  }
+}
