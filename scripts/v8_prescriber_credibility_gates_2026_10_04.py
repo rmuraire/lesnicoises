@@ -322,6 +322,12 @@ def enrich_hotel(s, block):
     marker='<div class="affiliate-cta">'
     if marker not in s: raise RuntimeError("Hotel refonte page has no affiliate CTA marker")
     return s.replace(marker,block+marker,1)
+patch("en/hotels/beaulieu-sur-mer/hotel-select/index.html",
+      lambda s:s.replace("No pool; the point is simplicity, price and the ability to move around the Riviera without making transport a project.",
+                         "The point is simplicity and the ability to move around the Riviera without making transport a project."))
+patch("hotels/beaulieu-sur-mer/hotel-select/index.html",
+      lambda s:s.replace("Pas de piscine : l’intérêt est la simplicité, le prix et la possibilité de bouger sur la Riviera sans transformer les transports en projet.",
+                         "L’intérêt est la simplicité et la possibilité de bouger sur la Riviera sans transformer les transports en projet."))
 for rel,block in HOTEL_EN.items(): patch(rel,lambda s,b=block:enrich_hotel(s,b))
 for rel,block in HOTEL_FR.items(): patch(rel,lambda s,b=block:enrich_hotel(s,b))
 
