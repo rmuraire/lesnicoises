@@ -256,7 +256,33 @@ INTERNAL_FR={
   "Hotel Beau Rivage":"/hotels/nice/hotel-beau-rivage/",
   "Boscolo Nice Hôtel &amp; Spa":"/hotels/nice/boscolo-nice-hotel-and-spa/",
 }
+CUT_HOTELS={
+  "Hotel 64 Nice","Hotel Florence Nice","Hotel Byakko Nice","Hôtel KHLA Nice",
+  "Hotel Amour Nice","Hôtel Aston La Scala","Hotel West End Nice Promenade",
+}
+def trim_hotel_hub(s):
+    def keep_or_cut(m):
+        card=m.group(0)
+        h=re.search(r'<h3>([\\s\\S]*?)</h3>',card,re.I)
+        name=re.sub(r'<[^>]+>','',h.group(1)).strip() if h else ""
+        return "" if name in CUT_HOTELS else card
+    s=re.sub(r'<article class="hotel-choice-card"[\\s\\S]*?</article>',keep_or_cut,s,flags=re.I)
+    replacements={
+      "Twenty hotels, four trip styles":"Thirteen hotels, four trip styles",
+      "20 selected hotels":"13 selected hotels",
+      "Twenty addresses. Four clear logics.":"Thirteen addresses. Four clear logics.",
+      "Vingt hôtels, quatre styles de séjour":"Treize hôtels, quatre styles de séjour",
+      "20 hôtels sélectionnés":"13 hôtels sélectionnés",
+      "Vingt adresses. Quatre logiques claires.":"Treize adresses. Quatre logiques claires.",
+      "Hotel 64 · Florence · Hotel 66 · Byakko":"Hotel 66 · Boutique Hôtel Nice Côte d’Azur · Apollinaire",
+      "Villa Victoria · Le Grimaldi · Hotel Amour · Beau Rivage":"Villa Victoria · Le Grimaldi · Beau Rivage",
+    }
+    for old,new in replacements.items():
+        s=s.replace(old,new)
+    return s
+
 def editorialise_hotel_hub(s,mapping):
+    s=trim_hotel_hub(s)
     for name,url in mapping.items():
         esc=re.escape(name)
         s=re.sub(r'<a aria-label="'+esc+r'" class="hotel-choice-media" href="https://www\.kqzyfj\.com[^"]*"[^>]*>([\s\S]*?)</a>',
