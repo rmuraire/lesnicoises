@@ -410,6 +410,8 @@ for rel in ("stay/nice/index.html","fr/dormir/nice/index.html"):
         s=p.read_text(encoding="utf-8",errors="ignore")
         if re.search(r'<h3><a href="https://www\.kqzyfj\.com',s,re.I):
             raise RuntimeError(f"{rel}: hotel name still links directly to affiliate checkout")
+        if len(re.findall(r'<article class="hotel-choice-card"',s,re.I)) != 13:
+            raise RuntimeError(f"{rel}: defended shortlist should contain 13 hotel cards")
 
 # The formerly thin October pages now need a real practical layer.
 for rel in list(HOTEL_EN)+list(HOTEL_FR):
