@@ -174,8 +174,8 @@ def validate(voice_count: int, solo_count: int, home_count: int) -> None:
             raise RuntimeError(f"{rel}: solo voices missing persona disclosure")
 
     for rel, phrase in (
-        ("en/method/index.html", "genuine traveller feedback"),
-        ("methode/index.html", "retours authentiques"),
+        ("en/method/index.html", "editorial personas"),
+        ("methode/index.html", "personas éditoriaux"),
     ):
         text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
         if phrase not in text:
