@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Final transparency layer for Mametas traveller personas.
+"""Final transparency layer for Mametas traveller notes.
 
-Runs late, after all traveller-voice generators and presentation passes.
-It does not invent or rewrite traveller experiences. It only:
-- removes the restaurant-denigrating Sam block;
-- adds a concise methodology disclosure to every traveller-persona component;
-- links the disclosure to the full Method page;
-- validates that the final public HTML remains transparent.
+Traveller notes stay personal and specific. They are based on genuine feedback
+received by Mametas, but may be lightly edited for clarity, length and privacy.
+This layer makes that method explicit without depersonalising the voices.
 """
 from __future__ import annotations
 
@@ -17,25 +14,25 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 EN_METHOD = (
-    'Editorial persona: a synthesis of real traveller comments, experience feedback '
-    'and field observations. <a href="/en/method/">Our method →</a>'
+    'Traveller note: based on genuine traveller feedback, lightly edited where needed '
+    'for clarity, length and privacy. <a href="/en/method/">Our method →</a>'
 )
 FR_METHOD = (
-    'Persona éditorial : synthèse de vrais commentaires, retours d’expérience '
-    'et constatations de terrain. <a href="/methode/">Notre méthode →</a>'
+    'Note de voyageur : basée sur un retour authentique, légèrement édité si nécessaire '
+    'pour la clarté, la longueur et la confidentialité. <a href="/methode/">Notre méthode →</a>'
 )
 
 SOLO_EN = (
-    'These profiles are editorial personas. They synthesise real traveller comments, '
-    'experience feedback and field observations, and do not necessarily correspond '
-    'to identifiable individuals. Practical information is checked independently. '
+    'These traveller notes are based on genuine feedback shared with Mametas. '
+    'They may be lightly edited for clarity, length and privacy; identifying details '
+    'may be changed. Practical information is checked independently. '
     '<a href="/en/method/">Our method →</a>'
 )
 SOLO_FR = (
-    'Ces profils sont des personas éditoriaux. Ils synthétisent de véritables '
-    'commentaires, retours d’expérience et constatations de terrain, et ne '
-    'correspondent pas nécessairement à des personnes identifiables. Les informations '
-    'pratiques sont vérifiées indépendamment. <a href="/methode/">Notre méthode →</a>'
+    'Ces notes de voyageuses sont basées sur des retours authentiques partagés avec Mametas. '
+    'Elles peuvent être légèrement éditées pour la clarté, la longueur et la confidentialité ; '
+    'certains détails identifiants peuvent être modifiés. Les informations pratiques sont '
+    'vérifiées indépendamment. <a href="/methode/">Notre méthode →</a>'
 )
 
 def lang_of(text: str) -> str:
@@ -177,8 +174,8 @@ def validate(voice_count: int, solo_count: int, home_count: int) -> None:
             raise RuntimeError(f"{rel}: solo voices missing persona disclosure")
 
     for rel, phrase in (
-        ("en/method/index.html", "editorial personas"),
-        ("methode/index.html", "personas éditoriaux"),
+        ("en/method/index.html", "genuine traveller feedback"),
+        ("methode/index.html", "retours authentiques"),
     ):
         text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
         if phrase not in text:
