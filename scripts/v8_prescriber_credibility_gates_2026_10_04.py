@@ -140,6 +140,20 @@ for rel in ("cote-dazur-femme-solo/se-deplacer-sans-voiture/index.html","cote-da
     patch(rel,lambda s,b=FR_LAST:add_before_sources(s,b,"solo-last-return-2026-10-04"))
 
 
+# D2: do not fake lift / AC / step-free filters until inventory coverage is documented.
+# Instead, make the limitation useful and explicit on Hotel Fit.
+HOTEL_FIT_NOTE_EN=r'''<div class="verdict" data-layer="hotel-fit-comfort-check-2026-10-04"><span class="label">ONE FILTER WE REFUSE TO FAKE</span><p><strong>Need a lift, air conditioning or genuinely step-free access?</strong> Hotel Fit does not yet turn those into yes/no filters across the whole Riviera because we do not have verified room-level data for every hotel. Where we have checked them, the full Mametas hotel page says so. If any of the three is non-negotiable, confirm the exact room and access route with the hotel before paying.</p></div>'''
+HOTEL_FIT_NOTE_FR=r'''<div class="verdict" data-layer="hotel-fit-comfort-check-2026-10-04"><span class="label">UN FILTRE QUE NOUS REFUSONS DE SIMULER</span><p><strong>Ascenseur, climatisation ou accès réellement sans marche indispensables ?</strong> Hotel Fit n’en fait pas encore des filtres oui/non sur toute la Riviera : nous n’avons pas de données vérifiées au niveau de chaque chambre pour tous les hôtels. Quand l’information a été contrôlée, la fiche Mametas le précise. Si l’un de ces trois critères est non négociable, confirmez la chambre et le chemin d’accès exacts auprès de l’hôtel avant de payer.</p></div>'''
+def add_hotel_fit_note(s,block):
+    token="hotel-fit-comfort-check-2026-10-04"
+    if token in s:return s
+    needle='<p class="finder-method">'
+    i=s.find(needle)
+    if i<0: raise RuntimeError("Hotel Fit method marker missing")
+    return s[:i]+block+s[i:]
+patch("en/hotels/finder/index.html",lambda s:add_hotel_fit_note(s,HOTEL_FIT_NOTE_EN))
+patch("hotels/finder/index.html",lambda s:add_hotel_fit_note(s,HOTEL_FIT_NOTE_FR))
+
 # C3, hub side: September stays accessible as an archive but is no longer promoted as current.
 def agenda_hub_en(s):
     s=s.replace("Carnival, Ironman, an exhibition closing soon. The Riviera runs on its own calendar.",
