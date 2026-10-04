@@ -102,24 +102,29 @@ write_if("cote-dazur-femme-solo/index.html",lambda s:insert_neighbourhood(s,FR_N
 write_if("en/solo-female-french-riviera/where-to-stay/index.html",lambda s:insert_neighbourhood(s,EN_NEIGHBOURHOOD))
 write_if("cote-dazur-femme-solo/ou-dormir/index.html",lambda s:insert_neighbourhood(s,FR_NEIGHBOURHOOD))
 
-# 4) Remove reader-facing production/backlog language called out by the audit.
-BAD_SENTENCES=[
- "Our shortlist is still too thin",
- "it does not yet solve every budget",
- "rather than display our production backlog",
- "the missing middle is no longer missing",
- "the station-friendly answer we were missing",
- "Nice now has twenty addresses",
- "This page keeps its URL, but its depth now belongs to Practical",
-]
+# 4) Replace reader-facing production/backlog language called out by the audit.
+# IMPORTANT: use literal copy substitutions only. A former sentence-level regex could
+# cross HTML tags and corrupt markup on generated hotel pages.
+PRODUCTION_COPY_REPLACEMENTS = {
+    "Our shortlist is still too thin": "Our shortlist stays deliberately selective",
+    "it does not yet solve every budget": "it does not try to cover every budget",
+    "rather than display our production backlog": "rather than pad the list",
+    "The missing middle is no longer missing": "The middle of the market is finally useful",
+    "the missing middle is no longer missing": "the middle of the market is finally useful",
+    "The station-friendly answer we were missing": "A practical station-friendly choice",
+    "the station-friendly answer we were missing": "a practical station-friendly choice",
+    "Nice now has twenty addresses": "Nice has twenty selected addresses",
+    "This page keeps its URL, but its depth now belongs to Practical": "For the detailed practical layer, use Practical",
+}
 for p in ROOT.rglob("*.html"):
     rel=p.relative_to(ROOT)
     if rel.parts and rel.parts[0] in {".git",".github","scripts","docs","backup"}: continue
     s=p.read_text(encoding="utf-8",errors="ignore"); ns=s
-    for phrase in BAD_SENTENCES:
-        # Remove the sentence containing the production phrase, without touching the whole section.
-        ns=re.sub(r'(?i)(?<![>])[^.<!?]*'+re.escape(phrase)+r'[^.<!?]*[.!?]\s*','',ns)
-    if ns!=s: p.write_text(ns,encoding="utf-8"); print("removed production copy",rel)
+    for old,new in PRODUCTION_COPY_REPLACEMENTS.items():
+        ns=ns.replace(old,new)
+    if ns!=s:
+        p.write_text(ns,encoding="utf-8")
+        print("rewrote production copy",rel)
 
 # 5) Expired September agenda: do not present it as "this month".
 for rel in ("en/good-finds/index.html","bons-plans/index.html"):

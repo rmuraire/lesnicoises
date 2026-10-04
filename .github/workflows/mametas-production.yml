@@ -356,8 +356,14 @@ jobs:
       - name: Apply traveller persona transparency
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
+      - name: Syntax-check final editorial passes
+        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py
+
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
+
+      - name: Apply prescriber credibility gates
+        run: python scripts/v8_prescriber_credibility_gates_2026_10_04.py
 
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
@@ -693,7 +699,7 @@ jobs:
               f"https://www.mametas.com/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
                   'class="home-experience-grid"',
-                  'class="home-lgbtq-section"',
+                  "home-lgbtq-section",
                   "/en/gay-french-riviera/",
                   "home-credibility-strip",
                   'href="/en/riviera-fit/">Try Riviera Fit</a>',
@@ -701,7 +707,7 @@ jobs:
               f"https://www.mametas.com/fr/?deploy={sha}": (
                   "mametas-explore-restaurants-salad.webp",
                   'class="home-experience-grid"',
-                  'class="home-lgbtq-section"',
+                  "home-lgbtq-section",
                   "/cote-dazur-gay/",
                   "home-credibility-strip",
                   'href="/riviera-fit/">Tester Riviera Fit</a>',
