@@ -277,10 +277,10 @@ CUT_HOTELS={
 def trim_hotel_hub(s):
     def keep_or_cut(m):
         card=m.group(0)
-        h=re.search(r'<h3>([\\s\\S]*?)</h3>',card,re.I)
+        h=re.search(r'<h3>([\s\S]*?)</h3>',card,re.I)
         name=re.sub(r'<[^>]+>','',h.group(1)).strip() if h else ""
         return "" if name in CUT_HOTELS else card
-    s=re.sub(r'<article class="hotel-choice-card"[\\s\\S]*?</article>',keep_or_cut,s,flags=re.I)
+    s=re.sub(r'<article class="hotel-choice-card"[\s\S]*?</article>',keep_or_cut,s,flags=re.I)
     replacements={
       "Twenty hotels, four trip styles":"Thirteen hotels, four trip styles",
       "20 selected hotels":"13 selected hotels",
@@ -426,7 +426,7 @@ for rel in ("stay/nice/index.html","fr/dormir/nice/index.html"):
             raise RuntimeError(f"{rel}: hotel name still links directly to affiliate checkout")
         card_count=len(re.findall(r'<article class="hotel-choice-card"',s,re.I))
         if card_count != 13:
-            names=[re.sub(r'<[^>]+>','',x).strip() for x in re.findall(r'<h3>([\\s\\S]*?)</h3>',s,re.I)]
+            names=[re.sub(r'<[^>]+>','',x).strip() for x in re.findall(r'<h3>([\s\S]*?)</h3>',s,re.I)]
             raise RuntimeError(f"{rel}: defended shortlist should contain 13 hotel cards; found {card_count}: {names}")
 
 # The formerly thin October pages now need a real practical layer.
