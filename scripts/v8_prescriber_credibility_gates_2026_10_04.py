@@ -321,6 +321,13 @@ for rel in ("cote-dazur-gay/index.html","guide-gay-nice/index.html"):
         return s
     patch(rel,gay_fr)
 
+
+# Gay vertical: close the obvious audience gap without inventing a directory.
+GAY_SCOPE_EN=r'''<section data-layer="gay-scope-queer-women-trans-2026-10-04"><h2>A note for queer women, trans and non-binary travellers</h2><p>This guide currently has more concrete nightlife detail for gay men because that is where the dedicated venue offer we can verify is most visible. Do not read fewer venue cards as “nothing for you”. For current community events, mixed LGBTQIA+ nights and support, use Nice Côte d’Azur’s live LGBTQIA+ calendar and the Centre LGBTQIA+ Côte d’Azur; then use the ordinary Nice evening guide for the rest of the night. We would rather say where our coverage is strongest than pretend one men-only club represents everybody.</p><p><a href="https://www.explorenicecotedazur.com/en/events/special-lgbt-calendar/" target="_blank" rel="nofollow noopener">Current LGBTQIA+ calendar →</a> · <a href="/en/gay-nice/">Gay Nice local guide →</a></p></section>'''
+GAY_SCOPE_FR=r'''<section data-layer="gay-scope-queer-women-trans-2026-10-04"><h2>Un mot pour les femmes queer, les personnes trans et non-binaires</h2><p>Ce guide donne aujourd’hui davantage de détails nocturnes aux hommes gays parce que c’est là que l’offre de lieux dédiés que nous pouvons vérifier est la plus visible. Moins de cartes ne signifie pas « rien pour vous ». Pour les événements communautaires, soirées LGBTQIA+ mixtes et ressources, utilisez l’agenda LGBTQIA+ vivant de Nice Côte d’Azur et le Centre LGBTQIA+ Côte d’Azur ; pour le reste de la soirée, revenez au guide général de Nice. Nous préférons dire clairement où notre couverture est la plus forte plutôt que faire comme si un club masculin représentait tout le monde.</p><p><a href="https://www.explorenicecotedazur.com/evenements/agenda-special-lgbt/" target="_blank" rel="nofollow noopener">Agenda LGBTQIA+ actuel →</a> · <a href="/guide-gay-nice/">Guide local Nice gay →</a></p></section>'''
+patch("en/gay-french-riviera/index.html",lambda s:add_before_sources(s,GAY_SCOPE_EN,"gay-scope-queer-women-trans-2026-10-04"))
+patch("cote-dazur-gay/index.html",lambda s:add_before_sources(s,GAY_SCOPE_FR,"gay-scope-queer-women-trans-2026-10-04"))
+
 # Validation: fail the build on the credibility regressions this pass is intended to close.
 checks=[
  ("en/riviera-guide/nice/index.html",[", ."]),
