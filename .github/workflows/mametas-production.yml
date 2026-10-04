@@ -359,6 +359,9 @@ jobs:
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
 
+      - name: Apply prescriber credibility gates
+        run: python scripts/v8_prescriber_credibility_gates_2026_10_04.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
