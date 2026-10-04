@@ -356,6 +356,9 @@ jobs:
       - name: Apply traveller persona transparency
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
+      - name: Apply final editorial audit corrections
+        run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
