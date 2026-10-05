@@ -31,7 +31,8 @@ jobs:
             scripts/v6_traveller_persona_transparency_2026_10_02.py \
             scripts/v7_editorial_audit_corrections_2026_10_04.py \
             scripts/v8_prescriber_credibility_gates_2026_10_04.py \
-            scripts/v9_traveller_voice_integrity_2026_10_05.py
+            scripts/v9_traveller_voice_integrity_2026_10_05.py \
+            scripts/v10_final_ux_closure_2026_10_05.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
@@ -59,6 +60,17 @@ jobs:
 
       - name: Normalize Plan family
         run: python scripts/v6_plan_family_normalization_2026_10_02.py
+
+      - name: Apply final UX closure
+        run: python scripts/v10_final_ux_closure_2026_10_05.py
+
+      - name: Syntax-check interactive UX scripts
+        run: |
+          node --check assets/riviera-chooser.js
+          node --check assets/hotel-engine.js
+
+      - name: Self-test Riviera Fit
+        run: node assets/riviera-chooser.js --self-test
 
       - name: Validate global shell
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py

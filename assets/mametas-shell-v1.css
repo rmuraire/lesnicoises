@@ -519,3 +519,345 @@ body.mametas-menu-open{
     padding-top:24px!important;
   }
 }
+
+/* Final prescriber UX closure — 2026-10-05 */
+:root{
+  --mg-accent-text:#A3452D;
+  --mg-gold-text:#7A5B1B;
+}
+
+/* Trust badge: never clip the verification date on narrow screens. */
+.mametas-checked{
+  display:inline-flex!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  flex-wrap:wrap!important;
+  white-space:normal!important;
+  gap:6px 10px!important;
+}
+.mametas-checked small{
+  min-width:0!important;
+  white-space:normal!important;
+  font-size:12px!important;
+  line-height:1.35!important;
+}
+
+/* Destination reading comfort + one shared H1 rhythm across legacy and V3. */
+body.rg-destination .article h1,
+body.rg-destination .article-hero h1{
+  font-size:clamp(48px,5.6vw,72px)!important;
+  line-height:.98!important;
+  letter-spacing:-.035em!important;
+}
+body.rg-destination .article-body>p,
+body.rg-destination .article-body li,
+body.rg-destination.rg-legacy .article>p:not(.standfirst):not(.meta):not(.back),
+body.rg-destination.rg-legacy .route-step p,
+body.rg-destination.rg-legacy .mini-rule{
+  max-width:66ch!important;
+  font-size:17px!important;
+  line-height:1.7!important;
+}
+body.rg-destination .city-must-intro,
+body.rg-destination .city-must-item p{
+  font-size:15px!important;
+  line-height:1.62!important;
+}
+
+/* Decision text floor. Meta/legal stays smaller but readable. */
+.chooser-step-head p,
+.destination-reality-grid span,
+.phase4-route-meta,
+.engine-note,
+.itinerary-stay-prompt small{
+  font-size:14px!important;
+  line-height:1.5!important;
+}
+.affiliate-inline,
+.sources li,
+.sources p,
+.traveller-voice-method,
+.home-hotel-voice-method,
+.solo-voices-method{
+  font-size:12px!important;
+  line-height:1.5!important;
+}
+.sources h2,
+.sources>h2{
+  margin:0 0 12px!important;
+  color:var(--mg-gold-text)!important;
+  font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+  font-size:11px!important;
+  font-weight:800!important;
+  letter-spacing:.12em!important;
+  line-height:1.35!important;
+  text-transform:uppercase!important;
+}
+
+/* Cross-promos must not impersonate an editorial verdict. */
+body.rg-destination .verdict.ux-cross-promo{
+  border:1px solid rgba(20,33,61,.14)!important;
+  border-left:2px solid rgba(20,33,61,.28)!important;
+  background:rgba(255,253,248,.48)!important;
+  padding:15px 17px!important;
+}
+body.rg-destination .verdict.ux-cross-promo .label{
+  color:var(--mg-gold-text)!important;
+}
+body.rg-destination .verdict.ux-cross-promo p{
+  margin:5px 0 0!important;
+  font-size:14px!important;
+  line-height:1.5!important;
+}
+
+/* Repair late editorial blocks that were injected outside their page wrapper. */
+.ux-relocation-wrap{
+  width:min(calc(100% - 40px),960px)!important;
+  margin:30px auto!important;
+  box-sizing:border-box!important;
+}
+.ux-relocation-wrap>section{
+  margin:0!important;
+}
+.ux-relocation-wrap h2,
+.ux-contained-practical h2{
+  font-family:var(--mg-serif,"Fraunces",Georgia,serif)!important;
+}
+.ux-contained-practical{
+  width:min(calc(100% - 40px),750px)!important;
+  margin:26px auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Small accent text gets accessible text colours without changing brand fills. */
+.mametas-detail-back,
+.back{
+  color:var(--mg-gold-text)!important;
+}
+
+/* Mobile intent tables become readable cards instead of invisible sideways content. */
+@media(max-width:640px){
+  .table-wrap:has(.intent-table){overflow:visible!important}
+  .intent-table{
+    display:block!important;
+    width:100%!important;
+    min-width:0!important;
+    border:0!important;
+  }
+  .intent-table thead{
+    position:absolute!important;
+    width:1px!important;
+    height:1px!important;
+    padding:0!important;
+    margin:-1px!important;
+    overflow:hidden!important;
+    clip:rect(0,0,0,0)!important;
+    white-space:nowrap!important;
+    border:0!important;
+  }
+  .intent-table tbody,
+  .intent-table tr,
+  .intent-table td{
+    display:block!important;
+    width:100%!important;
+    box-sizing:border-box!important;
+  }
+  .intent-table tr{
+    margin:0 0 14px!important;
+    padding:13px 15px!important;
+    border:1px solid rgba(20,33,61,.14)!important;
+    background:rgba(255,253,248,.48)!important;
+  }
+  .intent-table td{
+    padding:8px 0!important;
+    border:0!important;
+    font-size:14px!important;
+    line-height:1.55!important;
+    overflow-wrap:anywhere!important;
+  }
+  .intent-table td+td{border-top:1px solid rgba(20,33,61,.1)!important}
+  .intent-table td::before{
+    content:attr(data-label);
+    display:block;
+    margin:0 0 3px;
+    color:var(--mg-gold-text);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+}
+
+/* Compact V3 destination orientation on phones so the verdict arrives quickly. */
+@media(max-width:767px){
+  body.rg-destination .article-cover img{
+    width:100%!important;
+    height:200px!important;
+    max-height:200px!important;
+    object-fit:cover!important;
+  }
+  body.rg-destination .article-aside{
+    margin:0 0 18px!important;
+    padding:12px 0!important;
+    border-top:1px solid rgba(20,33,61,.12)!important;
+    border-bottom:1px solid rgba(20,33,61,.12)!important;
+    background:transparent!important;
+  }
+  body.rg-destination .article-aside h2{
+    margin:0 0 8px!important;
+    font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+    font-size:10px!important;
+    font-weight:800!important;
+    letter-spacing:.1em!important;
+    text-transform:uppercase!important;
+  }
+  body.rg-destination .article-aside ol{
+    display:flex!important;
+    gap:7px!important;
+    margin:0!important;
+    padding:0 0 4px!important;
+    overflow-x:auto!important;
+    list-style:none!important;
+    scrollbar-width:thin;
+  }
+  body.rg-destination .article-aside li{flex:0 0 auto!important;margin:0!important}
+  body.rg-destination .article-aside a{
+    display:inline-flex!important;
+    min-height:40px!important;
+    align-items:center!important;
+    padding:8px 11px!important;
+    border:1px solid rgba(20,33,61,.14)!important;
+    border-radius:999px!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+    white-space:nowrap!important;
+  }
+  body.rg-destination .article h1,
+  body.rg-destination .article-hero h1{
+    font-size:42px!important;
+    line-height:1!important;
+  }
+  body.rg-destination .article-body>p,
+  body.rg-destination .article-body li,
+  body.rg-destination.rg-legacy .article>p:not(.standfirst):not(.meta):not(.back),
+  body.rg-destination.rg-legacy .route-step p,
+  body.rg-destination.rg-legacy .mini-rule{
+    font-size:16px!important;
+    line-height:1.66!important;
+  }
+
+  /* 44px hit areas without visually inflating the labels. */
+  .mametas-global-lang a,
+  .mametas-global-mobile-lang a,
+  .lang-switch a{
+    display:inline-flex!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    align-items:center!important;
+    justify-content:center!important;
+    box-sizing:border-box!important;
+  }
+  .mametas-detail-back,
+  .back,
+  .plan-switcher a,
+  .mametas-share-button,
+  [data-mametas-share]{
+    display:inline-flex!important;
+    min-height:44px!important;
+    align-items:center!important;
+    box-sizing:border-box!important;
+  }
+}
+
+/* Slightly larger legal/meta floor on large screens too. */
+@media(min-width:768px){
+  .chooser-step-head p,
+  .destination-reality-grid span,
+  .phase4-route-meta,
+  .engine-note{
+    font-size:15px!important;
+  }
+}
+
+/* Hotel shortlist editorial-first actions — 2026-10-05 */
+.hotel-card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-top:14px;
+}
+.hotel-card-actions .rate-link{
+  display:inline-flex!important;
+  min-height:42px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  padding:9px 13px!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+}
+.hotel-card-actions .editorial-link{
+  border:1px solid var(--mg-blue,#17365f)!important;
+  background:var(--mg-blue,#17365f)!important;
+  color:#fff!important;
+}
+.hotel-card-actions .affiliate-link{
+  border:1px solid rgba(20,33,61,.22)!important;
+  background:transparent!important;
+  color:var(--mg-ink,#14213d)!important;
+}
+@media(max-width:640px){
+  .hotel-card-actions{display:grid;grid-template-columns:1fr}
+  .hotel-card-actions .rate-link{width:100%;min-height:44px!important}
+}
+
+/* Accessible Hotel Fit action token — 2026-10-05 */
+a.button[href="/en/hotels/finder/"],
+a.button[href="/hotels/finder/"],
+a.button[href^="/en/hotels/finder/?"],
+a.button[href^="/hotels/finder/?"]{
+  background:var(--mg-accent-text,#A3452D)!important;
+  border-color:var(--mg-accent-text,#A3452D)!important;
+  color:#fff!important;
+}
+
+/* Hotel detail family alignment — 2026-10-05 */
+body.hotel-detail-page .hotel-copy,
+body.hotel-detail-page .article-body{
+  max-width:760px!important;
+}
+body.hotel-detail-page .hotel-copy p,
+body.hotel-detail-page .article-body>p,
+body.hotel-detail-page .article-body li{
+  font-size:16px!important;
+  line-height:1.68!important;
+}
+body.hotel-detail-page .hotel-hero-media img,
+body.hotel-detail-page .hotel-detail-hero img,
+body.hotel-detail-page .intent-hero img,
+body.hotel-detail-page .article-cover img{
+  width:100%!important;
+  object-fit:cover!important;
+}
+body.hotel-detail-page .mametas-detail-eyebrow,
+body.hotel-detail-page .eyebrow{
+  font-size:10px!important;
+  line-height:1.35!important;
+  letter-spacing:.12em!important;
+}
+@media(max-width:640px){
+  body.hotel-detail-page .hotel-hero-media img,
+  body.hotel-detail-page .hotel-detail-hero img,
+  body.hotel-detail-page .intent-hero img,
+  body.hotel-detail-page .article-cover img{
+    height:220px!important;
+    max-height:220px!important;
+  }
+  body.hotel-detail-page .hotel-copy p,
+  body.hotel-detail-page .article-body>p,
+  body.hotel-detail-page .article-body li{
+    font-size:16px!important;
+  }
+}

@@ -16,15 +16,15 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGETS = {
     "plan/three-days-riviera/index.html": ("en", "3 DAYS", "/assets/editorial/nice-riviera.jpg", "Nice and the Baie des Anges"),
     "plan/five-days-nice-no-car/index.html": ("en", "5 DAYS", "/assets/editorial/nice-riviera.jpg", "Nice and the Baie des Anges"),
-    "plan/seven-days-riviera/index.html": ("en", "7 DAYS", "/assets/editorial/nice-riviera.jpg", "Nice and the Baie des Anges"),
-    "plan/car-or-no-car/index.html": ("en", "CAR OR NO CAR", "/assets/editorial/nice-riviera.jpg", "The French Riviera from Nice"),
-    "plan/real-budget/index.html": ("en", "REAL BUDGET", "/assets/editorial/nice-riviera.jpg", "The French Riviera from Nice"),
+    "plan/seven-days-riviera/index.html": ("en", "7 DAYS", "/assets/editorial/plan-riviera-coast-nice-monaco.jpg", "The Riviera coast between Nice and Monaco"),
+    "plan/car-or-no-car/index.html": ("en", "CAR OR NO CAR", "/assets/editorial/riviera-train-hugo.webp", "Regional train on the French Riviera"),
+    "plan/real-budget/index.html": ("en", "REAL BUDGET", "/assets/editorial/riviera-beaches-cannes-aerial.webp", "Beach and seafront on the French Riviera"),
     "plan/when-to-go/index.html": ("en", "WHEN TO GO", "/assets/editorial/nice-riviera.jpg", "The French Riviera from Nice"),
     "fr/planifier/trois-jours-cote-d-azur/index.html": ("fr", "3 JOURS", "/assets/editorial/nice-riviera.jpg", "Nice et la baie des Anges"),
     "fr/planifier/cinq-jours-nice-sans-voiture/index.html": ("fr", "5 JOURS", "/assets/editorial/nice-riviera.jpg", "Nice et la baie des Anges"),
-    "fr/planifier/sept-jours-cote-d-azur/index.html": ("fr", "7 JOURS", "/assets/editorial/nice-riviera.jpg", "Nice et la baie des Anges"),
-    "fr/planifier/voiture-ou-pas/index.html": ("fr", "VOITURE OU PAS", "/assets/editorial/nice-riviera.jpg", "La Côte d’Azur depuis Nice"),
-    "fr/planifier/budget-reel/index.html": ("fr", "BUDGET RÉEL", "/assets/editorial/nice-riviera.jpg", "La Côte d’Azur depuis Nice"),
+    "fr/planifier/sept-jours-cote-d-azur/index.html": ("fr", "7 JOURS", "/assets/editorial/plan-riviera-coast-nice-monaco.jpg", "Le littoral entre Nice et Monaco"),
+    "fr/planifier/voiture-ou-pas/index.html": ("fr", "VOITURE OU PAS", "/assets/editorial/riviera-train-hugo.webp", "Un TER sur la Côte d’Azur"),
+    "fr/planifier/budget-reel/index.html": ("fr", "BUDGET RÉEL", "/assets/editorial/riviera-beaches-cannes-aerial.webp", "Plage et front de mer sur la Côte d’Azur"),
     "fr/planifier/quand-partir/index.html": ("fr", "QUAND PARTIR", "/assets/editorial/nice-riviera.jpg", "La Côte d’Azur depuis Nice"),
 }
 
@@ -79,10 +79,14 @@ def normalize_top(text: str, lang: str, subject: str) -> str:
 def add_cover(text: str, src: str, alt: str) -> str:
     if 'class="article-cover"' in text:
         return text
-    hero_close = text.find("</header>")
-    if hero_close < 0:
+    hero = re.search(
+        r"<header\\b[^>]*class=[\"'][^\"']*article-hero[^\"']*[\"'][^>]*>[\\s\\S]*?</header>",
+        text,
+        re.I,
+    )
+    if not hero:
         return text
-    pos = hero_close + len("</header>")
+    pos = hero.end()
     cover = f'<div class="article-cover mametas-plan-cover"><img src="{src}" alt="{alt}" loading="eager"></div>'
     return text[:pos] + cover + text[pos:]
 
