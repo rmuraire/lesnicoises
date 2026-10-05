@@ -371,6 +371,11 @@ jobs:
       - name: Apply final UX closure
         run: python scripts/v10_final_ux_closure_2026_10_05.py
 
+      - name: Syntax-check interactive UX scripts
+        run: |
+          node --check assets/riviera-chooser.js
+          node --check assets/hotel-engine.js
+
       - name: Self-test Riviera Fit after UX closure
         run: node assets/riviera-chooser.js --self-test
 
