@@ -46,3 +46,6 @@
   body.hotel-fit-page .v3-section:first-of-type{padding-top:26px!important}
   body.hotel-fit-page .section-heading{margin-bottom:22px!important}
 }
+
+/* Accessible ranked-result accent — 2026-10-05 */
+.engine-fit-status.is-best{background:#A3452D!important;color:#fff!important}
