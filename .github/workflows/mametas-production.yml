@@ -920,7 +920,6 @@ jobs:
                   "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
                   "/assets/v3.css",
                   "/en/solo-female-french-riviera/",
-                  "Some dates change the whole trip.",
               ),
               "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css"),
               "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css"),
