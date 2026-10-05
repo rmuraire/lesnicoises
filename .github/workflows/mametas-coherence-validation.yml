@@ -28,7 +28,10 @@ jobs:
             scripts/v4_solo_verbatims_2026_09_30.py \
             scripts/v4_traveller_voices_2026_09_30.py \
             scripts/v5_home_hotel_voice_2026_10_01.py \
-            scripts/v6_traveller_persona_transparency_2026_10_02.py
+            scripts/v6_traveller_persona_transparency_2026_10_02.py \
+            scripts/v7_editorial_audit_corrections_2026_10_04.py \
+            scripts/v8_prescriber_credibility_gates_2026_10_04.py \
+            scripts/v9_traveller_voice_integrity_2026_10_05.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
