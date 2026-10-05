@@ -162,6 +162,36 @@ for p in ROOT.rglob("*.html"):
         p.write_text(s, encoding="utf-8")
 
 
+
+# Bring late-generated Hotel Take pages closer to the polished review vocabulary without
+# rewriting their facts. This runs after v8, so its added sections are included.
+def normalise_late_hotel_detail(s, fr=False):
+    s = ensure_body_class(s, "hotel-detail-page")
+    replacements = {
+        "<h2>Pourquoi le choisir</h2>": "<h2>À qui il convient</h2>",
+        "<h2>Le point faible</h2>": "<h2>Mèfi — le compromis</h2>",
+    } if fr else {
+        "<h2>Why choose it</h2>": "<h2>Who it suits</h2>",
+        "<h2>The catch</h2>": "<h2>Mèfi — the catch</h2>",
+    }
+    for old, new in replacements.items():
+        s = s.replace(old, new)
+    return s
+
+for p in ROOT.rglob("index.html"):
+    rel = p.relative_to(ROOT)
+    parts = rel.parts
+    is_en_hotel = len(parts) >= 5 and parts[0] == "en" and parts[1] == "hotels"
+    is_fr_hotel = len(parts) >= 4 and parts[0] == "hotels"
+    if not (is_en_hotel or is_fr_hotel):
+        continue
+    text = p.read_text(encoding="utf-8", errors="ignore")
+    if "<h1" not in text.lower() or not any(token in text for token in ("affiliate-cta", "hotel-practical-facts", "MAMETAS HOTEL TAKE", "THE MAMETAS VERDICT", "LE VERDICT MAMETAS")):
+        continue
+    new = normalise_late_hotel_detail(text, is_fr_hotel)
+    if new != text:
+        p.write_text(new, encoding="utf-8")
+
 # Editorial links should lead shortlist cards; affiliate links are secondary.
 def normalise_hotel_choice_actions(s, fr=False):
     card_pat = re.compile(r'<article class="hotel-choice-card">[\s\S]*?</article>', re.I)
