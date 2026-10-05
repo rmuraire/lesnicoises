@@ -176,7 +176,7 @@
       pace:{
         slow:'Slow means the base should do more of the work. Plan fewer departures and leave one half-day completely unclaimed.',
         balanced:'Balanced means the base still matters, but two proper regional outings belong in the trip. You did not come this far to inspect one postcode.',
-        ambitious:'Ambitious means we widen the map. Keep one direction per day and use the car or train to cover more of the Riviera intelligently.'
+        ambitious:'Ambitious means we widen the map. Keep one direction per day and use the best available connection to cover more of the Riviera intelligently.'
       },
       priorities:{
         nice:{
@@ -493,7 +493,17 @@
     var out = [];
     order.forEach(function (id) {
       if (out.length >= count || exclude.indexOf(id) >= 0 || !data.items[id]) return;
-      out.push(data.items[id]);
+      var regionalItem = data.items[id];
+      if (id === 'saintpaul' && profile.mobility === 'nocar') {
+        regionalItem = {
+          label:regionalItem.label,
+          href:regionalItem.href,
+          body:lang === 'fr'
+            ? 'Sans voiture, combinez le village et la Fondation Maeght en prévoyant davantage de temps de liaison. Partez tôt et vérifiez les bus du jour.'
+            : 'Without a car, combine the village and Fondation Maeght with extra transfer time. Start early and check the day’s bus timetable.'
+        };
+      }
+      out.push(regionalItem);
     });
     return out;
   }
@@ -596,7 +606,7 @@
     }[baseId];
     return {
       mobility: fr ? baseReality.car : baseReality.carEn,
-      budget: baseReality.budget,
+      budget: fr ? baseReality.budget : baseReality.budget.replace(/ à /g, ' to '),
       friction: fr ? baseReality.friction : baseReality.frictionEn,
       season: seasonNoteFor(profile, baseId, lang)
     };
@@ -1026,6 +1036,13 @@
         cultureAmbitiousLabels.indexOf('Saint-Paul-de-Vence') >= 0) {
       errors.push('3-day car culture ambitious further must be Èze + Antibes/Picasso, without Villefranche or duplicate Saint-Paul');
     }
+    var noCarCulture = resultModel({days:'5',season:'summer',mobility:'nocar',mood:'culture',pace:'balanced'}, null, 'en');
+    var noCarSaintPaul = noCarCulture.further.filter(function(x){ return x.label === 'Saint-Paul-de-Vence'; })[0];
+    if (noCarSaintPaul && /use the car|drive/i.test(noCarSaintPaul.body)) errors.push('no-car Saint-Paul copy must not tell traveller to drive');
+    if (/\bà\b/.test(noCarCulture.reality.budget)) errors.push('English budget range must not use French à');
+    var ambitiousNoCar = resultModel({days:'7',season:'summer',mobility:'nocar',mood:'culture',pace:'ambitious'}, null, 'en');
+    if (/car or train/i.test(ambitiousNoCar.pace)) errors.push('ambitious no-car pace copy must be mobility-neutral');
+
     var winterCalmCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'peace',pace:'slow'}, null, 'en');
     if (winterCalmCar.baseId === 'sainttropez') errors.push('winter calm/car must not choose Saint-Tropez');
     var winterSeaCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'sea',pace:'slow'}, null, 'en');
