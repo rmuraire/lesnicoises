@@ -357,7 +357,7 @@ jobs:
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
       - name: Syntax-check final editorial passes
-        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py
+        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py scripts/v10_final_ux_closure_2026_10_05.py
 
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
@@ -367,6 +367,12 @@ jobs:
 
       - name: Apply traveller voice integrity pass
         run: python scripts/v9_traveller_voice_integrity_2026_10_05.py
+
+      - name: Apply final UX closure
+        run: python scripts/v10_final_ux_closure_2026_10_05.py
+
+      - name: Self-test Riviera Fit after UX closure
+        run: node assets/riviera-chooser.js --self-test
 
       - name: Validate Carnival 2027 freshness
         run: python scripts/validate_carnival_2027_freshness_2026_10_05.py
@@ -998,7 +1004,8 @@ jobs:
               f"https://www.mametas.com/fr/dormir/nice/?deploy={sha}": (
                   'hotel-price-band',
                   'data-price-band=',
-                  'Booking.com',
+                  'hotel-choice-grid',
+                  'Voir notre avis complet',
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
