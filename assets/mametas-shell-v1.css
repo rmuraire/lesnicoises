@@ -822,3 +822,42 @@ a.button[href^="/hotels/finder/?"]{
   border-color:var(--mg-accent-text,#A3452D)!important;
   color:#fff!important;
 }
+
+/* Hotel detail family alignment — 2026-10-05 */
+body.hotel-detail-page .hotel-copy,
+body.hotel-detail-page .article-body{
+  max-width:760px!important;
+}
+body.hotel-detail-page .hotel-copy p,
+body.hotel-detail-page .article-body>p,
+body.hotel-detail-page .article-body li{
+  font-size:16px!important;
+  line-height:1.68!important;
+}
+body.hotel-detail-page .hotel-hero-media img,
+body.hotel-detail-page .hotel-detail-hero img,
+body.hotel-detail-page .intent-hero img,
+body.hotel-detail-page .article-cover img{
+  width:100%!important;
+  object-fit:cover!important;
+}
+body.hotel-detail-page .mametas-detail-eyebrow,
+body.hotel-detail-page .eyebrow{
+  font-size:10px!important;
+  line-height:1.35!important;
+  letter-spacing:.12em!important;
+}
+@media(max-width:640px){
+  body.hotel-detail-page .hotel-hero-media img,
+  body.hotel-detail-page .hotel-detail-hero img,
+  body.hotel-detail-page .intent-hero img,
+  body.hotel-detail-page .article-cover img{
+    height:220px!important;
+    max-height:220px!important;
+  }
+  body.hotel-detail-page .hotel-copy p,
+  body.hotel-detail-page .article-body>p,
+  body.hotel-detail-page .article-body li{
+    font-size:16px!important;
+  }
+}
