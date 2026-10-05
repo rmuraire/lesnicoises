@@ -357,13 +357,16 @@ jobs:
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
       - name: Syntax-check final editorial passes
-        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py
+        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py
 
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
 
       - name: Apply prescriber credibility gates
         run: python scripts/v8_prescriber_credibility_gates_2026_10_04.py
+
+      - name: Apply traveller voice integrity pass
+        run: python scripts/v9_traveller_voice_integrity_2026_10_05.py
 
       - name: Validate Carnival 2027 freshness
         run: python scripts/validate_carnival_2027_freshness_2026_10_05.py
