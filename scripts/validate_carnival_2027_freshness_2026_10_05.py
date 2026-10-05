@@ -7,7 +7,7 @@ ROOT=Path(__file__).resolve().parents[1]
 TARGETS={
     "en/good-finds/nice-carnival/index.html":{
         "required":[
-            "9–28 February 2027",
+            ("9–28 February 2027","9-28 February 2027"),
             "Vive l’Amour",
             "carnival-ticketing-status-2026-10-05",
             "5 October 2026",
@@ -22,7 +22,7 @@ TARGETS={
     },
     "bons-plans/carnaval-nice/index.html":{
         "required":[
-            "9–28 février 2027",
+            ("9–28 février 2027","9-28 février 2027"),
             "Vive l’Amour",
             "carnival-ticketing-status-2026-10-05",
             "5 octobre 2026",
@@ -42,7 +42,10 @@ for rel,rules in TARGETS.items():
         raise SystemExit(f"Missing Carnival page: {rel}")
     s=p.read_text(encoding="utf-8",errors="ignore")
     for token in rules["required"]:
-        if token not in s:
+        if isinstance(token, tuple):
+            if not any(option in s for option in token):
+                raise SystemExit(f"{rel}: missing Carnival freshness alternatives: {token}")
+        elif token not in s:
             raise SystemExit(f"{rel}: missing Carnival freshness token: {token}")
     for token in rules["forbidden"]:
         if token in s:
