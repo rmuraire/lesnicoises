@@ -365,6 +365,9 @@ jobs:
       - name: Apply prescriber credibility gates
         run: python scripts/v8_prescriber_credibility_gates_2026_10_04.py
 
+      - name: Validate Carnival 2027 freshness
+        run: python scripts/validate_carnival_2027_freshness_2026_10_05.py
+
       - name: Validate V6 coherence envelope
         run: python scripts/validate_v6_coherence_envelope_2026_10_02.py
 
@@ -476,6 +479,34 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
+      - name: Check Carnival 2027 freshness live
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha=os.environ.get("GITHUB_SHA","release")
+          checks={
+              f"https://www.mametas.com/en/good-finds/nice-carnival/?deploy={sha}": (
+                  "Vive l’Amour",
+                  "carnival-ticketing-status-2026-10-05",
+                  "5 October 2026",
+              ),
+              f"https://www.mametas.com/bons-plans/carnaval-nice/?deploy={sha}": (
+                  "Vive l’Amour",
+                  "carnival-ticketing-status-2026-10-05",
+                  "5 octobre 2026",
+              ),
+          }
+          for url,needles in checks.items():
+              req=Request(url,headers={"User-Agent":"MametasCarnivalFreshness/1.0","Cache-Control":"no-cache"})
+              with urlopen(req,timeout=30) as response:
+                  body=response.read().decode("utf-8","replace")
+                  missing=[x for x in needles if x not in body]
+                  if response.status != 200 or missing:
+                      raise SystemExit(f"{url}: status={response.status} missing={missing}")
+                  print("Carnival freshness live check passed:",url)
+          PY
+
       - name: Check V5 intent pillars live
         run: |
           python - <<'PY'
@@ -569,7 +600,7 @@ jobs:
               f"https://www.mametas.com/fr/planifier/quand-partir/?deploy={sha}": ("AVR-JUIN", "SEP-OCT"),
               f"https://www.mametas.com/plan/three-days-riviera/?deploy={sha}": ("DAY 1", "DAY 3"),
               f"https://www.mametas.com/fr/planifier/trois-jours-cote-d-azur/?deploy={sha}": ("JOUR 1", "JOUR 3"),
-              f"https://www.mametas.com/plan/seven-days-riviera/?deploy={sha}": ("DAY 7", "Choose one direction"),
+              f"https://www.mametas.com/plan/seven-days-riviera/?deploy={sha}": ("DAY 7", "Choose one extra direction"),
               f"https://www.mametas.com/fr/planifier/sept-jours-cote-d-azur/?deploy={sha}": ("JOUR 7", "Choisissez une direction"),
               f"https://www.mametas.com/en/explore/2-3-hours/?deploy={sha}": ("Only got 2 or 3 hours? Good.", "Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
