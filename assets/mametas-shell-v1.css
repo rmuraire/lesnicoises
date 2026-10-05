@@ -778,3 +778,37 @@ body.rg-destination .verdict.ux-cross-promo p{
     font-size:15px!important;
   }
 }
+
+/* Hotel shortlist editorial-first actions — 2026-10-05 */
+.hotel-card-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+  margin-top:14px;
+}
+.hotel-card-actions .rate-link{
+  display:inline-flex!important;
+  min-height:42px!important;
+  align-items:center!important;
+  justify-content:center!important;
+  box-sizing:border-box!important;
+  padding:9px 13px!important;
+  font-size:12px!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+}
+.hotel-card-actions .editorial-link{
+  border:1px solid var(--mg-blue,#17365f)!important;
+  background:var(--mg-blue,#17365f)!important;
+  color:#fff!important;
+}
+.hotel-card-actions .affiliate-link{
+  border:1px solid rgba(20,33,61,.22)!important;
+  background:transparent!important;
+  color:var(--mg-ink,#14213d)!important;
+}
+@media(max-width:640px){
+  .hotel-card-actions{display:grid;grid-template-columns:1fr}
+  .hotel-card-actions .rate-link{width:100%;min-height:44px!important}
+}
