@@ -920,6 +920,42 @@ jobs:
               print("mametas.com is reachable (HTTP 200)")
           PY
 
+      - name: Check final UX closure live
+        run: |
+          python - <<'PY'
+          import os
+          from urllib.request import Request, urlopen
+          sha=os.environ.get("GITHUB_SHA","ux-release")
+          def fetch(path):
+              sep="&" if "?" in path else "?"
+              url="https://www.mametas.com"+path+sep+"deploy="+sha
+              req=Request(url,headers={"User-Agent":"MametasFinalUX/1.0","Cache-Control":"no-cache, no-store"})
+              with urlopen(req,timeout=30) as r:
+                  if r.status != 200:
+                      raise SystemExit(f"{url}: HTTP {r.status}")
+                  return r.read().decode("utf-8","replace")
+
+          checks={
+              "/": ("mametas-five-women-hero-960.webp",),
+              "/assets/mametas-shell-v1.css": ("Final prescriber UX closure — 2026-10-05","Hotel shortlist editorial-first actions — 2026-10-05"),
+              "/assets/riviera-chooser.js": ("Without a car, combine the village and Fondation Maeght","baseReality.budget.replace(/ à /g, ' to ')"),
+              "/assets/hotel-engine.js": ("Read our take","data-engine-reset","hotel-engine-editorial"),
+              "/en/explore/living-antibes-expat/": ("ux-relocation-wrap","expat-first-90-days-2026-10-04"),
+              "/en/riviera-guide/monaco/": ("ux-contained-practical",),
+              "/en/hotels/finder/": ("hotel-fit-page",),
+              "/sitemap.xml": (
+                  "https://www.mametas.com/en/explore/",
+                  "https://www.mametas.com/en/good-finds/nice-airport-transfer/",
+              ),
+          }
+          for path,needles in checks.items():
+              body=fetch(path)
+              missing=[x for x in needles if x not in body]
+              if missing:
+                  raise SystemExit(f"{path}: final UX live markers missing {missing}")
+              print("Final UX live check passed:",path)
+          PY
+
       - name: Check final CSS parity and Maeght asset
         run: |
           python - <<'PY'
