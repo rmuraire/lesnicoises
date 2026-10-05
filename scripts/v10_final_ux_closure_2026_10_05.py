@@ -145,9 +145,19 @@ for p in ROOT.rglob("*.html"):
         # Small legacy-language leak in English source boxes.
         s = s.replace("Site officiel", "Official site").replace("site officiel", "official site")
     if rel.as_posix() in {"index.html", "fr/index.html"}:
-        hero = '<img src="/assets/editorial/mametas-home-hero-2026-09-11.PNG"'
-        if hero in s and 'fetchpriority="high"' not in s[s.find(hero):s.find(hero)+260]:
-            s = s.replace(hero, hero + ' fetchpriority="high" decoding="async"', 1)
+        s = s.replace(
+            '<link rel="preload" as="image" href="/assets/editorial/mametas-home-hero-2026-09-11.PNG" type="image/png">',
+            '<link rel="preload" as="image" href="/assets/editorial/mametas-five-women-hero-960.webp" type="image/webp">'
+        )
+        old_hero = '<img src="/assets/editorial/mametas-home-hero-2026-09-11.PNG"'
+        new_hero = '<img src="/assets/editorial/mametas-five-women-hero-960.webp" fetchpriority="high" decoding="async"'
+        if old_hero in s:
+            s = s.replace(old_hero, new_hero, 1)
+        elif '/assets/editorial/mametas-five-women-hero-960.webp' in s:
+            hero = '<img src="/assets/editorial/mametas-five-women-hero-960.webp"'
+            i = s.find(hero)
+            if i >= 0 and 'fetchpriority="high"' not in s[i:i+260]:
+                s = s.replace(hero, hero + ' fetchpriority="high" decoding="async"', 1)
     if s != before:
         p.write_text(s, encoding="utf-8")
 
