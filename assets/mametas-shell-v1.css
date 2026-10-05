@@ -812,3 +812,13 @@ body.rg-destination .verdict.ux-cross-promo p{
   .hotel-card-actions{display:grid;grid-template-columns:1fr}
   .hotel-card-actions .rate-link{width:100%;min-height:44px!important}
 }
+
+/* Accessible Hotel Fit action token — 2026-10-05 */
+a.button[href="/en/hotels/finder/"],
+a.button[href="/hotels/finder/"],
+a.button[href^="/en/hotels/finder/?"],
+a.button[href^="/hotels/finder/?"]{
+  background:var(--mg-accent-text,#A3452D)!important;
+  border-color:var(--mg-accent-text,#A3452D)!important;
+  color:#fff!important;
+}
