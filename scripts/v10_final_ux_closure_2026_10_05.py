@@ -267,6 +267,10 @@ sitemap_path = ROOT / "sitemap.xml"
 if sitemap_path.exists():
     xml = sitemap_path.read_text(encoding="utf-8", errors="ignore")
     existing = set(re.findall(r'<loc>(https://www\.mametas\.com/[^<]*)</loc>', xml))
+    forbidden_sitemap = {
+        "https://www.mametas.com/en/hotels/nice/",
+        "https://www.mametas.com/hotels/nice/",
+    }
     candidates = []
     for p in ROOT.rglob("index.html"):
         rel = p.relative_to(ROOT)
@@ -277,7 +281,7 @@ if sitemap_path.exists():
             continue
         expected = expected_url(p)
         canonical = canonical_of(text_page)
-        if expected and canonical == expected and canonical not in existing:
+        if expected and canonical == expected and canonical not in existing and canonical not in forbidden_sitemap:
             candidates.append(canonical)
     if candidates:
         rows = "".join(
