@@ -222,6 +222,72 @@ def normalise_hotel_choice_actions(s, fr=False):
 write_if("stay/nice/index.html", lambda s: normalise_hotel_choice_actions(s, False))
 write_if("fr/dormir/nice/index.html", lambda s: normalise_hotel_choice_actions(s, True))
 
+
+# Metadata parity for the Stay hubs: add alternates only when an upstream template omitted them.
+def ensure_hreflang(s, fr_url, en_url):
+    tags = []
+    if f'hreflang="fr" href="{fr_url}"' not in s and f'href="{fr_url}" hreflang="fr"' not in s:
+        tags.append(f'<link rel="alternate" hreflang="fr" href="{fr_url}">')
+    if f'hreflang="en" href="{en_url}"' not in s and f'href="{en_url}" hreflang="en"' not in s:
+        tags.append(f'<link rel="alternate" hreflang="en" href="{en_url}">')
+    if 'hreflang="x-default"' not in s:
+        tags.append(f'<link rel="alternate" hreflang="x-default" href="{en_url}">')
+    if tags:
+        s = s.replace("</head>", "\n" + "\n".join(tags) + "\n</head>", 1)
+    return s
+
+write_if("en/hotels/index.html", lambda s: ensure_hreflang(
+    s, "https://www.mametas.com/hotels/", "https://www.mametas.com/en/hotels/"
+))
+write_if("hotels/index.html", lambda s: ensure_hreflang(
+    s, "https://www.mametas.com/hotels/", "https://www.mametas.com/en/hotels/"
+))
+
+# Sitemap closure: include every crawlable page whose canonical URL matches its own file route.
+# This repairs linked-but-omitted pages without indexing redirects, noindex pages or aliases.
+def expected_url(path):
+    rel = path.relative_to(ROOT).as_posix()
+    if rel == "index.html":
+        route = "/"
+    elif rel.endswith("/index.html"):
+        route = "/" + rel[:-len("index.html")]
+    else:
+        return None
+    return "https://www.mametas.com" + route
+
+def canonical_of(text):
+    m = re.search(
+        r'<link\b(?=[^>]*\brel=["\']canonical["\'])(?=[^>]*\bhref=["\']([^"\']+)["\'])[^>]*>',
+        text,
+        re.I,
+    )
+    return html.unescape(m.group(1)) if m else None
+
+sitemap_path = ROOT / "sitemap.xml"
+if sitemap_path.exists():
+    xml = sitemap_path.read_text(encoding="utf-8", errors="ignore")
+    existing = set(re.findall(r'<loc>(https://www\.mametas\.com/[^<]*)</loc>', xml))
+    candidates = []
+    for p in ROOT.rglob("index.html"):
+        rel = p.relative_to(ROOT)
+        if rel.parts and rel.parts[0] in {".git", ".github", "scripts", "docs", "backup"}:
+            continue
+        text_page = p.read_text(encoding="utf-8", errors="ignore")
+        if re.search(r'<meta\b[^>]*name=["\']robots["\'][^>]*content=["\'][^"\']*noindex', text_page, re.I):
+            continue
+        expected = expected_url(p)
+        canonical = canonical_of(text_page)
+        if expected and canonical == expected and canonical not in existing:
+            candidates.append(canonical)
+    if candidates:
+        rows = "".join(
+            f'  <url><loc>{url}</loc><lastmod>2026-10-05</lastmod></url>\n'
+            for url in sorted(set(candidates))
+        )
+        xml = xml.replace("</urlset>", rows + "</urlset>", 1)
+        sitemap_path.write_text(xml, encoding="utf-8")
+        print(f"Sitemap closure added {len(set(candidates))} self-canonical pages.")
+
 # Validation.
 for rel in ("en/hotels/finder/index.html", "hotels/finder/index.html"):
     text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
@@ -248,5 +314,15 @@ for p in ROOT.rglob("*.html"):
 
 if labelled_tables < 1:
     raise RuntimeError("No responsive intent-table labels were produced")
+
+sitemap_text = (ROOT / "sitemap.xml").read_text(encoding="utf-8", errors="ignore")
+for required_url in (
+    "https://www.mametas.com/en/explore/",
+    "https://www.mametas.com/explore/",
+    "https://www.mametas.com/en/good-finds/nice-airport-transfer/",
+    "https://www.mametas.com/bons-plans/transfert-aeroport-nice/",
+):
+    if f"<loc>{required_url}</loc>" not in sitemap_text:
+        raise RuntimeError(f"Sitemap still missing important crawlable page: {required_url}")
 
 print(f"Final UX HTML closure passed: {labelled_tables} labelled mobile table cells.")
