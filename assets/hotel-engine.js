@@ -57,8 +57,9 @@
     why:'Pourquoi elle ressort',
     notFor:'Moins adapté à',
     catch:'Le compromis',
-    rates:'Voir les tarifs',
-    details:'Voir la fiche Mametas',
+    rates:'Voir les tarifs ↗',
+    details:'Lire notre avis',
+    reset:'Recommencer',
     disclosure:'Transparence : certains liens de réservation sont affiliés. Mametas peut percevoir une commission si vous réservez, sans que cela influence la sélection.'
   } : {
     loading:'Checking the Mametas selection…',
@@ -72,8 +73,9 @@
     why:'Why it made the cut',
     notFor:'Not for',
     catch:'The catch',
-    rates:'Check rates',
-    details:'See the Mametas review',
+    rates:'Check rates ↗',
+    details:'Read our take',
+    reset:'Start again',
     disclosure:'Transparency: some booking links are affiliate links. Mametas may earn a commission if you book, without influencing the selection.'
   };
 
@@ -447,13 +449,15 @@
       var bestFor = bestForText(hotel);
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
-      var action = '';
+      var actions = [];
       var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
-      if (hotel.affiliate) {
-        action = '<a class="button" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>';
-      } else if (hotel.detailPath) {
-        action = '<a class="button" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>';
+      if (hotel.detailPath) {
+        actions.push('<a class="button hotel-engine-editorial" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>');
       }
+      if (hotel.affiliate) {
+        actions.push('<a class="button secondary hotel-engine-affiliate" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>');
+      }
+      var action = actions.join('');
       return '<article class="hotel-engine-result' + (hotel.media ? ' has-media' : '') + '">' +
         '<div class="hotel-engine-rank">' + String(index + 1).padStart(2, '0') + '</div>' +
         renderHotelMedia(hotel) +
@@ -470,11 +474,16 @@
         '</div>' +
       '</article>';
     }).join('');
-    results.insertAdjacentHTML('afterend', '<p class="engine-disclosure" data-engine-disclosure>' + labels.disclosure + '</p>');
+    results.insertAdjacentHTML('afterend',
+      '<div class="hotel-engine-after-results" data-engine-after-results>' +
+        '<p class="engine-disclosure" data-engine-disclosure>' + labels.disclosure + '</p>' +
+        '<button class="button secondary hotel-engine-reset" type="button" data-engine-reset>' + labels.reset + '</button>' +
+      '</div>'
+    );
   }
 
   function clearDisclosure() {
-    var old = root.querySelector('[data-engine-disclosure]');
+    var old = root.querySelector('[data-engine-after-results]');
     if (old) old.remove();
   }
 
@@ -579,6 +588,21 @@
   });
 
   root.addEventListener('click', function(event){
+    var reset = event.target.closest('[data-engine-reset]');
+    if (reset) {
+      state = { base:'any', style:'any', geography:'any', mobility:'any', budget:'any' };
+      root.querySelectorAll('[data-engine-choice]').forEach(function(button){
+        var active = button.getAttribute('data-engine-choice') === 'any';
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      clearDisclosure();
+      results.innerHTML = '';
+      output.hidden = true;
+      root.querySelector('.engine-controls').scrollIntoView({behavior:'smooth', block:'start'});
+      track('hotel_fit_reset', {});
+      return;
+    }
     var affiliate = event.target.closest('[data-affiliate-network][data-affiliate-hotel]');
     if (!affiliate) return;
     track('affiliate_click', {
