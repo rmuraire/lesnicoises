@@ -161,6 +161,37 @@ for p in ROOT.rglob("*.html"):
     if s != before:
         p.write_text(s, encoding="utf-8")
 
+
+# Editorial links should lead shortlist cards; affiliate links are secondary.
+def normalise_hotel_choice_actions(s, fr=False):
+    card_pat = re.compile(r'<article class="hotel-choice-card">[\s\S]*?</article>', re.I)
+    def card_repl(cm):
+        card = cm.group(0)
+        internal = re.search(r'<h3><a href="(/[^"]+)">', card, re.I)
+        if not internal:
+            return card
+        internal_href = internal.group(1)
+        rate = re.search(r'<a class="rate-link" href="([^"]+)"([^>]*)>[\s\S]*?</a>', card, re.I)
+        if not rate:
+            return card
+        rate_href = rate.group(1)
+        editorial_label = "Lire notre avis" if fr else "Read our take"
+        rates_label = "Voir les tarifs ↗" if fr else "Check rates ↗"
+        if rate_href.startswith("http"):
+            actions = (
+                f'<div class="hotel-card-actions">'
+                f'<a class="rate-link editorial-link" href="{internal_href}">{editorial_label}</a>'
+                f'<a class="rate-link affiliate-link" href="{rate_href}" rel="sponsored nofollow noopener" target="_blank">{rates_label}</a>'
+                f'</div>'
+            )
+        else:
+            actions = f'<div class="hotel-card-actions"><a class="rate-link editorial-link" href="{internal_href}">{editorial_label}</a></div>'
+        return card[:rate.start()] + actions + card[rate.end():]
+    return card_pat.sub(card_repl, s)
+
+write_if("stay/nice/index.html", lambda s: normalise_hotel_choice_actions(s, False))
+write_if("fr/dormir/nice/index.html", lambda s: normalise_hotel_choice_actions(s, True))
+
 # Validation.
 for rel in ("en/hotels/finder/index.html", "hotels/finder/index.html"):
     text = (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
