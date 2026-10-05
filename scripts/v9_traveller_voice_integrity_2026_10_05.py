@@ -210,6 +210,7 @@ def method_en(s):
     n, count = pat.subn(EN_CARD, s, count=1)
     if count != 1:
         raise RuntimeError("EN method traveller-voices card not found")
+    n = n.replace("Fictional editorial characters. Real places. A method you can read.", "Fictional Mametas characters. Real places. A method you can read.")
     return n
 
 def method_fr(s):
@@ -220,6 +221,7 @@ def method_fr(s):
     n, count = pat.subn(FR_CARD, s, count=1)
     if count != 1:
         raise RuntimeError("FR method traveller-voices card not found")
+    n = n.replace("Des personnages éditoriaux fictifs. Des lieux réels. Une méthode qu’on peut lire.", "Des personnages Mametas fictifs. Des lieux réels. Une méthode qu’on peut lire.")
     return n
 
 save_if("en/method/index.html", method_en)
