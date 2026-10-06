@@ -32,7 +32,8 @@ jobs:
             scripts/v7_editorial_audit_corrections_2026_10_04.py \
             scripts/v8_prescriber_credibility_gates_2026_10_04.py \
             scripts/v9_traveller_voice_integrity_2026_10_05.py \
-            scripts/v10_final_ux_closure_2026_10_05.py
+            scripts/v10_final_ux_closure_2026_10_05.py \
+            scripts/v11_claude_final_audit_core_2026_10_06.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
@@ -63,6 +64,9 @@ jobs:
 
       - name: Apply final UX closure
         run: python scripts/v10_final_ux_closure_2026_10_05.py
+
+      - name: Apply Claude final audit core fixes
+        run: python scripts/v11_claude_final_audit_core_2026_10_06.py
 
       - name: Syntax-check interactive UX scripts
         run: |
