@@ -177,15 +177,29 @@ def patch_hotel_budget_logic():
     old_trade="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
       var action = '';
       var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';"""
-    new_trade="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+    old_trade_editorial_actions="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+      var actions = [];
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';"""
+    budget_trade_prefix="""      var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
       if (budgetRaised) {
         tradeOff = (fr ? 'Budget : ' : 'Budget: ') + (priceSymbol[hotel.priceBand] || budgetSymbol || '') + (fr ? ', au-dessus de votre plafond. ' : ', above your ceiling. ') + tradeOff;
       }
-      var action = '';
+"""
+    budget_status_suffix="""      if (fitStatus && budgetRaised) fitStatus += fr ? ' · AU-DESSUS DU BUDGET' : ' · ABOVE BUDGET';"""
+    if "if (budgetRaised)" not in text:
+      if old_trade in text:
+        replacement = budget_trade_prefix + """      var action = '';
       var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
-      if (fitStatus && budgetRaised) fitStatus += fr ? ' · AU-DESSUS DU BUDGET' : ' · ABOVE BUDGET';"""
-    if old_trade not in text: raise RuntimeError("Hotel Fit tradeoff anchor not found")
-    text=text.replace(old_trade,new_trade,1)
+""" + budget_status_suffix
+        text=text.replace(old_trade,replacement,1)
+      elif old_trade_editorial_actions in text:
+        replacement = budget_trade_prefix + """      var actions = [];
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
+""" + budget_status_suffix
+        text=text.replace(old_trade_editorial_actions,replacement,1)
+      else:
+        raise RuntimeError("Hotel Fit tradeoff anchor not found")
+
 
     old="""      var relaxed = false;
       var rankedSource = matching;
