@@ -738,7 +738,18 @@
       });
       var ready = state.days && state.season && state.mobility && state.mood && state.pace;
       var submit = root.querySelector('[data-chooser-submit]');
-      if (submit) submit.disabled = !ready;
+      if (submit) {
+        submit.disabled = !ready;
+        var note = root.querySelector('[data-chooser-incomplete-note]');
+        if (!note) {
+          note = document.createElement('p');
+          note.className = 'chooser-submit-note';
+          note.setAttribute('data-chooser-incomplete-note', '');
+          submit.insertAdjacentElement('afterend', note);
+        }
+        note.textContent = ready ? '' : labels.incomplete;
+        note.hidden = ready;
+      }
       root.querySelectorAll('[data-step]').forEach(function (step) {
         step.hidden = false;
       });

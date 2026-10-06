@@ -861,3 +861,18 @@ body.hotel-detail-page .eyebrow{
     font-size:16px!important;
   }
 }
+
+
+/* Riviera Fit disabled-action explanation — 2026-10-06 */
+.chooser-submit-note{
+  margin:8px 0 0!important;
+  color:var(--mg-ink-soft,#5f6672)!important;
+  font-size:12px!important;
+  line-height:1.45!important;
+}
+.chooser-submit-note[hidden]{display:none!important}
+
+/* Cap d'Antibes shortlist hierarchy — 2026-10-06 */
+body .page-hero + .section > .wrap > h2{
+  font-family:var(--mg-serif,"Fraunces",Georgia,serif);
+}
