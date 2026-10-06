@@ -1056,7 +1056,8 @@ jobs:
               f"https://www.mametas.com/en/good-finds/?deploy={sha}": (
                   'RIVIERA AGENDA',
                   'Looking for the practical stuff?',
-                  'Nice Carnival: where to stay?',
+                  '/en/good-finds/nice-carnival/',
+                  'February 2027',
               ),
               f"https://www.mametas.com/en/about/?deploy={sha}": (
                   'about-mameta-2026-09-18.webp',
