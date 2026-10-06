@@ -80,7 +80,7 @@ def add_cover(text: str, src: str, alt: str) -> str:
     if 'class="article-cover"' in text:
         return text
     hero = re.search(
-        r"<header\\b[^>]*class=[\"'][^\"']*article-hero[^\"']*[\"'][^>]*>[\\s\\S]*?</header>",
+        r"<header\b[^>]*class=[\"'][^\"']*article-hero[^\"']*[\"'][^>]*>[\s\S]*?</header>",
         text,
         re.I,
     )
