@@ -136,6 +136,22 @@ for rel in ("en/good-finds/index.html","bons-plans/index.html"):
         return s
     write_if(rel,agenda)
 
+# Remove the expired September card from the live Now hub. Keep the archive URL itself
+# available for search/history, but do not present it as a current recommendation in October.
+for rel, href in (
+    ("en/good-finds/index.html", "/en/good-finds/september-2026/"),
+    ("bons-plans/index.html", "/bons-plans/septembre-2026/"),
+):
+    def remove_september_hub_card(s, href=href):
+        return re.sub(
+            rf'<a\b[^>]*href=["\']{re.escape(href)}["\'][^>]*>[\s\S]*?</a>',
+            '',
+            s,
+            count=1,
+            flags=re.I,
+        )
+    write_if(rel, remove_september_hub_card)
+
 # 6) Nice-in-the-rain: strip two exhibitions that ended in September if they survive upstream.
 for rel in ("en/good-finds/nice-in-the-rain/index.html","bons-plans/nice-sous-la-pluie/index.html"):
     def expired_exhibitions(s):
