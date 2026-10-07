@@ -97,6 +97,42 @@ def affiliate_from_detail(href: str) -> str | None:
     return None
 
 
+def neutralize_external_card_navigation(block: str) -> str:
+    """Keep reservation partners behind the explicit rate CTA only."""
+    media_patterns = (
+        re.compile(
+            r'<a(?P<pre>[^>]*)class=["\'](?P<class>[^"\']*hotel-choice-media[^"\']*)["\'](?P<mid>[^>]*)href=["\'](?P<href>https?://[^"\']+)["\'](?P<post>[^>]*)>(?P<body>[\s\S]*?)</a>',
+            re.I,
+        ),
+        re.compile(
+            r'<a(?P<pre>[^>]*)href=["\'](?P<href>https?://[^"\']+)["\'](?P<mid>[^>]*)class=["\'](?P<class>[^"\']*hotel-choice-media[^"\']*)["\'](?P<post>[^>]*)>(?P<body>[\s\S]*?)</a>',
+            re.I,
+        ),
+    )
+
+    def media_repl(m: re.Match[str]) -> str:
+        href = m.group("href").lower()
+        if not any(host in href for host in AFFILIATE_HOSTS):
+            return m.group(0)
+        return '<div class="hotel-choice-media">' + m.group("body") + '</div>'
+
+    for pat in media_patterns:
+        block = pat.sub(media_repl, block)
+
+    h3_pat = re.compile(
+        r'(<h3>\s*)<a\b[^>]*href=["\'](?P<href>https?://[^"\']+)["\'][^>]*>(?P<label>[\s\S]*?)</a>(\s*</h3>)',
+        re.I,
+    )
+
+    def h3_repl(m: re.Match[str]) -> str:
+        href = m.group("href").lower()
+        if not any(host in href for host in AFFILIATE_HOSTS):
+            return m.group(0)
+        return m.group(1) + m.group("label") + m.group(4)
+
+    return h3_pat.sub(h3_repl, block)
+
+
 def patch_hotel_choice_cards(rel: str) -> None:
     p = ROOT / rel
     if not p.exists():
@@ -107,7 +143,7 @@ def patch_hotel_choice_cards(rel: str) -> None:
     pat = re.compile(r'<article\b(?P<attrs>[^>]*)class=["\'](?P<class>[^"\']*hotel-choice-card[^"\']*)["\'](?P<tail>[^>]*)>(?P<body>[\s\S]*?)</article>', re.I)
 
     def repl(m: re.Match[str]) -> str:
-        block = m.group(0)
+        block = neutralize_external_card_navigation(m.group(0))
         internal = re.search(r'href=["\'](?P<href>/(?:en/)?hotels/[^"\']+/[^"\']+/)["\']', block, re.I)
         detail = internal.group("href") if internal else None
         detail_exists = False
@@ -200,20 +236,33 @@ def audit_cards() -> list[str]:
         s = p.read_text(encoding="utf-8", errors="ignore")
         rp = rel.as_posix()
 
-        # Hotel choice cards have a clean <article> boundary.
+        # Hotel choice cards have a clean <article> boundary. A batch-thumb is
+        # a genuine visual (background image sprite) and counts as media.
         for m in re.finditer(r'<article\b[^>]*class=["\'][^"\']*hotel-choice-card[^"\']*["\'][^>]*>([\s\S]*?)</article>', s, re.I):
             block = m.group(1)
-            if "<img" not in block.lower():
-                problems.append(rp + " :: hotel-choice-card without image")
+            if "<img" not in block.lower() and "batch-thumb" not in block:
+                problems.append(rp + " :: hotel-choice-card without visual")
+                break
+            # Only the explicit rate CTA may point directly to a reservation partner.
+            if re.search(r'<(?:a)\b[^>]*class=["\'][^"\']*hotel-choice-media[^"\']*["\'][^>]*href=["\']https?://', block, re.I):
+                problems.append(rp + " :: hotel-choice media links directly to reservation partner")
+                break
+            if re.search(r'<h3>\s*<a\b[^>]*href=["\']https?://', block, re.I):
+                problems.append(rp + " :: hotel-choice title links directly to reservation partner")
                 break
 
-        # Legacy hotel cards are compact. Look ahead only to the next card boundary.
-        starts = [m.start() for m in re.finditer(r'<div\b[^>]*class=["\'][^"\']*\bhotel-card\b[^"\']*["\'][^>]*>', s, re.I)]
+        # Legacy hotel cards: match the exact class token. "hotel-card-body" is
+        # not another card and must never create a false media failure.
+        starts = []
+        for sm in re.finditer(r'<div\b(?P<attrs>[^>]*)>', s, re.I):
+            cm = re.search(r'\bclass=["\']([^"\']*)["\']', sm.group("attrs"), re.I)
+            if cm and "hotel-card" in cm.group(1).split():
+                starts.append(sm.start())
         for i, start in enumerate(starts):
             end = starts[i + 1] if i + 1 < len(starts) else min(len(s), start + 3500)
             block = s[start:end]
-            if "hotel-card-body" in block and "<img" not in block.lower():
-                problems.append(rp + " :: hotel-card without image")
+            if "hotel-card-body" in block and "<img" not in block.lower() and "batch-thumb" not in block:
+                problems.append(rp + " :: hotel-card without visual")
                 break
     return problems
 
@@ -245,7 +294,10 @@ def audit_presentation() -> None:
         s = p.read_text(encoding="utf-8", errors="ignore")
         if "practical-guide-page" not in s:
             errors.append(rel + ": practical guide page scope missing")
-        if "/assets/editorial/iles-de-lerins-bruno-attuyt.webp" not in s:
+        if not any(src in s for src in (
+            "/assets/editorial/iles-de-lerins-bruno-attuyt.webp",
+            "/assets/editorial/iles-lerins.jpg",
+        )):
             errors.append(rel + ": Lérins local visual missing")
 
     errors.extend(audit_cards())
