@@ -331,6 +331,10 @@ def audit_presentation() -> None:
         p = ROOT / rel
         if not p.exists():
             continue
+        # Hotel Fit legitimately repeats "Pas de préférence" as filter labels;
+        # those are UI choices, not opposition-style editorial fragments.
+        if rel.endswith("hotels/finder/index.html"):
+            continue
         txt = visible_text(p.read_text(encoding="utf-8", errors="ignore"))
         fragments = len(re.findall(r'(?:(?:^|[.!?]\s+)(?:Not|Pas)\s+\w+)', txt))
         if fragments > 2:
