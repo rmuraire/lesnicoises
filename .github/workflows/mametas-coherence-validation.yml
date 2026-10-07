@@ -44,6 +44,9 @@ jobs:
             scripts/v19_final_post_parity_cleanup_2026_10_07.py scripts/v20_final_audit_heading_hierarchy_2026_10_07.py scripts/v21_final_audit_hotel_depth_2026_10_07.py \
             scripts/v22_final_hotel_fit_wording_guard_2026_10_07.py scripts/v23_css_foundation_2026_10_07.py scripts/v24_final_presentation_stabilization_2026_10_07.py scripts/v25_browser_smoke_2026_10_07.py
 
+      - name: Materialize Riviera Fit canonical route
+        run: python scripts/v3_riviera_fit_route_2026_09_25.py
+
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
 
