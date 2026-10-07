@@ -112,7 +112,22 @@ def unwrap_affiliate_titles_and_media():
         rel=p.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore"); old=s
-        s=media_pat.sub(lambda m:m.group(3) if affiliate(m.group(2)) else m.group(0),s)
+        def unwrap_media(m):
+            if not affiliate(m.group(2)):
+                return m.group(0)
+            attrs=m.group(1)
+            body=m.group(3)
+            cm=re.search(r'class=["\']([^"\']*)["\']',attrs,re.I)
+            classes=cm.group(1).split() if cm else []
+            # Preserve the structural media box even when the reservation link
+            # is removed. This keeps every hotel card on the canonical 3:2
+            # geometry instead of leaving a sprite/image orphaned in the card.
+            if "hotel-choice-media" in classes:
+                return '<div class="hotel-choice-media">'+body+'</div>'
+            if "hotel-card-media" in classes:
+                return '<div class="hotel-card-media">'+body+'</div>'
+            return body
+        s=media_pat.sub(unwrap_media,s)
         s=title_pat.sub(lambda m:m.group(1)+m.group(4)+m.group(5) if affiliate(m.group(3)) else m.group(0),s)
         def unwrap_card(m):
             body=m.group(3)

@@ -72,6 +72,12 @@ def normalize_anchor(m,fr,preserve_riviera=False):
     low=label.lower()
     href_low=href.lower()
     has_img="<img" in inner.lower()
+    cm=re.search(r'\sclass=["\']([^"\']*)["\']',attrs,re.I)
+    anchor_classes=set(cm.group(1).split()) if cm else set()
+    structural_link=bool(anchor_classes.intersection({
+        "practical-link","decision-card","base-card","place-card","stay-card",
+        "home-experience-card","home-journey-step","chooser-hotel-card"
+    }))
 
     affiliate=any(x in href_low for x in (
         "booking.com","kqzyfj.com","expedia.","getyourguide.","gyg.me"
@@ -103,12 +109,12 @@ def normalize_anchor(m,fr,preserve_riviera=False):
             return f"<a{attrs}>{inner}</a>"
 
     # Tool launch labels.
-    if (not preserve_riviera) and re.match(r'^/(?:en/)?(?:riviera-fit|riviera-chooser)/',href):
+    if (not structural_link) and (not preserve_riviera) and re.match(r'^/(?:en/)?(?:riviera-fit|riviera-chooser)/',href):
         if any(x in low for x in ("riviera fit","riviera chooser","chooser")):
             attrs=add_classes(attrs,"btn","btn--primary")
             inner="Tester Riviera Fit" if fr else "Try Riviera Fit"
             return f"<a{attrs}>{inner}</a>"
-    if re.match(r'^/(?:en/)?hotels/finder/',href):
+    if (not structural_link) and re.match(r'^/(?:en/)?hotels/finder/',href):
         if any(x in low for x in ("hotel fit","matcher","shortlist")):
             attrs=add_classes(attrs,"btn","btn--primary")
             inner="Tester Hotel Fit" if fr else "Try Hotel Fit"

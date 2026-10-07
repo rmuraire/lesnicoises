@@ -1,0 +1,381 @@
+/*
+ * MAMETAS VISUAL GUARDRAILS — 2026-10-07
+ *
+ * Conservative final layer. The visual baseline remains the proven site.css,
+ * v3.css and shell from the early-October release. This file only protects the
+ * cross-site invariants that were repeatedly broken by later build passes.
+ *
+ * Loaded as the LAST stylesheet by v23_css_foundation_2026_10_07.py.
+ */
+
+/* 1) One restrained editorial heading scale. Homepage-specific heroes remain
+   untouched: this targets the recurring page/article families only. */
+.page-hero h1,
+.article-hero h1,
+.article h1,
+.hotel-detail h1,
+.culture-detail h1,
+.core-hub-final .article-hero h1,
+.core-hub-final .page-hero h1{
+  max-width:14ch!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(46px,5.35vw,72px)!important;
+  font-weight:500!important;
+  letter-spacing:-.045em!important;
+  line-height:.98!important;
+  text-transform:none!important;
+}
+
+.section h2,
+.v3-section .section-heading h2,
+.article h2,
+.article-body h2,
+.hotel-detail h2,
+.culture-detail h2,
+.chooser-intro h2,
+.hotel-style-heading h2,
+.next-step h2,
+.practical-title h2,
+.explore-practical .practical-intro h2,
+.family-section-heading{
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(32px,3.6vw,46px)!important;
+  font-weight:500!important;
+  letter-spacing:-.035em!important;
+  line-height:1.08!important;
+}
+
+.card h3,
+.hotel-card h3,
+.hotel-choice-copy h3,
+.stay-card h3,
+.culture-card h3,
+.decision-card h3,
+.practical-link h3,
+.article h3,
+.article-body h3,
+.hotel-engine-result h3,
+.chooser-hotel-card h4{
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(24px,2.25vw,29px)!important;
+  font-weight:500!important;
+  line-height:1.1!important;
+}
+
+/* 2) Buttons keep each family's colour language, but share geometry.
+   Full-width is reserved for mobile decision controls. */
+.button,
+.btn,
+.cta-button,
+.rate-link,
+.affiliate-hotel-link,
+.hotel-engine-actions .button,
+.engine-submit-row .button,
+.chooser-actions .button,
+.chooser-escape .button,
+.hotel-card-actions .rate-link{
+  width:auto!important;
+  min-width:0!important;
+  min-height:44px!important;
+  height:auto!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  padding:11px 16px!important;
+  border-radius:0!important;
+  font-size:11px!important;
+  font-weight:700!important;
+  letter-spacing:.08em!important;
+  line-height:1.15!important;
+}
+
+.button,
+.btn,
+.cta-button,
+.rate-link,
+.affiliate-hotel-link,
+.hotel-card-actions .rate-link{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+}
+
+/* 3) Hotel cards: same media geometry, same internal rhythm, no stretched
+   landscape strips. The 4:3 ratio is the pre-audit visual baseline. */
+.hotel-card,
+.hotel-choice-card{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  overflow:hidden;
+}
+
+.hotel-card-media,
+.hotel-choice-media{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  height:auto!important;
+  flex:0 0 auto!important;
+  aspect-ratio:4/3!important;
+  overflow:hidden!important;
+}
+
+.hotel-card-media>img,
+.hotel-choice-media>img,
+.hotel-card-media>.batch-thumb,
+.hotel-choice-media>.batch-thumb{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  object-fit:cover!important;
+}
+
+.hotel-card-body,
+.hotel-choice-copy{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  padding:24px!important;
+}
+
+.hotel-card-body>p,
+.hotel-choice-copy>p{
+  width:100%;
+}
+
+.hotel-card .more,
+.hotel-choice-copy .rate-link,
+.hotel-choice-copy .catch{
+  margin-top:auto;
+}
+
+.hotel-choice-tags .hotel-price-band,
+.hotel-choice-tags span{
+  border-radius:0!important;
+}
+
+.hotel-card-body>.btn,
+.hotel-choice-copy>.btn{
+  margin-top:12px!important;
+}
+.hotel-card-body>.btn+.btn,
+.hotel-choice-copy>.btn+.btn{
+  margin-top:8px!important;
+}
+
+@media(min-width:761px){
+  .hotel-choice-copy .rate-link,
+  .hotel-choice-copy>.btn{
+    align-self:flex-start!important;
+    max-width:100%!important;
+    white-space:nowrap!important;
+  }
+}
+
+/* 4) Homepage journey spine: navigation cells must never be turned into two
+   adjacent navy CTA slabs by global label normalisation. */
+.home-journey-spine{
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+  background:rgba(255,253,248,.72)!important;
+}
+.home-journey-inner{
+  display:grid!important;
+  grid-template-columns:minmax(150px,.62fr) repeat(4,minmax(0,1fr))!important;
+  align-items:stretch!important;
+}
+.home-journey-label{
+  display:flex!important;
+  align-items:center!important;
+  padding:16px 18px 16px 0!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.14em!important;
+  line-height:1.4!important;
+  text-transform:uppercase!important;
+}
+.home-journey-inner>a,
+.home-journey-inner>a.btn,
+.home-journey-inner>a.btn--primary{
+  width:auto!important;
+  min-width:0!important;
+  min-height:82px!important;
+  padding:13px 16px!important;
+  display:grid!important;
+  grid-template-columns:auto 1fr!important;
+  column-gap:10px!important;
+  align-content:center!important;
+  border:0!important;
+  border-left:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-radius:0!important;
+  background:transparent!important;
+  color:var(--ink,#14213d)!important;
+  font-size:inherit!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:normal!important;
+  text-align:left!important;
+  text-decoration:none!important;
+  text-transform:none!important;
+}
+.home-journey-inner>a:hover,
+.home-journey-inner>a:focus-visible,
+.home-journey-inner>a.btn:hover,
+.home-journey-inner>a.btn:focus-visible{
+  background:var(--white,#fffdf8)!important;
+  color:var(--ink,#14213d)!important;
+}
+.home-journey-inner>a b{
+  grid-row:1/3!important;
+  color:var(--coral,#d96c4e)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:16px!important;
+  font-style:italic!important;
+  font-weight:500!important;
+}
+.home-journey-inner>a strong{
+  color:var(--ink,#14213d)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:18px!important;
+  font-weight:500!important;
+  letter-spacing:0!important;
+  line-height:1.08!important;
+  text-transform:none!important;
+}
+.home-journey-inner>a small{
+  margin-top:4px!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font-size:11px!important;
+  font-weight:400!important;
+  letter-spacing:0!important;
+  line-height:1.4!important;
+  text-transform:none!important;
+}
+
+/* 5) What-to-book / Que réserver: individual decisions read as intentional
+   editorial panels instead of loose text blocks. */
+.practical-guide-page .article>.place{
+  margin:16px 0!important;
+  padding:24px!important;
+  border:1px solid var(--line,rgba(20,33,61,.16))!important;
+  background:rgba(255,253,248,.42)!important;
+}
+.practical-guide-page .article>.place .address{
+  margin:0 0 9px!important;
+  font-size:10px!important;
+  font-weight:700!important;
+  letter-spacing:.13em!important;
+  line-height:1.4!important;
+}
+.practical-guide-page .article>.place h3{
+  margin:0 0 10px!important;
+}
+.practical-guide-page .article>.place p:last-child{
+  margin-bottom:0!important;
+}
+.practical-guide-page .booking-highlight-visual{
+  margin:18px 0 20px!important;
+}
+.practical-guide-page .booking-highlight-visual img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:16/9!important;
+  object-fit:cover!important;
+}
+.practical-guide-page .article>.place .spot-logistics{
+  margin-top:16px!important;
+  padding-top:13px!important;
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
+}
+.practical-guide-page .fact-grid{
+  gap:14px!important;
+}
+
+/* 6) Undo one late shell experiment: destination section anchors are useful,
+   but do not need pill styling to be touchable. */
+body.rg-destination .article-aside a{
+  border-radius:0!important;
+}
+
+@media(max-width:1050px){
+  .home-journey-inner{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+  .home-journey-label{
+    grid-column:1/-1!important;
+    padding:13px 0!important;
+    border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+  }
+  .home-journey-inner>a:nth-of-type(odd){
+    border-left:0!important;
+  }
+  .home-journey-inner>a{
+    border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+  }
+}
+
+@media(max-width:760px){
+  .page-hero h1,
+  .article-hero h1,
+  .article h1,
+  .hotel-detail h1,
+  .culture-detail h1,
+  .core-hub-final .article-hero h1,
+  .core-hub-final .page-hero h1{
+    max-width:12ch!important;
+    font-size:clamp(38px,11vw,52px)!important;
+    line-height:1!important;
+  }
+
+  .section h2,
+  .v3-section .section-heading h2,
+  .article h2,
+  .article-body h2,
+  .hotel-detail h2,
+  .culture-detail h2,
+  .chooser-intro h2,
+  .hotel-style-heading h2,
+  .next-step h2,
+  .practical-title h2,
+  .family-section-heading{
+    font-size:clamp(29px,8vw,36px)!important;
+  }
+
+  .home-journey-inner{
+    grid-template-columns:1fr!important;
+  }
+  .home-journey-label{
+    padding-left:0!important;
+  }
+  .home-journey-inner>a,
+  .home-journey-inner>a.btn,
+  .home-journey-inner>a.btn--primary{
+    min-height:68px!important;
+    padding:11px 4px!important;
+    border-left:0!important;
+  }
+
+  .practical-guide-page .article>.place{
+    margin:12px 0!important;
+    padding:19px!important;
+  }
+
+  .hotel-grid,
+  .hotel-choice-grid{
+    grid-template-columns:1fr!important;
+  }
+
+  .hotel-card-body>.btn,
+  .hotel-choice-copy>.btn,
+  .engine-submit-row .button,
+  .hotel-engine-actions .button,
+  .chooser-actions .button{
+    width:100%!important;
+  }
+}

@@ -132,8 +132,8 @@ def unify_affiliate_disclosures():
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore"); old=s
         lang=html_lang(s)
-        # Only disclosure elements/classes, never Method prose.
-        pat=re.compile(r'<p([^>]*class=["\'][^"\']*(?:affiliate|disclosure)[^"\']*["\'][^>]*)>[\s\S]*?</p>',re.I)
+        # Only affiliate disclosure classes; generic .disclosure is editorial transparency.
+        pat=re.compile(r'<p([^>]*class=["\'][^"\']*affiliate[^"\']*["\'][^>]*)>[\s\S]*?</p>',re.I)
         s=pat.sub(lambda m:f'<p{m.group(1)}>{canonical[lang]}</p>',s)
         if s!=old:
             p.write_text(s,encoding="utf-8"); count+=1
