@@ -56,8 +56,6 @@ PAGES = [
     ("/plages/nice/", "editorial"),
     ("/en/gay-french-riviera/", "editorial"),
     ("/cote-dazur-gay/", "editorial"),
-    ("/en/solo-female-french-riviera/", "editorial"),
-    ("/cote-dazur-femme-solo/", "editorial"),
     ("/en/restaurants/", "editorial"),
     ("/en/culture/", "editorial"),
 ]
