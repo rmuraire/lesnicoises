@@ -725,7 +725,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .mametas-share-button{
   appearance:none;
   border:1px solid currentColor;
-  border-radius:999px;
+  border-radius:0;
   background:transparent;
   color:inherit;
   cursor:pointer;
