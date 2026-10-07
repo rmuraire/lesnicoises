@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 import html as htmlmod
 import re
+import os
 
 ROOT=Path(__file__).resolve().parents[1]
 SKIP={".git",".github","scripts","docs","backup",
@@ -28,6 +29,7 @@ def visible_text(s):
 
 errors=[]
 warnings=[]
+SKIP_MATERIALIZED=os.environ.get("MAMETAS_SKIP_MATERIALIZED")=="1"
 
 def err(msg): errors.append(msg)
 def warn(msg): warnings.append(msg)
@@ -91,7 +93,16 @@ for p,rel in public_html():
 
     if "commons.wikimedia.org" in s or "upload.wikimedia.org" in s:
         remote_wiki.append(rp)
-    if ", ," in txt or ", ." in txt or re.search(r'\s+,',txt):
+    # Broken punctuation only inside text nodes. Stripping tags with spaces
+    # creates false positives around inline <strong>/<a> boundaries.
+    node_source=re.sub(r'<(script|style)\\b[^>]*>[\\s\\S]*?</\\1>','',s,flags=re.I)
+    nodes=re.split(r'(<[^>]+>)',node_source)
+    comma_bad=False
+    for ni in range(0,len(nodes),2):
+        node=htmlmod.unescape(nodes[ni])
+        if ", ," in node or ", ." in node or re.search(r'[ \\t\\u00a0\\u202f]+,',node):
+            comma_bad=True; break
+    if comma_bad:
         bad_commas.append(rp)
     if "See official information below." in txt or "Voir les informations officielles ci-dessous." in txt:
         placeholders.append(rp)
@@ -140,7 +151,8 @@ for p,rel in public_html():
         repeat_templates.append(rp)
 
 if bad_commas: err("broken comma spacing/sequences: "+", ".join(bad_commas[:20]))
-if remote_wiki: err("remote Wikimedia survives: "+", ".join(remote_wiki[:30]))
+if remote_wiki and not SKIP_MATERIALIZED: err("remote Wikimedia survives: "+", ".join(remote_wiki[:30]))
+elif remote_wiki: warn("remote Wikimedia check deferred to production materialisation")
 if placeholders: err("culture logistics placeholders survive: "+", ".join(placeholders[:20]))
 if stale_dates: err("past September dates still presented as current: "+", ".join(stale_dates[:20]))
 if dash_pages: err("dash punctuation survives on "+str(len(dash_pages))+" pages: "+", ".join(dash_pages[:20]))
@@ -162,15 +174,16 @@ for tok in (
 if "border-radius:999px" in css:
     warn("pill radius remains somewhere in CSS; verify whether it is a non-button decorative pill")
 
-# 17 hotel selection hreflang.
+# 17 hotel selection hreflang (materialised by v15 in production).
 cities=("cannes","antibes","beaulieu-sur-mer","monaco","menton","mougins","saint-tropez","saint-paul-de-vence","villefranche-sur-mer")
-for city in cities:
-    for rel in (f"en/hotels/{city}/index.html",f"hotels/{city}/index.html"):
-        p=ROOT/rel
-        if not p.exists(): continue
-        s=p.read_text(encoding="utf-8",errors="ignore")
-        if 'hreflang="en"' not in s or 'hreflang="fr"' not in s:
-            err("hreflang missing: "+rel)
+if not SKIP_MATERIALIZED:
+    for city in cities:
+        for rel in (f"en/hotels/{city}/index.html",f"hotels/{city}/index.html"):
+            p=ROOT/rel
+            if not p.exists(): continue
+            s=p.read_text(encoding="utf-8",errors="ignore")
+            if 'hreflang="en"' not in s or 'hreflang="fr"' not in s:
+                err("hreflang missing: "+rel)
 
 # 20 hotel depth diagnostic. Only inspect actual hotel-detail pages.
 short_hotels=[]
