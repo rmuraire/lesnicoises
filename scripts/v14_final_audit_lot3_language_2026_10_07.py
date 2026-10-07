@@ -38,8 +38,8 @@ def clean_text_node(x,lang,restaurant=False):
     # relationship explicit without introducing another repeated tic.
     x=re.sub(r'\s+[—–]\s+', ': ', x)
     # Also catch dashes attached to words, while preserving numeric ranges such as 9–28.
-    x=re.sub(r'(?<=[A-Za-zÀ-ÖØ-öø-ÿ])\s*[—–]\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ': ', x)
-    x=re.sub(r'(?<=[,.;!?])\s*[—–]\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ' ', x)
+    x=re.sub(r'(?<=[A-Za-zÀ-ÖØ-öø-ÿ])\s*—\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ': ', x)
+    x=re.sub(r'(?<=[,.;!?])\s*—\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ' ', x)
 
     # Short hyphen as punctuation is concentrated in restaurant decision lines.
     if restaurant:
@@ -151,8 +151,9 @@ def validate():
         visible=re.sub(r'<(script|style)\b[^>]*>[\s\S]*?</\1>','',s,flags=re.I)
         text=re.sub(r'<[^>]+>',' ',visible)
         text=unprotect(text)
-        dash_check=re.sub(r'(?<=\d)[–—](?=\d)','',text)
-        if re.search(r'[A-Za-zÀ-ÖØ-öø-ÿ]\s*[—–]|[—–]\s*[A-Za-zÀ-ÖØ-öø-ÿ]|\s[—–]\s',dash_check):
+        # En-dash without spaces is legitimate in ranges/routes (9–28, Nice–Cannes).
+        # Flag all em-dashes and only spaced en-dashes as prose punctuation.
+        if "—" in text or re.search(r'\s–\s', text):
             bad_dash.append(rel.as_posix())
         if html_lang(s)=="fr":
             if re.search(r' (?=[?!;»])',text) or re.search(r' (?=:)',text):
