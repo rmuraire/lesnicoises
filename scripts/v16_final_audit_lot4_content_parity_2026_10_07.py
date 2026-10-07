@@ -125,10 +125,10 @@ def patch_gay_beaches_fr():
 <div class="place"><h3>Saint-Laurent-d’Èze est-elle naturiste ?</h3><p class="why">C’est l’option la plus orientée naturisme de ce guide, mais l’accès demande davantage de préparation que les plages niçoises.</p></div>
 <div class="place"><h3>Peut-on y aller sans voiture ?</h3><p class="why">Oui pour les plages couvertes ici, mais « possible » ne veut pas dire « sans effort ». Castel est la plus simple ; Saint-Laurent-d’Èze demande le plus d’organisation.</p></div>
 '''
-        if 'Y a-t-il une plage gay à Nice ?' not in s:
-            marker='<div class="sources"><h2>Sources vérifiées</h2>'
-            if marker not in s: raise RuntimeError("FR gay beaches sources marker missing")
-            s=s.replace(marker,faq+marker,1)
+        if 'Y a-t-il une plage gay à Nice' not in s:
+            m=re.search(r'<div class="sources">\s*<h2[^>]*>\s*Sources vérifiées\s*</h2>',s,re.I)
+            if not m: raise RuntimeError("FR gay beaches sources marker missing")
+            s=s[:m.start()]+faq+s[m.start():]
         return s
     rw(rel,fn)
 
