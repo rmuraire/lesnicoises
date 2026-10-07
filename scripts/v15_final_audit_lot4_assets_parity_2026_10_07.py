@@ -37,7 +37,7 @@ def is_wiki(url:str)->bool:
 def localise_wikimedia():
     outdir=ROOT/"assets"/"editorial"/"culture"/"local"
     outdir.mkdir(parents=True,exist_ok=True)
-    url_pat=re.compile(r'https://(?:commons|upload)\.wikimedia\.org/[^\\s"\'<>]+',re.I)
+    url_pat=re.compile(r'https://(?:commons|upload)\.wikimedia\.org/[^\s"\'<>]+',re.I)
     seen={}
     changed=0
     downloaded=0
