@@ -63,7 +63,7 @@ def add_classes(attrs,*classes):
         return attrs[:m.start()]+f' class="{value}"'+attrs[m.end():]
     return attrs+f' class="{value}"'
 
-def normalize_anchor(m,fr):
+def normalize_anchor(m,fr,preserve_riviera=False):
     attrs,inner=m.group(1),m.group(2)
     hm=re.search(r'href=["\']([^"\']+)["\']',attrs,re.I)
     if not hm: return m.group(0)
@@ -103,7 +103,7 @@ def normalize_anchor(m,fr):
             return f"<a{attrs}>{inner}</a>"
 
     # Tool launch labels.
-    if re.match(r'^/(?:en/)?(?:riviera-fit|riviera-chooser)/',href):
+    if (not preserve_riviera) and re.match(r'^/(?:en/)?(?:riviera-fit|riviera-chooser)/',href):
         if any(x in low for x in ("riviera fit","riviera chooser","chooser")):
             attrs=add_classes(attrs,"btn","btn--primary")
             inner="Tester Riviera Fit" if fr else "Try Riviera Fit"
@@ -154,7 +154,13 @@ def patch_html_components():
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore"); old=s
         fr=bool(re.search(r'<html\b[^>]*\blang=["\']fr',s,re.I))
-        s=re.sub(r'<a\b([^>]*)>([\s\S]*?)</a>',lambda m:normalize_anchor(m,fr),s,flags=re.I)
+        preserve_riviera = "/riviera-guide/" in ("/" + rel.as_posix())
+        s=re.sub(r'<a\b([^>]*)>([\s\S]*?)</a>',lambda m:normalize_anchor(m,fr,preserve_riviera),s,flags=re.I)
+        # B14 exact live headline variants still present in the Oct 7 crawl.
+        s=s.replace("Carnival, Ironman, an exhibition closing soon. The Riviera runs on its own calendar.",
+                    "Carnival, MIPIM, Ironman. The Riviera has its own calendar.")
+        s=s.replace("Carnaval, Ironman, une expo qui ferme bientôt. La Riviera a son propre calendrier.",
+                    "Carnaval, MIPIM, Ironman. La Riviera a son propre calendrier.")
         if rel.as_posix() in FAQ_PAGES:
             s=convert_open_faq(s)
         if s!=old:
