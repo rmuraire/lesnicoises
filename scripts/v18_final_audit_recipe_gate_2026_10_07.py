@@ -95,12 +95,12 @@ for p,rel in public_html():
         remote_wiki.append(rp)
     # Broken punctuation only inside text nodes. Stripping tags with spaces
     # creates false positives around inline <strong>/<a> boundaries.
-    node_source=re.sub(r'<(script|style)\\b[^>]*>[\\s\\S]*?</\\1>','',s,flags=re.I)
+    node_source=re.sub(r'<(script|style)\b[^>]*>[\s\S]*?</\1>','',s,flags=re.I)
     nodes=re.split(r'(<[^>]+>)',node_source)
     comma_bad=False
     for ni in range(0,len(nodes),2):
         node=htmlmod.unescape(nodes[ni])
-        if ", ," in node or ", ." in node or re.search(r'[ \\t\\u00a0\\u202f]+,',node):
+        if ", ," in node or ", ." in node or re.search(r'[ \t\u00a0\u202f]+,',node):
             comma_bad=True; break
     if comma_bad:
         bad_commas.append(rp)
