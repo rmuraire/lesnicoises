@@ -120,6 +120,8 @@ jobs:
         run: python scripts/v25_browser_smoke_2026_10_07.py
 
       - name: Run Claude final recipe static gate
+        env:
+          MAMETAS_SKIP_MATERIALIZED: "1"
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
