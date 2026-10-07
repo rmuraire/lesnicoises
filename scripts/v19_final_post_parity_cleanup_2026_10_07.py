@@ -90,6 +90,13 @@ def unwrap_affiliate_titles_and_media():
       r'(<h3\b[^>]*>)\s*<a\b([^>]*href=["\']([^"\']+)["\'][^>]*)>([\s\S]*?)</a>\s*(</h3>)',
       re.I
     )
+    # Some showcase cards wrap the entire image/title card in an affiliate
+    # anchor. Unwrap those too; the explicit rate button remains the only
+    # reservation action.
+    card_pat=re.compile(
+      r'<a\b([^>]*href=["\']([^"\']+)["\'][^>]*)>([\s\S]*?)</a>',
+      re.I
+    )
     def affiliate(url): return any(x in url.lower() for x in AFFILIATE_HOST_TOKENS)
 
     for p in ROOT.rglob("*.html"):
@@ -98,6 +105,13 @@ def unwrap_affiliate_titles_and_media():
         s=p.read_text(encoding="utf-8",errors="ignore"); old=s
         s=media_pat.sub(lambda m:m.group(3) if affiliate(m.group(2)) else m.group(0),s)
         s=title_pat.sub(lambda m:m.group(1)+m.group(4)+m.group(5) if affiliate(m.group(3)) else m.group(0),s)
+        def unwrap_card(m):
+            body=m.group(3)
+            if not affiliate(m.group(2)): return m.group(0)
+            if re.search(r'<img\b|<h[1-4]\b|class=["\'][^"\']*(?:hotel-card|hotel-choice|stay-card)',body,re.I):
+                return body
+            return m.group(0)
+        s=card_pat.sub(unwrap_card,s)
         if s!=old:
             p.write_text(s,encoding="utf-8"); changed+=1
     print("affiliate title/media wrappers removed on",changed,"pages")
