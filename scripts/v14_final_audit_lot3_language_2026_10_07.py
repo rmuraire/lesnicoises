@@ -124,7 +124,7 @@ def patch_dynamic_js():
 def unify_affiliate_disclosures():
     canonical={
       "en":"Affiliate links: Mametas may earn a commission at no extra cost to you. Selection stays editorial.",
-      "fr":"Liens affiliés : Mametas peut percevoir une commission, sans coût pour vous. La sélection reste éditoriale.",
+      "fr":"Liens affiliés : Mametas peut percevoir une commission, sans coût pour vous. La sélection reste éditoriale.",
     }
     count=0
     for p in ROOT.rglob("*.html"):
