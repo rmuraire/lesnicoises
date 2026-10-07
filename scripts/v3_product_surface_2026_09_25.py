@@ -193,8 +193,8 @@ def add_css():
 
 def validate():
     checks = {
-        "index.html": ("MAMETAS RIVIERA FIT · THE CALL", "EXAMPLE · YOUR TRIP", "THE MAMETAS CALL", "Try Riviera Fit", "Explore Stay", "SHORT SELECTION · WHERE TO STAY IN NICE"),
-        "fr/index.html": ("MAMETAS RIVIERA FIT · LA RECO", "EXEMPLE · VOTRE SÉJOUR", "LA RECO MAMETAS", "Tester Riviera Fit", "Explorer la rubrique Dormir", "SÉLECTION COURTE · OÙ DORMIR À NICE"),
+        "index.html": ("MAMETAS RIVIERA FIT · THE CALL", "EXAMPLE · YOUR TRIP", "THE MAMETAS CALL", "Try Riviera Fit", "Hotel Fit", "SHORT SELECTION · WHERE TO STAY IN NICE"),
+        "fr/index.html": ("MAMETAS RIVIERA FIT · LA RECO", "EXEMPLE · VOTRE SÉJOUR", "LA RECO MAMETAS", "Tester Riviera Fit", "Hotel Fit", "SÉLECTION COURTE · OÙ DORMIR À NICE"),
         "riviera-chooser/index.html": ("MAMETAS RIVIERA FIT · LA RECO",),
         "en/riviera-chooser/index.html": ("MAMETAS RIVIERA FIT · THE CALL",),
         "hotels/finder/index.html": ("HOTEL FIT · LE MATCHING HÔTELIER MAMETAS", "Cinq choix. Puis seulement les hôtels qui collent."),
