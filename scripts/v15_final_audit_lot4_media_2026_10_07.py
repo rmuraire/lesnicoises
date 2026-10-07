@@ -24,6 +24,7 @@ DOWNLOADS={
   "musee-explorations-cannes-wikimedia.webp":"https://upload.wikimedia.org/wikipedia/commons/0/09/Musee_de_la_Castre%2C_Cannes%2C_Provence-Alpes-C%C3%B4te_d%27Azur%2C_France_-_panoramio.jpg",
   "musee-cocteau-bastion-wikimedia.webp":"https://upload.wikimedia.org/wikipedia/commons/6/60/Le_mus%C3%A9e_du_Bastion_Jean_Cocteau_%28Menton%2C_France%29_%2833757795078%29.jpg",
   "musee-oceanographique-monaco-wikimedia.webp":"https://upload.wikimedia.org/wikipedia/commons/7/72/Mus%C3%A9e_Oc%C3%A9anographique_de_Monaco.jpg",
+  "nice-vieux-nice-wikimedia.webp":"https://upload.wikimedia.org/wikipedia/commons/1/16/Nice_Vieux-Nice_1.jpg",
 }
 
 def fetch_image(name,url):
@@ -61,6 +62,7 @@ MAP={
   "Mus%C3%A9e%20Matisse%20de%20Nice.jpg":"/assets/editorial/culture-musee-matisse-v2.webp",
   "Antibes%20Museum%20Picasso.jpg":"/assets/editorial/culture-musee-picasso-antibes-v2.webp",
   "Villa%20K%C3%A9rylos%2C%20Beaulieu-sur-Mer%20P1030831.jpg":"/assets/editorial/culture-villa-kerylos-v2.webp",
+  "Nice%20Vieux-Nice%201.jpg":"/assets/editorial/culture/nice-vieux-nice-wikimedia.webp",
 }
 
 def replacement(url):
