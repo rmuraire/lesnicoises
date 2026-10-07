@@ -89,6 +89,11 @@ def audit_html_coverage() -> None:
             if "hotel-card" not in classes:
                 continue
             block = m.group("body")
+            # Some legacy CTA buttons unfortunately reuse the "hotel-card" class.
+            # Only structured hotel cards (those with a hotel-card-body wrapper)
+            # are subject to the media requirement.
+            if "hotel-card-body" not in block:
+                continue
             if "hotel-card-media" not in block or "<img" not in block.lower():
                 compact = re.sub(r"\\s+", " ", block).strip()[:500]
                 print("HOTEL CARD WITHOUT MEDIA", rel.as_posix(), m.group("attrs")[:220], compact)
