@@ -263,18 +263,29 @@
   if(!nav||!open||!close||open.getAttribute('data-menu-bound')==='true')return;
   open.setAttribute('data-menu-bound','true');
 
+  var lockedScrollY=0;
+  function lockPageScroll(){
+    lockedScrollY=window.scrollY||document.documentElement.scrollTop||0;
+    document.body.style.top='-'+lockedScrollY+'px';
+    document.body.classList.add('menu-open');
+  }
+  function unlockPageScroll(){
+    document.body.classList.remove('menu-open');
+    document.body.style.top='';
+    window.scrollTo(0,lockedScrollY);
+  }
   function show(){
+    lockPageScroll();
     nav.classList.add('open');
     nav.setAttribute('aria-hidden','false');
     open.setAttribute('aria-expanded','true');
-    document.body.classList.add('menu-open');
     close.focus();
   }
   function hide(returnFocus){
     nav.classList.remove('open');
     nav.setAttribute('aria-hidden','true');
     open.setAttribute('aria-expanded','false');
-    document.body.classList.remove('menu-open');
+    unlockPageScroll();
     if(returnFocus!==false)open.focus();
   }
   nav.setAttribute('aria-hidden','true');
