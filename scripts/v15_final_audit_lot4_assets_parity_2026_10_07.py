@@ -54,15 +54,25 @@ def localise_wikimedia():
             if url in seen:
                 local=seen[url]
             else:
-                fetch_url=url
-                if "commons.wikimedia.org/wiki/Special:Redirect/file/" in fetch_url and "?" not in fetch_url:
-                    fetch_url += "?width=1600"
-                req=Request(fetch_url,headers={"User-Agent":"Mametas/1.0 (editorial image localisation)"})
-                with urlopen(req,timeout=45) as resp:
-                    data=resp.read()
-                    ctype=(resp.headers.get_content_type() or "").lower()
+                candidates=[]
+                if "commons.wikimedia.org/wiki/Special:Redirect/file/" in url and "?" not in url:
+                    candidates.append(url+"?width=1600")
+                candidates.append(url)
+                data=None; ctype=""; last_error=None; fetch_url=url
+                for candidate in candidates:
+                    try:
+                        req=Request(candidate,headers={"User-Agent":"Mametas/1.0 (editorial image localisation)"})
+                        with urlopen(req,timeout=45) as resp:
+                            candidate_data=resp.read()
+                            candidate_type=(resp.headers.get_content_type() or "").lower()
+                        if candidate_data:
+                            data=candidate_data; ctype=candidate_type; fetch_url=candidate
+                            break
+                    except Exception as exc:
+                        last_error=exc
+                        print("Wikimedia fetch retry:",candidate,repr(exc))
                 if not data:
-                    raise RuntimeError(f"Empty Wikimedia image: {url}")
+                    raise RuntimeError(f"Cannot localise Wikimedia image {url}: {last_error}")
                 ext={ "image/jpeg":".jpg","image/png":".png","image/webp":".webp" }.get(ctype)
                 if not ext:
                     ext=Path(urlparse(fetch_url).path).suffix.lower()
