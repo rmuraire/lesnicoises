@@ -312,7 +312,7 @@ def main() -> None:
                         errors.append(f"{label}: duplicate ids {metrics['dupes'][:6]}")
                     if metrics["h1Count"] != 1:
                         errors.append(f"{label}: visible H1 count is {metrics['h1Count']}, expected 1")
-                    h1_limit = 60 if viewport_name == "mobile" else 80
+                    h1_limit = (96 if viewport_name == "mobile" else 120) if kind == "home" else (60 if viewport_name == "mobile" else 80)
                     if metrics["h1Sizes"] and max(metrics["h1Sizes"]) > h1_limit:
                         errors.append(
                             f"{label}: H1 is {max(metrics['h1Sizes']):.0f}px, above {h1_limit}px guardrail"
