@@ -110,7 +110,7 @@ jobs:
       - name: Apply canonical CSS foundation
         run: python scripts/v23_css_foundation_2026_10_07.py
 
-      - name: Diagnose final presentation markup
+      - name: Apply final presentation stabilization
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
       - name: Run Claude final recipe static gate
