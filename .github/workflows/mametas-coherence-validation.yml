@@ -89,6 +89,9 @@ jobs:
       - name: Apply Claude final audit lot 3 language
         run: python scripts/v14_final_audit_lot3_language_2026_10_07.py
 
+      - name: Apply Claude final audit lot 4A assets and parity
+        run: python scripts/v15_final_audit_lot4_assets_parity_2026_10_07.py
+
       - name: Apply Claude final audit lot 4B content parity
         run: python scripts/v16_final_audit_lot4_content_parity_2026_10_07.py
 
@@ -114,8 +117,6 @@ jobs:
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
       - name: Run Claude final recipe static gate
-        env:
-          MAMETAS_SKIP_MATERIALIZED: "1"
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
