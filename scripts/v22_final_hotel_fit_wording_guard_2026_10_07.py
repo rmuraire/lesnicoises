@@ -69,7 +69,7 @@ def ensure_hotel66_sources():
         if not p.exists(): continue
         src=p.read_text(encoding="utf-8",errors="ignore")
         if "hotel-depth-sources" in src: continue
-        m=re.search(r'<div class=["\\']affiliate-cta["\\']',src,re.I)
+        m=re.search(r"<div class=[\"']affiliate-cta[\"']",src,re.I)
         if not m:
             raise RuntimeError("Hotel 66 affiliate anchor missing: "+rel)
         out=src[:m.start()]+block+src[m.start():]
