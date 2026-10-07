@@ -74,11 +74,21 @@ def audit_html_coverage() -> None:
                 break
 
         for m in re.finditer(
-            r"<a\b[^>]*class=[\"'][^\"']*\bhotel-card\b[^\"']*[\"'][^>]*>(.*?)</a>",
+            r"<a\b(?P<attrs>[^>]*)>(?P<body>.*?)</a>",
             s,
             flags=re.I | re.S,
         ):
-            block = m.group(1)
+            class_match = re.search(
+                r"\bclass=[\"']([^\"']*)[\"']",
+                m.group("attrs"),
+                flags=re.I,
+            )
+            if not class_match:
+                continue
+            classes = set(class_match.group(1).split())
+            if "hotel-card" not in classes:
+                continue
+            block = m.group("body")
             if "hotel-card-media" not in block or "<img" not in block.lower():
                 hotel_cards_without_media.append(rel.as_posix())
                 break
