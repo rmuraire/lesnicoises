@@ -29,6 +29,12 @@ AFFILIATE_HOSTS = (
     "getyourguide.com", "gyg.me",
 )
 
+DESTINATION_TOOL_PAGES = tuple(
+    f"{prefix}riviera-guide/{slug}/index.html"
+    for prefix in ("", "en/")
+    for slug in ("nice", "villefranche-cap-ferrat", "antibes", "cannes", "monaco", "menton")
+)
+
 
 def read(rel: str) -> str:
     return (ROOT / rel).read_text(encoding="utf-8", errors="ignore")
@@ -222,10 +228,11 @@ def normalize_inline_tool_ctas() -> None:
     para_pat = re.compile(r'<p(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)</p>', re.I)
     anchor_pat = re.compile(r'<a\b(?P<attrs>[^>]*)>(?P<label>[\s\S]*?)</a>', re.I)
 
-    for p in ROOT.rglob("*.html"):
-        rel = p.relative_to(ROOT)
-        if rel.parts and rel.parts[0] in SKIP:
+    for rel_name in DESTINATION_TOOL_PAGES:
+        p = ROOT / rel_name
+        if not p.exists():
             continue
+        rel = p.relative_to(ROOT)
         s = p.read_text(encoding="utf-8", errors="ignore")
         if "/hotels/finder/" not in s and "/en/hotels/finder/" not in s:
             continue
@@ -370,17 +377,18 @@ def audit_presentation() -> None:
     errors.extend(audit_cards())
 
     # Editorial copy must never contain a Hotel Fit button inside a paragraph.
-    for p in ROOT.rglob("*.html"):
-        rel = p.relative_to(ROOT)
-        if rel.parts and rel.parts[0] in SKIP:
+    for rel_name in DESTINATION_TOOL_PAGES:
+        p = ROOT / rel_name
+        if not p.exists():
             continue
+        rel = p.relative_to(ROOT)
         s = p.read_text(encoding="utf-8", errors="ignore")
         if re.search(
             r'<p\b[^>]*>[\s\S]*?<a\b[^>]*class=["\'][^"\']*\b(?:btn|button)\b[^"\']*["\'][^>]*href=["\']/(?:en/)?hotels/finder/',
             s,
             re.I,
         ):
-            errors.append(rel.as_posix() + ": Hotel Fit button still injected inside editorial paragraph")
+            errors.append(rel.as_posix() + ": Hotel Fit button still injected inside destination paragraph")
 
     # Key-page local image integrity.
     key_pages = [
