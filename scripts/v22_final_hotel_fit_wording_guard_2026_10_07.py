@@ -35,7 +35,7 @@ def final_french_typography():
         rel=p.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP: continue
         src=p.read_text(encoding="utf-8",errors="ignore")
-        if not re.search(r'<html\\b[^>]*\\blang=["\\']fr',src,re.I): continue
+        if not re.search(r"<html\\b[^>]*\\blang=[\"']fr",src,re.I): continue
         protected,blocks=protect_blocks(src)
         parts=re.split(r'(<[^>]+>)',protected)
         for i in range(0,len(parts),2):
