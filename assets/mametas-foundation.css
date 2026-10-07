@@ -1,77 +1,15 @@
 /*
- * MAMETAS CANONICAL VISUAL FOUNDATION
- * Source of truth for cross-site visual consistency.
- * Applied last to site.css and v3.css by v23_css_foundation_2026_10_07.py.
+ * MAMETAS VISUAL GUARDRAILS — 2026-10-07
  *
- * Principles:
- * - one typographic hierarchy across editorial families
- * - one button geometry
- * - one hotel-card visual language
- * - one spacing rhythm
- * - preserve Mametas palette and editorial personality
+ * Conservative final layer. The visual baseline remains the proven site.css,
+ * v3.css and shell from the early-October release. This file only protects the
+ * cross-site invariants that were repeatedly broken by later build passes.
+ *
+ * Loaded as the LAST stylesheet by v23_css_foundation_2026_10_07.py.
  */
 
-:root{
-  --m-paper:#f4efe4;
-  --m-paper-deep:#e8dfcf;
-  --m-ink:#14213d;
-  --m-ink-soft:#3f4b63;
-  --m-blue:#176f83;
-  --m-blue-deep:#0e5265;
-  --m-coral:#d96c4e;
-  --m-sun:#d8ad52;
-  --m-white:#fffdf8;
-  --m-line:rgba(20,33,61,.16);
-  --m-serif:"Fraunces",Georgia,serif;
-  --m-sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  --m-max:1240px;
-  --m-reading:820px;
-  --m-gutter:clamp(20px,4vw,64px);
-  --m-section-space:clamp(54px,6.2vw,86px);
-  --m-h1:clamp(46px,5.35vw,72px);
-  --m-h2:clamp(32px,3.6vw,46px);
-  --m-h3:clamp(24px,2.25vw,29px);
-  --m-lead:clamp(20px,2vw,27px);
-  --m-body:16px;
-  --m-card-pad:24px;
-  --m-button-h:44px;
-
-  /* Bridge legacy vocabularies. */
-  --paper:var(--m-paper);
-  --cream:var(--m-paper);
-  --paper-deep:var(--m-paper-deep);
-  --cream-deep:var(--m-paper-deep);
-  --ink:var(--m-ink);
-  --navy:var(--m-ink);
-  --ink-soft:var(--m-ink-soft);
-  --navy-soft:var(--m-ink-soft);
-  --blue:var(--m-blue);
-  --med-blue:var(--m-blue);
-  --blue-deep:var(--m-blue-deep);
-  --coral:var(--m-coral);
-  --sun:var(--m-sun);
-  --gold:var(--m-sun);
-  --white:var(--m-white);
-  --line:var(--m-line);
-  --serif:var(--m-serif);
-  --sans:var(--m-sans);
-  --max:var(--m-max);
-  --gutter:var(--m-gutter);
-}
-
-body{
-  background:var(--m-paper);
-  color:var(--m-ink);
-  font-family:var(--m-sans);
-}
-
-/* ---------- Canonical hero + type hierarchy ---------- */
-.page-hero,
-.article-hero{
-  padding:clamp(54px,6vw,78px) 0 clamp(38px,4vw,52px)!important;
-  border-bottom:1px solid var(--m-line);
-}
-
+/* 1) One restrained editorial heading scale. Homepage-specific heroes remain
+   untouched: this targets the recurring page/article families only. */
 .page-hero h1,
 .article-hero h1,
 .article h1,
@@ -80,36 +18,12 @@ body{
 .core-hub-final .article-hero h1,
 .core-hub-final .page-hero h1{
   max-width:14ch!important;
-  margin:0!important;
-  font-family:var(--m-serif)!important;
-  font-size:var(--m-h1)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(46px,5.35vw,72px)!important;
   font-weight:500!important;
   letter-spacing:-.045em!important;
   line-height:.98!important;
   text-transform:none!important;
-}
-
-.article-deck,
-.page-hero .lead,
-.article .standfirst,
-.hotel-detail .standfirst,
-.culture-detail .standfirst,
-.core-hub-final .article-deck,
-.core-hub-final .lead{
-  max-width:var(--m-reading)!important;
-  margin-top:22px!important;
-  color:var(--m-ink-soft)!important;
-  font-family:var(--m-serif)!important;
-  font-size:var(--m-lead)!important;
-  font-weight:400!important;
-  letter-spacing:-.012em!important;
-  line-height:1.45!important;
-}
-
-.article .standfirst,
-.hotel-detail .standfirst,
-.culture-detail .standfirst{
-  margin-bottom:34px!important;
 }
 
 .section h2,
@@ -124,9 +38,8 @@ body{
 .practical-title h2,
 .explore-practical .practical-intro h2,
 .family-section-heading{
-  max-width:22ch;
-  font-family:var(--m-serif)!important;
-  font-size:var(--m-h2)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(32px,3.6vw,46px)!important;
   font-weight:500!important;
   letter-spacing:-.035em!important;
   line-height:1.08!important;
@@ -143,61 +56,14 @@ body{
 .article-body h3,
 .hotel-engine-result h3,
 .chooser-hotel-card h4{
-  font-family:var(--m-serif)!important;
-  font-size:var(--m-h3)!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(24px,2.25vw,29px)!important;
   font-weight:500!important;
   line-height:1.1!important;
 }
 
-.eyebrow,
-.kicker,
-.hotel-choice-tags span,
-.hotel-card .kicker,
-.culture-card .kicker{
-  font-family:var(--m-sans);
-  font-size:10px!important;
-  font-weight:700!important;
-  letter-spacing:.15em!important;
-  line-height:1.3!important;
-  text-transform:uppercase!important;
-}
-
-/* ---------- Canonical vertical rhythm ---------- */
-.v3-section,
-.section{
-  padding:var(--m-section-space) 0!important;
-}
-
-.article{
-  max-width:var(--m-reading);
-  padding-top:var(--m-section-space);
-  padding-bottom:var(--m-section-space);
-}
-
-.article-body{
-  font-size:var(--m-body);
-  line-height:1.78;
-}
-
-.article h2,
-.article-body h2{
-  margin-top:clamp(42px,5vw,58px)!important;
-  margin-bottom:14px!important;
-}
-
-.article h3,
-.article-body h3{
-  margin-top:28px!important;
-  margin-bottom:10px!important;
-}
-
-.section-heading,
-.chooser-intro,
-.hotel-style-heading{
-  margin-bottom:34px!important;
-}
-
-/* ---------- Canonical buttons ---------- */
+/* 2) Buttons keep each family's colour language, but share geometry.
+   Full-width is reserved for mobile decision controls. */
 .button,
 .cta-button,
 .rate-link,
@@ -205,105 +71,34 @@ body{
 .hotel-engine-actions .button,
 .engine-submit-row .button,
 .chooser-actions .button,
-.chooser-escape .button{
+.chooser-escape .button,
+.hotel-card-actions .rate-link{
   width:auto!important;
   min-width:0!important;
-  min-height:var(--m-button-h)!important;
-  padding:11px 16px!important;
+  min-height:44px!important;
+  box-sizing:border-box!important;
+  border-radius:0!important;
+}
+
+.button,
+.cta-button,
+.rate-link,
+.affiliate-hotel-link,
+.hotel-card-actions .rate-link{
   display:inline-flex!important;
   align-items:center!important;
   justify-content:center!important;
-  flex:0 0 auto!important;
-  border:1px solid var(--m-ink)!important;
-  border-radius:0!important;
-  background:var(--m-ink)!important;
-  color:var(--m-white)!important;
-  font-family:var(--m-sans)!important;
-  font-size:11px!important;
-  font-weight:700!important;
-  letter-spacing:.09em!important;
-  line-height:1.15!important;
-  text-align:center!important;
-  text-transform:uppercase!important;
-  text-decoration:none!important;
 }
 
-.button:hover,
-.button:focus-visible,
-.cta-button:hover,
-.cta-button:focus-visible,
-.rate-link:hover,
-.rate-link:focus-visible,
-.affiliate-hotel-link:hover,
-.affiliate-hotel-link:focus-visible{
-  background:var(--m-blue)!important;
-  border-color:var(--m-blue)!important;
-  color:var(--m-white)!important;
-}
-
-.button.secondary,
-.hotel-engine-actions .hotel-engine-affiliate{
-  background:transparent!important;
-  color:var(--m-ink)!important;
-  border-color:var(--m-line)!important;
-}
-
-/* ---------- Canonical card surface ---------- */
-.card,
-.decision-card,
-.culture-card,
-.hotel-card,
-.hotel-choice-card,
-.stay-card,
-.chooser-hotel-card,
-.hotel-engine-result{
-  border:1px solid var(--m-line)!important;
-  border-radius:0!important;
-  background:rgba(255,253,248,.34)!important;
-  box-shadow:none!important;
-}
-
-.card:hover,
-.decision-card:hover,
-.culture-card:hover,
-.hotel-card:hover,
-.hotel-choice-card:hover,
-.stay-card:hover,
-.chooser-hotel-card:hover{
-  background:var(--m-white)!important;
-}
-
-.card p,
-.decision-card p,
-.culture-card p,
-.hotel-card p,
-.hotel-choice-copy>p,
-.stay-card p,
-.chooser-hotel-card p,
-.hotel-engine-result p{
-  color:var(--m-ink-soft);
-  line-height:1.62;
-}
-
-/* ---------- Canonical hotel language ---------- */
-.hotel-grid,
-.hotel-choice-grid{
-  gap:18px!important;
-}
-
+/* 3) Hotel cards: same media geometry, same internal rhythm, no stretched
+   landscape strips. The 4:3 ratio is the pre-audit visual baseline. */
 .hotel-card,
 .hotel-choice-card{
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%;
   overflow:hidden;
-}
-
-.hotel-card-media,
-.hotel-choice-media,
-.chooser-hotel-media,
-.hotel-engine-media{
-  overflow:hidden!important;
-  background:
-    linear-gradient(135deg,rgba(23,111,131,.07),rgba(216,173,82,.08)),
-    var(--m-paper-deep)!important;
 }
 
 .hotel-card-media,
@@ -318,8 +113,8 @@ body{
 
 .hotel-card-media>img,
 .hotel-choice-media>img,
-.hotel-choice-media>.batch-thumb,
-.hotel-card-media>.batch-thumb{
+.hotel-card-media>.batch-thumb,
+.hotel-choice-media>.batch-thumb{
   position:absolute!important;
   inset:0!important;
   display:block!important;
@@ -328,100 +123,46 @@ body{
   min-height:100%!important;
   object-fit:cover!important;
 }
-.hotel-choice-media>.batch-thumb,
-.hotel-card-media>.batch-thumb{
-  background-repeat:no-repeat!important;
-}
-.chooser-hotel-media img,
-.hotel-engine-media img{
-  width:100%!important;
-  height:100%!important;
-  object-fit:cover!important;
-}
 
 .hotel-card-body,
-.hotel-choice-copy,
-.stay-card-copy{
-  padding:var(--m-card-pad)!important;
+.hotel-choice-copy{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  padding:24px!important;
 }
 
-.hotel-card h3,
-.hotel-choice-copy h3,
-.stay-card h3{
-  margin:12px 0 10px!important;
+.hotel-card-body>p,
+.hotel-choice-copy>p{
+  width:100%;
 }
 
 .hotel-card .more,
-.hotel-choice-copy .catch,
-.stay-card .catch{
+.hotel-choice-copy .rate-link,
+.hotel-choice-copy .catch{
   margin-top:auto;
 }
 
-.hotel-choice-tags{
-  gap:6px!important;
+.hotel-choice-tags .hotel-price-band,
+.hotel-choice-tags span{
+  border-radius:0!important;
 }
 
-.hotel-choice-tags span,
-.hotel-card .kicker{
-  color:var(--m-blue-deep)!important;
+.hotel-card-body>.btn,
+.hotel-choice-copy>.btn{
+  margin-top:12px!important;
+}
+.hotel-card-body>.btn+.btn,
+.hotel-choice-copy>.btn+.btn{
+  margin-top:8px!important;
 }
 
-.hotel-choice-tags .hotel-price-band{
-  padding:4px 8px!important;
-  border:1px solid rgba(20,33,61,.14)!important;
-  border-radius:999px!important;
-  background:#f4ead8!important;
-  color:var(--m-blue-deep)!important;
-  font-weight:800!important;
-  letter-spacing:.07em!important;
-}
-
-.rate-link{
-  align-self:flex-start!important;
-  margin-top:14px!important;
-}
-
-.hotel-engine-result.has-media{
-  align-items:stretch;
-}
-
-.hotel-engine-actions{
-  gap:10px!important;
-}
-
-/* ---------- Editorial media ---------- */
-.article-visual img,
-.booking-highlight-visual img,
-.beach-place-visual img,
-.hotel-hero-media img,
-.culture-hero-media img{
-  display:block;
-  width:100%;
-  object-fit:cover;
-}
-
-.article-visual figcaption,
-.booking-highlight-visual figcaption,
-.beach-place-visual figcaption,
-.hotel-hero-media figcaption,
-.culture-hero-media figcaption,
-.beach-photo-credit{
-  margin-top:6px!important;
-  color:#5f6570!important;
-  font-family:var(--m-sans)!important;
-  font-size:12px!important;
-  font-weight:400!important;
-  letter-spacing:0!important;
-  line-height:1.45!important;
-  text-transform:none!important;
-}
-
-/* ---------- Homepage journey spine ---------- */
-/* These links are navigation steps, never primary CTA buttons, even if a later
-   label-normalisation pass sees the words Riviera Fit or Hotel Fit. */
+/* 4) Homepage journey spine: navigation cells must never be turned into two
+   adjacent navy CTA slabs by global label normalisation. */
 .home-journey-spine{
-  border-top:1px solid var(--m-line)!important;
-  border-bottom:1px solid var(--m-line)!important;
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
   background:rgba(255,253,248,.72)!important;
 }
 .home-journey-inner{
@@ -433,8 +174,7 @@ body{
   display:flex!important;
   align-items:center!important;
   padding:16px 18px 16px 0!important;
-  color:var(--m-ink-soft)!important;
-  font-family:var(--m-sans)!important;
+  color:var(--ink-soft,#3f4b63)!important;
   font-size:10px!important;
   font-weight:800!important;
   letter-spacing:.14em!important;
@@ -453,11 +193,10 @@ body{
   column-gap:10px!important;
   align-content:center!important;
   border:0!important;
-  border-left:1px solid var(--m-line)!important;
+  border-left:1px solid var(--line,rgba(20,33,61,.16))!important;
   border-radius:0!important;
   background:transparent!important;
-  color:var(--m-ink)!important;
-  font-family:var(--m-sans)!important;
+  color:var(--ink,#14213d)!important;
   font-size:inherit!important;
   font-weight:400!important;
   letter-spacing:0!important;
@@ -470,21 +209,20 @@ body{
 .home-journey-inner>a:focus-visible,
 .home-journey-inner>a.btn:hover,
 .home-journey-inner>a.btn:focus-visible{
-  background:var(--m-white)!important;
-  border-left-color:var(--m-line)!important;
-  color:var(--m-ink)!important;
+  background:var(--white,#fffdf8)!important;
+  color:var(--ink,#14213d)!important;
 }
 .home-journey-inner>a b{
   grid-row:1/3!important;
-  color:var(--m-coral)!important;
-  font-family:var(--m-serif)!important;
+  color:var(--coral,#d96c4e)!important;
+  font-family:"Fraunces",Georgia,serif!important;
   font-size:16px!important;
   font-style:italic!important;
   font-weight:500!important;
 }
 .home-journey-inner>a strong{
-  color:var(--m-ink)!important;
-  font-family:var(--m-serif)!important;
+  color:var(--ink,#14213d)!important;
+  font-family:"Fraunces",Georgia,serif!important;
   font-size:18px!important;
   font-weight:500!important;
   letter-spacing:0!important;
@@ -493,8 +231,7 @@ body{
 }
 .home-journey-inner>a small{
   margin-top:4px!important;
-  color:var(--m-ink-soft)!important;
-  font-family:var(--m-sans)!important;
+  color:var(--ink-soft,#3f4b63)!important;
   font-size:11px!important;
   font-weight:400!important;
   letter-spacing:0!important;
@@ -502,19 +239,16 @@ body{
   text-transform:none!important;
 }
 
-/* ---------- Practical booking guides ---------- */
+/* 5) What-to-book / Que réserver: individual decisions read as intentional
+   editorial panels instead of loose text blocks. */
 .practical-guide-page .article>.place{
   margin:16px 0!important;
   padding:24px!important;
-  border:1px solid var(--m-line)!important;
+  border:1px solid var(--line,rgba(20,33,61,.16))!important;
   background:rgba(255,253,248,.42)!important;
-}
-.practical-guide-page .article>.place:hover{
-  background:rgba(255,253,248,.72)!important;
 }
 .practical-guide-page .article>.place .address{
   margin:0 0 9px!important;
-  color:var(--m-blue-deep)!important;
   font-size:10px!important;
   font-weight:700!important;
   letter-spacing:.13em!important;
@@ -526,68 +260,31 @@ body{
 .practical-guide-page .article>.place p:last-child{
   margin-bottom:0!important;
 }
-.practical-guide-page .article>.place .booking-highlight-visual{
+.practical-guide-page .booking-highlight-visual{
   margin:18px 0 20px!important;
+}
+.practical-guide-page .booking-highlight-visual img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:16/9!important;
+  object-fit:cover!important;
 }
 .practical-guide-page .article>.place .spot-logistics{
   margin-top:16px!important;
   padding-top:13px!important;
-  border-top:1px solid var(--m-line)!important;
-}
-.practical-guide-page .article>.place .spot-logistics a{
-  display:inline-block!important;
-  padding:5px 0!important;
-  color:var(--m-ink)!important;
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
 }
 .practical-guide-page .fact-grid{
   gap:14px!important;
 }
-.practical-guide-page .fact{
-  min-height:132px;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-}
-.practical-guide-page .note{
-  border:1px solid var(--m-line)!important;
-  border-left:3px solid var(--m-sun)!important;
-  background:var(--m-paper-deep)!important;
+
+/* 6) Undo one late shell experiment: destination section anchors are useful,
+   but do not need pill styling to be touchable. */
+body.rg-destination .article-aside a{
+  border-radius:0!important;
 }
 
-/* ---------- Hotel card structure + actions ---------- */
-.hotel-card,
-.hotel-choice-card{
-  display:flex!important;
-  flex-direction:column!important;
-  height:100%;
-}
-.hotel-card-body,
-.hotel-choice-copy{
-  display:flex!important;
-  flex:1 1 auto!important;
-  flex-direction:column!important;
-  align-items:flex-start!important;
-}
-.hotel-card-body>p,
-.hotel-choice-copy>p{
-  width:100%;
-}
-.hotel-card-body>.btn,
-.hotel-choice-copy>.btn{
-  margin-top:14px!important;
-  margin-right:8px!important;
-}
-.hotel-card-body>.btn+.btn,
-.hotel-choice-copy>.btn+.btn{
-  margin-top:8px!important;
-}
-.hotel-card-body>.btn--affiliate,
-.hotel-choice-copy>.btn--affiliate{
-  background:transparent!important;
-  color:var(--m-ink)!important;
-}
-
-/* ---------- Mobile ---------- */
 @media(max-width:1050px){
   .home-journey-inner{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
@@ -595,24 +292,41 @@ body{
   .home-journey-label{
     grid-column:1/-1!important;
     padding:13px 0!important;
-    border-bottom:1px solid var(--m-line)!important;
+    border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
   }
   .home-journey-inner>a:nth-of-type(odd){
     border-left:0!important;
   }
   .home-journey-inner>a{
-    border-bottom:1px solid var(--m-line)!important;
+    border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
   }
 }
 
 @media(max-width:760px){
-  :root{
-    --m-section-space:clamp(42px,11vw,58px);
-    --m-h1:clamp(38px,11vw,52px);
-    --m-h2:clamp(29px,8vw,36px);
-    --m-h3:clamp(22px,6.5vw,27px);
-    --m-lead:clamp(19px,5.6vw,23px);
-    --m-card-pad:20px;
+  .page-hero h1,
+  .article-hero h1,
+  .article h1,
+  .hotel-detail h1,
+  .culture-detail h1,
+  .core-hub-final .article-hero h1,
+  .core-hub-final .page-hero h1{
+    max-width:12ch!important;
+    font-size:clamp(38px,11vw,52px)!important;
+    line-height:1!important;
+  }
+
+  .section h2,
+  .v3-section .section-heading h2,
+  .article h2,
+  .article-body h2,
+  .hotel-detail h2,
+  .culture-detail h2,
+  .chooser-intro h2,
+  .hotel-style-heading h2,
+  .next-step h2,
+  .practical-title h2,
+  .family-section-heading{
+    font-size:clamp(29px,8vw,36px)!important;
   }
 
   .home-journey-inner{
@@ -628,56 +342,10 @@ body{
     padding:11px 4px!important;
     border-left:0!important;
   }
-  .home-journey-inner>a strong{
-    font-size:17px!important;
-  }
 
   .practical-guide-page .article>.place{
     margin:12px 0!important;
     padding:19px!important;
-  }
-  .practical-guide-page .fact{
-    min-height:0;
-  }
-
-  .hotel-card-body>.btn,
-  .hotel-choice-copy>.btn{
-    width:100%!important;
-    margin-right:0!important;
-  }
-
-  .page-hero,
-  .article-hero{
-    padding:42px 0 32px!important;
-  }
-
-  .page-hero h1,
-  .article-hero h1,
-  .article h1,
-  .hotel-detail h1,
-  .culture-detail h1,
-  .core-hub-final .article-hero h1,
-  .core-hub-final .page-hero h1{
-    max-width:12ch!important;
-    line-height:1!important;
-  }
-
-  .article-deck,
-  .page-hero .lead,
-  .article .standfirst,
-  .hotel-detail .standfirst,
-  .culture-detail .standfirst{
-    max-width:100%!important;
-    margin-top:18px!important;
-    line-height:1.44!important;
-  }
-
-  .section-heading,
-  .chooser-intro,
-  .hotel-style-heading{
-    grid-template-columns:1fr!important;
-    gap:18px!important;
-    margin-bottom:26px!important;
   }
 
   .hotel-grid,
@@ -685,23 +353,11 @@ body{
     grid-template-columns:1fr!important;
   }
 
-  .stay-card{
-    grid-template-columns:1fr!important;
-  }
-
-  .stay-card img{
-    width:100%;
-    aspect-ratio:16/9;
-  }
-
+  .hotel-card-body>.btn,
+  .hotel-choice-copy>.btn,
   .engine-submit-row .button,
   .hotel-engine-actions .button,
   .chooser-actions .button{
     width:100%!important;
-  }
-
-  .article{
-    padding-left:20px;
-    padding-right:20px;
   }
 }
