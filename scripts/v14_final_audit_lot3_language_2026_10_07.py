@@ -37,6 +37,9 @@ def clean_text_node(x,lang,restaurant=False):
     # Long/en dashes used as punctuation become a colon. This keeps the
     # relationship explicit without introducing another repeated tic.
     x=re.sub(r'\s+[—–]\s+', ': ', x)
+    # Also catch dashes attached to words, while preserving numeric ranges such as 9–28.
+    x=re.sub(r'(?<=[A-Za-zÀ-ÖØ-öø-ÿ])\s*[—–]\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ': ', x)
+    x=re.sub(r'(?<=[,.;!?])\s*[—–]\s*(?=[A-Za-zÀ-ÖØ-öø-ÿ])', ' ', x)
 
     # Short hyphen as punctuation is concentrated in restaurant decision lines.
     if restaurant:
@@ -148,7 +151,8 @@ def validate():
         visible=re.sub(r'<(script|style)\b[^>]*>[\s\S]*?</\1>','',s,flags=re.I)
         text=re.sub(r'<[^>]+>',' ',visible)
         text=unprotect(text)
-        if "—" in text or "–" in text:
+        dash_check=re.sub(r'(?<=\d)[–—](?=\d)','',text)
+        if re.search(r'[A-Za-zÀ-ÖØ-öø-ÿ]\s*[—–]|[—–]\s*[A-Za-zÀ-ÖØ-öø-ÿ]|\s[—–]\s',dash_check):
             bad_dash.append(rel.as_posix())
         if html_lang(s)=="fr":
             if re.search(r' (?=[?!;»])',text) or re.search(r' (?=:)',text):
