@@ -77,11 +77,17 @@ def patch_gay_nice_fr_faq():
 def patch_where_to_stay_en_markup():
     rel="en/gay-french-riviera/where-to-stay/index.html"
     def fn(s):
-        fixed='''<div class="place"><h3>Blue Angels Bed &amp; Breakfast: Nice</h3><div class="address">8 rue Assalit · central Nice</div><p class="why">Two rooms, four guests maximum, and an official description as a 100% gay B&amp;B. This is much closer to a community stay than a conventional labelled hotel.</p><p class="practical">Men only · Nice Rainbow · very small capacity · direct booking.</p></div>
-<div class="place"><h3>Les Jardins de Baquis: Nice</h3><div class="address">3 avenue Baquis · central Nice</div><p class="why">A quiet gay-friendly guest room with a private shower room and balcony, central enough to reach the sea and centre on foot.</p><p class="practical">Nice Rainbow · one room · direct booking.</p></div>
+        blue='''<div class="place"><h3>Blue Angels Bed &amp; Breakfast: Nice</h3><div class="address">8 rue Assalit · central Nice</div><p class="why">Two rooms, four guests maximum, and an official description as a 100% gay B&amp;B. This is much closer to a community stay than a conventional labelled hotel.</p><p class="practical">Men only · Nice Rainbow · very small capacity · direct booking.</p></div>
 '''
-        pat=re.compile(r'<div class="place"><h3>Blue Angels Bed &amp; Breakfast(?::|\s*[—–-])\s*Nice</h3><div class="address">8 rue Assalit · central Nice</div>\s*<div class="place"><h3>Les Jardins de Baquis(?::|\s*[—–-])\s*Nice</h3><div class="address">3 avenue Baquis · central Nice</div>\s*(?=<h2>Labelled and lower budget</h2>)',re.I)
-        return pat.sub(fixed,s,count=1)
+        gardens='''<div class="place"><h3>Les Jardins de Baquis: Nice</h3><div class="address">3 avenue Baquis · central Nice</div><p class="why">A quiet gay-friendly guest room with a private shower room and balcony, central enough to reach the sea and centre on foot.</p><p class="practical">Nice Rainbow · one room · direct booking.</p></div>
+'''
+        # Replace the two malformed place stubs independently. Upstream language
+        # cleanup may change dash punctuation, so anchor on names/addresses only.
+        p1=re.compile(r'<div class="place"><h3>Blue Angels Bed &amp; Breakfast[^<]*</h3><div class="address">8 rue Assalit · central Nice</div>[\s\S]*?(?=<div class="place"><h3>Les Jardins de Baquis)',re.I)
+        p2=re.compile(r'<div class="place"><h3>Les Jardins de Baquis[^<]*</h3><div class="address">3 avenue Baquis · central Nice</div>[\s\S]*?(?=<h2>Labelled and lower budget</h2>)',re.I)
+        if p1.search(s): s=p1.sub(blue,s,count=1)
+        if p2.search(s): s=p2.sub(gardens,s,count=1)
+        return s
     rw(rel,fn)
 
 def patch_where_to_stay_fr_faq_and_hotels():
@@ -165,8 +171,9 @@ def validate():
         missing=[x for x in tokens if x not in s]
         if missing: raise RuntimeError(f"{rel}: missing lot4B tokens {missing}")
     en=(ROOT/"en/gay-french-riviera/where-to-stay/index.html").read_text(encoding="utf-8",errors="ignore")
-    if '<div class="address">8 rue Assalit · central Nice</div>\n<div class="place">' in en:
-        raise RuntimeError("Blue Angels malformed div still survives")
+    for token in ("Two rooms, four guests maximum","A quiet gay-friendly guest room"):
+        if token not in en:
+            raise RuntimeError("EN gay stay description repair missing: "+token)
     print("Claude final audit lot 4B parity validation passed.")
 
 def main():
