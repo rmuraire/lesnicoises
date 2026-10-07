@@ -221,8 +221,8 @@ def check_hotels(page, label: str) -> list[str]:
             errors.append(f"{label}: hotel card {d['idx']+1} has no loaded visual")
         if d["mediaW"] and d["mediaH"]:
             ratio = d["mediaW"] / d["mediaH"]
-            if ratio < 1.35 or ratio > 1.65:
-                errors.append(f"{label}: hotel card {d['idx']+1} media ratio {ratio:.2f}, expected ~1.50")
+            if ratio < 1.22 or ratio > 1.45:
+                errors.append(f"{label}: hotel card {d['idx']+1} media ratio {ratio:.2f}, expected ~1.33")
         for a in d["actions"]:
             if a["h"] < 40:
                 errors.append(f"{label}: hotel CTA '{a['text'][:28]}' is only {a['h']:.0f}px high")
