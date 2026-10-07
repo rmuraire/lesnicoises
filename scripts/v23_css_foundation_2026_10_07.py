@@ -90,6 +90,8 @@ def audit_html_coverage() -> None:
                 continue
             block = m.group("body")
             if "hotel-card-media" not in block or "<img" not in block.lower():
+                compact = re.sub(r"\\s+", " ", block).strip()[:500]
+                print("HOTEL CARD WITHOUT MEDIA", rel.as_posix(), m.group("attrs")[:220], compact)
                 hotel_cards_without_media.append(rel.as_posix())
                 break
 
