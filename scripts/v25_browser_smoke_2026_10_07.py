@@ -34,6 +34,8 @@ PAGES = [
     ("/riviera-guide/", "editorial"),
     ("/en/riviera-guide/nice/", "editorial"),
     ("/riviera-guide/nice/", "editorial"),
+    ("/en/riviera-guide/antibes/", "destination"),
+    ("/riviera-guide/antibes/", "destination"),
     ("/en/practical/", "editorial"),
     ("/pratique/", "editorial"),
     ("/en/explore/", "editorial"),
@@ -222,6 +224,110 @@ def check_booking(page, label: str) -> list[str]:
     return errors
 
 
+def check_mobile_menu(page, label: str) -> list[str]:
+    errors: list[str] = []
+    has_menu = page.evaluate(
+        """() => !!document.querySelector('[data-v3-menu-open], [data-menu-open]')"""
+    )
+    if not has_menu:
+        return errors
+
+    page.evaluate("window.scrollTo(0, Math.min(520, Math.max(0, document.body.scrollHeight - innerHeight)))")
+    page.wait_for_timeout(60)
+    before = page.evaluate("window.scrollY")
+    page.evaluate(
+        """() => {
+          const b = document.querySelector('[data-v3-menu-open], [data-menu-open]');
+          if (b) b.click();
+        }"""
+    )
+    page.wait_for_timeout(100)
+    data = page.evaluate(
+        """() => {
+          const menu = document.querySelector('.mobile-menu.open, .mobile-nav.open');
+          if (!menu) return {missing:true};
+          const r = menu.getBoundingClientRect();
+          const s = getComputedStyle(menu);
+          const main = document.querySelector('main');
+          return {
+            missing:false,
+            top:r.top, left:r.left, width:r.width, height:r.height,
+            position:s.position, bg:s.backgroundColor,
+            bodyFixed:getComputedStyle(document.body).position,
+            bodyTop:document.body.style.top,
+            mainVisibility:main ? getComputedStyle(main).visibility : '',
+            viewportW:innerWidth, viewportH:innerHeight
+          };
+        }"""
+    )
+    if data.get("missing"):
+        return [f"{label}: mobile menu did not open"]
+    if data["position"] != "fixed":
+        errors.append(f"{label}: mobile menu position is {data['position']}, expected fixed")
+    if abs(data["top"]) > 2 or abs(data["left"]) > 2:
+        errors.append(f"{label}: mobile menu does not start at viewport origin ({data['left']:.0f},{data['top']:.0f})")
+    if data["width"] < data["viewportW"] - 2 or data["height"] < data["viewportH"] - 2:
+        errors.append(
+            f"{label}: mobile menu does not cover viewport ({data['width']:.0f}x{data['height']:.0f} vs {data['viewportW']}x{data['viewportH']})"
+        )
+    if data["bg"] in ("rgba(0, 0, 0, 0)", "transparent"):
+        errors.append(f"{label}: mobile menu background is transparent")
+    if data["bodyFixed"] != "fixed" or not data["bodyTop"].startswith("-"):
+        errors.append(f"{label}: iPhone scroll lock is not active")
+    if data["mainVisibility"] != "hidden":
+        errors.append(f"{label}: page content remains visible behind open mobile menu")
+
+    page.evaluate(
+        """() => {
+          const b = document.querySelector('[data-v3-menu-close], [data-menu-close]');
+          if (b) b.click();
+        }"""
+    )
+    page.wait_for_timeout(100)
+    after = page.evaluate("window.scrollY")
+    if abs(after - before) > 3:
+        errors.append(f"{label}: closing mobile menu changed scroll position {before:.0f}->{after:.0f}")
+    return errors
+
+
+def check_editorial_mobile(page, label: str) -> list[str]:
+    errors: list[str] = []
+    data = page.evaluate(
+        """() => {
+          const bad = Array.from(document.querySelectorAll(
+            'p a.btn[href*="/hotels/finder/"], p a.button[href*="/hotels/finder/"]'
+          )).map(a => (a.innerText || '').trim());
+          const cover = document.querySelector('.article-cover');
+          if (!cover) return {bad, cover:null};
+          const cr = cover.getBoundingClientRect();
+          const img = cover.querySelector('img');
+          const ir = img ? img.getBoundingClientRect() : null;
+          const layout = document.querySelector('.article-cover + .v3-section .article-layout');
+          const lr = layout ? layout.getBoundingClientRect() : null;
+          return {
+            bad,
+            cover:{
+              width:cr.width, height:cr.height,
+              imageWidth:ir ? ir.width : 0, imageHeight:ir ? ir.height : 0,
+              gap:lr ? lr.top - cr.bottom : null
+            }
+          };
+        }"""
+    )
+    if data["bad"]:
+        errors.append(f"{label}: Hotel Fit button still sits inside paragraph text: {data['bad'][:3]}")
+    cover = data.get("cover")
+    if cover and cover["width"] and cover["height"]:
+        ratio = cover["width"] / cover["height"]
+        if ratio < 1.65 or ratio > 1.90:
+            errors.append(f"{label}: mobile article cover ratio is {ratio:.2f}, expected landscape ~16:9")
+        if abs(cover["imageWidth"] - cover["width"]) > 2 or abs(cover["imageHeight"] - cover["height"]) > 2:
+            errors.append(f"{label}: article cover image does not fill its frame")
+        if cover["gap"] is not None and (cover["gap"] < 20 or cover["gap"] > 80):
+            errors.append(f"{label}: article cover to content gap is {cover['gap']:.0f}px")
+    return errors
+
+
 def check_hotels(page, label: str) -> list[str]:
     errors: list[str] = []
     data = page.evaluate(
@@ -331,6 +437,11 @@ def main() -> None:
                         errors.extend(check_booking(page, label))
                     elif kind == "hotels":
                         errors.extend(check_hotels(page, label))
+
+                    if viewport_name == "mobile":
+                        errors.extend(check_mobile_menu(page, label))
+                        if kind in ("editorial", "destination"):
+                            errors.extend(check_editorial_mobile(page, label))
 
                     print(
                         f"OK geometry {label}: scroll={metrics['scrollWidth']} "

@@ -379,3 +379,100 @@ body.rg-destination .article-aside a{
     width:100%!important;
   }
 }
+
+/* 7) Mobile editorial integrity — keep CTAs, cover images and navigation stable. */
+.article-body p > a.btn[href*="/hotels/finder/"],
+.article-body p > a.button[href*="/hotels/finder/"],
+.article-body p > a.btn[href*="/en/hotels/finder/"],
+.article-body p > a.button[href*="/en/hotels/finder/"],
+.article-body .editorial-tool-bridge > a,
+p.destination-hotel-fit-cta > a{
+  display:table!important;
+  width:auto!important;
+  min-height:0!important;
+  margin:12px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:var(--blue-deep,#0e5265)!important;
+  font-size:inherit!important;
+  font-weight:700!important;
+  letter-spacing:0!important;
+  line-height:1.5!important;
+  text-transform:none!important;
+  text-decoration:underline!important;
+  text-underline-offset:3px!important;
+}
+
+@media(max-width:1080px){
+  body.menu-open{
+    position:fixed!important;
+    left:0!important;
+    right:0!important;
+    width:100%!important;
+    overflow:hidden!important;
+  }
+
+  .mobile-menu,
+  .mobile-nav{
+    position:fixed!important;
+    inset:0!important;
+    z-index:10000!important;
+    width:100vw!important;
+    height:100dvh!important;
+    min-height:100vh!important;
+    box-sizing:border-box!important;
+    overflow-y:auto!important;
+    overscroll-behavior:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    background:var(--paper,var(--cream,#f4efe4))!important;
+  }
+
+  .mobile-menu{
+    display:block!important;
+    opacity:0!important;
+    visibility:hidden!important;
+    pointer-events:none!important;
+  }
+
+  .mobile-menu.open{
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+
+  .mobile-menu-top,
+  .mobile-nav-top{
+    position:sticky!important;
+    top:0!important;
+    z-index:2!important;
+    background:var(--paper,var(--cream,#f4efe4))!important;
+  }
+
+  body.menu-open > main,
+  body.menu-open > footer{
+    visibility:hidden!important;
+  }
+}
+
+@media(max-width:760px){
+  .article-cover{
+    width:min(calc(100% - 2 * var(--gutter,20px)),var(--max,1240px))!important;
+    height:auto!important;
+    aspect-ratio:16/9!important;
+    margin:0 auto!important;
+    overflow:hidden!important;
+  }
+
+  .article-cover img{
+    display:block!important;
+    width:100%!important;
+    height:100%!important;
+    object-fit:cover!important;
+  }
+
+  .article-cover + .v3-section{
+    padding-top:36px!important;
+  }
+}
+
