@@ -256,7 +256,7 @@ def main() -> None:
 
                 for path, kind in PAGES:
                     label = f"{viewport_name} {path}"
-                    response = page.goto(base + path.lstrip("/"), wait_until="domcontentloaded", timeout=15000)
+                    response = page.goto(base + path, wait_until="domcontentloaded", timeout=15000)
                     if response is None or response.status >= 400:
                         errors.append(f"{label}: HTTP {response.status if response else 'no response'}")
                         continue
