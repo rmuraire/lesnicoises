@@ -28,6 +28,18 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = [
     ("/", "home"),
     ("/fr/", "home"),
+    ("/plan/", "editorial"),
+    ("/fr/planifier/", "editorial"),
+    ("/en/riviera-guide/", "editorial"),
+    ("/riviera-guide/", "editorial"),
+    ("/en/riviera-guide/nice/", "editorial"),
+    ("/riviera-guide/nice/", "editorial"),
+    ("/en/practical/", "editorial"),
+    ("/pratique/", "editorial"),
+    ("/en/explore/", "editorial"),
+    ("/explore/", "editorial"),
+    ("/en/good-finds/", "editorial"),
+    ("/bons-plans/", "editorial"),
     ("/en/good-finds/what-to-book/", "booking"),
     ("/bons-plans/que-reserver/", "booking"),
     ("/en/riviera-chooser/", "tool"),
@@ -38,8 +50,14 @@ PAGES = [
     ("/fr/dormir/nice/", "hotels"),
     ("/en/hotels/antibes/", "hotels"),
     ("/hotels/antibes/", "hotels"),
+    ("/en/hotels/nice/le-negresco/", "editorial"),
+    ("/hotels/nice/le-negresco/", "editorial"),
+    ("/en/beaches/nice/", "editorial"),
+    ("/plages/nice/", "editorial"),
     ("/en/gay-french-riviera/", "editorial"),
     ("/cote-dazur-gay/", "editorial"),
+    ("/en/solo-female-french-riviera/", "editorial"),
+    ("/cote-dazur-femme-solo/", "editorial"),
     ("/en/restaurants/", "editorial"),
     ("/en/culture/", "editorial"),
 ]
@@ -103,11 +121,23 @@ def common_metrics(page) -> dict:
           const root = document.documentElement;
           const ids = Array.from(document.querySelectorAll('[id]')).map(n => n.id).filter(Boolean);
           const dupes = [...new Set(ids.filter((id, i) => ids.indexOf(id) !== i))];
+          const h1s = Array.from(document.querySelectorAll('h1')).filter(h => {
+            const s = getComputedStyle(h);
+            return s.display !== 'none' && s.visibility !== 'hidden';
+          });
+          const buttonSel = '.button,.btn,.rate-link,.affiliate-hotel-link,.cta-button,.hotel-card-actions .rate-link';
+          const buttons = Array.from(document.querySelectorAll(buttonSel)).map(el => {
+            const r = el.getBoundingClientRect();
+            return {w:r.width,h:r.height,text:(el.innerText||'').replace(/\\s+/g,' ').trim().slice(0,60)};
+          }).filter(x => x.w > 0 && x.h > 0);
           return {
             viewport: window.innerWidth,
             scrollWidth: root.scrollWidth,
             clientWidth: root.clientWidth,
             dupes,
+            h1Count: h1s.length,
+            h1Sizes: h1s.map(h => parseFloat(getComputedStyle(h).fontSize)),
+            buttons,
           };
         }"""
     )
@@ -128,7 +158,7 @@ def check_home(page, label: str) -> list[str]:
               width:r.width, height:r.height,
               display:s.display, background:s.backgroundColor,
               textTransform:s.textTransform, cls:a.className,
-              text:a.innerText.replace(/\s+/g,' ').trim()
+              text:a.innerText.replace(/\\s+/g,' ').trim()
             };
           });
           return {missing:false, count:links.length, rects};
@@ -280,6 +310,18 @@ def main() -> None:
                         )
                     if metrics["dupes"]:
                         errors.append(f"{label}: duplicate ids {metrics['dupes'][:6]}")
+                    if metrics["h1Count"] != 1:
+                        errors.append(f"{label}: visible H1 count is {metrics['h1Count']}, expected 1")
+                    h1_limit = 60 if viewport_name == "mobile" else 80
+                    if metrics["h1Sizes"] and max(metrics["h1Sizes"]) > h1_limit:
+                        errors.append(
+                            f"{label}: H1 is {max(metrics['h1Sizes']):.0f}px, above {h1_limit}px guardrail"
+                        )
+                    for b in metrics["buttons"]:
+                        if b["h"] > 72:
+                            errors.append(f"{label}: oversized button height {b['h']:.0f}px ({b['text']})")
+                        if viewport_name == "desktop" and b["w"] > 460:
+                            errors.append(f"{label}: oversized desktop button width {b['w']:.0f}px ({b['text']})")
 
                     broken = local_image_health(page)
                     if broken:
