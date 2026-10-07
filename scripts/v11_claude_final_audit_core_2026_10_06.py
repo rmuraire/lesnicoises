@@ -85,6 +85,8 @@ def patch_hotel_fit() -> None:
     )
 
     # HF2/HF3/HF4. Some budgetFallback strings are injected earlier in the build.
+    # HF4 must survive upstream punctuation rewrites, so normalise the French phrase first.
+    s = s.replace("Aucun match exact.", "Aucune correspondance exacte.")
     s = s.replace(
         "closest:function(n){ return 'Aucun match exact. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ' — avec les critères qu’il faut accepter de relâcher.'; }",
         "closest:function(n){ return 'Aucune correspondance exacte. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ', avec les critères qu’il faut accepter de relâcher.'; }",
@@ -100,6 +102,31 @@ def patch_hotel_fit() -> None:
     s = s.replace(" compromis Mametas le plus proche - avec les critères", " compromis Mametas le plus proche, avec les critères")
 
     write_if(p, s, old)
+
+def patch_home_hero() -> None:
+    """B1 emergency restore: never ship a blank homepage visual.
+
+    The current derivative mametas-five-women-hero-960.webp is a bad export.
+    Until the opaque WebP set is regenerated, use the original local PNG that is
+    already the Open Graph image. It is heavier, but preferable to a blank hero
+    while the site is receiving traffic.
+    """
+    for rel in ("index.html", "fr/index.html"):
+        p = ROOT / rel
+        if not p.exists():
+            raise RuntimeError(f"Missing homepage: {rel}")
+        html = p.read_text(encoding="utf-8")
+        old = html
+        html = html.replace(
+            '<link rel="preload" as="image" href="/assets/editorial/mametas-five-women-hero-960.webp" type="image/webp">',
+            '<link rel="preload" as="image" href="/assets/editorial/mametas-home-hero-2026-09-11.PNG" type="image/png">'
+        )
+        html = html.replace(
+            'src="/assets/editorial/mametas-five-women-hero-960.webp"',
+            'src="/assets/editorial/mametas-home-hero-2026-09-11.PNG"'
+        )
+        html = html.replace('width="1360" height="1120"', 'width="1536" height="1024"')
+        write_if(p, html, old)
 
 def patch_css() -> None:
     p = ROOT / "assets/mametas-shell-v1.css"
@@ -224,7 +251,12 @@ def validate() -> None:
     engine = (ROOT/"assets/hotel-engine.js").read_text(encoding="utf-8")
     css = (ROOT/"assets/mametas-shell-v1.css").read_text(encoding="utf-8")
 
+    home_en = (ROOT/"index.html").read_text(encoding="utf-8")
+    home_fr = (ROOT/"fr/index.html").read_text(encoding="utf-8")
+
     must = [
+        ("B1 EN hero", "mametas-home-hero-2026-09-11.PNG" in home_en and 'width="1536" height="1024"' in home_en),
+        ("B1 FR hero", "mametas-home-hero-2026-09-11.PNG" in home_fr and 'width="1536" height="1024"' in home_fr),
         ("RF1", "avec la meilleure liaison disponible" in chooser),
         ("RF2", "Moyenne : relief + budget" in chooser),
         ("HF1 denylist", "hotel-west-end-nice-promenade" in engine and "invalidDetailPaths" in engine),
@@ -253,6 +285,7 @@ def validate() -> None:
 def main() -> None:
     patch_riviera_fit()
     patch_hotel_fit()
+    patch_home_hero()
     patch_css()
     clean_html_visible_text()
     validate()
