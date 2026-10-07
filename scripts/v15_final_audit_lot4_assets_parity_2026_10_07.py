@@ -37,7 +37,7 @@ def is_wiki(url:str)->bool:
 def localise_wikimedia():
     outdir=ROOT/"assets"/"editorial"/"culture"/"local"
     outdir.mkdir(parents=True,exist_ok=True)
-    url_pat=re.compile(r'https://(?:commons|upload)\.wikimedia\.org/[^"\'<> )]+',re.I)
+    url_pat=re.compile(r'https://(?:commons|upload)\.wikimedia\.org/[^\\s"\'<>]+',re.I)
     seen={}
     changed=0
     downloaded=0
@@ -55,9 +55,15 @@ def localise_wikimedia():
                 local=seen[url]
             else:
                 candidates=[]
-                if "commons.wikimedia.org/wiki/Special:Redirect/file/" in url and "?" not in url:
-                    candidates.append(url+"?width=1600")
-                candidates.append(url)
+                # img src occasionally uses a Commons File: page instead of the
+                # binary redirect. Convert it to Special:Redirect first.
+                binary_url=url
+                if "commons.wikimedia.org/wiki/File:" in binary_url:
+                    filename=binary_url.split("/wiki/File:",1)[1]
+                    binary_url="https://commons.wikimedia.org/wiki/Special:Redirect/file/"+filename
+                if "commons.wikimedia.org/wiki/Special:Redirect/file/" in binary_url and "?" not in binary_url:
+                    candidates.append(binary_url+"?width=1600")
+                candidates.append(binary_url)
                 data=None; ctype=""; last_error=None; fetch_url=url
                 for candidate in candidates:
                     try:
