@@ -167,6 +167,15 @@
   margin-top:8px!important;
 }
 
+@media(min-width:761px){
+  .hotel-choice-copy .rate-link,
+  .hotel-choice-copy>.btn{
+    align-self:flex-start!important;
+    max-width:100%!important;
+    white-space:nowrap!important;
+  }
+}
+
 /* 4) Homepage journey spine: navigation cells must never be turned into two
    adjacent navy CTA slabs by global label normalisation. */
 .home-journey-spine{
