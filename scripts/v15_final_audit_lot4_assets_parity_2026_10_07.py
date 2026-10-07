@@ -21,6 +21,7 @@ from urllib.request import Request, urlopen
 import hashlib
 import mimetypes
 import re
+import time
 
 ROOT=Path(__file__).resolve().parents[1]
 SKIP={".git",".github","scripts","docs","backup",
@@ -66,17 +67,33 @@ def localise_wikimedia():
                 candidates.append(binary_url)
                 data=None; ctype=""; last_error=None; fetch_url=url
                 for candidate in candidates:
-                    try:
-                        req=Request(candidate,headers={"User-Agent":"Mametas/1.0 (editorial image localisation)"})
-                        with urlopen(req,timeout=45) as resp:
-                            candidate_data=resp.read()
-                            candidate_type=(resp.headers.get_content_type() or "").lower()
-                        if candidate_data:
-                            data=candidate_data; ctype=candidate_type; fetch_url=candidate
+                    for attempt in range(4):
+                        try:
+                            req=Request(candidate,headers={
+                                "User-Agent":"Mametas/1.0 (editorial image localisation)",
+                                "Accept":"image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+                            })
+                            with urlopen(req,timeout=45) as resp:
+                                candidate_data=resp.read()
+                                candidate_type=(resp.headers.get_content_type() or "").lower()
+                            if candidate_data:
+                                data=candidate_data; ctype=candidate_type; fetch_url=candidate
+                                # Commons rate-limits bursts. A small pause makes
+                                # the one production materialisation predictable.
+                                time.sleep(0.35)
+                                break
+                        except Exception as exc:
+                            last_error=exc
+                            code=getattr(exc,"code",None)
+                            if code==429 and attempt<3:
+                                wait=2.0*(attempt+1)
+                                print("Wikimedia rate limited; retrying in",wait,"seconds:",candidate)
+                                time.sleep(wait)
+                                continue
+                            print("Wikimedia fetch retry:",candidate,repr(exc))
                             break
-                    except Exception as exc:
-                        last_error=exc
-                        print("Wikimedia fetch retry:",candidate,repr(exc))
+                    if data:
+                        break
                 if not data:
                     raise RuntimeError(f"Cannot localise Wikimedia image {url}: {last_error}")
                 ext={ "image/jpeg":".jpg","image/png":".png","image/webp":".webp" }.get(ctype)
