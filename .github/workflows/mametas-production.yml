@@ -357,7 +357,7 @@ jobs:
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
       - name: Syntax-check final editorial passes
-        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py scripts/v10_final_ux_closure_2026_10_05.py scripts/v11_claude_final_audit_core_2026_10_06.py scripts/v12_final_audit_lot1_2026_10_07.py
+        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py scripts/v10_final_ux_closure_2026_10_05.py scripts/v11_claude_final_audit_core_2026_10_06.py scripts/v12_final_audit_lot1_2026_10_07.py scripts/v13_final_audit_lot2_components_2026_10_07.py
 
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
@@ -376,6 +376,9 @@ jobs:
 
       - name: Apply Claude final audit lot 1 blockers
         run: python scripts/v12_final_audit_lot1_2026_10_07.py
+
+      - name: Apply Claude final audit lot 2 components
+        run: python scripts/v13_final_audit_lot2_components_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
         run: |

@@ -34,7 +34,8 @@ jobs:
             scripts/v9_traveller_voice_integrity_2026_10_05.py \
             scripts/v10_final_ux_closure_2026_10_05.py \
             scripts/v11_claude_final_audit_core_2026_10_06.py \
-            scripts/v12_final_audit_lot1_2026_10_07.py
+            scripts/v12_final_audit_lot1_2026_10_07.py \
+            scripts/v13_final_audit_lot2_components_2026_10_07.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
@@ -71,6 +72,9 @@ jobs:
 
       - name: Apply Claude final audit lot 1 blockers
         run: python scripts/v12_final_audit_lot1_2026_10_07.py
+
+      - name: Apply Claude final audit lot 2 components
+        run: python scripts/v13_final_audit_lot2_components_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
         run: |

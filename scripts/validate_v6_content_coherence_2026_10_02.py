@@ -136,11 +136,11 @@ for p in ROOT.rglob("index.html"):
         label = re.sub(r'<[^>]+>', '', m.group(2)).strip()
         fr = bool(re.search(r'<html[^>]+lang=["\']fr', s, re.I))
         if "expedia" in href.lower():
-            expected = "Voir les tarifs sur Expedia" if fr else "Check rates on Expedia"
+            expected = "Voir les tarifs sur Expedia ↗" if fr else "Check rates on Expedia ↗"
             if label != expected:
                 errors.append(f"{rel}: non-canonical Expedia CTA")
         if "booking.com" in href.lower() or "kqzyfj.com" in href.lower():
-            expected = "Voir les tarifs sur Booking.com" if fr else "Check rates on Booking.com"
+            expected = "Voir les tarifs sur Booking.com ↗" if fr else "Check rates on Booking.com ↗"
             if label != expected:
                 errors.append(f"{rel}: non-canonical Booking CTA")
 
