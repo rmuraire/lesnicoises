@@ -77,11 +77,11 @@ def patch_gay_nice_fr_faq():
 def patch_where_to_stay_en_markup():
     rel="en/gay-french-riviera/where-to-stay/index.html"
     def fn(s):
-        broken='<div class="place"><h3>Blue Angels Bed &amp; Breakfast — Nice</h3><div class="address">8 rue Assalit · central Nice</div>\n<div class="place"><h3>Les Jardins de Baquis — Nice</h3><div class="address">3 avenue Baquis · central Nice</div>'
         fixed='''<div class="place"><h3>Blue Angels Bed &amp; Breakfast: Nice</h3><div class="address">8 rue Assalit · central Nice</div><p class="why">Two rooms, four guests maximum, and an official description as a 100% gay B&amp;B. This is much closer to a community stay than a conventional labelled hotel.</p><p class="practical">Men only · Nice Rainbow · very small capacity · direct booking.</p></div>
-<div class="place"><h3>Les Jardins de Baquis: Nice</h3><div class="address">3 avenue Baquis · central Nice</div><p class="why">A quiet gay-friendly guest room with a private shower room and balcony, central enough to reach the sea and centre on foot.</p><p class="practical">Nice Rainbow · one room · direct booking.</p></div>'''
-        if broken in s: return s.replace(broken,fixed,1)
-        return s
+<div class="place"><h3>Les Jardins de Baquis: Nice</h3><div class="address">3 avenue Baquis · central Nice</div><p class="why">A quiet gay-friendly guest room with a private shower room and balcony, central enough to reach the sea and centre on foot.</p><p class="practical">Nice Rainbow · one room · direct booking.</p></div>
+'''
+        pat=re.compile(r'<div class="place"><h3>Blue Angels Bed &amp; Breakfast(?::|\s*[—–-])\s*Nice</h3><div class="address">8 rue Assalit · central Nice</div>\s*<div class="place"><h3>Les Jardins de Baquis(?::|\s*[—–-])\s*Nice</h3><div class="address">3 avenue Baquis · central Nice</div>\s*(?=<h2>Labelled and lower budget</h2>)',re.I)
+        return pat.sub(fixed,s,count=1)
     rw(rel,fn)
 
 def patch_where_to_stay_fr_faq_and_hotels():
@@ -94,18 +94,18 @@ def patch_where_to_stay_fr_faq_and_hotels():
 </div>
 '''
         if 'Deux compléments utiles à Nice' not in s:
-            marker='<h2>2. Vous voulez une vraie maison d’hôtes gay à Nice ?</h2>'
-            if marker not in s: raise RuntimeError("FR gay stay section marker missing")
-            s=s.replace(marker,hotel_block+marker,1)
+            m=re.search(r'<h2[^>]*>\s*2\.\s*Vous voulez une vraie maison d[’\']hôtes gay à Nice\s*[\u202f\u00a0 ]*\?\s*</h2>',s,re.I)
+            if not m: raise RuntimeError("FR gay stay section marker missing")
+            s=s[:m.start()]+hotel_block+s[m.start():]
         faq='''<h2>FAQ</h2>
 <div class="place"><h3>Qu’est-ce que le label Nice Rainbow ?</h3><p class="why">Un programme officiel d’accueil de Nice Côte d’Azur. C’est un signal utile d’accueil LGBTQ+ explicite ; cela ne signifie ni hôtel réservé aux gays ni clientèle majoritairement LGBTQ+.</p></div>
 <div class="place"><h3>Existe-t-il des hôtels gay-only près de Nice ?</h3><p class="why">L’option dédiée la plus claire de ce guide est La Connexion, dans l’arrière-pays cannois. À Nice, Blue Angels est un très petit B&amp;B réservé aux hommes plutôt qu’un hôtel classique.</p></div>
 <div class="place"><h3>Quel quartier de Nice choisir pour la vie nocturne gay ?</h3><p class="why">Vieux-Nice, Garibaldi et le côté Port gardent les adresses du soir les plus proches. Si la nuit compte, privilégiez la possibilité de rentrer à pied plutôt qu’un code postal en bord de mer.</p></div>
 '''
         if 'Qu’est-ce que le label Nice Rainbow ?' not in s:
-            marker='<div class="verdict"><span class="label">DÉCISION SUIVANTE</span>'
-            if marker not in s: raise RuntimeError("FR gay stay next-decision marker missing")
-            s=s.replace(marker,faq+marker,1)
+            m=re.search(r'<div class="verdict"><span class="label">DÉCISION SUIVANTE</span>',s,re.I)
+            if not m: raise RuntimeError("FR gay stay next-decision marker missing")
+            s=s[:m.start()]+faq+s[m.start():]
         return s
     rw(rel,fn)
 
@@ -117,9 +117,9 @@ def patch_gay_beaches_fr():
 <div class="fact-grid"><div class="fact"><b>Villefranche</b><span>Facile en train ou en bus, baie calme et simple sans voiture.</span></div><div class="fact"><b>Cap-Ferrat</b><span>Plus intéressant pour les criques, le sentier côtier et une vraie journée lente.</span></div><div class="fact"><b>Rester à Nice</b><span>Castel ou Coco Beach si vous ne voulez aucune logistique supplémentaire.</span></div></div>
 '''
         if 'Pour la plus belle journée de baignade' not in s:
-            marker='<h2>Laquelle choisir ?</h2>'
-            if marker not in s: raise RuntimeError("FR gay beaches choice marker missing")
-            s=s.replace(marker,block+marker,1)
+            m=re.search(r'<h2[^>]*>\s*Laquelle choisir\s*[\u202f\u00a0 ]*\?\s*</h2>',s,re.I)
+            if not m: raise RuntimeError("FR gay beaches choice marker missing")
+            s=s[:m.start()]+block+s[m.start():]
         faq='''<h2>FAQ</h2>
 <div class="place"><h3>Y a-t-il une plage gay à Nice ?</h3><p class="why">Castel est l’option centrale la plus claire avec un signal Nice Rainbow explicite. Coco Beach est un lieu de baignade public plus informel, sans label gay.</p></div>
 <div class="place"><h3>Saint-Laurent-d’Èze est-elle naturiste ?</h3><p class="why">C’est l’option la plus orientée naturisme de ce guide, mais l’accès demande davantage de préparation que les plages niçoises.</p></div>
