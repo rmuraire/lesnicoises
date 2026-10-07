@@ -29,6 +29,13 @@ SKIP={".git",".github","scripts","docs","backup",
 
 WIKI_HOSTS=("commons.wikimedia.org","upload.wikimedia.org")
 
+# Known editorial images that are already licensed/local in the repository.
+# Prefer these over a network fetch so Wikimedia throttling can never block
+# an otherwise unrelated production deployment.
+KNOWN_WIKI_LOCAL={
+    "08_Fondation_Maeght.JPG":"/assets/editorial/fondation-maeght-waterborough.webp",
+}
+
 def is_wiki(url:str)->bool:
     try:
         return urlparse(url).hostname in WIKI_HOSTS
@@ -55,6 +62,19 @@ def localise_wikimedia():
             if url in seen:
                 local=seen[url]
             else:
+                local=next(
+                    (
+                        local_path
+                        for needle,local_path in KNOWN_WIKI_LOCAL.items()
+                        if needle in url and (ROOT/local_path.lstrip("/")).is_file()
+                    ),
+                    None,
+                )
+                if local:
+                    seen[url]=local
+                    print("Wikimedia localisation reused local asset:",url,"->",local)
+                    s=s.replace(raw,local).replace(raw.replace("&","&amp;"),local)
+                    continue
                 candidates=[]
                 # img src occasionally uses a Commons File: page instead of the
                 # binary redirect. Convert it to Special:Redirect first.
