@@ -202,6 +202,7 @@ def check_hotels(page, label: str) -> list[str]:
           const img = card.querySelector('.hotel-choice-media img');
           const thumb = card.querySelector('.hotel-choice-media .batch-thumb');
           const r = media ? media.getBoundingClientRect() : null;
+          const ms = media ? getComputedStyle(media) : null;
           const actions = Array.from(card.querySelectorAll('.btn, .rate-link')).map(a => {
             const ar = a.getBoundingClientRect();
             return {w:ar.width, h:ar.height, text:a.innerText.trim()};
@@ -212,6 +213,12 @@ def check_hotels(page, label: str) -> list[str]:
             naturalWidth: img ? img.naturalWidth : (thumb ? 1 : 0),
             mediaW: r ? r.width : 0,
             mediaH: r ? r.height : 0,
+            aspect: ms ? ms.aspectRatio : '',
+            flex: ms ? ms.flex : '',
+            heightStyle: ms ? ms.height : '',
+            widthStyle: ms ? ms.width : '',
+            position: ms ? ms.position : '',
+            display: ms ? ms.display : '',
             actions
           };
         })"""
@@ -222,7 +229,11 @@ def check_hotels(page, label: str) -> list[str]:
         if d["mediaW"] and d["mediaH"]:
             ratio = d["mediaW"] / d["mediaH"]
             if ratio < 1.22 or ratio > 1.45:
-                errors.append(f"{label}: hotel card {d['idx']+1} media ratio {ratio:.2f}, expected ~1.33")
+                errors.append(
+                    f"{label}: hotel card {d['idx']+1} media ratio {ratio:.2f}, expected ~1.33 "
+                    f"(computed aspect={d['aspect']}, flex={d['flex']}, size={d['widthStyle']}×{d['heightStyle']}, "
+                    f"display={d['display']}, position={d['position']})"
+                )
         for a in d["actions"]:
             if a["h"] < 40:
                 errors.append(f"{label}: hotel CTA '{a['text'][:28]}' is only {a['h']:.0f}px high")
