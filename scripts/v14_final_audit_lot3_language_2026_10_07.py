@@ -156,8 +156,10 @@ def validate():
         if "—" in text or re.search(r'\s–\s', text):
             bad_dash.append(rel.as_posix())
         if html_lang(s)=="fr":
-            if re.search(r' (?=[?!;»])',text) or re.search(r' (?=:)',text):
-                bad_typo.append(rel.as_posix())
+            m1=re.search(r' (?=[?!;»:])',text)
+            if m1:
+                a=max(0,m1.start()-70); b=min(len(text),m1.end()+90)
+                bad_typo.append(rel.as_posix()+" :: "+re.sub(r'\\s+',' ',text[a:b]))
         # Report residual opposition density; do not fail on isolated deliberate uses.
         if html_lang(s)=="en":
             n=len(re.findall(r',\s+not\b|\bNot\s+[^.!?]{1,80}[.!?]',text,re.I))
