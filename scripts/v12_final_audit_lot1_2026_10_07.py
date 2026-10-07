@@ -95,19 +95,8 @@ def patch_html_blockers():
         s=s.replace("jusqu'au 30 septembre 2026","pendant la saison 2026, jusqu’au 30 septembre")
         s=s.replace("du 15 juin au 15 septembre 2026","pendant la saison 2026, du 15 juin au 15 septembre")
 
-        # B11: remove logistics cells whose only value is a placeholder.
-        placeholder=r'(?:See official information below\.|Voir les informations officielles ci-dessous\.)'
-        patterns=[
-          rf'<div[^>]*class=["\'][^"\']*(?:fact|logistics)[^"\']*["\'][^>]*>(?:(?!</div>)[\s\S])*?{placeholder}(?:(?!</div>)[\s\S])*?</div>',
-          rf'<li[^>]*>(?:(?!</li>)[\s\S])*?{placeholder}(?:(?!</li>)[\s\S])*?</li>',
-          rf'<tr[^>]*>(?:(?!</tr>)[\s\S])*?{placeholder}(?:(?!</tr>)[\s\S])*?</tr>',
-        ]
-        for pat in patterns:
-            s=re.sub(pat,"",s,flags=re.I)
-
-        # If a naked placeholder survived, remove its immediate paragraph/span rather than
-        # leaving a false address/access/time statement.
-        s=re.sub(rf'<(?:p|span)[^>]*>\s*{placeholder}\s*</(?:p|span)>',"",s,flags=re.I)
+        # B11 is fixed at generation time in v6_content_family_normalization:
+        # unknown logistics fields are omitted rather than filled with a placeholder.
 
         # B14: home agenda headline parity and remove stale exhibition wording wherever it survived.
         s=s.replace("Carnival, IRONMAN, an exhibition closing soon — the Riviera has its own calendar.",
