@@ -126,9 +126,10 @@ def patch_gay_beaches_fr():
 <div class="place"><h3>Peut-on y aller sans voiture ?</h3><p class="why">Oui pour les plages couvertes ici, mais « possible » ne veut pas dire « sans effort ». Castel est la plus simple ; Saint-Laurent-d’Èze demande le plus d’organisation.</p></div>
 '''
         if 'Y a-t-il une plage gay à Nice' not in s:
-            m=re.search(r'<div class="sources">\s*<h2[^>]*>\s*Sources vérifiées\s*</h2>',s,re.I)
-            if not m: raise RuntimeError("FR gay beaches sources marker missing")
-            s=s[:m.start()]+faq+s[m.start():]
+            marker='<div class="sources">'
+            pos=s.find(marker)
+            if pos < 0: raise RuntimeError("FR gay beaches sources container missing")
+            s=s[:pos]+faq+s[pos:]
         return s
     rw(rel,fn)
 
