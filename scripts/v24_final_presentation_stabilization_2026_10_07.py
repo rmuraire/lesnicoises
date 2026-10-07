@@ -198,6 +198,73 @@ def patch_solo_hotel66_media() -> None:
         write(rel, s, old)
 
 
+def _normalise_class_attr(attrs: str, add: tuple[str, ...] = (), remove: tuple[str, ...] = ()) -> str:
+    m = re.search(r'\sclass=["\']([^"\']*)["\']', attrs, re.I)
+    classes = m.group(1).split() if m else []
+    classes = [x for x in classes if x not in set(remove)]
+    for x in add:
+        if x not in classes:
+            classes.append(x)
+    value = " ".join(classes)
+    if m:
+        return attrs[:m.start()] + (f' class="{value}"' if value else "") + attrs[m.end():]
+    return attrs + (f' class="{value}"' if value else "")
+
+
+def normalize_inline_tool_ctas() -> None:
+    """A button must never be injected into running editorial copy.
+
+    Earlier audit passes intentionally normalise Hotel Fit launch labels, but on
+    destination pages that can turn an inline editorial link into a navy button
+    in the middle of a sentence. Keep the link, demote it to editorial-link
+    geometry, and mark the paragraph so the last CSS layer can place it cleanly.
+    """
+    para_pat = re.compile(r'<p(?P<attrs>[^>]*)>(?P<body>[\s\S]*?)</p>', re.I)
+    anchor_pat = re.compile(r'<a\b(?P<attrs>[^>]*)>(?P<label>[\s\S]*?)</a>', re.I)
+
+    for p in ROOT.rglob("*.html"):
+        rel = p.relative_to(ROOT)
+        if rel.parts and rel.parts[0] in SKIP:
+            continue
+        s = p.read_text(encoding="utf-8", errors="ignore")
+        if "/hotels/finder/" not in s and "/en/hotels/finder/" not in s:
+            continue
+        old = s
+
+        def para_repl(pm: re.Match[str]) -> str:
+            attrs = pm.group("attrs")
+            body = pm.group("body")
+            touched = False
+
+            def anchor_repl(am: re.Match[str]) -> str:
+                nonlocal touched
+                aattrs = am.group("attrs")
+                href_m = re.search(r'\bhref=["\']([^"\']+)["\']', aattrs, re.I)
+                if not href_m or not re.match(r'^/(?:en/)?hotels/finder/', href_m.group(1), re.I):
+                    return am.group(0)
+                cm = re.search(r'\sclass=["\']([^"\']*)["\']', aattrs, re.I)
+                classes = set(cm.group(1).split()) if cm else set()
+                paragraph_is_bridge = "destination-hotel-fit-cta" in attrs
+                if not paragraph_is_bridge and not classes.intersection({"btn", "btn--primary", "button"}):
+                    return am.group(0)
+                touched = True
+                aattrs = _normalise_class_attr(
+                    aattrs,
+                    add=("inline-decision-link", "editorial-tool-link"),
+                    remove=("btn", "btn--primary", "button"),
+                )
+                return f'<a{aattrs}>{am.group("label")}</a>'
+
+            new_body = anchor_pat.sub(anchor_repl, body)
+            if not touched:
+                return pm.group(0)
+            new_attrs = _normalise_class_attr(attrs, add=("editorial-tool-bridge",))
+            return f'<p{new_attrs}>{new_body}</p>'
+
+        s = para_pat.sub(para_repl, s)
+        write(rel.as_posix(), s, old)
+
+
 def targeted_copy_cleanup() -> None:
     replace_many("index.html", [
         ("Do not collect the Riviera. Choose it.", "Choose the Riviera that fits your trip."),
@@ -302,6 +369,19 @@ def audit_presentation() -> None:
 
     errors.extend(audit_cards())
 
+    # Editorial copy must never contain a Hotel Fit button inside a paragraph.
+    for p in ROOT.rglob("*.html"):
+        rel = p.relative_to(ROOT)
+        if rel.parts and rel.parts[0] in SKIP:
+            continue
+        s = p.read_text(encoding="utf-8", errors="ignore")
+        if re.search(
+            r'<p\b[^>]*>[\s\S]*?<a\b[^>]*class=["\'][^"\']*\b(?:btn|button)\b[^"\']*["\'][^>]*href=["\']/(?:en/)?hotels/finder/',
+            s,
+            re.I,
+        ):
+            errors.append(rel.as_posix() + ": Hotel Fit button still injected inside editorial paragraph")
+
     # Key-page local image integrity.
     key_pages = [
         "index.html", "fr/index.html",
@@ -355,6 +435,7 @@ def main() -> None:
     restore_home_journey("fr/index.html", JOURNEY_FR)
     patch_solo_hotel66_media()
     patch_all_hotel_choice_cards()
+    normalize_inline_tool_ctas()
     targeted_copy_cleanup()
     audit_presentation()
 
