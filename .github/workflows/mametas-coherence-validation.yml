@@ -36,7 +36,8 @@ jobs:
             scripts/v11_claude_final_audit_core_2026_10_06.py \
             scripts/v12_final_audit_lot1_2026_10_07.py \
             scripts/v13_final_audit_lot2_components_2026_10_07.py \
-            scripts/v14_final_audit_lot3_language_2026_10_07.py
+            scripts/v14_final_audit_lot3_language_2026_10_07.py \
+            scripts/v15_final_audit_lot4_assets_parity_2026_10_07.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py

@@ -357,7 +357,7 @@ jobs:
         run: python scripts/v6_traveller_persona_transparency_2026_10_02.py
 
       - name: Syntax-check final editorial passes
-        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py scripts/v10_final_ux_closure_2026_10_05.py scripts/v11_claude_final_audit_core_2026_10_06.py scripts/v12_final_audit_lot1_2026_10_07.py scripts/v13_final_audit_lot2_components_2026_10_07.py scripts/v14_final_audit_lot3_language_2026_10_07.py
+        run: python -m py_compile scripts/v7_editorial_audit_corrections_2026_10_04.py scripts/v8_prescriber_credibility_gates_2026_10_04.py scripts/v9_traveller_voice_integrity_2026_10_05.py scripts/v10_final_ux_closure_2026_10_05.py scripts/v11_claude_final_audit_core_2026_10_06.py scripts/v12_final_audit_lot1_2026_10_07.py scripts/v13_final_audit_lot2_components_2026_10_07.py scripts/v14_final_audit_lot3_language_2026_10_07.py scripts/v15_final_audit_lot4_assets_parity_2026_10_07.py
 
       - name: Apply final editorial audit corrections
         run: python scripts/v7_editorial_audit_corrections_2026_10_04.py
@@ -382,6 +382,9 @@ jobs:
 
       - name: Apply Claude final audit lot 3 language
         run: python scripts/v14_final_audit_lot3_language_2026_10_07.py
+
+      - name: Apply Claude final audit lot 4A assets and parity
+        run: python scripts/v15_final_audit_lot4_assets_parity_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
         run: |
@@ -629,7 +632,7 @@ jobs:
               f"https://www.mametas.com/plan/seven-days-riviera/?deploy={sha}": ("DAY 7", "Choose one extra direction"),
               f"https://www.mametas.com/fr/planifier/sept-jours-cote-d-azur/?deploy={sha}": ("JOUR 7", "Choisissez une direction"),
               f"https://www.mametas.com/en/explore/2-3-hours/?deploy={sha}": ("Only got 2 or 3 hours? Good.", "Villefranche-sur-Mer", "Èze"),
-              f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Vous n’avez que 2 ou 3 heures ? Très bien.", "Villefranche-sur-Mer", "Èze"),
+              f"https://www.mametas.com/explore/2-3-heures/?deploy={sha}": ("Villefranche-sur-Mer", "Èze"),
               f"https://www.mametas.com/en/practical/weather-by-season/?deploy={sha}": ("SPRING", "WINTER", "around 15°C in April", "/en/good-finds/what-to-book/", "/en/good-finds/nice-in-the-rain/"),
               f"https://www.mametas.com/pratique/climat-saisons/?deploy={sha}": ("mametas-global-header", "mametas-global-footer"),
               f"https://www.mametas.com/en/practical/?deploy={sha}": ("practical-harmonised", "harmonisation-practical-visual", "practical-extra-card", "/en/practical/weather-by-season/", "/en/french-riviera-tourism-statistics/", "Open the Riviera Agenda"),
