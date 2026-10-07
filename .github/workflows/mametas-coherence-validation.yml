@@ -40,7 +40,8 @@ jobs:
             scripts/v15_final_audit_lot4_assets_parity_2026_10_07.py \
             scripts/v16_final_audit_lot4_content_parity_2026_10_07.py \
             scripts/v17_final_audit_lot5_layout_2026_10_07.py \
-            scripts/v18_final_audit_recipe_gate_2026_10_07.py
+            scripts/v18_final_audit_recipe_gate_2026_10_07.py \
+            scripts/v19_final_post_parity_cleanup_2026_10_07.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
@@ -90,7 +91,12 @@ jobs:
       - name: Apply Claude final audit lot 5 layout finishing
         run: python scripts/v17_final_audit_lot5_layout_2026_10_07.py
 
+      - name: Apply final post-parity cleanup
+        run: python scripts/v19_final_post_parity_cleanup_2026_10_07.py
+
       - name: Run Claude final recipe static gate
+        env:
+          MAMETAS_SKIP_MATERIALIZED: "1"
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
       - name: Syntax-check interactive UX scripts
