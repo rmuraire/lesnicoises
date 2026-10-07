@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: mametas-coherence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   coherence:
     runs-on: ubuntu-latest
