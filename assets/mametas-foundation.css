@@ -309,27 +309,34 @@ body{
 .hotel-card-media,
 .hotel-choice-media{
   display:block!important;
+  position:relative!important;
   width:100%!important;
   height:auto!important;
-  aspect-ratio:3/2!important;
+  aspect-ratio:4/3!important;
+  overflow:hidden!important;
 }
 
-.hotel-card-media img,
-.hotel-choice-media img,
+.hotel-card-media>img,
+.hotel-choice-media>img,
+.hotel-choice-media>.batch-thumb,
+.hotel-card-media>.batch-thumb{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:100%!important;
+  object-fit:cover!important;
+}
+.hotel-choice-media>.batch-thumb,
+.hotel-card-media>.batch-thumb{
+  background-repeat:no-repeat!important;
+}
 .chooser-hotel-media img,
 .hotel-engine-media img{
   width:100%!important;
   height:100%!important;
   object-fit:cover!important;
-}
-.hotel-choice-media .batch-thumb,
-.hotel-card-media .batch-thumb{
-  display:block!important;
-  width:100%!important;
-  height:100%!important;
-  min-height:100%!important;
-  background-size:cover!important;
-  background-repeat:no-repeat!important;
 }
 
 .hotel-card-body,
