@@ -73,8 +73,12 @@ def homepage_agenda(s,fr=False):
         replacement='''<section class="v3-section now-section" id="maintenant"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">AGENDA DE LA RIVIERA</p><h2>Carnaval, MIPIM, Ironman. La Riviera a son propre calendrier.</h2></div><p>Les grands événements changent les tarifs, la circulation et les disponibilités. Gardez les dates qui comptent avant de réserver.</p></div><div class="now-grid"><a class="now-card" href="/bons-plans/"><time>À venir</time><h3>Voir l’agenda de la Riviera</h3><p>Dates officielles, implications pratiques et liens utiles, mis à jour sans remplir la page pour remplir la page.</p></a></div></div></section>'''
     else:
         replacement='''<section class="v3-section now-section" id="now"><div class="wrap"><div class="section-heading"><div><p class="eyebrow">RIVIERA AGENDA</p><h2>Carnival, MIPIM, Ironman. The Riviera has its own calendar.</h2></div><p>Big events change rates, traffic and availability. Keep the dates that matter in view before you book.</p></div><div class="now-grid"><a class="now-card" href="/en/good-finds/"><time>Coming up</time><h3>Open the Riviera agenda</h3><p>Official dates, practical implications and useful links, kept current without padding the calendar.</p></a></div></div></section>'''
-    pat=re.compile(r'<section class="v3-section now-section"[^>]*>[sS]*?</section>',re.I)
+    target_id = "maintenant" if fr else "now"
+    pat=re.compile(r'<section\\b[^>]*\\bid=["\\\']'+re.escape(target_id)+r'["\\\'][^>]*>[\\s\\S]*?</section>',re.I)
     n,count=pat.subn(replacement,s,count=1)
+    if not count:
+        pat2=re.compile(r'<section\\b[^>]*\\bclass=["\\\'][^"\\\']*now-section[^"\\\']*["\\\'][^>]*>[\\s\\S]*?</section>',re.I)
+        n,count=pat2.subn(replacement,s,count=1)
     return n if count else s
 write("index.html",lambda s:homepage_agenda(s,False))
 write("fr/index.html",lambda s:homepage_agenda(s,True))
@@ -83,7 +87,7 @@ write("fr/index.html",lambda s:homepage_agenda(s,True))
 # U+202F before ? ! ; » ; U+00A0 before : and after «.
 def protect_blocks(s):
     blocks=[]
-    pat=re.compile(r'<(script|style)[^>]*>[sS]*?</\1>',re.I)
+    pat=re.compile(r'<(script|style)\\b[^>]*>[\\s\\S]*?</\1>',re.I)
     def repl(m):
         key=f"__PROTECTED_{len(blocks)}__"
         blocks.append(m.group(0))
