@@ -39,6 +39,13 @@ def typography():
         parts=re.split(r'(<[^>]+>)',protected)
         for i in range(0,len(parts),2):
             t=parts[i]
+            # Protect HTML entities: French punctuation spacing must not turn
+            # "&amp;" into "&amp ;" or otherwise corrupt entity syntax.
+            entities=[]
+            def hold_entity(m):
+                key=f"__MAMETAS_ENTITY_{len(entities)}__"
+                entities.append(m.group(0)); return key
+            t=re.sub(r'&(?:#[0-9]+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]+);',hold_entity,t)
             t=re.sub(r'[ \t\u00a0\u202f]+(?=[,.])','',t)
             if fr:
                 t=t.replace("'","’")
@@ -50,6 +57,8 @@ def typography():
                     t=re.sub(rf'\b{a}\b',b,t)
             else:
                 t=re.sub(r'[ \t\u00a0\u202f]+(?=:)','',t)
+            for ei,entity in enumerate(entities):
+                t=t.replace(f"__MAMETAS_ENTITY_{ei}__",entity)
             parts[i]=t
         s=restore_blocks("".join(parts),blocks)
         if s!=old:
