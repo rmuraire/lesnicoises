@@ -42,7 +42,7 @@ jobs:
             scripts/v17_final_audit_lot5_layout_2026_10_07.py \
             scripts/v18_final_audit_recipe_gate_2026_10_07.py \
             scripts/v19_final_post_parity_cleanup_2026_10_07.py scripts/v20_final_audit_heading_hierarchy_2026_10_07.py scripts/v21_final_audit_hotel_depth_2026_10_07.py \
-            scripts/v22_final_hotel_fit_wording_guard_2026_10_07.py scripts/v23_css_foundation_2026_10_07.py scripts/v24_final_presentation_stabilization_2026_10_07.py
+            scripts/v22_final_hotel_fit_wording_guard_2026_10_07.py scripts/v23_css_foundation_2026_10_07.py scripts/v24_final_presentation_stabilization_2026_10_07.py scripts/v25_browser_smoke_2026_10_07.py
 
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
@@ -115,6 +115,12 @@ jobs:
 
       - name: Apply final presentation stabilization
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
+
+      - name: Install browser smoke dependency
+        run: python -m pip install --quiet playwright
+
+      - name: Run browser presentation smoke
+        run: python scripts/v25_browser_smoke_2026_10_07.py
 
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
