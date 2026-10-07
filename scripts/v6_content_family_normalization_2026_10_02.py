@@ -423,6 +423,7 @@ def culture_practical_block(block: str, full_text: str, lang: str) -> str:
     grid = ''.join(
         f'<div><b>{label}</b><span>{value}</span></div>'
         for label, value in zip(labels[1:], values)
+        if value != missing
     )
     return (
         '<div class="culture-logistics" data-culture-logistics="v1">'
