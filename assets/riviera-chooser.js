@@ -822,6 +822,41 @@
       return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
     }
 
+    // Riviera Fit must not depend on scraping one town hub for imagery: some
+    // recommendations deliberately cross Villefranche / Beaulieu / Cap-Ferrat.
+    var HOTEL_MEDIA = {
+      'hotel 66 nice':'/assets/hotels/hotel-66/hero.jpg',
+      'hotel villa victoria':'/assets/hotels/villa-victoria/hero.jpg',
+      'hotel du couvent':'/assets/hotels/hotel-du-couvent/exterieur.jpg',
+      'hotel de provence':'/assets/hotels/hotel-de-provence-cannes/batch-thumb.svg',
+      'le cavendish':'/assets/hotels/le-cavendish/hero.jpg',
+      'hotel martinez':'/assets/hotels/hotel-martinez/hero.jpg',
+      'hotel de l etoile':'/assets/hotels/hotel-de-letoile-antibes/batch-thumb.svg',
+      'la villa port d antibes':'/assets/hotels/la-villa-port-antibes/hero.jpg',
+      'hotel belles rives':'/assets/hotels/hotel-belles-rives/batch-thumb.svg',
+      'hotel comte de nice':'/assets/hotels/hotel-le-comte-de-nice/hero.jpg',
+      'welcome hotel':'/assets/hotels/welcome-hotel/hero.jpg',
+      'grand hotel du cap ferrat':'/assets/hotels/grand-hotel-du-cap-ferrat/batch-thumb.svg',
+      'ibis roquebrune cap martin menton':'/assets/hotels/ibis-roquebrune-cap-martin/batch-thumb.svg',
+      'hotel napoleon':'/assets/hotels/hotel-napoleon/hero.jpg',
+      'villa genesis':'/assets/hotels/villa-genesis/hero.jpg',
+      'monte carlo bay hotel resort':'/assets/hotels/monte-carlo-bay/batch-thumb.svg',
+      'hotel hermitage monte carlo':'/assets/hotels/hotel-hermitage-monte-carlo/batch-thumb.svg',
+      'hotel de paris monte carlo':'/assets/hotels/hotel-de-paris-monte-carlo/hero.jpg',
+      'kube saint tropez':'/assets/hotels/kube-saint-tropez/batch-thumb.svg',
+      'la ferme d augustin':'/assets/hotels/la-ferme-daugustin/batch-thumb.svg',
+      'hotel la ponche':'/assets/hotels/la-ponche-saint-tropez/batch-thumb.svg',
+      'hotel les messugues':'/assets/hotels/hotel-les-messugues/batch-thumb.svg',
+      'toile blanche':'/assets/hotels/toile-blanche/batch-thumb.svg',
+      'le domaine du mas de pierre':'/assets/hotels/domaine-du-mas-de-pierre/batch-thumb.svg'
+    };
+
+    function hotelMediaMarkup(name) {
+      var src = HOTEL_MEDIA[hotelKey(name)];
+      if (!src) return '';
+      return '<div class="chooser-hotel-media"><img src="' + esc(src) + '" alt="' + esc(name) + '" loading="lazy" decoding="async"></div>';
+    }
+
     function hydrateHotelMedia(model, out) {
       if (!model || !model.base || !model.base.hotels || typeof fetch === 'undefined') return;
       fetch(model.base.hotels, { credentials:'same-origin', cache:'no-store' })
@@ -910,7 +945,7 @@
       }
       var hotelCards = model.hotels.map(function (h) {
         var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
-        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="booking_or_partner" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
+        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="booking_or_partner" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '">' + hotelMediaMarkup(h.name) + '<div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
       }).join('');
       var escape = '';
       if (!model.override && model.escape) {
