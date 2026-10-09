@@ -14,6 +14,46 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  typography-focus:
+    name: Compare three typography examples
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install screenshot browser dependency
+        run: pip install --disable-pip-version-check --quiet playwright
+      - name: Capture three live pages with computed fonts
+        run: python scripts/mametas_live_typography_screens_2026_10_09.py --focus
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mametas-typography-3-pages
+          path: typography-screen-audit/
+          retention-days: 10
+
+  typography-sitewide:
+    name: Capture every sitemap page at 390 and 1440px
+    runs-on: ubuntu-latest
+    timeout-minutes: 48
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install screenshot browser dependency
+        run: pip install --disable-pip-version-check --quiet playwright
+      - name: Screen live site and measure typography
+        run: python scripts/mametas_live_typography_screens_2026_10_09.py --max-pages 400
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mametas-typography-whole-site
+          path: typography-screen-audit/
+          retention-days: 10
+
   hotel-hubs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
