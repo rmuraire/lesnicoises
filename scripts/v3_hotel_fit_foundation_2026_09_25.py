@@ -483,7 +483,8 @@ def inject_shortlist_cta(rel: str, base: str, lang: str) -> None:
             '</div>'
         )
 
-    text = text[:paragraph_end] + block + text[paragraph_end:]
+    # Place a standalone tool block AFTER the closing paragraph, not inside <p>.
+    text = text[:paragraph_end + 4] + block + text[paragraph_end + 4:]
     write_if_changed(rel, text, original)
 
 def inject_hub_fit_profiles() -> None:

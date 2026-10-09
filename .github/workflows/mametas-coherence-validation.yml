@@ -140,6 +140,12 @@ jobs:
       - name: Apply final presentation stabilization
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
+      - name: Materialize curated day-trip activity cards for family QA
+        run: python scripts/getyourguide_affiliate_pass.py
+
+      - name: Apply family-wide destination recipe in PR QA
+        run: python scripts/v27_destination_recipe_cta_layout_2026_10_09.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 

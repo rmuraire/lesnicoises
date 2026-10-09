@@ -62,7 +62,7 @@ for slug, key in destination_files:
         if "mametas-detail-back" not in s or "mametas-detail-eyebrow" not in s:
             errors.append(f"{rel}: canonical detail top missing")
         if key in {"nice","villefranche","antibes","cannes","monaco","menton"} and not any(
-            token in s for token in ("destination-hotel-fit-cta","destination-hotel-fit-bridge")
+            token in s for token in ("destination-hotel-fit-cta","destination-hotel-fit-bridge","destination-hotel-fit-single")
         ):
             errors.append(f"{rel}: Hotel Fit bridge missing")
 

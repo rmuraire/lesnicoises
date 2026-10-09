@@ -419,6 +419,9 @@ jobs:
       - name: Apply final presentation stabilization
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
+      - name: Apply final destination and activity card recipe
+        run: python scripts/v27_destination_recipe_cta_layout_2026_10_09.py
+
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
@@ -549,6 +552,50 @@ jobs:
           OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
+
+      - name: Check final destination recipe across public families
+        run: |
+          python - <<'PY'
+          import os, re
+          from urllib.request import Request, urlopen
+
+          def fetch(path):
+              url="https://www.mametas.com"+path
+              url+=("&" if "?" in url else "?")+"recipe="+os.getenv("GITHUB_SHA","check")
+              req=Request(url,headers={"User-Agent":"MametasFamilyRecipeQA/1.0",
+                                       "Cache-Control":"no-cache, no-store"})
+              with urlopen(req,timeout=30) as response:
+                  if response.status != 200:
+                      raise RuntimeError(f"{path}: HTTP {response.status}")
+                  return response.read().decode("utf-8","replace")
+
+          css=fetch("/assets/mametas-foundation.css")
+          for marker in ("MAMETAS RECIPE: DESTINATION AND ACTIVITY FAMILY",
+                         ".destination-hotel-fit-single",
+                         ".practical-decision-layer .day-grid",
+                         ".mametas-activity-copy > .mametas-activity-cta"):
+              if marker not in css:
+                  raise RuntimeError(f"Public foundation CSS missing: {marker}")
+
+          for slug in ("antibes","villefranche-cap-ferrat","monaco","menton"):
+              for lang in ("en/",""):
+                  path=f"/{lang}riviera-guide/{slug}/"
+                  html=fetch(path)
+                  article=html.split('class="article-body"',1)[-1].split("</article>",1)[0]
+                  if html.count('data-mametas-destination-fit="one"') != 1:
+                      raise RuntimeError(f"{path}: expected one Hotel Fit section")
+                  count=len(re.findall(r'href=["\']/(?:en/)?hotels/finder/',article,re.I))
+                  if count != 1:
+                      raise RuntimeError(f"{path}: {count} Hotel Fit links inside article")
+                  print("Live Hotel Fit bridge passed:",path)
+
+          for path in ("/escapades/","/en/day-trips/"):
+              html=fetch(path)
+              if "mametas-activity-grid" not in html or "mametas-activity-cta" not in html:
+                  raise RuntimeError(f"{path}: GetYourGuide card family missing")
+              print("Live activity layout hooks passed:",path)
+          print("Final family-wide recipe verified on public assets and pages")
+          PY
 
       - name: Check Carnival 2027 freshness live
         run: |
