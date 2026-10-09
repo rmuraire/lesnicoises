@@ -42,25 +42,41 @@ def normalize_page(rel):
     if 'data-hotel-fit-base-bridge="true"' not in s:
         match = gate.search(s)
         if not match:
-            nearby = s.find("engine-base-gate")
-            raise RuntimeError(rel + ": Riviera Fit bridge paragraph not located; context="
-                               + repr(s[max(0, nearby-140):nearby+470]))
-        inner = match.group("body")
-        anchor = re.search(r'<a\b[^>]*>[\s\S]*?</a>', inner, re.I)
-        if not anchor:
-            raise RuntimeError(rel + ": Riviera Fit anchor not found in base gate")
-        text = (inner[:anchor.start()] + inner[anchor.end():]).strip()
-        if not text or "Fit" not in text:
-            raise RuntimeError(rel + ": base gate explanation missing")
-        label = "Tester Riviera Fit" if rel.startswith("hotels/") else "Try Riviera Fit"
-        href = "/riviera-fit/" if rel.startswith("hotels/") else "/en/riviera-fit/"
-        repl = (
-            '<div class="engine-base-gate" data-hotel-fit-base-bridge="true">'
-            '<p class="engine-base-gate-copy">' + text + '</p>'
-            '<a class="engine-base-gate-cta" href="' + href + '">' + label + '</a>'
-            '</div>'
-        )
-        s = s[:match.start()] + repl + s[match.end():]
+            # PR coherence jobs start from a smaller, earlier materialization
+            # than production and do not always run v3_architecture_phase2.
+            # Create the same canonical bridge in that case.
+            first_legend = re.search(r'<fieldset>\s*<legend>1\s*·\s*[^<]+</legend>', s)
+            if not first_legend:
+                raise RuntimeError(rel + ": first Hotel Fit fieldset/legend missing")
+            copy = ("Hotel Fit commence quand la géographie est réglée. Vous hésitez encore entre les villes ?"
+                    if rel.startswith("hotels/") else
+                    "Hotel Fit starts once geography is settled. Still deciding between towns?")
+            href = "/riviera-fit/" if rel.startswith("hotels/") else "/en/riviera-fit/"
+            label = "Tester Riviera Fit" if rel.startswith("hotels/") else "Try Riviera Fit"
+            block = (
+                '<div class="engine-base-gate" data-hotel-fit-base-bridge="true">'
+                '<p class="engine-base-gate-copy">' + copy + '</p>'
+                '<a class="engine-base-gate-cta" href="' + href + '">' + label + '</a>'
+                '</div>'
+            )
+            s = s[:first_legend.end()] + block + s[first_legend.end():]
+        else:
+            inner = match.group("body")
+            anchor = re.search(r'<a\b[^>]*>[\s\S]*?</a>', inner, re.I)
+            if not anchor:
+                raise RuntimeError(rel + ": Riviera Fit anchor not found in base gate")
+            text = (inner[:anchor.start()] + inner[anchor.end():]).strip()
+            if not text or "Fit" not in text:
+                raise RuntimeError(rel + ": base gate explanation missing")
+            label = "Tester Riviera Fit" if rel.startswith("hotels/") else "Try Riviera Fit"
+            href = "/riviera-fit/" if rel.startswith("hotels/") else "/en/riviera-fit/"
+            repl = (
+                '<div class="engine-base-gate" data-hotel-fit-base-bridge="true">'
+                '<p class="engine-base-gate-copy">' + text + '</p>'
+                '<a class="engine-base-gate-cta" href="' + href + '">' + label + '</a>'
+                '</div>'
+            )
+            s = s[:match.start()] + repl + s[match.end():]
     if s.count('class="hotel-fit-intro-note"') != 1:
         raise RuntimeError(rel + ": expected exactly one editorial note")
     if s.count('data-hotel-fit-base-bridge="true"') != 1:
