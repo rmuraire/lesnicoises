@@ -66,6 +66,9 @@ jobs:
       - name: Add September 13 hotels
         run: python scripts/run_hotel_expansion_2026_09_13.py
 
+      - name: Validate hotel hub markup immediately after expansion
+        run: python scripts/validate_hotel_hub_structure_2026_10_09.py
+
       - name: Strengthen Nice hotel mid-range merchandising
         run: python scripts/nice_hotel_merchandising_2026_09_14.py
 
@@ -519,6 +522,9 @@ jobs:
           name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
           path: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
           retention-days: 30
+
+      - name: Gate production on intact FR and EN hotel hubs
+        run: python scripts/validate_hotel_hub_structure_2026_10_09.py
 
       - name: Deploy changed public files to OVH
         env:
