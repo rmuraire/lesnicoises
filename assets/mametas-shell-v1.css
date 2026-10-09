@@ -878,3 +878,23 @@ body.hotel-detail-page .eyebrow{
 body .page-hero + .section > .wrap > h2{
   font-family:var(--mg-serif,"Fraunces",Georgia,serif);
 }
+
+
+/* HOTEL BOOK CTA CONTRAST — 2026-10-09
+   Both hotel detail templates put their conversion CTA on a navy background.
+   The site's global .btn--affiliate and .booking-quiet-cta outline rules make
+   these links dark-on-dark/invisible. Override only this concrete component.
+   Booking/Expedia URLs, disclosure and all other affiliate buttons are untouched. */
+body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate,
+body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:visited {
+  background:#F7F2E7!important;
+  border:1px solid #F7F2E7!important;
+  color:#14213D!important;
+  text-decoration:none!important;
+}
+body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:hover,
+body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:focus-visible {
+  background:#FFFFFF!important;
+  border-color:#FFFFFF!important;
+  color:#14213D!important;
+}
