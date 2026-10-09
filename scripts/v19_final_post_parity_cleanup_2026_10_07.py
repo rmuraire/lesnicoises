@@ -159,14 +159,23 @@ def dedupe_boilerplate():
         for needle in needles:
             occurrences=[m for m in re.finditer(re.escape(needle),s)]
             if len(occurrences)<=1: continue
-            # Remove whole repeated paragraph after the first when it contains the boilerplate.
+            # Match *one paragraph at a time*. The previous expression
+            # <p>.*needle.*</p> could cross arbitrary cards/sections and
+            # accidentally delete most of a hotel's FR shortlist.
             seen=0
-            pat=re.compile(r'<p\b[^>]*>[\s\S]*?'+re.escape(needle[:min(48,len(needle))])+r'[\s\S]*?</p>',re.I)
+            paragraph_pat=re.compile(
+                r'<p\b[^>]*>(?:(?!</?(?:p|div|section|article)\b)[\s\S])*?</p>',
+                re.I,
+            )
             def repl(m):
                 nonlocal seen
+                paragraph=m.group(0)
+                # Only the genuine boilerplate paragraph is eligible.
+                if needle[:min(48,len(needle))].lower() not in paragraph.lower():
+                    return paragraph
                 seen+=1
-                return m.group(0) if seen==1 else ''
-            s=pat.sub(repl,s)
+                return paragraph if seen==1 else ''
+            s=paragraph_pat.sub(repl,s)
         if s!=old:
             p.write_text(s,encoding="utf-8"); changed+=1
     print("boilerplate dedupe changed",changed,"pages")

@@ -63,6 +63,9 @@ jobs:
       - name: Materialize hotel hubs
         run: python scripts/materialize_hotel_hubs.py
 
+      - name: Test safe hotel paragraph deduplication
+        run: python scripts/test_safe_boilerplate_2026_10_09.py
+
       - name: Add September 13 hotels
         run: python scripts/run_hotel_expansion_2026_09_13.py
 
