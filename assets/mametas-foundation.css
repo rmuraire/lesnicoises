@@ -744,3 +744,171 @@ body.rg-destination .article-body p>a[href*="/hotels/finder/"]{
     grid-template-columns:repeat(2,minmax(0,1fr))!important;
   }
 }
+
+
+/* MAMETAS RECIPE: DESTINATION AND ACTIVITY FAMILY — 2026-10-09
+   Shared final layer; keep scoped to the affected component families. */
+
+/* One deliberate, in-flow Hotel Fit bridge following the accommodation section. */
+body.rg-destination .article-body .destination-hotel-fit-single {
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:750px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  flex-wrap:wrap!important;
+  gap:14px 24px!important;
+  margin:26px 0 34px!important;
+  padding:20px 0!important;
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+  background:transparent!important;
+}
+body.rg-destination .article-body .destination-hotel-fit-single p {
+  flex:1 1 260px!important;
+  min-width:0!important;
+  margin:0!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font:500 14px/1.5 Inter,Arial,sans-serif!important;
+}
+body.rg-destination .article-body .destination-hotel-fit-single a.destination-hotel-fit-action {
+  flex:0 0 auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  max-width:100%!important;
+  min-height:44px!important;
+  margin:0!important;
+  padding:12px 18px!important;
+  background:#14213d!important;
+  border:1px solid #14213d!important;
+  color:#fffdf8!important;
+  text-decoration:none!important;
+  font:700 11px/1.35 Inter,Arial,sans-serif!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+  position:static!important;
+  transform:none!important;
+}
+
+/* All five practical-tip destination variants have the same reading rhythm.
+   The original generic .day-card rules inflated h3 and collapsed the gap
+   between heading and body. Treat tips as three peers, not giant headings. */
+body.rg-destination .practical-decision-layer .section-heading {
+  display:block!important;
+  max-width:850px!important;
+  margin:0 0 25px!important;
+}
+body.rg-destination .practical-decision-layer .section-heading h2 {
+  margin:8px 0 12px!important;
+  padding:0!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(29px,3vw,38px)!important;
+  font-weight:500!important;
+  line-height:1.12!important;
+}
+body.rg-destination .practical-decision-layer .section-heading > p {
+  margin:0 0 10px!important;
+  font-size:15px!important;
+  line-height:1.6!important;
+}
+body.rg-destination .practical-decision-layer .day-grid {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:16px!important;
+  margin:0!important;
+}
+body.rg-destination .practical-decision-layer .day-card {
+  box-sizing:border-box!important;
+  min-width:0!important;
+  height:100%!important;
+  margin:0!important;
+  padding:20px 20px 22px!important;
+  border:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-left:3px solid #b9903f!important;
+  background:rgba(255,253,248,.65)!important;
+}
+body.rg-destination .practical-decision-layer .day-card h3 {
+  margin:0 0 13px!important;
+  padding:0!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(20px,1.7vw,23px)!important;
+  font-weight:500!important;
+  line-height:1.18!important;
+}
+body.rg-destination .practical-decision-layer .day-card p {
+  margin:0!important;
+  padding:0!important;
+  font:400 14px/1.58 Inter,Arial,sans-serif!important;
+  color:var(--ink-soft,#3f4b63)!important;
+}
+body.rg-destination .practical-decision-layer .verdict-box {
+  margin:22px 0 0!important;
+  padding:24px 28px!important;
+}
+body.rg-destination .practical-decision-layer .verdict-box p {
+  margin:10px 0 0!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(19px,2vw,25px)!important;
+  line-height:1.38!important;
+}
+
+/* Escapades / Day trips: identical button baseline within the 2-column
+   GetYourGuide grid; CTA height no longer follows paragraph length. */
+.mametas-activities .mametas-activity-grid {
+  align-items:stretch!important;
+}
+.mametas-activities .mametas-activity-grid > .mametas-activity-card {
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  height:100%!important;
+}
+.mametas-activities .mametas-activity-grid > .mametas-activity-card > img {
+  flex:0 0 auto!important;
+}
+.mametas-activities .mametas-activity-grid > .mametas-activity-card > .mametas-activity-copy {
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+}
+.mametas-activities .mametas-activity-grid .mametas-activity-copy > .mametas-activity-cta {
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  margin-top:auto!important;
+  padding-top:12px!important;
+  align-self:flex-start!important;
+  white-space:normal!important;
+  text-align:center!important;
+}
+/* The action reserves its own vertical breathing room without changing
+   the clickable button height or the affiliate destination. */
+.mametas-activities .mametas-activity-grid .mametas-activity-copy > .mametas-catch {
+  margin-bottom:20px!important;
+}
+@media(max-width:920px) {
+  body.rg-destination .practical-decision-layer .day-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+@media(max-width:650px) {
+  body.rg-destination .practical-decision-layer .day-grid {
+    grid-template-columns:1fr!important;
+  }
+  body.rg-destination .article-body .destination-hotel-fit-single {
+    align-items:stretch!important;
+    gap:13px!important;
+  }
+  body.rg-destination .article-body .destination-hotel-fit-single a.destination-hotel-fit-action {
+    width:100%!important;
+  }
+  body.rg-destination .practical-decision-layer .day-card {
+    height:auto!important;
+    padding:18px!important;
+  }
+}
