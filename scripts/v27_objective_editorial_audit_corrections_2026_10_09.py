@@ -29,7 +29,7 @@ CORRECTIONS={
    ('<div class="segment-hotel-price">Sea-view room shown from about €366</div>',""),
  ],
  "cote-dazur-gay/index.html":[
-   ("Les dates peuvent bouger. Vérifiez l’agenda LGBTQIA+ officiel avant de réserver autour d’un événement.",
+   ("Les dates peuvent bouger. Vérifiez l’agenda LGBTQIA+ officiel avant de réserver autour d’un événement précis.",
     "La Pink Parade de Nice a eu lieu le 11 juillet en 2026. Pour 2027, confirmez la date auprès des organisateurs LGBTQIA+ locaux avant de réserver un séjour autour de l’événement."),
  ],
 }
