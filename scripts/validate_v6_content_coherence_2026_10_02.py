@@ -61,7 +61,9 @@ for slug, key in destination_files:
                 errors.append(f"{rel}: Reality Check label {label} missing")
         if "mametas-detail-back" not in s or "mametas-detail-eyebrow" not in s:
             errors.append(f"{rel}: canonical detail top missing")
-        if key in {"nice","villefranche","antibes","cannes","monaco","menton"} and "destination-hotel-fit-cta" not in s:
+        if key in {"nice","villefranche","antibes","cannes","monaco","menton"} and not any(
+            token in s for token in ("destination-hotel-fit-cta","destination-hotel-fit-bridge")
+        ):
             errors.append(f"{rel}: Hotel Fit bridge missing")
 
 # 3) Legacy semantic fragments from the audit.
