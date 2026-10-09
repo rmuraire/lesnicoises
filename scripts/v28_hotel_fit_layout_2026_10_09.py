@@ -59,6 +59,8 @@ def normalize_page(rel):
                 '<a class="engine-base-gate-cta" href="' + href + '">' + label + '</a>'
                 '</div>'
             )
+            if rel.startswith("hotels/"):
+                block = block.replace(" ?", "\u202f?").replace(" :", "\u202f:")
             s = s[:first_legend.end()] + block + s[first_legend.end():]
         else:
             inner = match.group("body")
@@ -66,6 +68,8 @@ def normalize_page(rel):
             if not anchor:
                 raise RuntimeError(rel + ": Riviera Fit anchor not found in base gate")
             text = (inner[:anchor.start()] + inner[anchor.end():]).strip()
+            if rel.startswith("hotels/"):
+                text = re.sub(r' (?=[?!;:»])', "\u202f", text)
             if not text or "Fit" not in text:
                 raise RuntimeError(rel + ": base gate explanation missing")
             label = "Tester Riviera Fit" if rel.startswith("hotels/") else "Try Riviera Fit"
