@@ -422,6 +422,9 @@ jobs:
       - name: Apply final destination and activity card recipe
         run: python scripts/v27_destination_recipe_cta_layout_2026_10_09.py
 
+      - name: Apply final Hotel Fit header and base-choice layout
+        run: python scripts/v28_hotel_fit_layout_2026_10_09.py
+
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
