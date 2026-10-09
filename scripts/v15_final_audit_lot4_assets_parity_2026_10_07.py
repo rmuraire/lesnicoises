@@ -70,13 +70,18 @@ def localise_wikimedia():
             original="https://commons.wikimedia.org/wiki/Special:Redirect/file/Villa%20Ephrussi%20de%20Rothschild.jpg"
             source="https://commons.wikimedia.org/wiki/File:Villa_Ephrussi_de_Rothschild.jpg"
             s=s.replace(original,local)
+            is_fr=rel.parts[0] != "en"
+            alt=("Saint-Jean-Cap-Ferrat et son port vus du ciel"
+                 if is_fr else "Saint-Jean-Cap-Ferrat and its marina seen from above")
+            caption=("Photo : Depositphotos, panorama de Saint-Jean-Cap-Ferrat"
+                     if is_fr else "Photo: Depositphotos, Saint-Jean-Cap-Ferrat panorama")
             s=s.replace(
                 'alt="Villa Ephrussi de Rothschild, Saint-Jean-Cap-Ferrat"',
-                'alt="Saint-Jean-Cap-Ferrat and its marina seen from above"',
+                'alt="'+alt+'"',
             )
             s=re.sub(
                 r'<figcaption>Photo: <a href="'+re.escape(source)+r'"[^>]*>[^<]*</a></figcaption>',
-                '<figcaption>Photo: Depositphotos — Saint-Jean-Cap-Ferrat panorama</figcaption>',
+                '<figcaption>'+caption+'</figcaption>',
                 s,
             )
             s=re.sub(
