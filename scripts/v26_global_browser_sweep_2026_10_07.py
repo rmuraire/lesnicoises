@@ -289,7 +289,7 @@ def check_family_consistency(page, label: str, path: str, mobile: bool) -> list[
             return {
               top:r.top,bottom:r.bottom,h:r.height,
               hasImg:!!img,
-              imgLoaded:img ? (img.complete && img.naturalWidth>0) : true,
+              imgLoaded:img ? (!img.complete && img.loading === 'lazy' ? null : (img.complete && img.naturalWidth>0)) : true,
               textGap:(lr&&tr)?tr.top-lr.bottom:null,
               actions
             };
@@ -338,7 +338,7 @@ def check_family_consistency(page, label: str, path: str, mobile: bool) -> list[
             errors.append(f"{label}: affiliate disclosure {i+1} is only {note['gap']:.0f}px below preceding control")
 
     for i,card in enumerate(data["cards"]):
-        if card["hasImg"] and not card["imgLoaded"]:
+        if card["hasImg"] and card["imgLoaded"] is False:
             errors.append(f"{label}: hotel card {i+1} has an unloaded image")
         if card["textGap"] is not None and card["textGap"] < 5:
             errors.append(f"{label}: hotel card {i+1} label/title gap is only {card['textGap']:.0f}px")
