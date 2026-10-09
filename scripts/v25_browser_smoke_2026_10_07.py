@@ -75,8 +75,8 @@ PAGES = [
 ]
 
 VIEWPORTS = [
-    ("mobile", 390, 844),
     ("desktop", 1440, 1000),
+    ("mobile", 390, 844),
 ]
 
 
@@ -557,6 +557,8 @@ def main() -> None:
                           return nodes;
                         }""")
                         print("ANTIBES_DESKTOP_ANCESTRY", debug, flush=True)
+                        if isinstance(debug,list) and debug[0]["w"] < 100:
+                            raise RuntimeError("Antibes seaside hotel card has collapsed below 100px")
                     metrics = common_metrics(page)
                     if metrics["scrollWidth"] > width + 2:
                         errors.append(
