@@ -146,6 +146,9 @@ jobs:
       - name: Apply family-wide destination recipe in PR QA
         run: python scripts/v27_destination_recipe_cta_layout_2026_10_09.py
 
+      - name: Apply final Hotel Fit header and base-choice layout
+        run: python scripts/v28_hotel_fit_layout_2026_10_09.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
