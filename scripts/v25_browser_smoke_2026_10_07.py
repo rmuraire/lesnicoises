@@ -26,6 +26,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 
 PAGES = [
+    ("/hotels/antibes/", "hotels"),
     ("/", "home"),
     ("/fr/", "home"),
     ("/plan/", "editorial"),
@@ -60,7 +61,6 @@ PAGES = [
     ("/stay/nice/", "hotels"),
     ("/fr/dormir/nice/", "hotels"),
     ("/en/hotels/antibes/", "hotels"),
-    ("/hotels/antibes/", "hotels"),
     ("/en/hotels/cannes/", "hotels"),
     ("/hotels/cannes/", "hotels"),
     ("/en/hotels/nice/le-negresco/", "editorial"),
@@ -75,8 +75,8 @@ PAGES = [
 ]
 
 VIEWPORTS = [
-    ("mobile", 390, 844),
     ("desktop", 1440, 1000),
+    ("mobile", 390, 844),
 ]
 
 
@@ -140,7 +140,8 @@ def common_metrics(page) -> dict:
           const buttonSel = '.button,.btn,.rate-link,.affiliate-hotel-link,.cta-button,.hotel-card-actions .rate-link';
           const buttons = Array.from(document.querySelectorAll(buttonSel)).map(el => {
             const r = el.getBoundingClientRect();
-            return {w:r.width,h:r.height,text:(el.innerText||'').replace(/\\s+/g,' ').trim().slice(0,60)};
+            const st=getComputedStyle(el); const owner=el.closest('.hotel-choice-card,.hotel-card'); const pr=el.parentElement?.getBoundingClientRect(); const cr=owner?.getBoundingClientRect();
+            return {w:r.width,h:r.height,cls:el.className,parentWidth:pr?.width||0,cardWidth:cr?.width||0,whiteSpace:st.whiteSpace,fontSize:st.fontSize,display:st.display,text:(el.innerText||'').replace(/\\s+/g,' ').trim().slice(0,60)};
           }).filter(x => x.w > 0 && x.h > 0);
           return {
             viewport: window.innerWidth,
@@ -399,7 +400,7 @@ def check_family_visuals(page, label: str, kind: str) -> list[str]:
             const s=getComputedStyle(a);
             return {border:parseFloat(s.borderBottomWidth)||0, decoration:s.textDecorationLine, color:s.color};
           });
-          const affiliateNotes = Array.from(document.querySelectorAll('.affiliate-note,.affiliate-disclosure,.affiliate-inline')).filter(visible).map(n => {
+          const affiliateNotes = Array.from(document.querySelectorAll('.affiliate-note,.affiliate-disclosure,.affiliate-inline,.mametas-affiliate-disclosure')).filter(visible).map(n => {
             const s=getComputedStyle(n); return {marginTop:parseFloat(s.marginTop)||0};
           });
           const legacy = document.querySelector('body.rg-legacy-final article.article');
@@ -543,6 +544,23 @@ def main() -> None:
                         continue
                     page.wait_for_timeout(120)
 
+                    if viewport_name == "desktop" and path == "/hotels/antibes/":
+                        debug = page.evaluate("""() => {
+                          const link=[...document.querySelectorAll('a.rate-link')].find(a => (a.getAttribute('href')||'').includes('hotel-belles-rives')); const n=link?.closest('.hotel-choice-card');
+                          if(!n) return {missing:true};
+                          const nodes=[]; let p=n;
+                          while(p && nodes.length<14){
+                            const r=p.getBoundingClientRect(),s=getComputedStyle(p);
+                            nodes.push({tag:p.tagName,cls:p.className,id:p.id,w:Math.round(r.width),x:Math.round(r.left),display:s.display,grid:s.gridTemplateColumns,maxWidth:s.maxWidth});
+                            p=p.parentElement;
+                          }
+                          return nodes;
+                        }""")
+                        print("ANTIBES_DESKTOP_ANCESTRY", debug, flush=True)
+                        if isinstance(debug,list) and debug[0]["w"] < 100:
+                            raw=(ROOT / "hotels/antibes/index.html").read_text(encoding="utf-8")
+                            print("ANTIBES_BUILT_HTML", raw[raw.find('id="pratique-central"'):][-12000:], flush=True)
+                            raise RuntimeError("Antibes seaside hotel card has collapsed below 100px")
                     metrics = common_metrics(page)
                     if metrics["scrollWidth"] > width + 2:
                         errors.append(
@@ -559,7 +577,7 @@ def main() -> None:
                         )
                     for b in metrics["buttons"]:
                         if b["h"] > 72:
-                            errors.append(f"{label}: oversized button height {b['h']:.0f}px ({b['text']})")
+                            errors.append(f"{label}: oversized button {b['w']:.0f}x{b['h']:.0f}px [{b['cls']}]; parent={b['parentWidth']:.0f}px card={b['cardWidth']:.0f}px white-space={b['whiteSpace']} font={b['fontSize']} ({b['text']})")
                         if viewport_name == "desktop" and b["w"] > 460:
                             errors.append(f"{label}: oversized desktop button width {b['w']:.0f}px ({b['text']})")
 

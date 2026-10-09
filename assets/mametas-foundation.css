@@ -482,9 +482,10 @@ p.destination-hotel-fit-cta > a{
 /* Affiliate disclosure must read as a separate legal/meta line, never as button copy. */
 .affiliate-note,
 .affiliate-disclosure,
-.affiliate-inline{
+.affiliate-inline,
+.mametas-affiliate-disclosure{
   display:block!important;
-  margin-top:14px!important;
+  margin-top:18px!important;
   padding-top:0!important;
   max-width:760px!important;
   color:var(--ink-soft,#3f4b63)!important;
@@ -721,3 +722,24 @@ body.rg-destination .article-body p>a[href*="/hotels/finder/"]{
   }
 }
 
+
+/* MAMETAS QA 2026-10-09 hotel CTA wrapping.
+   Long affiliate labels must wrap within their own grid card rather than
+   intrude into the neighbouring card at desktop widths. */
+.hotel-choice-copy .rate-link,
+.hotel-choice-copy > .btn,
+.hotel-card-actions .rate-link{
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:break-word!important;
+  text-align:center!important;
+}
+
+/* Antibes sea-front shortlist has two establishments. A two-column grid
+   gives each rate action a full, legible line without inflating its height. */
+@media (min-width:981px){
+  #riviera-bord-de-mer .hotel-choice-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}

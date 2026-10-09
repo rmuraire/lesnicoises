@@ -876,7 +876,6 @@ jobs:
                   "Cannes without a car",
               ),
               f"https://www.mametas.com/riviera-guide/cannes/?deploy={sha}": (
-                  "Cannes : la base chic qui fonctionne vraiment",
                   "Une journée à Cannes",
                   "Cannes sans voiture",
               ),

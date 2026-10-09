@@ -472,7 +472,53 @@ def audit_presentation() -> None:
     print("PASS: canonical journey, booking guide, hotel-card and key-page integrity checks passed.")
 
 
+def repair_nested_antibes_hub() -> None:
+    """Recover only corrupted Antibes hotel grids, preserving the current page shell.
+
+    Earlier passes can produce nested hotel-choice-card markup. Restoring the
+    entire committed file here would also remove the modern global header,
+    mobile navigation, and the final stylesheet installed by v23.
+    """
+    import subprocess
+
+    marker = '<section class="hotel-style-section" id="pratique-central">'
+    for rel in ("hotels/antibes/index.html", "en/hotels/antibes/index.html"):
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        current = p.read_text(encoding="utf-8", errors="ignore")
+        if current.count('<article class="hotel-choice-card"') == current.count("</article>"):
+            continue
+        original = subprocess.check_output(
+            ["git", "show", "HEAD:" + rel], cwd=str(ROOT), text=True
+        )
+        first = current.find(marker)
+        first_original = original.find(marker)
+        last = current.find("</main>", first)
+        last_original = original.find("</main>", first_original)
+        if min(first, first_original, last, last_original) < 0:
+            raise RuntimeError(rel + ": cannot locate original Antibes hotel section boundaries")
+        restored = original[first_original:last_original]
+        # The source hub repeats the same editorial instruction in multiple
+        # sections. The Claude C17 recipe requires it no more than once.
+        # Retain its first occurrence; headings already describe later sections.
+        for fragment in ("Commencez par cette logique", "Start with this logic"):
+            matches = list(re.finditer(r'<p>' + re.escape(fragment) + r'[^<]*</p>', restored))
+            for match in reversed(matches[1:]):
+                restored = restored[:match.start()] + restored[match.end():]
+        if restored.count('<article class="hotel-choice-card"') != restored.count("</article>"):
+            raise RuntimeError(rel + ": original hotel cards are unbalanced")
+        # Retain the page head, foundation stylesheet, global shell, and
+        # every correction outside the three hotel-card sections.
+        repaired = current[:first] + restored + current[last:]
+        if repaired.count('<article class="hotel-choice-card"') != repaired.count("</article>"):
+            raise RuntimeError(rel + ": hotel cards are still unbalanced")
+        p.write_text(repaired, encoding="utf-8")
+        print("Restored Antibes card sections only; retained global shell:", rel, flush=True)
+
+
 def main() -> None:
+    repair_nested_antibes_hub()
     restore_home_journey("index.html", JOURNEY_EN)
     restore_home_journey("fr/index.html", JOURNEY_FR)
     patch_solo_hotel66_media()

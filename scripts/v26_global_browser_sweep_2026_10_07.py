@@ -240,6 +240,145 @@ def check_destination_tool_link(page, label: str, path: str) -> list[str]:
     return [f"{label}: Hotel Fit button inside destination paragraph {bad}"] if bad else []
 
 
+def check_family_consistency(page, label: str, path: str, mobile: bool) -> list[str]:
+    data = page.evaluate(
+        """() => {
+          const visible = el => {
+            const s=getComputedStyle(el), r=el.getBoundingClientRect();
+            return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0;
+          };
+
+          const maps=Array.from(document.querySelectorAll(
+            'a[href*="google.com/maps"],a[href*="maps.app.goo.gl"]'
+          )).filter(visible).map(a=>{
+            const s=getComputedStyle(a);
+            return {
+              border:parseFloat(s.borderBottomWidth)||0,
+              bg:s.backgroundColor,
+              display:s.display,
+              classes:a.className||''
+            };
+          });
+
+          const affiliateNotes=Array.from(document.querySelectorAll('p,div,small,span'))
+            .filter(el => visible(el) && /^Affiliate links?:/i.test((el.innerText||'').trim()))
+            .map(note=>{
+              const nr=note.getBoundingClientRect();
+              let prev=note.previousElementSibling;
+              while(prev && !visible(prev)) prev=prev.previousElementSibling;
+              if(!prev) return {gap:null};
+              const pr=prev.getBoundingClientRect();
+              return {gap:nr.top-pr.bottom};
+            });
+
+          const cards=Array.from(document.querySelectorAll(
+            '.hotel-card,.hotel-choice-card,.itinerary-stay-prompt>a,.chooser-hotel-card'
+          )).filter(visible).map(card=>{
+            const r=card.getBoundingClientRect();
+            const img=card.querySelector('img');
+            const labelEl=card.querySelector('.kicker,.hotel-choice-tags,span');
+            const title=card.querySelector('h3,h4,strong');
+            const lr=labelEl ? labelEl.getBoundingClientRect() : null;
+            const tr=title ? title.getBoundingClientRect() : null;
+            const actions=Array.from(card.querySelectorAll(
+              '.hotel-card-actions a,.hotel-card-actions button,.btn,.rate-link,.affiliate-hotel-link'
+            )).filter(visible).map(a=>{
+              const ar=a.getBoundingClientRect();
+              return {l:ar.left,r:ar.right,t:ar.top,b:ar.bottom,label:(a.innerText||a.getAttribute('aria-label')||'').trim().slice(0,65),href:a.getAttribute('href')||'',owner:(a.closest('.hotel-choice-card,.hotel-card')||card).className};
+            });
+            return {
+              top:r.top,bottom:r.bottom,h:r.height,classes:card.className,left:r.left,right:r.right,
+              hasImg:!!img,
+              imgLoaded:img ? (!img.complete && img.loading === 'lazy' ? null : (img.complete && img.naturalWidth>0)) : true,
+              textGap:(lr&&tr)?tr.top-lr.bottom:null,
+              actions
+            };
+          });
+
+          const exploreCards=Array.from(document.querySelectorAll(
+            '.intent-detail .hotel-card,.explore-page .hotel-card,.solo-female-page .hotel-card'
+          )).filter(visible).map(card=>{
+            const cr=card.getBoundingClientRect();
+            const action=card.querySelector('.hotel-card-actions,.affiliate-hotel-link,.rate-link,.btn');
+            const ar=action&&visible(action)?action.getBoundingClientRect():null;
+            return {top:cr.top,bottom:cr.bottom,actionBottom:ar?ar.bottom:null};
+          });
+
+          const fitLinks=Array.from(document.querySelectorAll(
+            '.article-body a[href*="/hotels/finder/"], article.article a[href*="/hotels/finder/"]'
+          )).filter(visible);
+
+          const legacy=document.querySelector('body.rg-legacy-final article.article');
+          const legacyRect=legacy&&visible(legacy)?legacy.getBoundingClientRect():null;
+
+          const practical=document.querySelector('.rg-v3-final .ux-contained-practical');
+          const practicalStyle=practical&&visible(practical)?getComputedStyle(practical):null;
+
+          return {
+            maps,affiliateNotes,cards,exploreCards,
+            fitCount:fitLinks.length,
+            legacy:legacyRect?{left:legacyRect.left,right:legacyRect.right,vw:innerWidth}:null,
+            practical:practicalStyle?{
+              bg:practicalStyle.backgroundColor,
+              borderLeft:parseFloat(practicalStyle.borderLeftWidth)||0
+            }:null
+          };
+        }"""
+    )
+    errors: list[str] = []
+
+    for i,m in enumerate(data["maps"]):
+        if m["border"] < 1 or m["bg"] not in ("rgba(0, 0, 0, 0)","transparent"):
+            errors.append(f"{label}: Google Maps link {i+1} does not use canonical inline-link styling")
+        if "btn" in str(m["classes"]).split() or "button" in str(m["classes"]).split():
+            errors.append(f"{label}: Google Maps link {i+1} still carries button styling")
+
+    for i,note in enumerate(data["affiliateNotes"]):
+        if note["gap"] is not None and note["gap"] < 10:
+            errors.append(f"{label}: affiliate disclosure {i+1} is only {note['gap']:.0f}px below preceding control")
+
+    for i,card in enumerate(data["cards"]):
+        if card["hasImg"] and card["imgLoaded"] is False:
+            errors.append(f"{label}: hotel card {i+1} has an unloaded image")
+        if card["textGap"] is not None and card["textGap"] < 5:
+            errors.append(f"{label}: hotel card {i+1} label/title gap is only {card['textGap']:.0f}px")
+        acts=card["actions"]
+        for a in range(len(acts)):
+            for b in range(a+1,len(acts)):
+                x=max(0,min(acts[a]["r"],acts[b]["r"])-max(acts[a]["l"],acts[b]["l"]))
+                y=max(0,min(acts[a]["b"],acts[b]["b"])-max(acts[a]["t"],acts[b]["t"]))
+                if x*y > 2:
+                    errors.append(f"{label}: card {i+1} {card['classes']!r} bounds={card['left']:.0f}-{card['right']:.0f}: overlapping actions {acts[a]['label']!r} ({acts[a]['href']}, owner={acts[a]['owner']}) / {acts[b]['label']!r} ({acts[b]['href']}, owner={acts[b]['owner']})")
+
+    # Cards sharing a desktop row should end on the same visual baseline.
+    if not mobile and data["exploreCards"]:
+        rows={}
+        for card in data["exploreCards"]:
+            key=round(card["top"]/12)*12
+            rows.setdefault(key,[]).append(card)
+        for row in rows.values():
+            bottoms=[x["bottom"] for x in row]
+            action_bottoms=[x["actionBottom"] for x in row if x["actionBottom"] is not None]
+            if len(bottoms)>1 and max(bottoms)-min(bottoms)>5:
+                errors.append(f"{label}: Explore hotel cards in one row differ by {max(bottoms)-min(bottoms):.0f}px in height")
+            if len(action_bottoms)>1 and max(action_bottoms)-min(action_bottoms)>12:
+                errors.append(f"{label}: Explore hotel actions float on different baselines")
+
+    if path in BASE_DESTINATION_PATHS and data["fitCount"] > 1:
+        errors.append(f"{label}: {data['fitCount']} visible Hotel Fit links remain in destination article")
+
+    if data["legacy"]:
+        center=(data["legacy"]["left"]+data["legacy"]["right"])/2
+        if abs(center-data["legacy"]["vw"]/2)>5:
+            errors.append(f"{label}: legacy Riviera Guide content is not centred")
+
+    if "monaco" in path and data["practical"]:
+        if data["practical"]["bg"] in ("rgba(0, 0, 0, 0)","transparent") or data["practical"]["borderLeft"] < 3:
+            errors.append(f"{label}: Monaco practical block is visually unformatted")
+
+    return errors
+
+
 def main() -> None:
     paths = sitemap_paths()
     errors: list[str] = []
@@ -279,6 +418,7 @@ def main() -> None:
                             errors.extend(check_mobile_cover(page, label))
                             errors.extend(check_mobile_menu(page, label))
                             errors.extend(check_destination_tool_link(page, label, path))
+                        errors.extend(check_family_consistency(page, label, path, mobile))
                         counts[vp_name] += 1
                     except Exception as exc:
                         errors.append(f"{label}: browser exception {type(exc).__name__}: {exc}")

@@ -60,6 +60,22 @@ def safe_member(name: str) -> bool:
 
 def normalize_html(data: bytes, name: str) -> bytes:
     text = data.decode('utf-8')
+    # Antibes / Juan-les-Pins are served by two distinct TER stations.
+    # Correct the archived hub copy at materialisation, in both languages.
+    if name in {'hotels/antibes/index.html', 'en/hotels/antibes/index.html'}:
+        text = text.replace(
+            'Antibes et Juan-les-Pins partagent une gare, pas tout à fait les mêmes vacances.',
+            'Antibes et Juan-les-Pins ont chacune leur gare et des ambiances de séjour différentes.'
+        ).replace(
+            'Antibes et Juan-les-Pins partagent une gare.',
+            'Antibes et Juan-les-Pins ont chacune leur propre gare.'
+        ).replace(
+            'Antibes and Juan-les-Pins share a station, not quite the same holiday.',
+            'Antibes and Juan-les-Pins have separate stations and different holiday rhythms.'
+        ).replace(
+            'Antibes and Juan-les-Pins share a station.',
+            'Antibes and Juan-les-Pins have separate stations.'
+        )
     lower = text.lower()
     if lower.count('<title>') > 1:
         body_end = lower.find('</body>')
