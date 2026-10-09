@@ -420,7 +420,7 @@ jobs:
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
       - name: Apply audited factual and editorial copy corrections
-        run: python scripts/v27_objective_editorial_audit_corrections_2026_10_09.py
+        run: python scripts/v27_objective_editorial_audit_corrections_2026_10_09.py --strict
 
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
