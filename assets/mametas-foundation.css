@@ -476,3 +476,248 @@ p.destination-hotel-fit-cta > a{
   }
 }
 
+/* 8) Global visual recipe — 2026-10-09.
+   These rules close repeated family-level defects found during page-by-page QA. */
+
+/* Affiliate disclosure must read as a separate legal/meta line, never as button copy. */
+.affiliate-note,
+.affiliate-disclosure,
+.affiliate-inline{
+  display:block!important;
+  margin-top:14px!important;
+  padding-top:0!important;
+  max-width:760px!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font-size:12px!important;
+  line-height:1.55!important;
+}
+
+/* Google Maps links use one visual language everywhere. */
+a[href*="google.com/maps"],
+a[href*="maps.app.goo.gl"]{
+  display:inline!important;
+  min-height:0!important;
+  padding:0 0 2px!important;
+  border:0!important;
+  border-bottom:1px solid var(--coral,#d96c4e)!important;
+  background:transparent!important;
+  color:var(--blue-deep,#0e5265)!important;
+  font-weight:700!important;
+  text-decoration:none!important;
+}
+
+/* Riviera Guide: one compact hotel-card grammar regardless of 2 or 3 picks. */
+.rg-v3-final .itinerary-stay-prompt{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr))!important;
+  gap:14px!important;
+  align-items:stretch!important;
+  margin:28px 0 30px!important;
+}
+.rg-v3-final .article-body .itinerary-stay-prompt>a{
+  min-height:0!important;
+  height:100%!important;
+  padding:18px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:stretch!important;
+}
+.rg-v3-final .itinerary-stay-prompt img{
+  width:calc(100% + 36px)!important;
+  height:auto!important;
+  aspect-ratio:3/2!important;
+  margin:-18px -18px 18px!important;
+  object-fit:cover!important;
+}
+.rg-v3-final .itinerary-stay-prompt span{
+  display:block!important;
+  margin:0 0 9px!important;
+  color:var(--coral,#d96c4e)!important;
+  font-size:9.5px!important;
+  font-weight:700!important;
+  letter-spacing:.13em!important;
+  line-height:1.35!important;
+  text-transform:uppercase!important;
+}
+.rg-v3-final .itinerary-stay-prompt strong{
+  display:block!important;
+  margin:0!important;
+  font-family:"Fraunces",Georgia,serif!important;
+  font-size:clamp(22px,2.15vw,27px)!important;
+  font-weight:500!important;
+  line-height:1.08!important;
+}
+.rg-v3-final .itinerary-stay-prompt small{
+  display:block!important;
+  margin:12px 0 0!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font-size:12.5px!important;
+  line-height:1.5!important;
+}
+
+/* Monaco late practical block should look intentional rather than like loose prose. */
+.rg-v3-final .ux-contained-practical{
+  width:min(calc(100% - 40px),750px)!important;
+  margin:34px auto!important;
+  padding:24px 26px!important;
+  border:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-left:4px solid var(--blue,#176f83)!important;
+  background:rgba(255,253,248,.48)!important;
+}
+.rg-v3-final .ux-contained-practical span{
+  display:block!important;
+  margin:0 0 10px!important;
+  color:var(--blue-deep,#0e5265)!important;
+  font-size:10px!important;
+  font-weight:800!important;
+  letter-spacing:.14em!important;
+  line-height:1.3!important;
+  text-transform:uppercase!important;
+}
+.rg-v3-final .ux-contained-practical p{
+  margin:0!important;
+  color:var(--ink-soft,#3f4b63)!important;
+  font-size:15px!important;
+  line-height:1.6!important;
+}
+
+/* Legacy Riviera Guide pages (notably Cannes/Nice) keep visuals centred on the same axis. */
+.rg-legacy-final article.article{
+  width:min(calc(100% - 48px),960px)!important;
+  max-width:960px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding-left:0!important;
+  padding-right:0!important;
+}
+.rg-legacy-final .fact-grid,
+.rg-legacy-final .culture-hero-media,
+.rg-legacy-final .hotel-grid,
+.rg-legacy-final .hotel-choice-grid{
+  width:100%!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Hotel grids: equal-height cards and one action zone at the bottom. */
+.hotel-grid,
+.hotel-choice-grid{
+  align-items:stretch!important;
+}
+.hotel-card,
+.hotel-choice-card{
+  height:100%!important;
+}
+.hotel-card-body,
+.hotel-choice-copy{
+  min-height:0!important;
+  height:100%!important;
+}
+.hotel-card-actions{
+  width:100%!important;
+  margin-top:auto!important;
+  padding-top:18px!important;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:8px!important;
+  align-items:start!important;
+  justify-items:start!important;
+}
+.hotel-card-actions .btn,
+.hotel-card-actions .rate-link{
+  width:auto!important;
+  max-width:100%!important;
+  margin:0!important;
+  position:static!important;
+  transform:none!important;
+}
+.hotel-card-body>.affiliate-hotel-link,
+.hotel-card-body>.rate-link,
+.hotel-card-body>a.btn:first-of-type,
+.hotel-choice-copy>.affiliate-hotel-link,
+.hotel-choice-copy>.rate-link,
+.hotel-choice-copy>a.btn:first-of-type{
+  margin-top:auto!important;
+}
+.hotel-card-body>a.btn+ a.btn,
+.hotel-choice-copy>a.btn+ a.btn{
+  margin-top:8px!important;
+}
+
+/* Riviera Fit shortlist: cards keep the media slot and actions aligned. */
+.chooser-hotel-card{
+  display:flex!important;
+  height:100%!important;
+  min-height:0!important;
+  flex-direction:column!important;
+}
+.chooser-hotel-media{
+  flex:0 0 auto!important;
+  width:calc(100% + 40px)!important;
+  height:auto!important;
+  aspect-ratio:3/2!important;
+  margin:-20px -20px 18px!important;
+  overflow:hidden!important;
+}
+.chooser-hotel-media img,
+.chooser-hotel-media .batch-thumb{
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+}
+.chooser-hotel-card>p{
+  margin-bottom:14px!important;
+}
+.chooser-hotel-cta{
+  margin-top:auto!important;
+  padding-top:8px!important;
+}
+
+/* Destination Hotel Fit bridge: exactly one visual grammar when the build keeps it. */
+body.rg-destination .article-body .destination-hotel-fit-bridge,
+body.rg-destination .article-body p.destination-hotel-fit-cta{
+  margin:24px 0 30px!important;
+  padding:18px 0!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:14px 18px!important;
+  border-top:1px solid var(--line,rgba(20,33,61,.16))!important;
+  border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+}
+body.rg-destination .article-body .destination-hotel-fit-bridge>a,
+body.rg-destination .article-body p.destination-hotel-fit-cta>a,
+body.rg-destination .article-body p>a[href*="/hotels/finder/"]{
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+
+/* Explore/intent hotel cards: reserve the bottom of each card for actions. */
+.intent-detail .hotel-card,
+.explore-page .hotel-card,
+.solo-female-page .hotel-card{
+  height:100%!important;
+}
+.intent-detail .hotel-card-body,
+.explore-page .hotel-card-body,
+.solo-female-page .hotel-card-body{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+}
+.intent-detail .hotel-card-body .hotel-card-actions,
+.explore-page .hotel-card-body .hotel-card-actions,
+.solo-female-page .hotel-card-body .hotel-card-actions{
+  margin-top:auto!important;
+}
+
+@media(max-width:760px){
+  .rg-v3-final .itinerary-stay-prompt{
+    grid-template-columns:1fr!important;
+  }
+  .rg-legacy-final article.article{
+    width:min(calc(100% - 40px),960px)!important;
+  }
+}
+
