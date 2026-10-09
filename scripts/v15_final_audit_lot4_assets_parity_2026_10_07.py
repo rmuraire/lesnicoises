@@ -54,9 +54,43 @@ def localise_wikimedia():
         rel=p.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore")
-        urls=sorted(set(url_pat.findall(s)))
-        if not urls: continue
         old=s
+        # The two Villa Ephrussi pages contain Commons references in both
+        # Special:Redirect (percent-encoded spaces) and File: (underscores).
+        # These repeatedly get HTTP 429 in GitHub Actions. Use a known
+        # locally licensed Cap-Ferrat panorama, with accurate alt/credit,
+        # rather than making production builds depend on Wikimedia.
+        if rel.as_posix() in (
+            "culture/villa-ephrussi/index.html",
+            "en/culture/villa-ephrussi/index.html",
+        ):
+            local="/assets/editorial/cap-ferrat-aerial.jpg"
+            if not (ROOT/local.lstrip("/")).is_file():
+                raise RuntimeError("Missing licensed Cap-Ferrat fallback image")
+            original="https://commons.wikimedia.org/wiki/Special:Redirect/file/Villa%20Ephrussi%20de%20Rothschild.jpg"
+            source="https://commons.wikimedia.org/wiki/File:Villa_Ephrussi_de_Rothschild.jpg"
+            s=s.replace(original,local)
+            is_fr=rel.parts[0] != "en"
+            alt=("Saint-Jean-Cap-Ferrat et son port vus du ciel"
+                 if is_fr else "Saint-Jean-Cap-Ferrat and its marina seen from above")
+            caption=("Photo : Depositphotos, panorama de Saint-Jean-Cap-Ferrat"
+                     if is_fr else "Photo: Depositphotos, Saint-Jean-Cap-Ferrat panorama")
+            s=s.replace(
+                'alt="Villa Ephrussi de Rothschild, Saint-Jean-Cap-Ferrat"',
+                'alt="'+alt+'"',
+            )
+            s=re.sub(
+                r'<figcaption>Photo: <a href="'+re.escape(source)+r'"[^>]*>[^<]*</a></figcaption>',
+                '<figcaption>'+caption+'</figcaption>',
+                s,
+            )
+            s=re.sub(
+                r'<li><a href="'+re.escape(source)+r'"[^>]*>[^<]*</a></li>',
+                '',s,
+            )
+            if source in s or original in s:
+                raise RuntimeError("Villa Ephrussi Wikimedia references were not fully localised")
+        urls=sorted(set(url_pat.findall(s)))
         for raw in urls:
             url=raw.replace("&amp;","&")
             if url in seen:
