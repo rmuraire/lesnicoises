@@ -54,6 +54,7 @@ PAGES = [
     ("/bons-plans/que-reserver/", "booking"),
     ("/en/riviera-chooser/", "tool"),
     ("/riviera-chooser/", "tool"),
+    ("/en/riviera-chooser/?days=5&season=summer&mobility=nocar&mood=peace&pace=balanced&base=villefranche", "chooser-result"),
     ("/en/hotels/finder/", "tool"),
     ("/hotels/finder/", "tool"),
     ("/stay/nice/", "hotels"),
@@ -339,6 +340,35 @@ def check_editorial_mobile(page, label: str) -> list[str]:
     return errors
 
 
+def check_chooser_result(page, label: str) -> list[str]:
+    errors: list[str] = []
+    page.wait_for_timeout(350)
+    data = page.evaluate(
+        """() => Array.from(document.querySelectorAll('.chooser-hotel-card')).map(card => {
+          const media=card.querySelector('.chooser-hotel-media');
+          const img=media && media.querySelector('img');
+          const r=media ? media.getBoundingClientRect() : null;
+          return {
+            name:card.getAttribute('data-hotel-name') || '',
+            hasMedia:!!media,
+            loaded:!!(img && img.complete && img.naturalWidth>0),
+            w:r ? r.width : 0,
+            h:r ? r.height : 0
+          };
+        })"""
+    )
+    if len(data) != 3:
+        errors.append(f"{label}: Riviera Fit rendered {len(data)} hotel cards, expected 3")
+    for item in data:
+        if not item["hasMedia"] or not item["loaded"]:
+            errors.append(f"{label}: Riviera Fit hotel '{item['name']}' has no loaded media")
+        elif item["w"] and item["h"]:
+            ratio=item["w"]/item["h"]
+            if ratio < 1.45 or ratio > 1.58:
+                errors.append(f"{label}: Riviera Fit hotel '{item['name']}' media ratio {ratio:.2f}, expected 3:2")
+    return errors
+
+
 def check_family_visuals(page, label: str, kind: str) -> list[str]:
     errors: list[str] = []
     data = page.evaluate(
@@ -543,6 +573,8 @@ def main() -> None:
                         errors.extend(check_booking(page, label))
                     elif kind == "hotels":
                         errors.extend(check_hotels(page, label))
+                    elif kind == "chooser-result":
+                        errors.extend(check_chooser_result(page, label))
 
                     if viewport_name == "mobile":
                         errors.extend(check_mobile_menu(page, label))
