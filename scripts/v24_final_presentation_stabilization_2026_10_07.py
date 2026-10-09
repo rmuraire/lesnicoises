@@ -487,7 +487,7 @@ def repair_nested_antibes_hub() -> None:
         if current.count('<article class="hotel-choice-card"') < 2:
             continue
         # A card must close before the next grid or card begins.
-        if not re.search(r'<article class="hotel-choice-card"[\\s\\S]*?<div class="hotel-choice-grid"', current):
+        if current.count('<article class="hotel-choice-card"') == current.count('</article>'):
             continue
         original = subprocess.check_output(
             ["git", "show", "HEAD:" + rel], cwd=str(ROOT), text=True
