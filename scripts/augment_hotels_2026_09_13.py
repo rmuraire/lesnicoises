@@ -200,6 +200,12 @@ def card_markup(hotel: dict[str, str], lang: str, index: int) -> str:
 
 
 def insert_into_section(text: str, section_id: str, cards: list[str], path: str) -> str:
+    """Insert each new hotel as a direct child of its destination grid.
+
+    Previously this used the penultimate </div>, which is the *hotel-copy*
+    closing tag, not the grid closing tag. It nested hotel cards and broke
+    the DOM (lost sections, collapsed cards and missing CTAs).
+    """
     if not cards:
         return text
     marker = f'id="{section_id}"'
@@ -212,12 +218,22 @@ def insert_into_section(text: str, section_id: str, cards: list[str], path: str)
         raise RuntimeError(f"{path}: malformed section {section_id!r}")
     grid_start = text.find('<div class="hotel-choice-grid">', marker_pos, section_end)
     if grid_start < 0:
-        raise RuntimeError(f"{path}: hotel grid not found in section {section_id!r}")
-    segment = text[grid_start:section_end]
-    closes = [m.start() for m in re.finditer(r"</div>", segment)]
-    if len(closes) < 2:
-        raise RuntimeError(f"{path}: could not locate grid closing tag in section {section_id!r}")
-    insert_at = grid_start + closes[-2]
+        raise RuntimeError(f"{path}: hotel grid missing in section {section_id!r}")
+
+    # Match the closing tag of the grid using nested <div> depth.
+    depth = 0
+    insert_at = None
+    for tag in re.finditer(r"</?div\b[^>]*>", text[grid_start:section_end], re.I):
+        token = tag.group(0).lower()
+        depth += -1 if token.startswith("</") else 1
+        if depth < 0:
+            raise RuntimeError(f"{path}: unbalanced <div> in section {section_id!r}")
+        if depth == 0:
+            insert_at = grid_start + tag.start()
+            break
+    if insert_at is None:
+        raise RuntimeError(f"{path}: no matching hotel grid closure in section {section_id!r}")
+
     return text[:insert_at] + "".join(cards) + text[insert_at:]
 
 
