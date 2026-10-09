@@ -546,7 +546,7 @@ def main() -> None:
 
                     if viewport_name == "desktop" and path == "/hotels/antibes/":
                         debug = page.evaluate("""() => {
-                          const n=document.querySelector('#riviera-bord-de-mer .hotel-choice-card');
+                          const link=[...document.querySelectorAll('a.rate-link')].find(a => (a.getAttribute('href')||'').includes('hotel-belles-rives')); const n=link?.closest('.hotel-choice-card');
                           if(!n) return {missing:true};
                           const nodes=[]; let p=n;
                           while(p && nodes.length<14){
