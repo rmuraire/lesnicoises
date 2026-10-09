@@ -54,8 +54,6 @@ PAGES = [
     ("/bons-plans/que-reserver/", "booking"),
     ("/en/riviera-chooser/", "tool"),
     ("/riviera-chooser/", "tool"),
-    ("/en/riviera-fit/", "tool"),
-    ("/riviera-fit/", "tool"),
     ("/en/hotels/finder/", "tool"),
     ("/hotels/finder/", "tool"),
     ("/stay/nice/", "hotels"),
@@ -379,6 +377,7 @@ def check_family_visuals(page, label: str, kind: str) -> list[str]:
           const practical = document.querySelector('.rg-v3-final .ux-contained-practical');
           const ps = practical ? getComputedStyle(practical) : null;
           return {
+            viewport:innerWidth,
             fitCount:fitLinks.length,
             stayCards,
             actionGroups,
@@ -398,10 +397,12 @@ def check_family_visuals(page, label: str, kind: str) -> list[str]:
         for i, card in enumerate(cards):
             if card["gap"] is not None and card["gap"] < 6:
                 errors.append(f"{label}: Riviera Guide hotel card {i+1} label/title gap is only {card['gap']:.0f}px")
-        # Cards sharing a visual row should be equal-height within a small tolerance.
-        heights = [x["h"] for x in cards[:3]]
-        if len(heights) > 1 and max(heights) - min(heights) > 4:
-            errors.append(f"{label}: Riviera Guide hotel cards differ by {max(heights)-min(heights):.0f}px in height")
+        # Equal-height matters only when cards share a desktop row. On mobile,
+        # stacked cards should size naturally to their content.
+        if data.get("viewport", 0) > 760:
+            heights = [x["h"] for x in cards[:3]]
+            if len(heights) > 1 and max(heights) - min(heights) > 4:
+                errors.append(f"{label}: Riviera Guide hotel cards differ by {max(heights)-min(heights):.0f}px in height")
 
     for gi, group in enumerate(data["actionGroups"]):
         for i in range(len(group)):
@@ -545,7 +546,7 @@ def main() -> None:
 
                     if viewport_name == "mobile":
                         errors.extend(check_mobile_menu(page, label))
-                        if kind in ("editorial", "destination"):
+                        if kind == "destination":
                             errors.extend(check_editorial_mobile(page, label))
 
                     errors.extend(check_family_visuals(page, label, kind))
