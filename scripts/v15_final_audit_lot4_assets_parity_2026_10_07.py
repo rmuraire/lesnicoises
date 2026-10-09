@@ -54,6 +54,36 @@ def localise_wikimedia():
         rel=p.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore")
+        # The two Villa Ephrussi pages contain Commons references in both
+        # Special:Redirect (percent-encoded spaces) and File: (underscores).
+        # These repeatedly get HTTP 429 in GitHub Actions. Use a known
+        # locally licensed Cap-Ferrat panorama, with accurate alt/credit,
+        # rather than making production builds depend on Wikimedia.
+        if rel.as_posix() in (
+            "culture/villa-ephrussi/index.html",
+            "en/culture/villa-ephrussi/index.html",
+        ):
+            local="/assets/editorial/cap-ferrat-aerial.jpg"
+            if not (ROOT/local.lstrip("/")).is_file():
+                raise RuntimeError("Missing licensed Cap-Ferrat fallback image")
+            original="https://commons.wikimedia.org/wiki/Special:Redirect/file/Villa%20Ephrussi%20de%20Rothschild.jpg"
+            source="https://commons.wikimedia.org/wiki/File:Villa_Ephrussi_de_Rothschild.jpg"
+            s=s.replace(original,local)
+            s=s.replace(
+                'alt="Villa Ephrussi de Rothschild, Saint-Jean-Cap-Ferrat"',
+                'alt="Saint-Jean-Cap-Ferrat and its marina seen from above"',
+            )
+            s=re.sub(
+                r'<figcaption>Photo: <a href="'+re.escape(source)+r'"[^>]*>[^<]*</a></figcaption>',
+                '<figcaption>Photo: Depositphotos — Saint-Jean-Cap-Ferrat panorama</figcaption>',
+                s,
+            )
+            s=re.sub(
+                r'<li><a href="'+re.escape(source)+r'"[^>]*>[^<]*</a></li>',
+                '',s,
+            )
+            if source in s or original in s:
+                raise RuntimeError("Villa Ephrussi Wikimedia references were not fully localised")
         urls=sorted(set(url_pat.findall(s)))
         if not urls: continue
         old=s
