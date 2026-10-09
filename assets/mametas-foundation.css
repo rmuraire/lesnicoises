@@ -735,3 +735,11 @@ body.rg-destination .article-body p>a[href*="/hotels/finder/"]{
   overflow-wrap:break-word!important;
   text-align:center!important;
 }
+
+/* Antibes sea-front shortlist has two establishments. A two-column grid
+   gives each rate action a full, legible line without inflating its height. */
+@media (min-width:981px){
+  #riviera-bord-de-mer .hotel-choice-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
