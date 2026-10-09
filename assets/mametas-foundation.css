@@ -722,3 +722,16 @@ body.rg-destination .article-body p>a[href*="/hotels/finder/"]{
   }
 }
 
+
+/* MAMETAS QA 2026-10-09 hotel CTA wrapping.
+   Long affiliate labels must wrap within their own grid card rather than
+   intrude into the neighbouring card at desktop widths. */
+.hotel-choice-copy .rate-link,
+.hotel-choice-copy > .btn,
+.hotel-card-actions .rate-link{
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:break-word!important;
+  text-align:center!important;
+}
