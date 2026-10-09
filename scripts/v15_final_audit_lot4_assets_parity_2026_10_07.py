@@ -135,7 +135,7 @@ def localise_wikimedia():
                             'alt="Saint-Jean-Cap-Ferrat and its marina from above"',
                         )
                         s=re.sub(
-                            r'<figcaption>Photo: <a href="https://commons\\.wikimedia\\.org/wiki/File:Villa_Ephrussi_de_Rothschild\\.jpg"[^>]*>[^<]*</a></figcaption>',
+                            r'<figcaption>Photo: <a href="https://commons\.wikimedia\.org/wiki/File:Villa_Ephrussi_de_Rothschild\.jpg"[^>]*>[^<]*</a></figcaption>',
                             '<figcaption>Photo: Depositphotos (Cap-Ferrat panorama)</figcaption>',
                             s,
                         )
