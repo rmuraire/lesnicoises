@@ -642,6 +642,33 @@
     });
   }
 
+  var chooserHotelMediaFallback = {
+    'hotel 66 nice':'/assets/hotels/hotel-66/hero.jpg',
+    'hotel villa victoria':'/assets/hotels/villa-victoria/hero.jpg',
+    'hotel du couvent':'/assets/hotels/hotel-du-couvent/exterieur.jpg',
+    'hotel de provence':'/assets/hotels/hotel-de-provence-cannes/batch-thumb.svg',
+    'le cavendish':'/assets/hotels/le-cavendish/hero.jpg',
+    'hotel martinez':'/assets/hotels/hotel-martinez/hero.jpg',
+    'hotel de l etoile':'/assets/hotels/hotel-de-letoile-antibes/batch-thumb.svg',
+    'la villa port d antibes':'/assets/hotels/la-villa-port-antibes/hero.jpg',
+    'hotel belles rives':'/assets/hotels/hotel-belles-rives/batch-thumb.svg',
+    'hotel comte de nice':'/assets/hotels/hotel-le-comte-de-nice/hero.jpg',
+    'welcome hotel':'/assets/hotels/welcome-hotel/hero.jpg',
+    'grand hotel du cap ferrat':'/assets/hotels/grand-hotel-du-cap-ferrat/batch-thumb.svg',
+    'ibis roquebrune cap martin menton':'/assets/hotels/ibis-roquebrune-cap-martin/batch-thumb.svg',
+    'hotel napoleon':'/assets/hotels/hotel-napoleon/hero.jpg',
+    'villa genesis':'/assets/hotels/villa-genesis/hero.jpg',
+    'monte carlo bay hotel resort':'/assets/hotels/monte-carlo-bay/batch-thumb.svg',
+    'hotel hermitage monte carlo':'/assets/hotels/hotel-hermitage-monte-carlo/batch-thumb.svg',
+    'hotel de paris monte carlo':'/assets/hotels/hotel-de-paris-monte-carlo/hero.jpg',
+    'kube saint tropez':'/assets/hotels/kube-saint-tropez/batch-thumb.svg',
+    'la ferme d augustin':'/assets/hotels/la-ferme-daugustin/batch-thumb.svg',
+    'hotel la ponche':'/assets/hotels/la-ponche-saint-tropez/batch-thumb.svg',
+    'hotel les messugues':'/assets/hotels/hotel-les-messugues/batch-thumb.svg',
+    'toile blanche':'/assets/hotels/toile-blanche/batch-thumb.svg',
+    'le domaine du mas de pierre':'/assets/hotels/domaine-du-mas-de-pierre/batch-thumb.svg'
+  };
+
   function mount() {
     var root = document.querySelector('[data-riviera-chooser]');
     if (!root) return;
@@ -822,6 +849,7 @@
       return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
     }
 
+
     function hydrateHotelMedia(model, out) {
       if (!model || !model.base || !model.base.hotels || typeof fetch === 'undefined') return;
       fetch(model.base.hotels, { credentials:'same-origin', cache:'no-store' })
@@ -850,7 +878,11 @@
           });
           out.querySelectorAll('.chooser-hotel-card[data-hotel-name]').forEach(function (target) {
             if (target.querySelector('.chooser-hotel-media')) return;
-            var media = mediaByName[hotelKey(target.getAttribute('data-hotel-name'))];
+            var key = hotelKey(target.getAttribute('data-hotel-name'));
+            var media = mediaByName[key];
+            if (!media && chooserHotelMediaFallback[key]) {
+              media = { type:'img', src:chooserHotelMediaFallback[key], alt:target.getAttribute('data-hotel-name') || '' };
+            }
             if (!media) return;
             var wrap = document.createElement('div');
             wrap.className = 'chooser-hotel-media';
@@ -872,7 +904,22 @@
             target.insertBefore(wrap, target.firstChild);
           });
         })
-        .catch(function () { /* text-only cards remain valid */ });
+        .catch(function () {
+          out.querySelectorAll('.chooser-hotel-card[data-hotel-name]').forEach(function (target) {
+            if (target.querySelector('.chooser-hotel-media')) return;
+            var key = hotelKey(target.getAttribute('data-hotel-name'));
+            var src = chooserHotelMediaFallback[key];
+            if (!src) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'chooser-hotel-media';
+            var img = document.createElement('img');
+            img.src = src;
+            img.alt = target.getAttribute('data-hotel-name') || '';
+            img.loading = 'lazy';
+            wrap.appendChild(img);
+            target.insertBefore(wrap, target.firstChild);
+          });
+        });
     }
 
     function render(overrideBase) {
@@ -1008,6 +1055,9 @@
   }
 
   function selfTest() {
+    var mediaKey=function(value){
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    };
     var days=['3','5','7'], seasons=['winter','spring','summer','autumn'], mobility=['nocar','car','either'], moods=['decide','sea','food','culture','glamour','peace'], pace=['slow','balanced','ambitious'];
     var count=0, errors=[];
     days.forEach(function(d){ seasons.forEach(function(s){ mobility.forEach(function(m){ moods.forEach(function(md){ pace.forEach(function(p){
@@ -1063,6 +1113,8 @@
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
           if (!h.url || h.url.indexOf('https://') !== 0) errors.push('missing affiliate '+lang+' '+base+' '+h.name);
+          var key=mediaKey(h.name);
+          if (!chooserHotelMediaFallback[key]) errors.push('missing local media '+lang+' '+base+' '+h.name);
         });
       });
     });
