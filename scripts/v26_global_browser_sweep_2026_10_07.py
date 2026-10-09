@@ -284,10 +284,10 @@ def check_family_consistency(page, label: str, path: str, mobile: bool) -> list[
               '.hotel-card-actions a,.hotel-card-actions button,.btn,.rate-link,.affiliate-hotel-link'
             )).filter(visible).map(a=>{
               const ar=a.getBoundingClientRect();
-              return {l:ar.left,r:ar.right,t:ar.top,b:ar.bottom,label:(a.innerText||a.getAttribute('aria-label')||'').trim().slice(0,65),href:a.getAttribute('href')||''};
+              return {l:ar.left,r:ar.right,t:ar.top,b:ar.bottom,label:(a.innerText||a.getAttribute('aria-label')||'').trim().slice(0,65),href:a.getAttribute('href')||'',owner:(a.closest('.hotel-choice-card,.hotel-card')||card).className};
             });
             return {
-              top:r.top,bottom:r.bottom,h:r.height,
+              top:r.top,bottom:r.bottom,h:r.height,classes:card.className,left:r.left,right:r.right,
               hasImg:!!img,
               imgLoaded:img ? (!img.complete && img.loading === 'lazy' ? null : (img.complete && img.naturalWidth>0)) : true,
               textGap:(lr&&tr)?tr.top-lr.bottom:null,
@@ -348,7 +348,7 @@ def check_family_consistency(page, label: str, path: str, mobile: bool) -> list[
                 x=max(0,min(acts[a]["r"],acts[b]["r"])-max(acts[a]["l"],acts[b]["l"]))
                 y=max(0,min(acts[a]["b"],acts[b]["b"])-max(acts[a]["t"],acts[b]["t"]))
                 if x*y > 2:
-                    errors.append(f"{label}: hotel card {i+1} overlapping actions {acts[a]['label']!r} ({acts[a]['href']}) / {acts[b]['label']!r} ({acts[b]['href']})")
+                    errors.append(f"{label}: card {i+1} {card['classes']!r} bounds={card['left']:.0f}-{card['right']:.0f}: overlapping actions {acts[a]['label']!r} ({acts[a]['href']}, owner={acts[a]['owner']}) / {acts[b]['label']!r} ({acts[b]['href']}, owner={acts[b]['owner']})")
 
     # Cards sharing a desktop row should end on the same visual baseline.
     if not mobile and data["exploreCards"]:
