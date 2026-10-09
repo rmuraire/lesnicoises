@@ -46,6 +46,9 @@ jobs:
       - name: Guard restored editorial typography scales
         run: python scripts/validate_editorial_typography_2026_10_09.py
 
+      - name: Guard hotel BOOK panel contrast across hotel detail families
+        run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
+
       - name: Test safe hotel paragraph deduplication
         run: python scripts/test_safe_boilerplate_2026_10_09.py
 
