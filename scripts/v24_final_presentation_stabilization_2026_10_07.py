@@ -269,6 +269,40 @@ def normalize_inline_tool_ctas() -> None:
             return f'<p{new_attrs}>{new_body}</p>'
 
         s = para_pat.sub(para_repl, s)
+
+        # Keep one Hotel Fit bridge per destination article. Late audit passes can
+        # inject the same tool launch more than once (after Stay, after comparisons,
+        # or before sources), which is what made the CTA appear to wander.
+        kept_bridge = False
+        def dedupe_bridge(pm: re.Match[str]) -> str:
+            nonlocal kept_bridge
+            attrs = pm.group("attrs")
+            body = pm.group("body")
+            if not re.search(r'href=["\']/(?:en/)?hotels/finder/', body, re.I):
+                return pm.group(0)
+            if kept_bridge:
+                return ""
+            kept_bridge = True
+            attrs = _normalise_class_attr(
+                attrs,
+                add=("destination-hotel-fit-bridge", "editorial-tool-bridge"),
+                remove=("destination-hotel-fit-cta",),
+            )
+            def clean_anchor(am: re.Match[str]) -> str:
+                aattrs = am.group("attrs")
+                href_m = re.search(r'\bhref=["\']([^"\']+)["\']', aattrs, re.I)
+                if not href_m or not re.match(r'^/(?:en/)?hotels/finder/', href_m.group(1), re.I):
+                    return am.group(0)
+                aattrs = _normalise_class_attr(
+                    aattrs,
+                    add=("inline-decision-link", "editorial-tool-link"),
+                    remove=("btn", "btn--primary", "button"),
+                )
+                return f'<a{aattrs}>{am.group("label")}</a>'
+            body = anchor_pat.sub(clean_anchor, body)
+            return f'<p{attrs}>{body}</p>'
+
+        s = para_pat.sub(dedupe_bridge, s)
         write(rel.as_posix(), s, old)
 
 
