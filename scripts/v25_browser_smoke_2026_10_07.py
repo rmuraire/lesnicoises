@@ -140,7 +140,8 @@ def common_metrics(page) -> dict:
           const buttonSel = '.button,.btn,.rate-link,.affiliate-hotel-link,.cta-button,.hotel-card-actions .rate-link';
           const buttons = Array.from(document.querySelectorAll(buttonSel)).map(el => {
             const r = el.getBoundingClientRect();
-            return {w:r.width,h:r.height,text:(el.innerText||'').replace(/\\s+/g,' ').trim().slice(0,60)};
+            const st=getComputedStyle(el); const owner=el.closest('.hotel-choice-card,.hotel-card'); const pr=el.parentElement?.getBoundingClientRect(); const cr=owner?.getBoundingClientRect();
+            return {w:r.width,h:r.height,cls:el.className,parentWidth:pr?.width||0,cardWidth:cr?.width||0,whiteSpace:st.whiteSpace,fontSize:st.fontSize,display:st.display,text:(el.innerText||'').replace(/\\s+/g,' ').trim().slice(0,60)};
           }).filter(x => x.w > 0 && x.h > 0);
           return {
             viewport: window.innerWidth,
@@ -559,7 +560,7 @@ def main() -> None:
                         )
                     for b in metrics["buttons"]:
                         if b["h"] > 72:
-                            errors.append(f"{label}: oversized button height {b['h']:.0f}px ({b['text']})")
+                            errors.append(f"{label}: oversized button {b['w']:.0f}x{b['h']:.0f}px [{b['cls']}]; parent={b['parentWidth']:.0f}px card={b['cardWidth']:.0f}px white-space={b['whiteSpace']} font={b['fontSize']} ({b['text']})")
                         if viewport_name == "desktop" and b["w"] > 460:
                             errors.append(f"{label}: oversized desktop button width {b['w']:.0f}px ({b['text']})")
 
