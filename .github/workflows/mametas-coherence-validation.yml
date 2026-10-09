@@ -43,6 +43,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Test safe hotel paragraph deduplication
+        run: python scripts/test_safe_boilerplate_2026_10_09.py
+
       - name: Compile traveller persona scripts
         run: |
           python -m py_compile \
