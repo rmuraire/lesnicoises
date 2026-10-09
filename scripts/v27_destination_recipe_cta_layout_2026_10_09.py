@@ -97,10 +97,45 @@ def verify_assets() -> None:
         if key not in js:
             raise RuntimeError(f"Practical tips family missing: {key}")
 
+def repair_french_punctuation(rel: str) -> None:
+    """Replace ordinary spaces before French high punctuation in rendered text.
+
+    This targets only the two known legacy pages flagged by the release gate.
+    Keep markup, CSS, inline JS, JSON-LD, URLs and affiliate hrefs intact.
+    """
+    path = ROOT / rel
+    source = path.read_text(encoding="utf-8")
+    tokens = re.compile(
+        r'(?s)<(?:script|style|textarea|pre|code)\b[^>]*>.*?</(?:script|style|textarea|pre|code)>'
+        r'|<[^>]+>|[^<]+',
+        flags=re.I,
+    )
+
+    def patch(match: re.Match[str]) -> str:
+        token = match.group(0)
+        if token.startswith("<"):
+            return token
+        return re.sub(r' (?=[?!;:»])', "\u202f", token)
+
+    fixed = tokens.sub(patch, source)
+    if fixed != source:
+        path.write_text(fixed, encoding="utf-8")
+    # Release gate inspects text nodes rather than source markup.
+    nodes = re.split(r'(<[^>]+>)', re.sub(
+        r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>',
+        '', fixed, flags=re.I,
+    ))
+    if any(re.search(r' (?=[?!;:»])', node) for node in nodes[::2]):
+        raise RuntimeError(f"{rel}: stray ordinary French punctuation space")
+    print("French text-node spacing verified:", rel)
+
+
 def main() -> None:
     for slug, _, _ in PAGES:
         normalize(f"en/riviera-guide/{slug}/index.html", False, slug)
         normalize(f"riviera-guide/{slug}/index.html", True, slug)
+    for rel in ("escapades/index.html", "riviera-guide/nice/index.html"):
+        repair_french_punctuation(rel)
     verify_assets()
     print("Destination family: 8 pages, one Hotel Fit bridge each; FR/EN activity-card hooks verified.")
 
