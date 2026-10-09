@@ -9,6 +9,14 @@ import re
 
 ROOT=Path(__file__).resolve().parents[1]
 CORRECTIONS={
+ "stay/nice/index.html":[
+   ("Hotel 66 · Boutique Hôtel Nice Côte d’Azur · Apollinaire",
+    "Hotel 66 · Boutique Hôtel Nice Côte d’Azur"),
+ ],
+ "fr/dormir/nice/index.html":[
+   ("Hotel 66 · Boutique Hôtel Nice Côte d’Azur · Apollinaire",
+    "Hotel 66 · Boutique Hôtel Nice Côte d’Azur"),
+ ],
  "en/good-finds/mipim-cannes/index.html":[
    ("CROISETTE · WEST", "CROISETTE · EAST"),
  ],
