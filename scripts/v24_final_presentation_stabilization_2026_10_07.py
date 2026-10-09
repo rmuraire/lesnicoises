@@ -472,7 +472,41 @@ def audit_presentation() -> None:
     print("PASS: canonical journey, booking guide, hotel-card and key-page integrity checks passed.")
 
 
+def repair_nested_antibes_hub() -> None:
+    """A prior presentation pass can strip closing card tags in Antibes hubs.
+
+    Restore only demonstrably malformed hubs from the committed, valid HTML,
+    rather than shipping nested cards that collapse to a few pixels.
+    """
+    import subprocess
+    for rel in ("hotels/antibes/index.html", "en/hotels/antibes/index.html"):
+        p = ROOT / rel
+        if not p.exists():
+            continue
+        current = p.read_text(encoding="utf-8", errors="ignore")
+        if current.count('<article class="hotel-choice-card"') < 2:
+            continue
+        # A card must close before the next grid or card begins.
+        if not re.search(r'<article class="hotel-choice-card"[\\s\\S]*?<div class="hotel-choice-grid"', current):
+            continue
+        original = subprocess.check_output(
+            ["git", "show", "HEAD:" + rel], cwd=str(ROOT), text=True
+        )
+        if original.count('<article class="hotel-choice-card"') != original.count('</article>'):
+            raise RuntimeError(rel + ": committed hotel hub is structurally invalid")
+        original = original.replace(
+            "Antibes et Juan-les-Pins partagent une gare, pas tout à fait les mêmes vacances.",
+            "Antibes et Juan-les-Pins ont chacune leur gare et des ambiances de séjour différentes."
+        ).replace(
+            "Antibes and Juan-les-Pins share a station, not quite the same holiday.",
+            "Antibes and Juan-les-Pins have separate stations and different holiday rhythms."
+        )
+        p.write_text(original, encoding="utf-8")
+        print("Repaired nested hotel hub from committed source:", rel, flush=True)
+
+
 def main() -> None:
+    repair_nested_antibes_hub()
     restore_home_journey("index.html", JOURNEY_EN)
     restore_home_journey("fr/index.html", JOURNEY_FR)
     patch_solo_hotel66_media()
