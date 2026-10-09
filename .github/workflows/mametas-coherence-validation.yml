@@ -140,6 +140,9 @@ jobs:
       - name: Apply final presentation stabilization
         run: python scripts/v24_final_presentation_stabilization_2026_10_07.py
 
+      - name: Apply audited factual and editorial copy corrections
+        run: python scripts/v27_objective_editorial_audit_corrections_2026_10_09.py
+
       - name: Install browser smoke dependency
         run: python -m pip install --quiet playwright
 
