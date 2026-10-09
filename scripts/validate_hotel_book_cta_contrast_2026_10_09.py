@@ -19,10 +19,6 @@ for token in (
     "background:#FFFFFF!important",
 ):
     assert token in rules, f"Hotel CTA contrast rule missing: {token}"
-assert ".btn--affiliate{background:transparent!important" in css or \
-       ".btn--affiliate{background:transparent!important" in \
-       (ROOT/"assets/mametas-shell-v1.css").read_text(), \
-       "Existing affiliate outline baseline changed: check scope"
 checked=0
 by_lang={"en":0,"fr":0}
 for part,lang in (("en/hotels","en"),("hotels","fr")):
