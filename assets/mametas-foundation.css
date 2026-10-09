@@ -482,9 +482,10 @@ p.destination-hotel-fit-cta > a{
 /* Affiliate disclosure must read as a separate legal/meta line, never as button copy. */
 .affiliate-note,
 .affiliate-disclosure,
-.affiliate-inline{
+.affiliate-inline,
+.mametas-affiliate-disclosure{
   display:block!important;
-  margin-top:14px!important;
+  margin-top:18px!important;
   padding-top:0!important;
   max-width:760px!important;
   color:var(--ink-soft,#3f4b63)!important;
