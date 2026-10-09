@@ -269,7 +269,7 @@ def main() -> None:
                 for n, path in enumerate(paths, 1):
                     label = f"{vp_name} {path}"
                     try:
-                        response = page.goto(base + path.lstrip("/"), wait_until="domcontentloaded", timeout=12000)
+                        response = page.goto(base + path, wait_until="domcontentloaded", timeout=12000)
                         if response is None or response.status >= 400:
                             errors.append(f"{label}: HTTP {response.status if response else 'no response'}")
                             continue
