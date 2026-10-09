@@ -32,10 +32,18 @@ PAGES = [
     ("/fr/planifier/", "editorial"),
     ("/en/riviera-guide/", "editorial"),
     ("/riviera-guide/", "editorial"),
-    ("/en/riviera-guide/nice/", "editorial"),
-    ("/riviera-guide/nice/", "editorial"),
+    ("/en/riviera-guide/nice/", "destination"),
+    ("/riviera-guide/nice/", "destination"),
+    ("/en/riviera-guide/villefranche-cap-ferrat/", "destination"),
+    ("/riviera-guide/villefranche-cap-ferrat/", "destination"),
     ("/en/riviera-guide/antibes/", "destination"),
     ("/riviera-guide/antibes/", "destination"),
+    ("/en/riviera-guide/cannes/", "destination"),
+    ("/riviera-guide/cannes/", "destination"),
+    ("/en/riviera-guide/monaco/", "destination"),
+    ("/riviera-guide/monaco/", "destination"),
+    ("/en/riviera-guide/menton/", "destination"),
+    ("/riviera-guide/menton/", "destination"),
     ("/en/practical/", "editorial"),
     ("/pratique/", "editorial"),
     ("/en/explore/", "editorial"),
@@ -46,12 +54,16 @@ PAGES = [
     ("/bons-plans/que-reserver/", "booking"),
     ("/en/riviera-chooser/", "tool"),
     ("/riviera-chooser/", "tool"),
+    ("/en/riviera-fit/", "tool"),
+    ("/riviera-fit/", "tool"),
     ("/en/hotels/finder/", "tool"),
     ("/hotels/finder/", "tool"),
     ("/stay/nice/", "hotels"),
     ("/fr/dormir/nice/", "hotels"),
     ("/en/hotels/antibes/", "hotels"),
     ("/hotels/antibes/", "hotels"),
+    ("/en/hotels/cannes/", "hotels"),
+    ("/hotels/cannes/", "hotels"),
     ("/en/hotels/nice/le-negresco/", "editorial"),
     ("/hotels/nice/le-negresco/", "editorial"),
     ("/en/beaches/nice/", "editorial"),
@@ -59,6 +71,7 @@ PAGES = [
     ("/en/gay-french-riviera/", "editorial"),
     ("/cote-dazur-gay/", "editorial"),
     ("/en/restaurants/", "editorial"),
+    ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
 ]
 
@@ -328,6 +341,98 @@ def check_editorial_mobile(page, label: str) -> list[str]:
     return errors
 
 
+def check_family_visuals(page, label: str, kind: str) -> list[str]:
+    errors: list[str] = []
+    data = page.evaluate(
+        """() => {
+          const visible = el => {
+            const r = el.getBoundingClientRect();
+            const s = getComputedStyle(el);
+            return r.width > 0 && r.height > 0 && s.display !== 'none' && s.visibility !== 'hidden';
+          };
+          const fitLinks = Array.from(document.querySelectorAll(
+            '.article-body a[href*="/hotels/finder/"], article.article a[href*="/hotels/finder/"]'
+          )).filter(visible);
+          const stayCards = Array.from(document.querySelectorAll('.itinerary-stay-prompt > a')).filter(visible).map(card => {
+            const r = card.getBoundingClientRect();
+            const span = card.querySelector('span');
+            const strong = card.querySelector('strong');
+            const sr = span ? span.getBoundingClientRect() : null;
+            const tr = strong ? strong.getBoundingClientRect() : null;
+            return {h:r.height, gap:(sr && tr) ? tr.top - sr.bottom : null};
+          });
+          const actionGroups = Array.from(document.querySelectorAll('.hotel-card-actions')).filter(visible).map(group => {
+            const actions = Array.from(group.querySelectorAll('a,button')).filter(visible).map(a => {
+              const r=a.getBoundingClientRect(); return {l:r.left,r:r.right,t:r.top,b:r.bottom,text:(a.innerText||'').trim()};
+            });
+            return actions;
+          });
+          const maps = Array.from(document.querySelectorAll('a[href*="google.com/maps"],a[href*="maps.app.goo.gl"]')).filter(visible).map(a => {
+            const s=getComputedStyle(a);
+            return {border:parseFloat(s.borderBottomWidth)||0, decoration:s.textDecorationLine, color:s.color};
+          });
+          const affiliateNotes = Array.from(document.querySelectorAll('.affiliate-note,.affiliate-disclosure,.affiliate-inline')).filter(visible).map(n => {
+            const s=getComputedStyle(n); return {marginTop:parseFloat(s.marginTop)||0};
+          });
+          const legacy = document.querySelector('body.rg-legacy-final article.article');
+          const lr = legacy ? legacy.getBoundingClientRect() : null;
+          const practical = document.querySelector('.rg-v3-final .ux-contained-practical');
+          const ps = practical ? getComputedStyle(practical) : null;
+          return {
+            fitCount:fitLinks.length,
+            stayCards,
+            actionGroups,
+            maps,
+            affiliateNotes,
+            legacy:lr ? {left:lr.left,right:lr.right,width:lr.width,viewport:innerWidth} : null,
+            practical:ps ? {bg:ps.backgroundColor,borderLeft:parseFloat(ps.borderLeftWidth)||0} : null
+          };
+        }"""
+    )
+
+    if kind == "destination" and data["fitCount"] > 1:
+        errors.append(f"{label}: {data['fitCount']} visible Hotel Fit links remain in destination article")
+
+    cards = data["stayCards"]
+    if cards:
+        for i, card in enumerate(cards):
+            if card["gap"] is not None and card["gap"] < 6:
+                errors.append(f"{label}: Riviera Guide hotel card {i+1} label/title gap is only {card['gap']:.0f}px")
+        # Cards sharing a visual row should be equal-height within a small tolerance.
+        heights = [x["h"] for x in cards[:3]]
+        if len(heights) > 1 and max(heights) - min(heights) > 4:
+            errors.append(f"{label}: Riviera Guide hotel cards differ by {max(heights)-min(heights):.0f}px in height")
+
+    for gi, group in enumerate(data["actionGroups"]):
+        for i in range(len(group)):
+            for j in range(i + 1, len(group)):
+                a,b = group[i],group[j]
+                x=max(0,min(a["r"],b["r"])-max(a["l"],b["l"]))
+                y=max(0,min(a["b"],b["b"])-max(a["t"],b["t"]))
+                if x*y > 2:
+                    errors.append(f"{label}: hotel action buttons overlap in group {gi+1}")
+
+    for i, note in enumerate(data["affiliateNotes"]):
+        if note["marginTop"] < 10:
+            errors.append(f"{label}: affiliate disclosure {i+1} is too close to preceding action")
+
+    for i, m in enumerate(data["maps"]):
+        if m["border"] < 1 and "underline" not in m["decoration"]:
+            errors.append(f"{label}: Google Maps link {i+1} has no consistent text affordance")
+
+    legacy=data.get("legacy")
+    if legacy:
+        center=(legacy["left"]+legacy["right"])/2
+        if abs(center-legacy["viewport"]/2) > 4:
+            errors.append(f"{label}: legacy Riviera Guide article is not centred")
+
+    practical=data.get("practical")
+    if practical and (practical["bg"] in ("rgba(0, 0, 0, 0)","transparent") or practical["borderLeft"] < 3):
+        errors.append(f"{label}: contained practical block has no visual treatment")
+
+    return errors
+
+
 def check_hotels(page, label: str) -> list[str]:
     errors: list[str] = []
     data = page.evaluate(
@@ -442,6 +547,8 @@ def main() -> None:
                         errors.extend(check_mobile_menu(page, label))
                         if kind in ("editorial", "destination"):
                             errors.extend(check_editorial_mobile(page, label))
+
+                    errors.extend(check_family_visuals(page, label, kind))
 
                     print(
                         f"OK geometry {label}: scroll={metrics['scrollWidth']} "
