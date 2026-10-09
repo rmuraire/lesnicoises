@@ -26,6 +26,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 
 PAGES = [
+    ("/hotels/antibes/", "hotels"),
     ("/", "home"),
     ("/fr/", "home"),
     ("/plan/", "editorial"),
@@ -60,7 +61,6 @@ PAGES = [
     ("/stay/nice/", "hotels"),
     ("/fr/dormir/nice/", "hotels"),
     ("/en/hotels/antibes/", "hotels"),
-    ("/hotels/antibes/", "hotels"),
     ("/en/hotels/cannes/", "hotels"),
     ("/hotels/cannes/", "hotels"),
     ("/en/hotels/nice/le-negresco/", "editorial"),
@@ -544,6 +544,19 @@ def main() -> None:
                         continue
                     page.wait_for_timeout(120)
 
+                    if viewport_name == "desktop" and path == "/hotels/antibes/":
+                        debug = page.evaluate("""() => {
+                          const n=document.querySelector('#riviera-bord-de-mer .hotel-choice-card');
+                          if(!n) return {missing:true};
+                          const nodes=[]; let p=n;
+                          while(p && nodes.length<14){
+                            const r=p.getBoundingClientRect(),s=getComputedStyle(p);
+                            nodes.push({tag:p.tagName,cls:p.className,id:p.id,w:Math.round(r.width),x:Math.round(r.left),display:s.display,grid:s.gridTemplateColumns,maxWidth:s.maxWidth});
+                            p=p.parentElement;
+                          }
+                          return nodes;
+                        }""")
+                        print("ANTIBES_DESKTOP_ANCESTRY", debug, flush=True)
                     metrics = common_metrics(page)
                     if metrics["scrollWidth"] > width + 2:
                         errors.append(
