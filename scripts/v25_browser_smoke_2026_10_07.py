@@ -558,6 +558,8 @@ def main() -> None:
                         }""")
                         print("ANTIBES_DESKTOP_ANCESTRY", debug, flush=True)
                         if isinstance(debug,list) and debug[0]["w"] < 100:
+                            raw=(ROOT / "hotels/antibes/index.html").read_text(encoding="utf-8")
+                            print("ANTIBES_BUILT_HTML", raw[raw.find('id="pratique-central"'):][-12000:], flush=True)
                             raise RuntimeError("Antibes seaside hotel card has collapsed below 100px")
                     metrics = common_metrics(page)
                     if metrics["scrollWidth"] > width + 2:
