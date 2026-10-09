@@ -891,6 +891,9 @@ body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:visited {
   border:1px solid #F7F2E7!important;
   color:#14213D!important;
   text-decoration:none!important;
+  /* Keep the booking-network name and the arrow together at 390px. */
+  font-size:11px!important;
+  letter-spacing:.015em!important;
 }
 body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:hover,
 body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:focus-visible {
