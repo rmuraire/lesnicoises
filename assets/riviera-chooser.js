@@ -1054,6 +1054,9 @@
   }
 
   function selfTest() {
+    var mediaKey=function(value){
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    };
     var days=['3','5','7'], seasons=['winter','spring','summer','autumn'], mobility=['nocar','car','either'], moods=['decide','sea','food','culture','glamour','peace'], pace=['slow','balanced','ambitious'];
     var count=0, errors=[];
     days.forEach(function(d){ seasons.forEach(function(s){ mobility.forEach(function(m){ moods.forEach(function(md){ pace.forEach(function(p){
@@ -1109,7 +1112,7 @@
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
           if (!h.url || h.url.indexOf('https://') !== 0) errors.push('missing affiliate '+lang+' '+base+' '+h.name);
-          var key=hotelKey(h.name);
+          var key=mediaKey(h.name);
           if (!chooserHotelMediaFallback[key]) errors.push('missing local media '+lang+' '+base+' '+h.name);
         });
       });
