@@ -82,9 +82,13 @@ def normalize_page(rel):
     if s.count('data-hotel-fit-base-bridge="true"') != 1:
         raise RuntimeError(rel + ": expected exactly one in-flow Riviera Fit bridge")
     # The base selector remains functional and still contains all destinations.
-    for group in ("base","style","geography","mobility","budget"):
+    for group in ("base","style","geography","mobility"):
         if 'data-engine-group="' + group + '"' not in s:
             raise RuntimeError(rel + ": missing Hotel Fit control " + group)
+    # Production uses five controls; shortened PR materialization starts with
+    # four. Never drop budget when the page actually advertises five.
+    if ("Five choices" in s or "Cinq choix" in s or "5 · " in s) and 'data-engine-group="budget"' not in s:
+        raise RuntimeError(rel + ": advertised budget control is missing")
     if rel.startswith("en/") and 'href="/en/riviera-fit/"' not in s:
         raise RuntimeError(rel + ": lost English Riviera Fit link")
     if not rel.startswith("en/") and 'href="/riviera-fit/"' not in s:
