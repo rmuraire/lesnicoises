@@ -98,6 +98,13 @@
   }
 
   function renderMustSee(data) {
+    // Many destinations already ship an editorial must-see list in their HTML.
+    // Keep that single canonical section instead of injecting a second one.
+    var existing = document.querySelector(".city-must-list");
+    if (existing) {
+      if (!existing.id) existing.id = fr ? "indispensables" : "what-not-to-miss";
+      return;
+    }
     var body = document.querySelector(".article-body") || document.querySelector("article.article");
     if (!body || body.querySelector("[data-mametas-must-see]")) return;
     var section = document.createElement("section");
