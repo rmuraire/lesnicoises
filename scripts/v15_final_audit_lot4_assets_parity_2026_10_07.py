@@ -60,9 +60,9 @@ def localise_wikimedia():
         # with underscores or percent-encoded spaces, including in source links.
         # Resolve *all* occurrences before the generic Wikimedia downloader.
         villa_pat=re.compile(
-            r'https://(?:commons|upload)\\.wikimedia\\.org/[^\\s"\\'<>]*'
-            r'Villa(?:_|%20)Ephrussi(?:_|%20)de(?:_|%20)Rothschild\\.jpg'
-            r'[^\\s"\\'<>]*',
+            r'''https://(?:commons|upload)\.wikimedia\.org/[^\s"'<>]*'''
+            r'''Villa(?:_|%20)Ephrussi(?:_|%20)de(?:_|%20)Rothschild\.jpg'''
+            r'''[^\s"'<>]*''',
             re.I,
         )
         if villa_pat.search(s):
@@ -76,8 +76,7 @@ def localise_wikimedia():
                      if is_fr else "Photo: Depositphotos, Saint-Jean-Cap-Ferrat panorama")
             # Replace photo attribution hyperlinks before rewriting URLs.
             s=re.sub(
-                r'<a\\b[^>]*\\bhref=["\\']https://commons\\.wikimedia\\.org/wiki/File:'
-                r'Villa_Ephrussi_de_Rothschild\\.jpg[^"\\']*["\\'][^>]*>[^<]*</a>',
+                r'''<a\b[^>]*\bhref=["']https://commons\.wikimedia\.org/wiki/File:Villa_Ephrussi_de_Rothschild\.jpg[^"']*["'][^>]*>[^<]*</a>''',
                 caption,s,flags=re.I,
             )
             s=villa_pat.sub(local,s)
