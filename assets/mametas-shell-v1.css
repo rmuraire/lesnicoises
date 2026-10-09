@@ -248,8 +248,10 @@ body.rg-destination.rg-legacy .legacy-destination-section>p,
 body.rg-destination.rg-v3 .article-body>p{
   max-width:68ch!important;
   margin-bottom:13px!important;
-  font-size:14.5px!important;
-  line-height:1.58!important;
+  /* Site-wide screenshot QA: restore a readable destination body floor,
+     without changing small labels, tables or card captions. */
+  font-size:16px!important;
+  line-height:1.68!important;
 }
 
 /* The canonical shortlist should read as an edited list, not loose word-processing text. */
