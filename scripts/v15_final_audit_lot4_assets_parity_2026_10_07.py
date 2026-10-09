@@ -54,6 +54,7 @@ def localise_wikimedia():
         rel=p.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP: continue
         s=p.read_text(encoding="utf-8",errors="ignore")
+        old=s
         # The two Villa Ephrussi pages contain Commons references in both
         # Special:Redirect (percent-encoded spaces) and File: (underscores).
         # These repeatedly get HTTP 429 in GitHub Actions. Use a known
@@ -85,8 +86,6 @@ def localise_wikimedia():
             if source in s or original in s:
                 raise RuntimeError("Villa Ephrussi Wikimedia references were not fully localised")
         urls=sorted(set(url_pat.findall(s)))
-        if not urls: continue
-        old=s
         for raw in urls:
             url=raw.replace("&amp;","&")
             if url in seen:
