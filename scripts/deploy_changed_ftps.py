@@ -13,6 +13,7 @@ import os
 import posixpath
 import subprocess
 import sys
+import time
 from pathlib import Path, PurePosixPath
 
 import paramiko
@@ -234,29 +235,71 @@ def main() -> int:
         print("DEPLOYMENT SKIPPED: missing GitHub Actions secrets: " + ", ".join(missing), file=sys.stderr)
         return 0
 
-    client = paramiko.SSHClient()
-    client.load_system_host_keys()
-    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    client.connect(
-        hostname=required["OVH_FTP_SERVER"], port=22, username=required["OVH_FTP_USERNAME"],
-        password=required["OVH_FTP_PASSWORD"], timeout=45, banner_timeout=45, auth_timeout=45,
-        look_for_keys=False, allow_agent=False,
-    )
-    try:
-        sftp = client.open_sftp()
+    def open_session():
+        client = paramiko.SSHClient()
+        client.load_system_host_keys()
+        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        client.connect(
+            hostname=required["OVH_FTP_SERVER"], port=22,
+            username=required["OVH_FTP_USERNAME"], password=required["OVH_FTP_PASSWORD"],
+            timeout=45, banner_timeout=45, auth_timeout=45,
+            look_for_keys=False, allow_agent=False,
+        )
         try:
+            sftp = client.open_sftp()
             home = sftp.normalize(".")
-            print("Connected to OVH over SFTP.")
-            remove_stale_remote_files(sftp, home, required["OVH_FTP_ROOT"])
-            for rel in uploads:
-                local = ROOT / rel
-                ensure_dir(sftp, home, required["OVH_FTP_ROOT"], posixpath.dirname(rel))
-                sftp.put(str(local), posixpath.basename(rel))
-                print(f"Uploaded {rel}")
-        finally:
+            print("Connected to OVH over SFTP.", flush=True)
+            return client, sftp, home
+        except BaseException:
+            client.close()
+            raise
+
+    def close_session(session):
+        if session is None:
+            return
+        client, sftp, _home = session
+        try:
             sftp.close()
+        except (OSError, EOFError, paramiko.SSHException):
+            pass
+        try:
+            client.close()
+        except (OSError, EOFError, paramiko.SSHException):
+            pass
+
+    # OVH may close long-lived SFTP sessions during a large incremental build.
+    # Reconnect periodically and retry the *current* file after a broken
+    # connection. A partial remote upload is overwritten by sftp.put on retry.
+    session = None
+    try:
+        for index, rel in enumerate(uploads):
+            local = ROOT / rel
+            for attempt in range(1, 5):
+                try:
+                    if session is None or (index > 0 and index % 100 == 0 and attempt == 1):
+                        close_session(session)
+                        session = open_session()
+                        if index == 0:
+                            remove_stale_remote_files(
+                                session[1], session[2], required["OVH_FTP_ROOT"]
+                            )
+                    _client, sftp, home = session
+                    ensure_dir(sftp, home, required["OVH_FTP_ROOT"], posixpath.dirname(rel))
+                    sftp.put(str(local), posixpath.basename(rel))
+                    print(f"Uploaded {rel}", flush=True)
+                    break
+                except (OSError, EOFError, paramiko.SSHException) as exc:
+                    print(
+                        f"SFTP attempt {attempt}/4 failed for {rel}: {type(exc).__name__}.",
+                        file=sys.stderr, flush=True,
+                    )
+                    close_session(session)
+                    session = None
+                    if attempt == 4:
+                        raise
+                    time.sleep(2 * attempt)
     finally:
-        client.close()
+        close_session(session)
     print("Mametas SFTP deployment completed successfully.")
     return 0
 
