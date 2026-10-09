@@ -399,7 +399,7 @@ def check_family_visuals(page, label: str, kind: str) -> list[str]:
             const s=getComputedStyle(a);
             return {border:parseFloat(s.borderBottomWidth)||0, decoration:s.textDecorationLine, color:s.color};
           });
-          const affiliateNotes = Array.from(document.querySelectorAll('.affiliate-note,.affiliate-disclosure,.affiliate-inline')).filter(visible).map(n => {
+          const affiliateNotes = Array.from(document.querySelectorAll('.affiliate-note,.affiliate-disclosure,.affiliate-inline,.mametas-affiliate-disclosure')).filter(visible).map(n => {
             const s=getComputedStyle(n); return {marginTop:parseFloat(s.marginTop)||0};
           });
           const legacy = document.querySelector('body.rg-legacy-final article.article');
