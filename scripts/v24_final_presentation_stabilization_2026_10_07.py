@@ -499,6 +499,13 @@ def repair_nested_antibes_hub() -> None:
         if min(first, first_original, last, last_original) < 0:
             raise RuntimeError(rel + ": cannot locate original Antibes hotel section boundaries")
         restored = original[first_original:last_original]
+        # The source hub repeats the same editorial instruction in multiple
+        # sections. The Claude C17 recipe requires it no more than once.
+        # Retain its first occurrence; headings already describe later sections.
+        for fragment in ("Commencez par cette logique", "Start with this logic"):
+            matches = list(re.finditer(r'<p>' + re.escape(fragment) + r'[^<]*</p>', restored))
+            for match in reversed(matches[1:]):
+                restored = restored[:match.start()] + restored[match.end():]
         if restored.count('<article class="hotel-choice-card"') != restored.count("</article>"):
             raise RuntimeError(rel + ": original hotel cards are unbalanced")
         # Retain the page head, foundation stylesheet, global shell, and
