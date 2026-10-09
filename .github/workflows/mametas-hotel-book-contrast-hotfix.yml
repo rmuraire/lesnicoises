@@ -1,0 +1,86 @@
+name: Mametas hotel BOOK contrast hotfix
+
+on:
+  push:
+    branches: [mametas-v3]
+    paths:
+      - "assets/mametas-shell-v1.css"
+      - ".github/workflows/mametas-hotel-book-contrast-hotfix.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mametas-hotel-book-contrast-hotfix
+  cancel-in-progress: true
+
+jobs:
+  deploy-and-verify-book:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install --quiet --disable-pip-version-check paramiko playwright
+      - name: Deploy only hotel CTA stylesheet to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/mametas-shell-v1.css
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Confirm CSS is live
+        run: |
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          import time
+          url="https://www.mametas.com/assets/mametas-shell-v1.css?hotel-book-fix=20261009"
+          for attempt in range(8):
+              try:
+                  req=Request(url,headers={"User-Agent":"MametasHotelBookCheck/1.0","Cache-Control":"no-cache, no-store"})
+                  with urlopen(req,timeout=25) as r:css=r.read().decode("utf-8","replace")
+                  if "HOTEL BOOK CTA CONTRAST" in css and "background:#F7F2E7!important" in css:
+                      print("PASS: hotel BOOK CSS is live");break
+              except Exception as exc:print("CSS check retry",attempt,str(exc))
+              time.sleep(4)
+          else:raise SystemExit("Hotel BOOK CSS did not reach public site")
+          PY
+      - name: Check live contrast in four hotel pages at 390px and 1440px
+        run: |
+          python - <<'PY'
+          from playwright.sync_api import sync_playwright
+          import shutil
+          urls=[
+            "https://www.mametas.com/en/hotels/cannes/majestic-cannes/",
+            "https://www.mametas.com/en/hotels/cannes/hotel-martinez/",
+            "https://www.mametas.com/hotels/eze/la-chevre-d-or/",
+            "https://www.mametas.com/en/hotels/nice/hotel-windsor/",
+          ]
+          exe=shutil.which("google-chrome") or shutil.which("chromium")
+          with sync_playwright() as pw:
+              kw=dict(headless=True,args=["--no-sandbox"])
+              if exe:kw["executable_path"]=exe
+              browser=pw.chromium.launch(**kw)
+              for width in (390,1440):
+                  ctx=browser.new_context(viewport={"width":width,"height":880},extra_http_headers={"Cache-Control":"no-cache"})
+                  page=ctx.new_page()
+                  for url in urls:
+                      r=page.goto(url,wait_until="domcontentloaded",timeout=30000)
+                      if not r or r.status!=200:raise SystemExit("Bad hotel page "+url)
+                      b=page.locator("body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate")
+                      if b.count()!=1:raise SystemExit("Missing booking CTA "+url)
+                      info=b.evaluate("""e=>{
+                          const s=getComputedStyle(e),r=e.getBoundingClientRect(),p=e.closest('.affiliate-cta').getBoundingClientRect();
+                          return {bg:s.backgroundColor,fg:s.color,inside:r.left>=p.left-1&&r.right<=p.right+1,overflow:document.documentElement.scrollWidth>innerWidth+2}
+                      }""")
+                      if info["bg"]!="rgb(247, 242, 231)" or info["fg"]!="rgb(20, 33, 61)" or not info["inside"] or info["overflow"]:
+                          raise SystemExit("Bad contrast: "+str((width,url,info)))
+                      print("PASS",width,url)
+                  ctx.close()
+              browser.close()
+          PY

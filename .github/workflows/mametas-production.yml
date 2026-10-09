@@ -526,6 +526,9 @@ jobs:
           path: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip
           retention-days: 30
 
+      - name: Guard hotel BOOK panel contrast across hotel detail families
+        run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
+
       - name: Gate production on intact FR and EN hotel hubs
         run: python scripts/validate_hotel_hub_structure_2026_10_09.py
 
