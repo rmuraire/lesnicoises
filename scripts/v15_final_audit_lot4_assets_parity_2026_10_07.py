@@ -78,7 +78,7 @@ def localise_wikimedia():
                 candidates=[]
                 # Use the original binary on the Wikimedia CDN first. The
                 # Commons Special:Redirect endpoint sometimes responds 429 in CI.
-                if "Villa%20Ephrussi%20de%20Rothschild.jpg" in url:
+                if any(key in url for key in ("Villa%20Ephrussi%20de%20Rothschild.jpg", "Villa_Ephrussi_de_Rothschild.jpg")):
                     candidates.append(
                         "https://upload.wikimedia.org/wikipedia/commons/b/bf/Villa_Ephrussi_de_Rothschild.jpg"
                     )
@@ -111,6 +111,13 @@ def localise_wikimedia():
                         except Exception as exc:
                             last_error=exc
                             code=getattr(exc,"code",None)
+                            if code==429 and any(key in url for key in (
+                                "Villa%20Ephrussi%20de%20Rothschild.jpg",
+                                "Villa_Ephrussi_de_Rothschild.jpg",
+                            )):
+                                print("Villa image is rate limited; using local context fallback")
+                                candidates.clear()
+                                break
                             if code==429 and attempt<3:
                                 wait=2.0*(attempt+1)
                                 print("Wikimedia rate limited; retrying in",wait,"seconds:",candidate)
@@ -126,7 +133,7 @@ def localise_wikimedia():
                     # misleading attribution. The normal path above retains
                     # the exact original Idarvol photo and Commons credit.
                     fallback="/assets/editorial/cap-ferrat-aerial.jpg"
-                    if ("Villa%20Ephrussi%20de%20Rothschild.jpg" in url
+                    if (any(key in url for key in ("Villa%20Ephrussi%20de%20Rothschild.jpg", "Villa_Ephrussi_de_Rothschild.jpg"))
                             and (ROOT/fallback.lstrip("/")).is_file()):
                         local=fallback
                         seen[url]=local
