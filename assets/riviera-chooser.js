@@ -1109,6 +1109,8 @@
       Object.keys(CONTENT[lang].hotels).forEach(function(base){
         CONTENT[lang].hotels[base].forEach(function(h){
           if (!h.url || h.url.indexOf('https://') !== 0) errors.push('missing affiliate '+lang+' '+base+' '+h.name);
+          var key=hotelKey(h.name);
+          if (!chooserHotelMediaFallback[key]) errors.push('missing local media '+lang+' '+base+' '+h.name);
         });
       });
     });
