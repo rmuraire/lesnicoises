@@ -76,6 +76,12 @@ def localise_wikimedia():
                     s=s.replace(raw,local).replace(raw.replace("&","&amp;"),local)
                     continue
                 candidates=[]
+                # Use the original binary on the Wikimedia CDN first. The
+                # Commons Special:Redirect endpoint sometimes responds 429 in CI.
+                if "Villa%20Ephrussi%20de%20Rothschild.jpg" in url:
+                    candidates.append(
+                        "https://upload.wikimedia.org/wikipedia/commons/b/bf/Villa_Ephrussi_de_Rothschild.jpg"
+                    )
                 # img src occasionally uses a Commons File: page instead of the
                 # binary redirect. Convert it to Special:Redirect first.
                 binary_url=url
@@ -115,6 +121,27 @@ def localise_wikimedia():
                     if data:
                         break
                 if not data:
+                    # Emergency fallback: show an accurately labelled local
+                    # peninsula photograph, never a broken Villa image or a
+                    # misleading attribution. The normal path above retains
+                    # the exact original Idarvol photo and Commons credit.
+                    fallback="/assets/editorial/cap-ferrat-aerial.jpg"
+                    if ("Villa%20Ephrussi%20de%20Rothschild.jpg" in url
+                            and (ROOT/fallback.lstrip("/")).is_file()):
+                        local=fallback
+                        seen[url]=local
+                        s=s.replace(
+                            'alt="Villa Ephrussi de Rothschild, Saint-Jean-Cap-Ferrat"',
+                            'alt="Saint-Jean-Cap-Ferrat and its marina from above"',
+                        )
+                        s=re.sub(
+                            r'<figcaption>Photo: <a href="https://commons\\.wikimedia\\.org/wiki/File:Villa_Ephrussi_de_Rothschild\\.jpg"[^>]*>[^<]*</a></figcaption>',
+                            '<figcaption>Photo: Depositphotos (Cap-Ferrat panorama)</figcaption>',
+                            s,
+                        )
+                        print("Using local Cap-Ferrat context image while Commons is rate limited")
+                        s=s.replace(raw,local).replace(raw.replace("&","&amp;"),local)
+                        continue
                     raise RuntimeError(f"Cannot localise Wikimedia image {url}: {last_error}")
                 ext={ "image/jpeg":".jpg","image/png":".png","image/webp":".webp" }.get(ctype)
                 if not ext:
