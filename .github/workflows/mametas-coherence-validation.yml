@@ -43,6 +43,9 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Guard restored editorial typography scales
+        run: python scripts/validate_editorial_typography_2026_10_09.py
+
       - name: Test safe hotel paragraph deduplication
         run: python scripts/test_safe_boilerplate_2026_10_09.py
 

@@ -28,10 +28,7 @@
 
 .section h2,
 .v3-section .section-heading h2,
-.article h2,
 .article-body h2,
-.hotel-detail h2,
-.culture-detail h2,
 .chooser-intro h2,
 .hotel-style-heading h2,
 .next-step h2,
@@ -46,13 +43,11 @@
 }
 
 .card h3,
-.hotel-card h3,
 .hotel-choice-copy h3,
 .stay-card h3,
 .culture-card h3,
 .decision-card h3,
 .practical-link h3,
-.article h3,
 .article-body h3,
 .hotel-engine-result h3,
 .chooser-hotel-card h4{
@@ -61,6 +56,12 @@
   font-weight:500!important;
   line-height:1.1!important;
 }
+
+/* Editorial hierarchy calibration, October 2026:
+   Let article/hotel/culture headings use their established 34px/25px
+   template sizes instead of the 46px/29px global emergency rule.
+   This deliberately leaves hero H1, home headings and special
+   components alone. No extra competing !important heading layer. */
 
 /* 2) Buttons keep each family's colour language, but share geometry.
    Full-width is reserved for mobile decision controls. */
