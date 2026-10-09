@@ -36,19 +36,28 @@ def normalize_page(rel):
     # into a free-standing navy button by another build pass. Make it a clear
     # one-row action beside a short explanation, inside fieldset 1.
     gate = re.compile(
-        r'<p class="engine-base-gate">(?P<copy>[\s\S]*?)'
-        r'(?P<link><a\b[^>]*href=["\'](?P<href>/(?:en/)?riviera-fit/[^"\']*)["\'][^>]*>[\s\S]*?</a>)'
-        r'\s*</p>', re.I
+        r'<p\b[^>]*class=["\'][^"\']*\bengine-base-gate\b[^"\']*["\'][^>]*>'
+        r'(?P<body>[\s\S]*?)</p>', re.I
     )
-    if 'class="engine-base-gate"' not in s or 'class="engine-base-gate-copy"' not in s:
+    if 'data-hotel-fit-base-bridge="true"' not in s:
         match = gate.search(s)
         if not match:
-            raise RuntimeError(rel + ": Riviera Fit bridge paragraph not located")
+            nearby = s.find("engine-base-gate")
+            raise RuntimeError(rel + ": Riviera Fit bridge paragraph not located; context="
+                               + repr(s[max(0, nearby-140):nearby+470]))
+        inner = match.group("body")
+        anchor = re.search(r'<a\b[^>]*>[\s\S]*?</a>', inner, re.I)
+        if not anchor:
+            raise RuntimeError(rel + ": Riviera Fit anchor not found in base gate")
+        text = (inner[:anchor.start()] + inner[anchor.end():]).strip()
+        if not text or "Fit" not in text:
+            raise RuntimeError(rel + ": base gate explanation missing")
         label = "Tester Riviera Fit" if rel.startswith("hotels/") else "Try Riviera Fit"
+        href = "/riviera-fit/" if rel.startswith("hotels/") else "/en/riviera-fit/"
         repl = (
             '<div class="engine-base-gate" data-hotel-fit-base-bridge="true">'
-            '<p class="engine-base-gate-copy">' + match.group("copy").strip() + '</p>'
-            '<a class="engine-base-gate-cta" href="' + match.group("href") + '">' + label + '</a>'
+            '<p class="engine-base-gate-copy">' + text + '</p>'
+            '<a class="engine-base-gate-cta" href="' + href + '">' + label + '</a>'
             '</div>'
         )
         s = s[:match.start()] + repl + s[match.end():]
