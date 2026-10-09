@@ -1,0 +1,89 @@
+name: Mametas Hotel Fit focused publish
+
+on:
+  push:
+    branches:
+      - mametas-hotel-fit-fast-publish-2026-10-09
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mametas-hotel-fit-focused-2026-10-09
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out deployment helper
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Download already-built production release
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 37995834215
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Restore only compiled Hotel Fit FR/EN and CSS
+        env:
+          MAMETAS_FORCE_FILES: assets/mametas-foundation.css;hotels/finder/index.html;en/hotels/finder/index.html
+        run: |
+          set -euo pipefail
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          for file in $(printf '%s' "$MAMETAS_FORCE_FILES" | tr ';' ' '); do
+            test -s "compiled/$file" || { echo "::error::Missing release output $file"; exit 1; }
+            mkdir -p "$(dirname "$file")"
+            cp "compiled/$file" "$file"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          css=Path("assets/mametas-foundation.css").read_text(encoding="utf-8")
+          assert "HOTEL FIT FRONT-OF-TOOL PRESENTATION" in css
+          for rel,href in (("hotels/finder/index.html","/riviera-fit/"),("en/hotels/finder/index.html","/en/riviera-fit/")):
+              s=Path(rel).read_text(encoding="utf-8")
+              assert s.count('class="hotel-fit-intro-note"')==1,rel
+              assert s.count('data-hotel-fit-base-bridge="true"')==1,rel
+              assert s.count('class="engine-base-gate-cta"')==1,rel
+              assert f'href="{href}"' in s,rel
+              assert "/assets/mametas-foundation.css?v=1.2" in s,rel
+              assert s.index("hotel-fit-intro-note")<s.index("engine-base-gate"),rel
+              assert 'data-engine-group="budget"' in s,rel
+              print("Built Hotel Fit page passed:",rel)
+          PY
+      - name: Install SFTP dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+      - name: Deploy scoped release to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/mametas-foundation.css;hotels/finder/index.html;en/hotels/finder/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Verify FR and EN layout markers live
+        run: |
+          python - <<'PY'
+          import time
+          from urllib.request import Request,urlopen
+          def read(path):
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?hf=20261009-"+str(attempt)
+                  try:
+                      with urlopen(Request(url,headers={"User-Agent":"MametasHotelFitPublish/1.0","Cache-Control":"no-cache,no-store"}),timeout=30) as r:
+                          if r.status==200: return r.read().decode("utf-8","replace")
+                  except Exception as exc:
+                      print("Retry",path,type(exc).__name__)
+                  time.sleep(4)
+              raise RuntimeError("Unreachable public page: "+path)
+          assert "HOTEL FIT FRONT-OF-TOOL PRESENTATION" in read("/assets/mametas-foundation.css")
+          for path in ("/en/hotels/finder/","/hotels/finder/"):
+              s=read(path)
+              for tok in ('class="hotel-fit-intro-note"','data-hotel-fit-base-bridge="true"','class="engine-base-gate-cta"','/assets/mametas-foundation.css?v=1.2'):
+                  assert tok in s,(path,tok)
+              print("LIVE PASS",path,flush=True)
+          print("HOTEL FIT FR/EN PRODUCTION VERIFIED")
+          PY
