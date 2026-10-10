@@ -116,8 +116,9 @@ def main():
         old=s
         if re.match(r'^(?:en/)?explore/[^/]+/index.html$',rel):
             s=add_body(s,"mametas-explore-detail")
-        if re.match(r'^(?:en/)?solo-female-french-riviera/[^/]+/index.html$',rel) or re.match(
-            r'^(?:en/)?voyage-femme-seule-cote-dazur/[^/]+/index.html
+        if (re.match(r'^(?:en/)?solo-female-french-riviera/[^/]+/index.html$',rel)
+            or re.match(r'^(?:en/)?voyage-femme-seule-cote-dazur/[^/]+/index.html$',rel)
+            or re.match(r'^cote-dazur-femme-solo/[^/]+/index.html$',rel)):
             s=add_body(s,"mametas-solo-detail")
         if rel in ("en/culture/index.html","culture/index.html",
                    "en/culture/villa-ephrussi/index.html","culture/villa-ephrussi/index.html"):
