@@ -55,9 +55,9 @@ def normalize_anchor(m):
         # Avoid leaking legacy button backgrounds into map links when another
         # late stylesheet overrides the canonical class rule.
         inline="display:inline!important;min-height:0!important;padding:0 0 1px!important;border:0!important;border-bottom:1px solid #b9903f!important;background:transparent!important;box-shadow:none!important;"
-        old_style=re.search(r'\bstyle=(["\\'])(.*?)\1',tag,re.I|re.S)
+        old_style=re.search(r'\bstyle="([^"]*)"',tag,re.I|re.S)
         if old_style:
-            tag=tag[:old_style.start(2)]+old_style.group(2).rstrip(";")+";"+inline+tag[old_style.end(2):]
+            tag=tag[:old_style.start(1)]+old_style.group(1).rstrip(";")+";"+inline+tag[old_style.end(1):]
         else:
             tag=tag[:-1]+' style="'+inline+'">'
     return tag
