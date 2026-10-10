@@ -1,0 +1,49 @@
+name: Mametas live rendering diagnostics
+on:
+  push:
+    branches:
+      - mametas-practical-sources-render-fix-2026-10-10
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Inspect live resource versions and DOM source
+        run: |
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          from html.parser import HTMLParser
+          import re,time
+          class Assets(HTMLParser):
+              def __init__(self):
+                  super().__init__();self.scripts=[];self.css=[]
+              def handle_starttag(self,tag,attrs):
+                  d=dict(attrs)
+                  if tag=="script" and d.get("src"):self.scripts.append(d["src"])
+                  if tag=="link" and d.get("rel")=="stylesheet":self.css.append(d.get("href"))
+          for path in ("/en/riviera-guide/nice/","/en/riviera-guide/villefranche-cap-ferrat/","/en/riviera-guide/cannes/"):
+              url="https://www.mametas.com"+path+"?mqa=20261010-"+str(time.time_ns())
+              req=Request(url,headers={"User-Agent":"MametasLiveRenderDiagnose/1.0","Cache-Control":"no-cache"})
+              with urlopen(req,timeout=22) as resp:html=resp.read().decode("utf-8","replace")
+              a=Assets();a.feed(html)
+              print("PAGE",path,"bytes",len(html),"css",a.css,"scripts",a.scripts,flush=True)
+              print("MARKERS",{
+                  "canonicalFound": "Three practical decisions" in html,
+                  "oldTitle": "The logistics trap" in html,
+                  "practicalStatic": "practical-decision-layer" in html,
+                  "sourcesClass": 'class="sources"' in html,
+                  "sourcesHeading": "<h2>Sources checked</h2>" in html,
+                  "foundation": "/assets/mametas-foundation.css" in html,
+              },flush=True)
+          for path in ("/assets/practical-layer.js","/assets/mametas-foundation.css"):
+              url="https://www.mametas.com"+path+"?mqa="+str(time.time_ns())
+              with urlopen(Request(url,headers={"Cache-Control":"no-cache"}),timeout=20) as r:body=r.read().decode("utf-8","replace")
+              print("ASSET",path,len(body),{
+                  "titleFixed":"Three practical decisions" in body,
+                  "legacyHeading":"'+cfg.title+" in body,
+                  "globalGrid":".practical-decision-layer .day-grid {" in body,
+                  "sourceCSS":".article .sources" in body
+              },flush=True)
+          PY
