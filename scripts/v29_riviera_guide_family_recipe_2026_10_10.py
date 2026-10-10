@@ -63,9 +63,28 @@ def fix_city(slug, fr):
             article=PROMO_PARAGRAPH.sub(
                 lambda m:"" if FINDER.search(m.group(0)) and re.search(r'hotel fit|hotel finder|trouver.*hôtel',m.group(0),re.I) else m.group(0),article)
             if FINDER.search(article):
-                # A promo inserted in another wrapper is not safe to strip
-                # heuristically: fail rather than leave a duplicate.
-                raise RuntimeError(f"{rel}: unrecognised Hotel Fit wrapper; no changes deployed")
+                # Some late materializers wrap the tool CTA in an otherwise
+                # unrecognised <div>/<aside> instead of a paragraph. Remove
+                # ONLY its hotel-finder anchor, never sibling editorial links
+                # or Booking/GetYourGuide affiliate destinations. We insert
+                # precisely one canonical CTA below.
+                finder_anchor = re.compile(
+                    r'<a\\b(?=[^>]*\\bhref=["\\\']/(?:en/)?hotels/finder/(?:\\?[^"\\\']*)?["\\\'])'
+                    r'[^>]*>[\\s\\S]*?</a>', re.I,
+                )
+                original_count = len(FINDER.findall(article))
+                article, removed = finder_anchor.subn("", article)
+                if removed != original_count or FINDER.search(article):
+                    raise RuntimeError(
+                        f"{rel}: unsafe hotel-finder promo cleanup "
+                        f"({removed} of {original_count} anchors removed)"
+                    )
+                # Remove now-empty CTA wrappers only. Do not delete
+                # explanatory paragraphs or unrelated editorial content.
+                article = re.sub(
+                    r'<(?P<tag>p|div|aside)\\b[^>]*>\\s*</(?P=tag)>',
+                    '', article, flags=re.I
+                )
             headings=list(H2.finditer(article))
             stay=None
             for h in headings:
