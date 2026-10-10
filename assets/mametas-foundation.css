@@ -2438,6 +2438,10 @@ body.mametas-solo-detail .article-body a.button[href*="/hotels/finder/"] {
   justify-content:center!important;
   align-items:center!important;
   min-height:44px!important;
+  height:auto!important;
+  max-height:72px!important;
+  align-self:flex-start!important;
+  flex:0 0 auto!important;
   width:auto!important;
   max-width:100%!important;
   margin:13px 0 18px!important;
