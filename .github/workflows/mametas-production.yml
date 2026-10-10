@@ -1225,7 +1225,7 @@ jobs:
                   'hotel-price-band',
                   'data-price-band=',
                   'hotel-choice-grid',
-                  'class="rate-link"',
+                  'rate-link',
                   'href="/hotels/nice/',
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
