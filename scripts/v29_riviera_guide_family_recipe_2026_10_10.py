@@ -32,7 +32,7 @@ def patch_sources(s):
             # <strong> label. Promote the label once and preserve every URL.
             fr_source = low.startswith(("sources vérifiées", "sources verifiees"))
             heading = "Sources vérifiées" if fr_source else "Sources checked"
-            links = re.sub(r'^\\s*<strong\\b[^>]*>[\\s\\S]*?</strong>\\s*', "", inside, count=1, flags=re.I)
+            links = re.sub(r'^\s*<strong\b[^>]*>[\s\S]*?</strong>\s*', "", inside, count=1, flags=re.I)
             return ('<div class="destination-verified-sources">'
                     f'<h2>{heading}</h2><p>{links.strip()}</p></div>')
         if low.startswith(("continue:", "continuer", "the next decision", "prochaine décision")):
