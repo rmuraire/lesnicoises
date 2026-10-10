@@ -28,6 +28,12 @@ jobs:
               req=Request(url,headers={"User-Agent":"MametasLiveRenderDiagnose/1.0","Cache-Control":"no-cache"})
               with urlopen(req,timeout=22) as resp:html=resp.read().decode("utf-8","replace")
               a=Assets();a.feed(html)
+              if "/cannes/" in path:
+                  st=html.find('class="sources"')
+                  print("CANNES_SOURCES_HTML",html[max(0,st-160):st+1650].replace("\\n"," ") if st>=0 else "MISSING",flush=True)
+              if path.endswith("/nice/") or path.endswith("/villefranche-cap-ferrat/"):
+                  st=html.find('practical-decision-layer')
+                  print("PRACTICAL_HTML",path,html[max(0,st-150):st+3600].replace("\\n"," ") if st>=0 else "MISSING",flush=True)
               print("PAGE",path,"bytes",len(html),"css",a.css,"scripts",a.scripts,flush=True)
               print("MARKERS",{
                   "canonicalFound": "Three practical decisions" in html,
