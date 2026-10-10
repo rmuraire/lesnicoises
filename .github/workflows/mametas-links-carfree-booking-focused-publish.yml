@@ -1,0 +1,125 @@
+name: Mametas Car-Free, Maps, Booking Family Focused Release
+on:
+  push:
+    branches:
+      - mametas-links-hotelcards-focused-2026-10-10
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mametas-links-carfree-booking-focus
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download latest materialized Mametas release
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38047128241
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Restore impacted page families and apply canonical markup
+        run: |
+          set -euo pipefail
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          from shutil import copy2
+          root=Path("compiled")
+          selected=[]
+          markers=("spot-logistics","hotel-choice-copy","next-decision-list","phase3-hotel-fit")
+          required=("en/hotels/without-a-car/index.html","hotels/sans-voiture/index.html",
+                    "en/good-finds/train-or-bus/index.html","bons-plans/train-ou-bus/index.html",
+                    "en/riviera-guide/saint-paul-de-vence/index.html",
+                    "riviera-guide/saint-paul-de-vence/index.html",
+                    "en/hotels/villefranche-sur-mer/index.html")
+          for source in root.rglob("index.html"):
+              rel=source.relative_to(root).as_posix()
+              if rel.startswith((".github/","scripts/","compiled/")):continue
+              body=source.read_text(encoding="utf-8",errors="replace")
+              if not any(m in body for m in markers) and rel not in required:continue
+              if "/assets/mametas-foundation.css?v=1.6" not in body:
+                  if rel in required:raise RuntimeError("Missing final CSS in "+rel)
+                  continue
+              dest=Path(rel);dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_text(body.replace(
+                  "/assets/mametas-foundation.css?v=1.6",
+                  "/assets/mametas-foundation.css?v=1.7"),encoding="utf-8")
+              selected.append(rel)
+          if not set(required).issubset(set(selected)):
+              raise RuntimeError("Essential family pages absent from release: "+str(set(required)-set(selected)))
+          Path("selected_release_paths.txt").write_text("\n".join(selected),encoding="utf-8")
+          print("Staged existing compiled family pages:",len(selected),flush=True)
+          PY
+          python scripts/v32_inline_links_hotel_cta_navigation_2026_10_10.py
+          python - <<'PY'
+          from pathlib import Path
+          paths=Path("selected_release_paths.txt").read_text().splitlines()
+          for rel in paths:
+              s=Path(rel).read_text(encoding="utf-8")
+              assert "/assets/mametas-foundation.css?v=1.7" in s,rel
+          for rel in ("en/hotels/without-a-car/index.html","hotels/sans-voiture/index.html"):
+              s=Path(rel).read_text(encoding="utf-8")
+              assert s.count("mametas-hotel-fit-bridge")==1,rel
+              assert 'mametas-hotel-fit-action' in s,rel
+              assert 'mametas-car-free-guide' in s,rel
+          for rel in ("en/riviera-guide/saint-paul-de-vence/index.html",
+                      "riviera-guide/saint-paul-de-vence/index.html"):
+              s=Path(rel).read_text(encoding="utf-8")
+              assert 'mametas-next-decision-panel' in s,rel
+              assert s.count('class="link-cta"')>=3,rel
+          css=Path("assets/mametas-foundation.css").read_text(encoding="utf-8")
+          assert "MAMETAS SINGLE-UNDERLINE / CAR-FREE / BOOKING / DECISIONS" in css
+          assert "border-bottom:0!important" in css
+          assert ".hotel-choice-card .hotel-choice-copy > a.rate-link.booking-quiet-cta" in css
+          print("Family HTML, affiliates and typography verified",flush=True)
+          PY
+          echo "MAMETAS_FORCE_FILES=assets/mametas-foundation.css;$(paste -sd ';' selected_release_paths.txt)" >> "$GITHUB_ENV"
+      - name: Install SFTP client
+        run: python -m pip install --quiet --disable-pip-version-check paramiko
+      - name: Deploy only pages using changed components and stylesheet
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Verify actual public FR/EN pages, CTA and stylesheet
+        run: |
+          python - <<'PY'
+          import time
+          from urllib.request import Request,urlopen
+          def get(path):
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?familyv17="+str(time.time_ns())
+                  try:
+                      with urlopen(Request(url,headers={"Cache-Control":"no-cache,no-store",
+                           "User-Agent":"Mametas-Scoped-Public-QA/1.0"}),timeout=28) as resp:
+                          if resp.status==200:return resp.read().decode("utf-8","replace")
+                  except Exception as exc:print("Retry",path,type(exc).__name__,flush=True)
+                  time.sleep(3)
+              raise RuntimeError("Public URL unavailable: "+path)
+          css=get("/assets/mametas-foundation.css")
+          assert "MAMETAS SINGLE-UNDERLINE / CAR-FREE / BOOKING / DECISIONS" in css
+          paths=(
+              "/en/hotels/without-a-car/","/hotels/sans-voiture/",
+              "/en/riviera-guide/saint-paul-de-vence/",
+              "/riviera-guide/saint-paul-de-vence/",
+              "/en/hotels/villefranche-sur-mer/",
+              "/en/good-finds/train-or-bus/","/bons-plans/train-ou-bus/"
+          )
+          for path in paths:
+              html=get(path)
+              assert "/assets/mametas-foundation.css?v=1.7" in html,path
+              if "without-a-car" in path or "sans-voiture" in path:
+                  assert "mametas-hotel-fit-bridge" in html,path
+              if "saint-paul-de-vence" in path:
+                  assert "mametas-next-decision-panel" in html,path
+              print("LIVE FAMILY PASS",path,flush=True)
+          print("FAMILY-WIDE FINAL CSS AND MARKUP VERIFIED",flush=True)
+          PY
