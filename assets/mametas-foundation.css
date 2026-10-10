@@ -1676,3 +1676,33 @@ body.mametas-car-free-guide .article > .verdict {
     padding:18px!important;
   }
 }
+
+
+/* Restaurant hero TYPOGRAPHY also shares one size across the two legacy
+   templates; this closes the remaining article-vs-culture-detail mismatch. */
+body.mametas-restaurant-detail .article > h1,
+body.mametas-restaurant-detail .culture-detail h1 {
+  font:500 clamp(40px,4.4vw,58px)/1.08 "Fraunces",Georgia,serif!important;
+  max-width:100%!important;
+  margin:10px 0 16px!important;
+  letter-spacing:-.035em!important;
+}
+body.mametas-restaurant-detail .article > p.standfirst,
+body.mametas-restaurant-detail .culture-detail p.standfirst {
+  max-width:760px!important;
+  font:400 clamp(19px,2.1vw,23px)/1.48 "Fraunces",Georgia,serif!important;
+  color:#45536c!important;
+  margin:16px 0 26px!important;
+}
+body.mametas-restaurant-detail .article > .meta,
+body.mametas-restaurant-detail .culture-detail .meta {
+  font:700 11px/1.5 Inter,Arial,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+}
+@media(max-width:650px) {
+  body.mametas-restaurant-detail .article > h1,
+  body.mametas-restaurant-detail .culture-detail h1 {
+    font-size:clamp(36px,10.5vw,48px)!important;
+  }
+}
