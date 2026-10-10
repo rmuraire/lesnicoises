@@ -158,6 +158,9 @@ jobs:
       - name: Repair late-rendered practical advice and Cannes references
         run: python scripts/v30_static_practical_cannes_sources_2026_10_10.py
 
+      - name: Normalize restaurant/map and car-free page presentation
+        run: python scripts/v31_restaurants_maps_carfree_2026_10_10.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
