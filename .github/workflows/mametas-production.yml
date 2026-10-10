@@ -443,6 +443,9 @@ jobs:
       - name: Fix final Culture, Plan and Practical family presentations
         run: python scripts/v33_culture_stats_plan_practical_2026_10_10.py
 
+      - name: Harmonize final visual families and Villa Ephrussi image
+        run: python scripts/v34_global_visual_family_2026_10_10.py
+
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
@@ -567,6 +570,13 @@ jobs:
             "en/practical/safety-emergencies/index.html":("mametas-safety-guide","emergency-grid"),
             "en/good-finds/nice-airport-transfer/index.html":("mametas-arrival-guide","spot-logistics"),
             "en/culture/matisse-museum/index.html":("mametas-culture-detail","/assets/editorial/culture-musee-matisse.webp"),
+            "en/culture/villa-ephrussi/index.html":("mametas-culture-detail","/assets/editorial/villa-ephrussi-trujillo.webp"),
+            "culture/villa-ephrussi/index.html":("mametas-culture-detail","/assets/editorial/villa-ephrussi-trujillo.webp"),
+            "en/culture/index.html":("/assets/editorial/villa-ephrussi-trujillo.webp",),
+            "culture/index.html":("/assets/editorial/villa-ephrussi-trujillo.webp",),
+            "en/explore/retire-french-riviera/index.html":("mametas-explore-detail",),
+            "en/solo-female-french-riviera/safety/index.html":("mametas-solo-detail",),
+            "en/solo-female-french-riviera/where-to-stay/index.html":("mametas-solo-detail",),
             "en/culture/fondation-maeght/index.html":("mametas-culture-detail","fondation-maeght-waterborough.webp"),
           }
           for rel,needles in must.items():
@@ -575,7 +585,7 @@ jobs:
               s=page.read_text(encoding="utf-8")
               for needle in needles:
                   if needle not in s:raise SystemExit("Missing release marker "+needle+" in "+rel)
-              if "/assets/mametas-foundation.css?v=1.8" not in s:
+              if "/assets/mametas-foundation.css?v=1.9" not in s:
                   raise SystemExit("Stale CSS in "+rel)
           plan=Path("fr/planifier/index.html").read_text(encoding="utf-8")
           if 'plan-fit-full-link' in plan:raise SystemExit("Duplicate Plan Fit CTA remains")
@@ -1215,7 +1225,7 @@ jobs:
                   'hotel-price-band',
                   'data-price-band=',
                   'hotel-choice-grid',
-                  'Voir notre avis complet',
+                  'class="rate-link" href="/hotels/nice/',
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (
                   'data-engine-group="budget"',
