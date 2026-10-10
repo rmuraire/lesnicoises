@@ -98,15 +98,6 @@ def culture(s,rel):
             raise RuntimeError("Former Matisse photo credit survived hero replacement")
     return s
 
-def home_culture(s,rel):
-    """Use the same verified local Fondation Maeght image on both homepages."""
-    target="/assets/editorial/fondation-maeght-waterborough.webp"
-    pat=re.compile(r'(<a\b[^>]*\bclass="[^"]*base-card--culture[^"]*"[^>]*>\s*<img\b[^>]*\bsrc=")[^"]+(")',re.I)
-    s,n=pat.subn(lambda m:m.group(1)+target+m.group(2),s,count=1)
-    if n!=1:
-        raise RuntimeError("Homepage Culture image not found: "+rel)
-    return s
-
 def main():
     modified=[]
     if update_file("en/french-riviera-tourism-statistics/index.html",stats):modified.append("statistics")
@@ -129,8 +120,6 @@ def main():
         if update_file(rel,culture):modified.append(rel)
         details+=1
     if details<20:raise RuntimeError(f"Culture guide family incomplete: {details}")
-    for rel in ("index.html","fr/index.html"):
-        if update_file(rel,home_culture):modified.append(rel)
     # Existing release gate rejects ASCII blanks before French high punctuation
     # in hotels/sans-voiture; fix only visible text nodes, never tags or hrefs.
     car=ROOT/"hotels/sans-voiture/index.html"
