@@ -205,6 +205,9 @@ jobs:
       - name: Harmonize final visual families and Villa Ephrussi image
         run: python scripts/v34_global_visual_family_2026_10_10.py
 
+      - name: Validate bilingual Culture artist spotlight
+        run: python scripts/validate_culture_artist_spotlight_2026_10_10.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
