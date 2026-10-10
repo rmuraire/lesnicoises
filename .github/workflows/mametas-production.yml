@@ -1125,7 +1125,7 @@ jobs:
           # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
               "https://www.mametas.com/": (
-                  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG",
+                  "https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",
                   "/assets/v3.css",
                   "/en/solo-female-french-riviera/",
               ),
@@ -1174,7 +1174,7 @@ jobs:
                       raise SystemExit(f"{css_url} PUBLIC CSS IS STALE: missing subtitle parity marker")
                   print(f"Public parity CSS check passed: {css_url} | Cache-Control={response.headers.get('Cache-Control','')}")
 
-          img_url="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/08_Fondation_Maeght.JPG/960px-08_Fondation_Maeght.JPG"
+          img_url="https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp"
           req=Request(img_url, headers={
               "User-Agent":"MametasDeployCheck/1.0",
               "Cache-Control":"no-cache, no-store, must-revalidate",
