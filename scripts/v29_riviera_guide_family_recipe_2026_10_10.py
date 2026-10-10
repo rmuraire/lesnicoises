@@ -114,11 +114,24 @@ def fix_city(slug, fr):
             if len(FINDER.findall(article))!=1:
                 raise RuntimeError(f"{rel}: expected precisely one Hotel Fit CTA")
             s=s[:opening.end()]+article+s[closing:]
-    # Historic V3 FR guides sometimes have a references list without the
-    # canonical accessible heading expected by the site's sources guard.
-    if fr and '<div class="sources">' in s and '<h2>Sources vérifiées</h2>' not in s:
-        s=s.replace('<div class="sources">',
-                    '<div class="sources"><h2>Sources vérifiées</h2>',1)
+    # This is the LAST content pass in production. Older guides and the
+    # later source-box normalizer do not always preserve an exact heading.
+    # Match the same sources class condition as the global coherence gate,
+    # in BOTH languages. Keep all source links and avoid duplicate headings.
+    formal_sources = re.search(
+        r"""<div\b[^>]*class=["'][^"']*sources[^"']*["'][^>]*>""", s, re.I
+    )
+    canonical = "Sources vérifiées" if fr else "Sources checked"
+    if formal_sources and f"<h2>{canonical}</h2>" not in s:
+        start = formal_sources.end()
+        next_heading = re.match(r"\s*<h2\b[^>]*>[\s\S]*?</h2>", s[start:], re.I)
+        if next_heading:
+            s = (s[:start] + f"<h2>{canonical}</h2>" +
+                 s[start + next_heading.end():])
+        else:
+            s = (s[:start] + f"<h2>{canonical}</h2>" + s[start:])
+    if formal_sources and f"<h2>{canonical}</h2>" not in s:
+        raise RuntimeError(f"{rel}: missing canonical sources heading")
     if s!=original:
         file.write_text(s,encoding="utf-8")
     # Only the 6 destinations with Hotel Fit placement requirements are
