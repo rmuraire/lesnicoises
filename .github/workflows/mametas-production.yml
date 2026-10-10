@@ -431,6 +431,9 @@ jobs:
       - name: Repair late-rendered practical advice and Cannes references
         run: python scripts/v30_static_practical_cannes_sources_2026_10_10.py
 
+      - name: Normalize restaurant/map and car-free page presentation
+        run: python scripts/v31_restaurants_maps_carfree_2026_10_10.py
+
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 

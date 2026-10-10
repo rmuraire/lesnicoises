@@ -1432,3 +1432,277 @@ body.rg-destination section.practical-decision-layer[data-static-editorial="true
     padding:20px!important;
   }
 }
+
+
+/* MAMETAS RESTAURANT / MAP / CAR-FREE RECIPE — 2026-10-10
+   One restaurant family for both legacy .article and .culture-detail layouts;
+   only shared presentation, no restaurant or outbound link alterations. */
+
+/* Consistent intermediate hero: between the oversized Nice and Saint-Tropez.
+   Use the same aspect ratio and visual cap for every restaurant city guide. */
+body.mametas-restaurant-detail .culture-hero-media {
+  box-sizing:border-box!important;
+  display:block!important;
+  width:min(100%,900px)!important;
+  max-width:900px!important;
+  padding:0!important;
+  margin:24px auto 32px!important;
+}
+body.mametas-restaurant-detail.culture-detail .culture-hero-media,
+body.mametas-restaurant-detail .culture-detail .culture-hero-media {
+  width:min(900px,calc(100% - 40px))!important;
+}
+body.mametas-restaurant-detail .culture-hero-media img {
+  box-sizing:border-box!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1.95 / 1!important;
+  max-height:460px!important;
+  object-fit:cover!important;
+}
+body.mametas-restaurant-detail .culture-hero-media figcaption {
+  margin:7px 0 0!important;
+  font:400 10px/1.45 Inter,Arial,sans-serif!important;
+}
+
+/* Restaurant guide hierarchy, deliberately quieter than 2026 generic article. */
+body.mametas-restaurant-detail .article > p:not(.standfirst):not(.meta),
+body.mametas-restaurant-detail .culture-detail .culture-copy > p:not(.standfirst):not(.meta),
+body.mametas-restaurant-detail .place > p:not(.why):not(.mametas-restaurant-tags):not(.mametas-restaurant-best-for) {
+  font-size:15px!important;
+  line-height:1.66!important;
+}
+body.mametas-restaurant-detail .place {
+  margin:0!important;
+  padding:24px 0 25px!important;
+  border-top:1px solid rgba(20,33,61,.16)!important;
+}
+body.mametas-restaurant-detail .place > h3 {
+  margin:5px 0 10px!important;
+  font:500 clamp(24px,2.2vw,29px)/1.2 "Fraunces",Georgia,serif!important;
+  letter-spacing:-.012em!important;
+  color:#14213d!important;
+}
+body.mametas-restaurant-detail .place > .address {
+  display:block!important;
+  margin:0 0 10px!important;
+  font:600 11px/1.5 Inter,Arial,sans-serif!important;
+  letter-spacing:.065em!important;
+  text-transform:uppercase!important;
+  color:#637087!important;
+}
+body.mametas-restaurant-detail .place > .why,
+body.mametas-restaurant-detail .place > .mametas-restaurant-brief {
+  display:block!important;
+  margin:0 0 12px!important;
+  padding:0!important;
+  border:0!important;
+  font-family:Inter,Arial,sans-serif!important;
+}
+body.mametas-restaurant-detail .place .mametas-restaurant-tags {
+  margin:0 0 7px!important;
+  font:600 11px/1.5 Inter,Arial,sans-serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:.045em!important;
+  color:#677187!important;
+}
+body.mametas-restaurant-detail .place .mametas-restaurant-best-for,
+body.mametas-restaurant-detail .place > .why {
+  margin:0 0 11px!important;
+  font:500 14px/1.5 Inter,Arial,sans-serif!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  color:#384c66!important;
+}
+body.mametas-restaurant-detail .place > p.practical {
+  font:400 13px/1.6 Inter,Arial,sans-serif!important;
+  color:#526076!important;
+}
+
+/* Official source and Google Maps: aligned links and matching underline.
+   Avoid a 30px box or deeply offset border on only one of the two links. */
+body.mametas-restaurant-detail .place > a.place-link {
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  vertical-align:baseline!important;
+  width:auto!important;
+  min-height:26px!important;
+  margin:10px 16px 0 0!important;
+  padding:0 0 4px!important;
+  border:0!important;
+  border-bottom:1px solid currentColor!important;
+  background:transparent!important;
+  font:700 11px/1.45 Inter,Arial,sans-serif!important;
+  letter-spacing:.09em!important;
+  text-decoration:none!important;
+  text-transform:uppercase!important;
+  white-space:normal!important;
+  color:#8b6a2c!important;
+}
+body.mametas-restaurant-detail .place > a.place-map {
+  color:#095168!important;
+  margin-left:0!important;
+}
+body.mametas-restaurant-detail .place > a.place-link:hover,
+body.mametas-restaurant-detail .place > a.place-link:focus-visible {
+  color:#ad492f!important;
+  border-bottom-color:#ad492f!important;
+}
+
+/* "Next decision" is clearly interactive even on older navy verdicts. */
+body.mametas-restaurant-detail .verdict a,
+body.mametas-restaurant-detail .culture-practical a {
+  color:#fff0c8!important;
+  text-decoration:underline!important;
+  text-decoration-color:#e4ac53!important;
+  text-underline-offset:4px!important;
+  text-decoration-thickness:1px!important;
+  font-weight:650!important;
+}
+body.mametas-restaurant-detail .verdict a:hover,
+body.mametas-restaurant-detail .verdict a:focus-visible,
+body.mametas-restaurant-detail .culture-practical a:hover,
+body.mametas-restaurant-detail .culture-practical a:focus-visible {
+  color:#fff!important;
+  text-decoration-thickness:2px!important;
+}
+body.mametas-restaurant-detail .culture-practical a {
+  color:#095168!important;
+  text-decoration-color:#a57b36!important;
+}
+
+/* Map links embedded within prose or logistics use the same understated
+   12px rhythm as the airport-transfer page, never a heading-sized link. */
+body .article p.spot-logistics,
+body .culture-detail p.spot-logistics,
+body .article .route-step p.spot-logistics,
+body.rg-destination .article p.spot-logistics {
+  font:400 12.5px/1.6 Inter,Arial,sans-serif!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  color:#53647b!important;
+}
+body .article p.spot-logistics strong,
+body .article .route-step p.spot-logistics strong,
+body .culture-detail p.spot-logistics strong {
+  font-size:inherit!important;
+  line-height:inherit!important;
+  font-weight:700!important;
+}
+body .article p.spot-logistics a[href*="google.com/maps"],
+body .culture-detail p.spot-logistics a[href*="google.com/maps"],
+body .article .route-step p.spot-logistics a[href*="google.com/maps"] {
+  display:inline!important;
+  font-family:Inter,Arial,sans-serif!important;
+  font-weight:700!important;
+  font-size:inherit!important;
+  line-height:inherit!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  vertical-align:baseline!important;
+  text-underline-offset:3px!important;
+  text-decoration:underline!important;
+  text-decoration-thickness:1px!important;
+  color:#095168!important;
+}
+body .article p.spot-logistics a[href*="google.com/maps"]:hover {
+  color:#ad492f!important;
+}
+
+/* Car-free comparison guide: all frames get internal breathing space. */
+body.mametas-car-free-guide .article .fact-grid {
+  gap:15px!important;
+  margin:28px 0 36px!important;
+}
+body.mametas-car-free-guide .article .fact-grid > .fact {
+  box-sizing:border-box!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:21px 22px!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+}
+body.mametas-car-free-guide .article .fact-grid > .fact > b {
+  display:block!important;
+  margin:0 0 9px!important;
+  line-height:1.3!important;
+}
+body.mametas-car-free-guide .article .fact-grid > .fact > span {
+  display:block!important;
+  margin:0!important;
+  font:400 13px/1.6 Inter,Arial,sans-serif!important;
+}
+body.mametas-car-free-guide .article > .place {
+  box-sizing:border-box!important;
+  padding:23px 25px!important;
+  margin:16px 0!important;
+  border:1px solid rgba(20,33,61,.16)!important;
+  background:rgba(255,253,248,.48)!important;
+}
+body.mametas-car-free-guide .article > .place > :first-child {
+  margin-top:0!important;
+}
+body.mametas-car-free-guide .article > .place > :last-child {
+  margin-bottom:0!important;
+}
+body.mametas-car-free-guide .article > .place > p {
+  margin:0 0 15px!important;
+  font:400 15px/1.66 Inter,Arial,sans-serif!important;
+}
+body.mametas-car-free-guide .article > .place > .spot-logistics {
+  margin-top:18px!important;
+  padding-top:13px!important;
+  border-top:1px solid rgba(20,33,61,.15)!important;
+  font-size:12.5px!important;
+}
+body.mametas-car-free-guide .article > .note,
+body.mametas-car-free-guide .article > .verdict {
+  box-sizing:border-box!important;
+  padding:25px 28px!important;
+}
+@media(max-width:650px) {
+  body.mametas-restaurant-detail .culture-hero-media,
+  body.mametas-restaurant-detail.culture-detail .culture-hero-media,
+  body.mametas-restaurant-detail .culture-detail .culture-hero-media {
+    width:calc(100% - 32px)!important;
+    margin:20px auto 24px!important;
+  }
+  body.mametas-restaurant-detail .culture-hero-media img {
+    aspect-ratio:1.55/1!important;
+  }
+  body.mametas-car-free-guide .article .fact-grid > .fact,
+  body.mametas-car-free-guide .article > .place {
+    padding:18px!important;
+  }
+}
+
+
+/* Restaurant hero TYPOGRAPHY also shares one size across the two legacy
+   templates; this closes the remaining article-vs-culture-detail mismatch. */
+body.mametas-restaurant-detail .article > h1,
+body.mametas-restaurant-detail .culture-detail h1 {
+  font:500 clamp(40px,4.4vw,58px)/1.08 "Fraunces",Georgia,serif!important;
+  max-width:100%!important;
+  margin:10px 0 16px!important;
+  letter-spacing:-.035em!important;
+}
+body.mametas-restaurant-detail .article > p.standfirst,
+body.mametas-restaurant-detail .culture-detail p.standfirst {
+  max-width:760px!important;
+  font:400 clamp(19px,2.1vw,23px)/1.48 "Fraunces",Georgia,serif!important;
+  color:#45536c!important;
+  margin:16px 0 26px!important;
+}
+body.mametas-restaurant-detail .article > .meta,
+body.mametas-restaurant-detail .culture-detail .meta {
+  font:700 11px/1.5 Inter,Arial,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+}
+@media(max-width:650px) {
+  body.mametas-restaurant-detail .article > h1,
+  body.mametas-restaurant-detail .culture-detail h1 {
+    font-size:clamp(36px,10.5vw,48px)!important;
+  }
+}
