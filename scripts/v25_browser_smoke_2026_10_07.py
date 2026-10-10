@@ -72,6 +72,11 @@ PAGES = [
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
+    ("/en/culture/villa-ephrussi/", "editorial"),
+    ("/culture/villa-ephrussi/", "editorial"),
+    ("/en/explore/retire-french-riviera/", "editorial"),
+    ("/en/solo-female-french-riviera/safety/", "editorial"),
+    ("/en/solo-female-french-riviera/where-to-stay/", "editorial"),
 ]
 
 VIEWPORTS = [
