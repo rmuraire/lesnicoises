@@ -1246,3 +1246,18 @@ body.hotel-fit-page .engine-controls .engine-base-gate a.engine-base-gate-cta:ho
   color:#14213d!important;
   font-weight:700!important;
 }
+
+
+/* CANONICAL SOURCE BLOCK HEADING — 2026-10-10 */
+.article-body .destination-verified-sources > h2 {
+  margin:0 0 12px!important;
+  padding:0!important;
+  color:#84631f!important;
+  font:700 11px/1.45 Inter,Arial,sans-serif!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+}
+.article-body .destination-verified-sources > p {
+  margin:0!important;
+  font:400 12px/1.65 Inter,Arial,sans-serif!important;
+}
