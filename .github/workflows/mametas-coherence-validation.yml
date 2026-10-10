@@ -149,6 +149,12 @@ jobs:
       - name: Apply final Hotel Fit header and base-choice layout
         run: python scripts/v28_hotel_fit_layout_2026_10_09.py
 
+      - name: Materialize curated GetYourGuide activity cards
+        run: python scripts/getyourguide_affiliate_pass.py
+
+      - name: Apply Riviera Guide family-wide recipe
+        run: python scripts/v29_riviera_guide_family_recipe_2026_10_10.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
