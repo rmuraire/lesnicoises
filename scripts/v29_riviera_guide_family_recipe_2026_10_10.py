@@ -90,10 +90,9 @@ def fix_city(slug, fr):
             s=s[:opening.end()]+article+s[closing:]
     # Historic V3 FR guides sometimes have a references list without the
     # canonical accessible heading expected by the site's sources guard.
-    if fr and '<div class="sources"' in s and '<h2>Sources vérifiées</h2>' not in s:
-        s=s.replace('<div class="sources"', '<div class="sources"', 1)
-        s=re.sub(r'(<div\\b[^>]*class=["\\\']sources["\\\'][^>]*>)',
-                 r'\\1<h2>Sources vérifiées</h2>',s,count=1,flags=re.I)
+    if fr and '<div class="sources">' in s and '<h2>Sources vérifiées</h2>' not in s:
+        s=s.replace('<div class="sources">',
+                    '<div class="sources"><h2>Sources vérifiées</h2>',1)
     if s!=original:
         file.write_text(s,encoding="utf-8")
     # Only the 6 destinations with Hotel Fit placement requirements are
