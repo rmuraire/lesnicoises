@@ -92,7 +92,7 @@ def culture(s,rel):
                 "File:Mus%C3%A9e_Matisse_de_Nice.jpg" in item):
                 return ""
             return item
-        s=re.sub(r'<li\\b[^>]*>[\\s\\S]*?</li>',
+        s=re.sub(r'<li\b[^>]*>[\s\S]*?</li>',
                  remove_stale_photo_credit,s,flags=re.I)
         if "Yair Haklai" in s:
             raise RuntimeError("Former Matisse photo credit survived hero replacement")
