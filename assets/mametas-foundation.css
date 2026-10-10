@@ -1715,3 +1715,221 @@ body.mametas-restaurant-detail .culture-detail .meta {
     font-size:clamp(36px,10.5vw,48px)!important;
   }
 }
+
+
+/* MAMETAS SINGLE-UNDERLINE / CAR-FREE / BOOKING / DECISIONS — 2026-10-10
+   One narrowly scoped pass for six recurring visual issues. */
+
+/* A single text-decoration replaces simultaneous border-bottom and underline.
+   Only in-flow text links, not buttons, navigation or official-source tiles. */
+body .article p.spot-logistics a,
+body .article p.spot-logistics a:visited,
+body .article p.spot-logistics a:hover,
+body .article p.spot-logistics a:focus-visible,
+body .culture-detail p.spot-logistics a,
+body .article p:not(.spot-logistics) a[href*="google.com/maps"],
+body .article p:not(.spot-logistics) a[href*="maps.app.goo.gl"],
+body .article p:not(.spot-logistics) a[href*="goo.gl/maps"] {
+  border-bottom:0!important;
+  box-shadow:none!important;
+  background-image:none!important;
+  padding-bottom:0!important;
+  text-decoration:underline!important;
+  text-decoration-thickness:1px!important;
+  text-decoration-color:#bc7850!important;
+  text-underline-offset:3px!important;
+  font-size:inherit!important;
+  vertical-align:baseline!important;
+}
+
+/* Car-free editorial ownership bridge: one aligned, quiet inset,
+   without the inherited oversized prose or crowding. */
+body.mametas-car-free-guide .article .ownership-note--split[data-phase3-owner="carfree"] {
+  box-sizing:border-box!important;
+  display:block!important;
+  clear:both!important;
+  width:100%!important;
+  max-width:860px!important;
+  margin:25px 0 28px!important;
+  padding:18px 22px!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+  border-left:3px solid #b9903f!important;
+  background:#fbf7ef!important;
+  font:400 14px/1.6 Inter,Arial,sans-serif!important;
+  color:#3e4d66!important;
+}
+body.mametas-car-free-guide .article .ownership-note--split[data-phase3-owner="carfree"] > strong {
+  display:block!important;
+  margin:0 0 6px!important;
+  font:700 14px/1.5 Inter,Arial,sans-serif!important;
+  color:#14213d!important;
+}
+body.mametas-car-free-guide .article .ownership-note--split a {
+  display:inline!important;
+  padding:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  text-decoration:underline!important;
+  text-decoration-color:#bc7850!important;
+  text-underline-offset:3px!important;
+  font:inherit!important;
+  font-weight:700!important;
+  color:#095168!important;
+}
+body.mametas-car-free-guide .article .ownership-note--split + p {
+  margin-top:0!important;
+  margin-bottom:24px!important;
+  font-size:15px!important;
+  line-height:1.65!important;
+}
+
+/* Canonical Hotel Fit choice row (only generated when old source-box exists). */
+body.mametas-car-free-guide .article .source-box.phase3-hotel-fit.mametas-hotel-fit-bridge {
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:18px 22px!important;
+  max-width:860px!important;
+  width:100%!important;
+  margin:30px 0 34px!important;
+  padding:22px 24px!important;
+  background:#fbf7ef!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+  border-left:3px solid #b9903f!important;
+}
+body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > p {
+  margin:0!important;
+  min-width:0!important;
+  font:400 14px/1.6 Inter,Arial,sans-serif!important;
+  color:#3d4d64!important;
+}
+body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > a.mametas-hotel-fit-action,
+body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > a.mametas-hotel-fit-action:visited,
+body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > a.mametas-hotel-fit-action:hover,
+body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > a.mametas-hotel-fit-action:focus-visible {
+  box-sizing:border-box!important;
+  position:static!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 auto!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:42px!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:11px 17px!important;
+  border:1px solid #ad492f!important;
+  border-radius:0!important;
+  background:#ad492f!important;
+  color:#fff!important;
+  text-decoration:none!important;
+  font:700 11px/1.35 Inter,Arial,sans-serif!important;
+  letter-spacing:.07em!important;
+  text-transform:uppercase!important;
+}
+
+/* Scoped legacy destination follow-ups; keep all original destinations and
+   turn separate inline links into three clearly actionable editorial tiles. */
+body.rg-destination .legacy-destination-section.mametas-next-decision-panel {
+  box-sizing:border-box!important;
+  margin:34px 0!important;
+  padding:25px 26px 28px!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+  border-left:3px solid #b9903f!important;
+  background:#fcf8f0!important;
+}
+body.rg-destination .legacy-destination-section.mametas-next-decision-panel > h2 {
+  margin:0 0 18px!important;
+  padding:0!important;
+  font:700 12px/1.4 Inter,Arial,sans-serif!important;
+  letter-spacing:.11em!important;
+  color:#946d2b!important;
+  text-transform:uppercase!important;
+}
+body.rg-destination .mametas-next-decision-panel .next-decision-list {
+  box-sizing:border-box!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:12px!important;
+  margin:0!important;
+  padding:0!important;
+}
+body.rg-destination .mametas-next-decision-panel .next-decision-list > a,
+body.rg-destination .mametas-next-decision-panel .next-decision-list > a:visited {
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  box-sizing:border-box!important;
+  min-width:0!important;
+  min-height:65px!important;
+  padding:13px 15px!important;
+  margin:0!important;
+  border:1px solid rgba(20,33,61,.19)!important;
+  border-bottom:2px solid #b9903f!important;
+  border-radius:0!important;
+  background:#fffdf8!important;
+  color:#14213d!important;
+  font:700 13px/1.45 Inter,Arial,sans-serif!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  text-decoration:none!important;
+  overflow-wrap:break-word!important;
+}
+body.rg-destination .mametas-next-decision-panel .next-decision-list > a:hover,
+body.rg-destination .mametas-next-decision-panel .next-decision-list > a:focus-visible {
+  border-color:#ad492f!important;
+  border-bottom-color:#ad492f!important;
+  color:#ad492f!important;
+}
+
+/* Booking actions inside curated hotel cards, not the site's generic CTA. */
+.hotel-choice-card .hotel-choice-copy > a.rate-link.booking-quiet-cta,
+.hotel-choice-card .hotel-choice-copy > a.btn--affiliate,
+.hotel-card-actions > a.rate-link.affiliate-link {
+  box-sizing:border-box!important;
+  position:static!important;
+  display:inline-flex!important;
+  align-self:flex-start!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  max-width:100%!important;
+  height:auto!important;
+  min-height:40px!important;
+  margin:17px 0 0!important;
+  padding:10px 15px!important;
+  font:700 11px/1.35 Inter,Arial,sans-serif!important;
+  letter-spacing:.045em!important;
+  text-transform:uppercase!important;
+  white-space:normal!important;
+  text-align:center!important;
+  border-width:1px!important;
+  border-radius:0!important;
+}
+
+/* Practical "Train or bus" reading scale matches standard editorial guides. */
+body.practical-guide-page .article > p:not(.standfirst),
+body.practical-guide-page .article .place > p:not(.spot-logistics),
+body.practical-guide-page .article > ul,
+body.practical-guide-page .article > ol {
+  font:400 15px/1.7 Inter,Arial,sans-serif!important;
+}
+body.practical-guide-page .article .note {
+  font:400 14px/1.65 Inter,Arial,sans-serif!important;
+}
+@media(max-width:760px) {
+  body.mametas-car-free-guide .article .source-box.phase3-hotel-fit.mametas-hotel-fit-bridge {
+    grid-template-columns:minmax(0,1fr)!important;
+    padding:19px!important;
+  }
+  body.mametas-car-free-guide .article .mametas-hotel-fit-bridge > a.mametas-hotel-fit-action {
+    width:100%!important;
+  }
+  body.rg-destination .mametas-next-decision-panel .next-decision-list {
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  body.rg-destination .legacy-destination-section.mametas-next-decision-panel {
+    padding:20px!important;
+  }
+}
