@@ -172,6 +172,9 @@ jobs:
       - name: Fix final Culture, Plan and Practical family presentations
         run: python scripts/v33_culture_stats_plan_practical_2026_10_10.py
 
+      - name: Harmonize final visual families and Villa Ephrussi image
+        run: python scripts/v34_global_visual_family_2026_10_10.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
