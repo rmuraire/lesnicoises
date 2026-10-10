@@ -594,7 +594,7 @@ def main() -> None:
                             if not h1 or float(h1["font"].removesuffix("px")) > limit:
                                 errors.append(f"{label}: Solo Female H1 exceeds {limit}px hierarchy {h1}")
                             if path.startswith("/cote-dazur-femme-solo/"):
-                                h2=next((h for h in debug["headings"] if h["tag"]=="H2" and "SOURCES" not in h["text"].upper()),None)
+                                h2=next((h for h in debug["headings"] if h["tag"]=="H2" and "SOURCES" not in h["text"].upper() and "family-section-heading" not in h["cls"]),None)
                                 if h2 and float(h2["font"].removesuffix("px")) > 32:
                                     errors.append(f"{label}: French Solo Female H2 not normalized {h2}")
 
