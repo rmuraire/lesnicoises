@@ -1125,7 +1125,7 @@ jobs:
           # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
               "https://www.mametas.com/": (
-                  "https://www.mametas.com/assets/editorial/fondation-maeght-waterborough.webp",
+                  "/assets/editorial/fondation-maeght-waterborough.webp",
                   "/assets/v3.css",
                   "/en/solo-female-french-riviera/",
               ),
