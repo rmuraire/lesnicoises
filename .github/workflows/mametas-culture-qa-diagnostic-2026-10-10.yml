@@ -1,0 +1,76 @@
+name: Mametas QA inspect source vs live culture
+on:
+  push:
+    branches:
+      - mametas-recipe-culture-practical-stats-2026-10-10
+permissions:
+  contents: read
+  actions: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38047128241
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Unpack and inspect compiled files, actual media and CSS
+        run: |
+          pip -q install pillow
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          python - <<'PY'
+          import re,io
+          from pathlib import Path
+          from PIL import Image
+          from urllib.request import urlopen,Request
+          for path in (
+            'fr/planifier/index.html','fr/plan/index.html','en/plan/index.html',
+            'en/french-riviera-tourism-statistics/index.html',
+            'en/practical/safety-emergencies/index.html',
+            'en/good-finds/nice-airport-transfer/index.html',
+            'en/culture/matisse-museum/index.html','culture/musee-matisse/index.html',
+            'en/culture/fondation-maeght/index.html','culture/fondation-maeght/index.html'
+          ):
+              p=Path('compiled')/path
+              print('===',path,p.exists(),flush=True)
+              if not p.exists():continue
+              s=p.read_text(encoding='utf-8')
+              patterns=[r'<body[^>]*>',r'<div[^>]*(?:ownership|cta|signature|hero|chooser|next)[^>]*>',
+                        r'<section[^>]*(?:hero|cta|chooser|practical|emergency)[^>]*>',
+                        r'<a[^>]*>[^<]*(?:Riviera Fit|VERDICT|Verdict|verdict|Riviera fit)[^<]*</a>',
+                        r'<img[^>]*>',r'<figure[^>]*>',r'<div class="sources"',r'<h2[^>]*>Sources checked',
+                        r'<h2[^>]*>Checked sources']
+              ms=[]
+              for pat in patterns:
+                  ms.extend((m.start(),m.group()[:235]) for m in re.finditer(pat,s,re.I) )
+              for pos,val in sorted(ms)[:25]:
+                  print('NODE',pos,val,flush=True)
+              for needle in ('Try Riviera Fit','Tester Riviera Fit','DONNEZ-MOI LE VERDICT',
+                             'This page answers','emergency-grid','GET STARTED'):
+                  k=s.find(needle)
+                  if k>=0:print('CONTEXT',needle,repr(s[max(0,k-330):k+670]),flush=True)
+              print('CSS',re.findall(r'/assets/[^" ]+\.css[^" ]*',s)[:6],flush=True)
+          for asset in (
+            'assets/editorial/fondation-maeght-waterborough.webp',
+            'assets/editorial/culture-musee-matisse.webp',
+            'assets/editorial/culture-musee-matisse-v2.webp',
+            'assets/editorial/musee-matisse-alyona-nagel-pexels.webp'
+          ):
+              p=Path('compiled')/asset
+              print('ASSET',asset,'exists',p.exists(),'size',p.stat().st_size if p.exists() else None,flush=True)
+              if p.exists():
+                  try:
+                      with Image.open(p) as im:print('DIMENSIONS',asset,im.size,im.format,flush=True)
+                  except Exception as exc:print('BROKEN',asset,str(exc),flush=True)
+              try:
+                  req=Request('https://www.mametas.com/'+asset,headers={'Cache-Control':'no-cache','User-Agent':'Mametas-QA'})
+                  with urlopen(req,timeout=15) as res:
+                      data=res.read();status=res.status
+                  print('LIVE MEDIA',asset,status,len(data),flush=True)
+                  with Image.open(io.BytesIO(data)) as im:print('LIVE DIMENSIONS',asset,im.size,flush=True)
+              except Exception as exc:print('LIVE MEDIA ERROR',asset,repr(exc),flush=True)
+          PY
