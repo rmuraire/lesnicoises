@@ -163,6 +163,14 @@ jobs:
 
       - name: Normalize final Hotel Fit bridges and inline navigation
         run: python scripts/v32_inline_links_hotel_cta_navigation_2026_10_10.py
+      - name: Prepare Pillow for licensed Maeght photo validation
+        run: python -m pip install --quiet --disable-pip-version-check pillow
+
+      - name: Restore decodable licensed Fondation Maeght photo
+        run: python scripts/v33_repair_maeght_photo_2026_10_10.py
+
+      - name: Fix final Culture, Plan and Practical family presentations
+        run: python scripts/v33_culture_stats_plan_practical_2026_10_10.py
 
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py

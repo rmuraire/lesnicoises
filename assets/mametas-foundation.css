@@ -1933,3 +1933,372 @@ body.practical-guide-page .article .note {
     padding:20px!important;
   }
 }
+
+
+/* MAMETAS CULTURE STATS PLAN SAFETY 2026-10-10
+   Explicit selectors for late-generated article body classes. */
+
+/* Data article: editorial 15px body, substantial but measured fact cards. */
+body.mametas-stats-guide .article {
+  box-sizing:border-box!important;
+  max-width:940px!important;
+  padding-bottom:62px!important;
+}
+body.mametas-stats-guide .article > h1 {
+  font-size:clamp(38px,4.4vw,56px)!important;
+  line-height:1.1!important;
+  margin-bottom:18px!important;
+}
+body.mametas-stats-guide .article > p:not(.standfirst):not(.meta),
+body.mametas-stats-guide .article > ul {
+  font:400 15px/1.7 Inter,Arial,sans-serif!important;
+  color:#35445d!important;
+}
+body.mametas-stats-guide .article > h2 {
+  margin:36px 0 13px!important;
+  font:500 clamp(25px,2.7vw,30px)/1.22 "Fraunces",Georgia,serif!important;
+}
+body.mametas-stats-guide .article .fact-grid {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  margin:24px 0 33px!important;
+}
+body.mametas-stats-guide .article .fact-grid .fact {
+  box-sizing:border-box!important;
+  padding:20px 21px!important;
+  min-width:0!important;
+}
+body.mametas-stats-guide .article .fact-grid .fact > b {
+  display:block!important;
+  margin-bottom:8px!important;
+}
+body.mametas-stats-guide .article .fact-grid .fact > span {
+  font:400 12.5px/1.6 Inter,Arial,sans-serif!important;
+}
+body.mametas-stats-guide .article .article-visual--panorama {
+  max-width:940px!important;
+  margin:20px auto 36px!important;
+}
+body.mametas-stats-guide .article .article-visual--panorama img {
+  aspect-ratio:1.95/1!important;
+  height:auto!important;
+  max-height:470px!important;
+  object-fit:cover!important;
+}
+body.mametas-stats-guide .article .verdict {
+  box-sizing:border-box!important;
+  padding:25px 29px!important;
+  margin:26px 0 30px!important;
+}
+body.mametas-stats-guide .article .verdict > p {
+  font:400 15px/1.6 Inter,Arial,sans-serif!important;
+}
+/* The blue "Traveller?" footer: three distinct links, primary button
+   terracotta with white text; no inherited white-on-white hover. */
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller {
+  background:#14213d!important;
+  color:#fff!important;
+  border:0!important;
+}
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller > .label {
+  display:block!important;
+  color:#f0c983!important;
+  margin-bottom:14px!important;
+}
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller > p {
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:11px 23px!important;
+  margin:0!important;
+  padding:0!important;
+}
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a:not(.btn),
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a:not(.btn):visited {
+  color:#fff!important;
+  text-decoration:underline!important;
+  text-decoration-color:#fff!important;
+  text-underline-offset:3px!important;
+  font:600 13px/1.5 Inter,Arial,sans-serif!important;
+}
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a.btn,
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a.btn:visited,
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a.btn:hover,
+body.mametas-stats-guide .article .verdict.mametas-stats-traveller p a.btn:focus-visible {
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  min-height:43px!important;
+  align-items:center!important;
+  margin:0!important;
+  padding:11px 16px!important;
+  background:#ad492f!important;
+  border:1px solid #ad492f!important;
+  border-radius:0!important;
+  color:#fff!important;
+  text-decoration:none!important;
+  font:700 11px/1.3 Inter,Arial,sans-serif!important;
+  letter-spacing:.055em!important;
+  text-transform:uppercase!important;
+}
+
+/* FR Plan: the verdict button performs the action. No second link next to it.
+   Keep colour consistent with the other Riviera Fit entry points. */
+body.mametas-plan-chooser-single .chooser-submit-row {
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  justify-content:flex-start!important;
+  gap:15px!important;
+  margin:27px 0!important;
+}
+body.mametas-plan-chooser-single .chooser-submit-row > button[data-chooser-submit],
+body.mametas-plan-chooser-single .chooser-submit-row > button[data-chooser-submit]:hover,
+body.mametas-plan-chooser-single .chooser-submit-row > button[data-chooser-submit]:focus-visible {
+  background:#ad492f!important;
+  border:1px solid #ad492f!important;
+  color:#fff!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+}
+body.mametas-plan-chooser-single .chooser-submit-row > button[data-chooser-submit]:disabled {
+  opacity:.65!important;
+  cursor:not-allowed!important;
+}
+
+/* Airport transport article: standard guide hierarchy without ballooned prose. */
+body.mametas-arrival-guide .article {
+  max-width:930px!important;
+  padding-bottom:65px!important;
+}
+body.mametas-arrival-guide .article > h1 {
+  font-size:clamp(38px,4.2vw,54px)!important;
+  line-height:1.13!important;
+}
+body.mametas-arrival-guide .article > p:not(.standfirst),
+body.mametas-arrival-guide .article > ul {
+  font:400 15px/1.68 Inter,Arial,sans-serif!important;
+}
+body.mametas-arrival-guide .article > h2 {
+  font:500 clamp(25px,2.7vw,30px)/1.24 "Fraunces",Georgia,serif!important;
+  margin:36px 0 13px!important;
+}
+body.mametas-arrival-guide .article .fact-grid {
+  gap:15px!important;
+  margin:26px 0 31px!important;
+}
+body.mametas-arrival-guide .article .fact-grid > .fact {
+  min-width:0!important;
+  box-sizing:border-box!important;
+  padding:20px 22px!important;
+}
+body.mametas-arrival-guide .article .fact-grid > .fact > span {
+  font:400 12.5px/1.6 Inter,Arial,sans-serif!important;
+}
+body.mametas-arrival-guide .article .verdict {
+  margin:25px 0 35px!important;
+  padding:25px 28px!important;
+}
+body.mametas-arrival-guide .article .verdict > p {
+  font:500 20px/1.5 "Fraunces",Georgia,serif!important;
+}
+body.mametas-arrival-guide .article .article-visual--panorama {
+  max-width:900px!important;
+  margin:27px 0 32px!important;
+}
+body.mametas-arrival-guide .article .article-visual--panorama img {
+  aspect-ratio:1.95/1!important;
+  height:auto!important;
+  max-height:440px!important;
+  object-fit:cover!important;
+}
+
+/* Emergency assistance: clear 6-card hierarchy / legible numbered steps. */
+body.mametas-safety-guide .article {
+  max-width:970px!important;
+  padding-bottom:66px!important;
+}
+body.mametas-safety-guide .article > h1 {
+  font-size:clamp(37px,4.1vw,54px)!important;
+  line-height:1.12!important;
+}
+body.mametas-safety-guide .article > p:not(.standfirst) {
+  font:400 15px/1.7 Inter,Arial,sans-serif!important;
+}
+body.mametas-safety-guide .article .emergency-grid {
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:14px!important;
+  margin:27px 0 35px!important;
+}
+body.mametas-safety-guide .article .emergency-grid > .emergency-card {
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  padding:21px 23px 23px!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+  border-top:3px solid #b9903f!important;
+  background:#fffaf2!important;
+}
+body.mametas-safety-guide .article .emergency-card > small {
+  font:700 10px/1.4 Inter,Arial,sans-serif!important;
+  letter-spacing:.08em!important;
+  margin:0 0 9px!important;
+  color:#4c6174!important;
+}
+body.mametas-safety-guide .article .emergency-card > strong {
+  font:500 43px/1.08 "Fraunces",Georgia,serif!important;
+  margin:0 0 10px!important;
+  color:#14213d!important;
+}
+body.mametas-safety-guide .article .emergency-card > p {
+  font:400 13px/1.55 Inter,Arial,sans-serif!important;
+  margin:0!important;
+}
+body.mametas-safety-guide .article .verdict {
+  margin:22px 0 36px!important;
+  padding:26px 29px!important;
+}
+body.mametas-safety-guide .article .verdict > p {
+  font:500 19px/1.47 "Fraunces",Georgia,serif!important;
+}
+body.mametas-safety-guide .article > h2 {
+  margin:34px 0 14px!important;
+  font:500 28px/1.23 "Fraunces",Georgia,serif!important;
+}
+body.mametas-safety-guide .article .safety-steps {
+  counter-reset:step!important;
+  list-style:none!important;
+  margin:20px 0 36px!important;
+  padding:0!important;
+}
+body.mametas-safety-guide .article .safety-steps li {
+  counter-increment:step!important;
+  position:relative!important;
+  margin:0!important;
+  padding:15px 13px 15px 50px!important;
+  border-top:1px solid rgba(20,33,61,.16)!important;
+  font:400 15px/1.6 Inter,Arial,sans-serif!important;
+}
+body.mametas-safety-guide .article .safety-steps li::before {
+  content:counter(step,decimal-leading-zero)!important;
+  position:absolute!important;
+  top:15px!important;
+  left:3px!important;
+  color:#ad492f!important;
+  font:700 12px/1.6 Inter,Arial,sans-serif!important;
+}
+
+/* Culture detail family: narrow hero, restrained prose and safe sources
+   bottom spacing (no overlap with the footer divider). */
+body.mametas-culture-detail .culture-detail {
+  box-sizing:border-box!important;
+  padding-bottom:55px!important;
+}
+body.mametas-culture-detail .culture-hero-media {
+  box-sizing:border-box!important;
+  display:block!important;
+  width:calc(100% - 44px)!important;
+  max-width:930px!important;
+  margin:20px auto 32px!important;
+  padding:0!important;
+}
+body.mametas-culture-detail .culture-hero-media > img {
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  aspect-ratio:1.8/1!important;
+  max-height:520px!important;
+  object-fit:cover!important;
+  object-position:center 47%!important;
+  background:#eee8de!important;
+}
+body.mametas-culture-detail .culture-hero-media figcaption {
+  display:block!important;
+  margin:8px 0 0!important;
+  font:400 10px/1.5 Inter,Arial,sans-serif!important;
+  color:#677185!important;
+  overflow-wrap:anywhere!important;
+}
+body.mametas-culture-detail .culture-copy {
+  max-width:880px!important;
+}
+body.mametas-culture-detail .culture-copy > p:not(.standfirst):not(.mini-rule),
+body.mametas-culture-detail .culture-copy > ul {
+  font:400 15px/1.68 Inter,Arial,sans-serif!important;
+}
+body.mametas-culture-detail .culture-copy > h2 {
+  font:500 clamp(25px,2.65vw,30px)/1.25 "Fraunces",Georgia,serif!important;
+  margin:35px 0 12px!important;
+}
+body.mametas-culture-detail .culture-copy:last-child {
+  box-sizing:border-box!important;
+  padding-bottom:42px!important;
+}
+body.mametas-culture-detail .culture-copy .sources {
+  box-sizing:border-box!important;
+  display:block!important;
+  width:100%!important;
+  clear:both!important;
+  margin:38px 0 36px!important;
+  padding:21px 0 26px!important;
+  border-top:1px solid rgba(20,33,61,.18)!important;
+  border-bottom:0!important;
+}
+body.mametas-culture-detail .culture-copy .sources > h2 {
+  margin:0 0 14px!important;
+  font:700 11px/1.4 Inter,Arial,sans-serif!important;
+  letter-spacing:.09em!important;
+  text-transform:uppercase!important;
+  color:#84631f!important;
+}
+body.mametas-culture-detail .culture-copy .sources ul {
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding-left:22px!important;
+  display:block!important;
+  list-style:disc outside!important;
+}
+body.mametas-culture-detail .culture-copy .sources li {
+  margin:0 0 10px!important;
+  padding:0!important;
+  font:400 12px/1.65 Inter,Arial,sans-serif!important;
+  min-width:0!important;
+  overflow-wrap:anywhere!important;
+}
+body.mametas-culture-detail .culture-copy .sources li:last-child {
+  margin-bottom:0!important;
+}
+body.mametas-culture-detail .culture-copy .sources li a {
+  display:inline!important;
+  vertical-align:baseline!important;
+  overflow-wrap:anywhere!important;
+  text-decoration:underline!important;
+  text-decoration-color:#b9903f!important;
+  text-underline-offset:3px!important;
+}
+@media(max-width:760px) {
+  body.mametas-stats-guide .article .fact-grid,
+  body.mametas-arrival-guide .article .fact-grid,
+  body.mametas-safety-guide .article .emergency-grid {
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+  body.mametas-stats-guide .article .verdict.mametas-stats-traveller > p {
+    display:flex!important;
+    align-items:stretch!important;
+    flex-direction:column!important;
+    gap:14px!important;
+  }
+  body.mametas-culture-detail .culture-hero-media {
+    width:calc(100% - 28px)!important;
+    margin:18px auto 27px!important;
+  }
+  body.mametas-culture-detail .culture-hero-media > img {
+    aspect-ratio:1.44/1!important;
+  }
+  body.mametas-culture-detail .culture-copy:last-child {
+    padding-bottom:32px!important;
+  }
+}
