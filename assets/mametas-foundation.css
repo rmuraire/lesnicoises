@@ -1403,3 +1403,32 @@ section.practical-decision-layer[data-static-editorial="true"] > .verdict a {
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+
+
+/* Last-mile specificity: legacy destination rules include body.rg-destination
+   and data-static-editorial, so match that specificity deliberately. */
+body.rg-destination section.practical-decision-layer[data-static-editorial="true"] {
+  padding:24px 26px 28px!important;
+  margin:32px 0!important;
+}
+body.rg-destination section.practical-decision-layer[data-static-editorial="true"] > h2 {
+  margin:0 0 20px!important;
+  font:700 12px/1.4 Inter,Arial,sans-serif!important;
+  letter-spacing:.11em!important;
+}
+body.rg-destination section.practical-decision-layer[data-static-editorial="true"] > .verdict {
+  margin:22px 0 0!important;
+  padding:24px 26px!important;
+}
+body.rg-destination section.practical-decision-layer[data-static-editorial="true"] > .verdict p {
+  margin:0!important;
+  font:500 clamp(19px,2vw,24px)/1.43 "Fraunces",Georgia,serif!important;
+}
+@media(max-width:670px) {
+  body.rg-destination section.practical-decision-layer[data-static-editorial="true"] {
+    padding:19px!important;
+  }
+  body.rg-destination section.practical-decision-layer[data-static-editorial="true"] > .verdict {
+    padding:20px!important;
+  }
+}
