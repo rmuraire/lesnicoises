@@ -84,7 +84,8 @@ def fix_city(slug, fr):
                 article = re.sub(
                     r'<(?P<tag>p|div|aside)\b[^>]*>\s*</(?P=tag)>',
                     '', article, flags=re.I
-                )            headings=list(H2.finditer(article))
+                )
+            headings=list(H2.finditer(article))
             stay=None
             for h in headings:
                 text=label(h.group(0))
