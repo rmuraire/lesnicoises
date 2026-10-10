@@ -2488,3 +2488,69 @@ body a.mametas-hotel-fit-primary {
   max-height:none!important;
   flex:0 0 auto!important;
 }
+
+/* FINAL FAMILY LAYOUT CLOSURE — 2026-10-10
+   Explore templates with just an article had been assigned the 250px sidebar
+   grid track. Span the existing grid instead of rewriting page HTML. */
+body.mametas-explore-detail .intent-detail .article-layout > .article-body:only-child {
+  grid-column:1 / -1!important;
+  width:100%!important;
+  max-width:820px!important;
+  min-width:0!important;
+  margin-inline:auto!important;
+}
+
+/* The Solo Female guides are .article pages, not .article-body pages.
+   Correct the actual component, leaving hub and hotel detail CSS alone. */
+body.mametas-solo-detail .article > h1 {
+  font-size:clamp(37px,4.1vw,54px)!important;
+  line-height:1.13!important;
+}
+body.mametas-solo-detail .article > h2 {
+  font-size:clamp(25px,2.65vw,29px)!important;
+  line-height:1.25!important;
+  margin:35px 0 14px!important;
+}
+body.mametas-solo-detail .article > h3 {
+  font-size:clamp(20px,2.1vw,24px)!important;
+  line-height:1.28!important;
+}
+body.mametas-solo-detail .article > p:not(.standfirst):not(.back),
+body.mametas-solo-detail .article > ul,
+body.mametas-solo-detail .article > ol,
+body.mametas-solo-detail .article .place p {
+  font-size:15px!important;
+  line-height:1.68!important;
+}
+/* A Maps link and its Mametas hotel-page companion are two editorial links,
+   not a 17px map label next to a 45px pseudo-button. */
+body.mametas-solo-detail .article a.place-link,
+body.mametas-solo-detail .article a.mametas-map-inline,
+body.mametas-solo-detail .article a.place-link:visited,
+body.mametas-solo-detail .article a.mametas-map-inline:visited {
+  display:inline!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 0 1px!important;
+  background:transparent!important;
+  border:0!important;
+  border-bottom:1px solid #b9903f!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  color:#0e5265!important;
+  font-family:Inter,Arial,sans-serif!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  line-height:1.55!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  text-decoration:none!important;
+  white-space:normal!important;
+}
+body.mametas-solo-detail .article a.place-link:focus-visible,
+body.mametas-solo-detail .article a.mametas-map-inline:focus-visible {
+  outline:2px solid #ad492f!important;
+  outline-offset:3px!important;
+}
