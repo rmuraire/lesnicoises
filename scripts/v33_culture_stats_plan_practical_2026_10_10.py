@@ -110,6 +110,19 @@ def main():
         if update_file(rel,culture):modified.append(rel)
         details+=1
     if details<20:raise RuntimeError(f"Culture guide family incomplete: {details}")
+    # Existing release gate rejects ASCII blanks before French high punctuation
+    # in hotels/sans-voiture; fix only visible text nodes, never tags or hrefs.
+    car=ROOT/"hotels/sans-voiture/index.html"
+    if car.is_file():
+        old_car=car.read_text(encoding="utf-8")
+        chunks=re.split(r'(<[^>]+>)',old_car)
+        for i in range(0,len(chunks),2):
+            chunks[i]=re.sub(r' (?=[?!;»:])', '\u202f', chunks[i])
+        fixed=''.join(chunks)
+        if fixed!=old_car:
+            car.write_text(fixed,encoding="utf-8")
+            modified.append("French punctuation in car-free")
+        assert not any(re.search(r' (?=[?!;»:])',chunk) for chunk in chunks[::2])
     css=(ROOT/"assets/mametas-foundation.css").read_text(encoding="utf-8")
     assert "MAMETAS CULTURE STATS PLAN SAFETY 2026-10-10" in css
     print("Family QA applied:",len(modified),"Culture details",details,flush=True)
