@@ -1,0 +1,91 @@
+name: Mametas Next decision white text focused publish
+on:
+  push:
+    branches:
+      - mametas-next-decision-white-focused-2026-10-10
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mametas-next-decision-white-focused-2026-10-10
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout new CSS and SFTP publishing helper
+        uses: actions/checkout@v4
+      - name: Download previous fully generated production snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38046401503
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Restore restaurant pages and bump CSS reference
+        env:
+          RESTAURANT_FILES: "en/restaurants/nice/index.html;restaurants/nice/index.html;en/restaurants/antibes/index.html;restaurants/antibes/index.html;en/restaurants/cannes/index.html;restaurants/cannes/index.html;en/restaurants/grasse/index.html;restaurants/grasse/index.html;en/restaurants/menton/index.html;restaurants/menton/index.html;en/restaurants/monaco/index.html;restaurants/monaco/index.html;en/restaurants/mougins/index.html;restaurants/mougins/index.html;en/restaurants/saint-paul-de-vence/index.html;restaurants/saint-paul-de-vence/index.html;en/restaurants/saint-tropez/index.html;restaurants/saint-tropez/index.html;en/restaurants/theoule-sur-mer/index.html;restaurants/theoule-sur-mer/index.html;en/restaurants/villefranche-sur-mer/index.html;restaurants/villefranche-sur-mer/index.html"
+        run: |
+          set -euo pipefail
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          python - <<'PY'
+          from pathlib import Path
+          import os
+          css=Path("assets/mametas-foundation.css").read_text(encoding="utf-8")
+          marker="/* Restaurant next-decision cards: pure white links"
+          assert marker in css
+          white=css[css.index(marker):css.index("body.mametas-restaurant-detail .culture-practical a {",css.index(marker))]
+          assert "color:#fff!important;" in white and "text-decoration-color:#fff!important;" in white
+          assert "#fff0c8" not in white and "#e4ac53" not in white
+          for rel in os.environ["RESTAURANT_FILES"].split(";"):
+              src=Path("compiled")/rel
+              assert src.is_file(),src
+              s=src.read_text(encoding="utf-8")
+              assert 'mametas-restaurant-detail' in s,rel
+              assert '/assets/mametas-foundation.css?v=1.5' in s,rel
+              s=s.replace('/assets/mametas-foundation.css?v=1.5',
+                          '/assets/mametas-foundation.css?v=1.6')
+              dst=Path(rel);dst.parent.mkdir(parents=True,exist_ok=True)
+              dst.write_text(s,encoding="utf-8")
+              print("STAGED",rel,flush=True)
+          print("WHITE NEXT DECISION LINKS AND 22 RESTAURANT PAGES VERIFIED",flush=True)
+          PY
+      - name: Install SFTP library
+        run: python -m pip install --quiet --disable-pip-version-check paramiko
+      - name: Publish CSS and twenty-two restaurant pages only
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;en/restaurants/nice/index.html;restaurants/nice/index.html;en/restaurants/antibes/index.html;restaurants/antibes/index.html;en/restaurants/cannes/index.html;restaurants/cannes/index.html;en/restaurants/grasse/index.html;restaurants/grasse/index.html;en/restaurants/menton/index.html;restaurants/menton/index.html;en/restaurants/monaco/index.html;restaurants/monaco/index.html;en/restaurants/mougins/index.html;restaurants/mougins/index.html;en/restaurants/saint-paul-de-vence/index.html;restaurants/saint-paul-de-vence/index.html;en/restaurants/saint-tropez/index.html;restaurants/saint-tropez/index.html;en/restaurants/theoule-sur-mer/index.html;restaurants/theoule-sur-mer/index.html;en/restaurants/villefranche-sur-mer/index.html;restaurants/villefranche-sur-mer/index.html"
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Verify live white link CSS and all restaurant pages
+        run: |
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          import time
+          def get(path):
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?white-links-"+str(time.time_ns())
+                  try:
+                      with urlopen(Request(url,headers={"Cache-Control":"no-cache,no-store","User-Agent":"MametasWhiteLinksQA/1.0"}),timeout=25) as r:
+                          if r.status==200:return r.read().decode("utf-8","replace")
+                  except Exception as e:print("Retry",path,type(e).__name__,flush=True)
+                  time.sleep(3)
+              raise RuntimeError("Unreachable public URL: "+path)
+          css=get("/assets/mametas-foundation.css")
+          marker="/* Restaurant next-decision cards: pure white links"
+          assert marker in css
+          rules=css[css.index(marker):css.index("body.mametas-restaurant-detail .culture-practical a {",css.index(marker))]
+          assert "color:#fff!important;" in rules and "text-decoration-color:#fff!important;" in rules
+          for city in ("nice","antibes","cannes","grasse","menton","monaco","mougins","saint-paul-de-vence","saint-tropez","theoule-sur-mer","villefranche-sur-mer"):
+              for prefix in ("/en/","/"):
+                  path=prefix+"restaurants/"+city+"/"
+                  html=get(path)
+                  assert 'mametas-restaurant-detail' in html,path
+                  assert '/assets/mametas-foundation.css?v=1.6' in html,path
+                  print("LIVE PASS",path,flush=True)
+          print("ALL RESTAURANT WHITE LINKS LIVE VERIFIED",flush=True)
+          PY
