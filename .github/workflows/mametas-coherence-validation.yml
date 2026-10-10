@@ -155,6 +155,9 @@ jobs:
       - name: Apply Riviera Guide family-wide recipe
         run: python scripts/v29_riviera_guide_family_recipe_2026_10_10.py
 
+      - name: Repair late-rendered practical advice and Cannes references
+        run: python scripts/v30_static_practical_cannes_sources_2026_10_10.py
+
       - name: Guard hotel BOOK panel contrast across hotel detail families
         run: python scripts/validate_hotel_book_cta_contrast_2026_10_09.py
 
