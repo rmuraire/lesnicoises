@@ -69,8 +69,8 @@ def fix_city(slug, fr):
                 # or Booking/GetYourGuide affiliate destinations. We insert
                 # precisely one canonical CTA below.
                 finder_anchor = re.compile(
-                    r'<a\\b(?=[^>]*\\bhref=["\\\']/(?:en/)?hotels/finder/(?:\\?[^"\\\']*)?["\\\'])'
-                    r'[^>]*>[\\s\\S]*?</a>', re.I,
+                    r"""<a\b(?=[^>]*\bhref=["']/(?:en/)?hotels/finder/(?:\?[^"']*)?["'])[^>]*>[\s\S]*?</a>""",
+                    re.I,
                 )
                 original_count = len(FINDER.findall(article))
                 article, removed = finder_anchor.subn("", article)
@@ -82,10 +82,9 @@ def fix_city(slug, fr):
                 # Remove now-empty CTA wrappers only. Do not delete
                 # explanatory paragraphs or unrelated editorial content.
                 article = re.sub(
-                    r'<(?P<tag>p|div|aside)\\b[^>]*>\\s*</(?P=tag)>',
+                    r'<(?P<tag>p|div|aside)\b[^>]*>\s*</(?P=tag)>',
                     '', article, flags=re.I
-                )
-            headings=list(H2.finditer(article))
+                )            headings=list(H2.finditer(article))
             stay=None
             for h in headings:
                 text=label(h.group(0))
