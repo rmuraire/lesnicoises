@@ -53,6 +53,14 @@ def normalize_anchor(m):
         tag=tag[:-1]+' class="'+ " ".join(classes)+'">'
     return tag
 
+def final_stylesheet(s):
+    """All generated pages receive the same FINAL CSS, after late rewrites."""
+    link='<link rel="stylesheet" href="/assets/mametas-foundation.css?v=1.9">'
+    s=re.sub(r'<link\b[^>]*href=["\']/assets/mametas-foundation\.css(?:\?[^"\']*)?["\'][^>]*>\s*','',s,flags=re.I)
+    close=re.search(r'</head>',s,re.I)
+    if not close:raise RuntimeError("HTML without head close")
+    return s[:close.start()]+link+"\n"+s[close.start():]
+
 def apply_villa(s,rel):
     if rel.endswith("/villa-ephrussi/index.html"):
         # Exactly the culture hero photograph, not unrelated interior images.
@@ -108,6 +116,7 @@ def main():
             villa_pages+=1
         maps+=len(MAP.findall(s))
         s=A_OPEN.sub(normalize_anchor,s)
+        s=final_stylesheet(s)
         # A durable check even if some original anchor carried button CSS.
         if rel.endswith("where-to-stay/index.html") and "solo" in rel and "mametas-solo-detail" not in s:
             raise RuntimeError("Solo Female stays family not tagged")
