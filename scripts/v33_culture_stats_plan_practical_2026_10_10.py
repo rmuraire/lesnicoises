@@ -83,9 +83,19 @@ def culture(s,rel):
                       '<figcaption>Image from the Mametas Culture selection.</figcaption>',
                       inside,count=1)
         s=s[:m.start()]+m.group(1)+inside+m.group(3)+s[m.end():]
-        # Remove only the photo citation that referred to the PREVIOUS hero.
-        s=re.sub(r'<li><a\b[^>]*href="https://commons\.wikimedia\.org/wiki/File:Mus%C3%A9e_Matisse_de_Nice\.jpg"[^>]*>[\s\S]*?</a></li>',
-                 '',s,flags=re.I)
+        # The old Yair Haklai source credited a different hero. Remove only
+        # that stale photo-credit list item, tolerating extra HTML attributes
+        # and whitespace introduced by intermediate materialization passes.
+        def remove_stale_photo_credit(match):
+            item=match.group(0)
+            if ("Yair Haklai" in item or
+                "File:Mus%C3%A9e_Matisse_de_Nice.jpg" in item):
+                return ""
+            return item
+        s=re.sub(r'<li\\b[^>]*>[\\s\\S]*?</li>',
+                 remove_stale_photo_credit,s,flags=re.I)
+        if "Yair Haklai" in s:
+            raise RuntimeError("Former Matisse photo credit survived hero replacement")
     return s
 
 def main():
