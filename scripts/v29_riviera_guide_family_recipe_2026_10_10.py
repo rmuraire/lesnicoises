@@ -27,7 +27,14 @@ def patch_sources(s):
         inside=m.group(1)
         low=label(inside)
         if low.startswith(("checked sources", "sources vérifiées", "sources verifiees")):
-            return '<div class="destination-verified-sources">'+inside+'</div>'
+            # A new class containing "sources" is a formal sources block.
+            # The global coherence gate requires an exact h2, not just a
+            # <strong> label. Promote the label once and preserve every URL.
+            fr_source = low.startswith(("sources vérifiées", "sources verifiees"))
+            heading = "Sources vérifiées" if fr_source else "Sources checked"
+            links = re.sub(r'^\\s*<strong\\b[^>]*>[\\s\\S]*?</strong>\\s*', "", inside, count=1, flags=re.I)
+            return ('<div class="destination-verified-sources">'
+                    f'<h2>{heading}</h2><p>{links.strip()}</p></div>')
         if low.startswith(("continue:", "continuer", "the next decision", "prochaine décision")):
             return '<div class="destination-next-links">'+inside+'</div>'
         return m.group(0)
