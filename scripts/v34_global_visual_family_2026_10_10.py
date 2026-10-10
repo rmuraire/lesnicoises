@@ -80,7 +80,7 @@ def apply_villa(s,rel):
         inner,n=re.subn(r'(<img\b[^>]*\bsrc=")[^"]+(")',
             lambda a:a.group(1)+VILLA+a.group(2),inner,count=1,flags=re.I)
         if n!=1:raise RuntimeError("Villa hero img missing: "+rel)
-        caption='Photo : Jean-Elie Trujillo / Pixabay · sélection Mametas.' if not rel.startswith("en/") else 'Photo: Jean-Elie Trujillo / Pixabay · Mametas selection.'
+        caption='Photo\u202f: Jean-Elie Trujillo / Pixabay · sélection Mametas.' if not rel.startswith("en/") else 'Photo: Jean-Elie Trujillo / Pixabay · Mametas selection.'
         inner=re.sub(r'<figcaption>[\s\S]*?</figcaption>','<figcaption>'+caption+'</figcaption>',inner,count=1,flags=re.I)
         s=s[:m.start()]+m.group(1)+inner+m.group(3)+s[m.end():]
         # Only the now-inaccurate credit for the former Commons photograph.
