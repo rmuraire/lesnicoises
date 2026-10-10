@@ -1,0 +1,116 @@
+name: Mametas Culture Stats Final Focused Publish
+on:
+  push:
+    branches:
+      - mametas-culture-stats-focused-release-20261010
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mametas-culture-stats-focus
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - name: Checkout publishing helper
+        uses: actions/checkout@v4
+      - name: Download fully generated production release snapshot
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38058537705
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Restore only scoped Culture Plan Stats and Practical outputs
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;assets/editorial/fondation-maeght-waterborough.webp;fr/planifier/index.html;en/french-riviera-tourism-statistics/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/transfert-aeroport-nice/index.html;en/practical/safety-emergencies/index.html;pratique/securite-urgences/index.html;en/culture/index.html;culture/index.html;culture/chapelle-du-rosaire-matisse/index.html;culture/chapelle-saint-pierre-cocteau/index.html;culture/fondation-maeght/index.html;culture/musee-arts-asiatiques/index.html;culture/musee-bonnard/index.html;culture/musee-cocteau-bastion/index.html;culture/musee-explorations-cannes/index.html;culture/musee-fernand-leger/index.html;culture/musee-matisse/index.html;culture/musee-oceanographique-monaco/index.html;culture/musee-picasso-antibes/index.html;culture/musee-renoir/index.html;culture/nice/index.html;culture/palais-lascaris/index.html;culture/villa-arson/index.html;culture/villa-ephrussi/index.html;culture/villa-kerylos/index.html;en/culture/asian-arts-museum/index.html;en/culture/bonnard-museum/index.html;en/culture/cocteau-bastion/index.html;en/culture/fernand-leger-museum/index.html;en/culture/fondation-maeght/index.html;en/culture/matisse-museum/index.html;en/culture/matisse-rosary-chapel/index.html;en/culture/musee-explorations-cannes/index.html;en/culture/nice/index.html;en/culture/oceanographic-museum-monaco/index.html;en/culture/palais-lascaris/index.html;en/culture/picasso-museum-antibes/index.html;en/culture/renoir-museum/index.html;en/culture/saint-pierre-chapel-cocteau/index.html;en/culture/villa-arson/index.html;en/culture/villa-ephrussi/index.html;en/culture/villa-kerylos/index.html;en/culture/world-explorations-museum-cannes/index.html"
+        run: |
+          pip -q install pillow
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          python - <<'PY'
+          from pathlib import Path
+          import os,shutil
+          from PIL import Image
+          files=os.environ["MAMETAS_FORCE_FILES"].split(";")
+          for rel in files:
+              src=Path("compiled")/rel
+              if not src.is_file():raise SystemExit(f"Missing generated release file: {rel}")
+              dst=Path(rel);dst.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copy2(src,dst)
+              print("STAGED",rel,flush=True)
+          css=Path("assets/mametas-foundation.css").read_text(encoding="utf-8")
+          assert "MAMETAS CULTURE STATS PLAN SAFETY 2026-10-10" in css
+          with Image.open("assets/editorial/fondation-maeght-waterborough.webp") as im:
+              im.verify()
+          with Image.open("assets/editorial/fondation-maeght-waterborough.webp") as im:
+              assert im.width>=800 and im.height>=550
+          plan=Path("fr/planifier/index.html").read_text(encoding="utf-8")
+          assert 'data-chooser-submit' in plan and 'plan-fit-full-link' not in plan
+          for path,mark in (
+             ("en/french-riviera-tourism-statistics/index.html","mametas-stats-traveller"),
+             ("en/good-finds/nice-airport-transfer/index.html","mametas-arrival-guide"),
+             ("en/practical/safety-emergencies/index.html","mametas-safety-guide"),
+             ("en/culture/matisse-museum/index.html","/assets/editorial/culture-musee-matisse.webp"),
+             ("culture/musee-matisse/index.html","/assets/editorial/culture-musee-matisse.webp"),
+             ("en/culture/fondation-maeght/index.html","mametas-culture-detail"),
+          ):
+              s=Path(path).read_text(encoding="utf-8")
+              assert mark in s,path
+              assert "/assets/mametas-foundation.css?v=1.8" in s,path
+          print("FINAL SCOPED HTML AND MEDIA VERIFIED",flush=True)
+          PY
+      - name: Install secure FTP publishing client
+        run: pip -q install paramiko
+      - name: Deploy verified scoped release to OVH
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;assets/editorial/fondation-maeght-waterborough.webp;fr/planifier/index.html;en/french-riviera-tourism-statistics/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/transfert-aeroport-nice/index.html;en/practical/safety-emergencies/index.html;pratique/securite-urgences/index.html;en/culture/index.html;culture/index.html;culture/chapelle-du-rosaire-matisse/index.html;culture/chapelle-saint-pierre-cocteau/index.html;culture/fondation-maeght/index.html;culture/musee-arts-asiatiques/index.html;culture/musee-bonnard/index.html;culture/musee-cocteau-bastion/index.html;culture/musee-explorations-cannes/index.html;culture/musee-fernand-leger/index.html;culture/musee-matisse/index.html;culture/musee-oceanographique-monaco/index.html;culture/musee-picasso-antibes/index.html;culture/musee-renoir/index.html;culture/nice/index.html;culture/palais-lascaris/index.html;culture/villa-arson/index.html;culture/villa-ephrussi/index.html;culture/villa-kerylos/index.html;en/culture/asian-arts-museum/index.html;en/culture/bonnard-museum/index.html;en/culture/cocteau-bastion/index.html;en/culture/fernand-leger-museum/index.html;en/culture/fondation-maeght/index.html;en/culture/matisse-museum/index.html;en/culture/matisse-rosary-chapel/index.html;en/culture/musee-explorations-cannes/index.html;en/culture/nice/index.html;en/culture/oceanographic-museum-monaco/index.html;en/culture/palais-lascaris/index.html;en/culture/picasso-museum-antibes/index.html;en/culture/renoir-museum/index.html;en/culture/saint-pierre-chapel-cocteau/index.html;en/culture/villa-arson/index.html;en/culture/villa-ephrussi/index.html;en/culture/villa-kerylos/index.html;en/culture/world-explorations-museum-cannes/index.html"
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Confirm final page markers and photo from public URLs
+        run: |
+          pip -q install pillow
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          from PIL import Image
+          from io import BytesIO
+          import time
+          def get(path):
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?finalculture="+str(time.time_ns())
+                  try:
+                      with urlopen(Request(url,headers={'Cache-Control':'no-cache','User-Agent':'MametasCultureLiveQA/1.0'}),timeout=22) as resp:
+                          if resp.status==200:return resp.read()
+                  except Exception as e:print('RETRY',path,str(e),flush=True)
+                  time.sleep(3)
+              raise RuntimeError('Unavailable or stale public URL: '+path)
+          css=get('/assets/mametas-foundation.css').decode('utf-8','replace')
+          assert "MAMETAS CULTURE STATS PLAN SAFETY 2026-10-10" in css
+          image=get('/assets/editorial/fondation-maeght-waterborough.webp')
+          with Image.open(BytesIO(image)) as im:
+              im.verify()
+          print('LIVE MAEGHT DECODE VERIFIED',len(image),flush=True)
+          sites=(
+             ('/fr/planifier/',('mametas-plan-chooser-single','data-chooser-submit')),
+             ('/en/french-riviera-tourism-statistics/',('mametas-stats-traveller',)),
+             ('/en/good-finds/nice-airport-transfer/',('mametas-arrival-guide',)),
+             ('/en/practical/safety-emergencies/',('mametas-safety-guide',)),
+             ('/en/culture/matisse-museum/',('/assets/editorial/culture-musee-matisse.webp',)),
+             ('/culture/musee-matisse/',('/assets/editorial/culture-musee-matisse.webp',)),
+             ('/en/culture/fondation-maeght/',('mametas-culture-detail',)),
+             ('/culture/fondation-maeght/',('mametas-culture-detail',)),
+             ('/en/culture/',('fondation-maeght-waterborough.webp',))
+          )
+          for path,needles in sites:
+              html=get(path).decode('utf-8','replace')
+              for needle in needles:assert needle in html,(path,needle)
+              if path=='/fr/planifier/':assert 'plan-fit-full-link' not in html
+              if '/culture/' in path and path not in ('/en/culture/',):
+                  assert '/assets/mametas-foundation.css?v=1.8' in html,path
+              print('LIVE PUBLIC PASS',path,flush=True)
+          print('ALL REQUESTED CULTURE/PLAN/PRACTICAL PUBLIC RELEASE CHECKS PASSED',flush=True)
+          PY
