@@ -2554,3 +2554,15 @@ body.mametas-solo-detail .article a.mametas-map-inline:focus-visible {
   outline:2px solid #ad492f!important;
   outline-offset:3px!important;
 }
+
+/* The legacy place + link-cta selector is more specific than the generic
+   editorial map rule. Keep map and hotel-page links at the same 13px scale. */
+body.mametas-solo-detail .article .place a.place-link.link-cta.mametas-map-inline,
+body.mametas-solo-detail .article .place a.place-link.link-cta.mametas-map-inline:visited {
+  font-family:Inter,Arial,sans-serif!important;
+  font-size:13px!important;
+  font-weight:600!important;
+  line-height:1.55!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+}
