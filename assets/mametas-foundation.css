@@ -2476,3 +2476,15 @@ body.mametas-solo-detail .article-body a.button[href*="/hotels/finder/"] {
     padding:17px 18px!important;
   }
 }
+
+/* V4 FINAL VISUAL SIGNOFF 2026-10-10
+   A Hotel Fit action inside a CSS grid must not stretch to the card height.
+   This fixes 201px-high primary buttons in the Solo Female landing cards. */
+body a.mametas-hotel-fit-primary {
+  align-self:start!important;
+  justify-self:start!important;
+  height:auto!important;
+  min-height:44px!important;
+  max-height:none!important;
+  flex:0 0 auto!important;
+}
