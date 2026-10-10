@@ -73,7 +73,7 @@ def apply_villa(s,rel):
         if "Idarvol" in s:
             raise RuntimeError("Old Villa Ephrussi photo attribution still appears in "+rel)
         return s
-    if rel.endswith("/culture/index.html"):
+    if rel in ("culture/index.html","en/culture/index.html"):
         pat=re.compile(r'(<a\b[^>]*href="/(?:en/)?culture/villa-ephrussi/"[^>]*>[\s\S]*?<img\b[^>]*\bsrc=")[^"]+(")',re.I)
         s,n=pat.subn(lambda m:m.group(1)+VILLA+m.group(2),s,count=1)
         if n!=1:raise RuntimeError("Villa culture vignette not found: "+rel)
