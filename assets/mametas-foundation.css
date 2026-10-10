@@ -1261,3 +1261,145 @@ body.hotel-fit-page .engine-controls .engine-base-gate a.engine-base-gate-cta:ho
   margin:0!important;
   font:400 12px/1.65 Inter,Arial,sans-serif!important;
 }
+
+
+/* MAMETAS PRACTICAL STATIC V2 — 2026-10-10
+   Targets the REAL late-generated static content, not unused .day-grid JS.
+   Shared across the Nice, Antibes, Villefranche, Monaco and Menton guides. */
+section.practical-decision-layer[data-static-editorial="true"] {
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:750px!important;
+  margin:32px 0!important;
+  padding:24px 26px 28px!important;
+  border:1px solid rgba(20,33,61,.17)!important;
+  border-left:4px solid #b9903f!important;
+  background:#fffdf8!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] > h2 {
+  display:block!important;
+  margin:0 0 20px!important;
+  padding:0!important;
+  border:0!important;
+  font:700 12px/1.4 Inter,Arial,sans-serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:.11em!important;
+  color:#9b742f!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] .mametas-practical-tip-list {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  gap:0!important;
+  width:100%!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] .mametas-practical-tip {
+  display:grid!important;
+  grid-template-columns:minmax(150px, 0.92fr) minmax(0,1.9fr)!important;
+  gap:12px 25px!important;
+  min-width:0!important;
+  padding:18px 0 19px!important;
+  margin:0!important;
+  border-top:1px solid rgba(20,33,61,.15)!important;
+  align-items:start!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] .mametas-practical-tip > h3 {
+  margin:0!important;
+  padding:0!important;
+  font:500 clamp(19px,1.8vw,22px)/1.22 "Fraunces",Georgia,serif!important;
+  color:#14213d!important;
+  text-transform:none!important;
+  letter-spacing:normal!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] .mametas-practical-tip > p {
+  margin:0!important;
+  padding:0!important;
+  font:400 14px/1.6 Inter,Arial,sans-serif!important;
+  color:#40506b!important;
+  min-width:0!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] > .verdict {
+  box-sizing:border-box!important;
+  clear:both!important;
+  width:100%!important;
+  margin:22px 0 0!important;
+  padding:24px 26px!important;
+  background:#14213d!important;
+  border:0!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] > .verdict .label {
+  display:block!important;
+  margin:0 0 10px!important;
+  color:#ba8a35!important;
+  font:700 11px/1.5 Inter,Arial,sans-serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:.12em!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] > .verdict p {
+  margin:0!important;
+  padding:0!important;
+  font:500 clamp(19px,2vw,24px)/1.43 "Fraunces",Georgia,serif!important;
+  color:#fffdf8!important;
+}
+section.practical-decision-layer[data-static-editorial="true"] > .verdict a {
+  color:inherit!important;
+  text-underline-offset:3px!important;
+}
+@media(max-width:670px) {
+  section.practical-decision-layer[data-static-editorial="true"] {
+    padding:19px!important;
+  }
+  section.practical-decision-layer[data-static-editorial="true"] .mametas-practical-tip {
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:7px!important;
+    padding:17px 0!important;
+  }
+  section.practical-decision-layer[data-static-editorial="true"] > .verdict {
+    padding:20px!important;
+  }
+}
+
+/* Cannes (legacy guide) — the generated nested sources section was invalid.
+   v30 repairs the DOM; keep the verified links in a restrained final strip. */
+.article .mametas-sources-section .sources,
+.legacy-destination-section.mametas-sources-section .sources {
+  box-sizing:border-box!important;
+  display:block!important;
+  width:100%!important;
+  max-width:750px!important;
+  margin:0!important;
+  padding:18px 0 0!important;
+  border-top:1px solid rgba(20,33,61,.2)!important;
+  background:transparent!important;
+}
+.article .mametas-sources-section .sources > h2 {
+  margin:0 0 16px!important;
+  padding:0!important;
+  font:700 11px/1.5 Inter,Arial,sans-serif!important;
+  text-transform:uppercase!important;
+  letter-spacing:.11em!important;
+  color:#926c29!important;
+}
+.article .mametas-sources-section .sources > ul {
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:10px 20px!important;
+  padding:0!important;
+  margin:0!important;
+  list-style:none!important;
+}
+.article .mametas-sources-section .sources li {
+  min-width:0!important;
+  padding:0!important;
+  margin:0!important;
+  font:400 12px/1.55 Inter,Arial,sans-serif!important;
+}
+.article .mametas-sources-section .sources li > a {
+  display:inline!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+@media(max-width:650px) {
+  .article .mametas-sources-section .sources > ul {
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
