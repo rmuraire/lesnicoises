@@ -1,0 +1,108 @@
+name: Mametas Restaurant Maps Car-Free Focused Publish
+on:
+  push:
+    branches:
+      - mametas-focused-restaurant-maps-carfree-2026-10-10
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: mametas-restaurant-maps-carfree-publish
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - name: Checkout deployment helper
+        uses: actions/checkout@v4
+      - name: Download exact QA-cleared production archive
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38046401503
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+      - name: Restore and verify compiled HTML and shared CSS
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;en/restaurants/nice/index.html;restaurants/nice/index.html;en/restaurants/antibes/index.html;restaurants/antibes/index.html;en/restaurants/cannes/index.html;restaurants/cannes/index.html;en/restaurants/grasse/index.html;restaurants/grasse/index.html;en/restaurants/menton/index.html;restaurants/menton/index.html;en/restaurants/monaco/index.html;restaurants/monaco/index.html;en/restaurants/mougins/index.html;restaurants/mougins/index.html;en/restaurants/saint-paul-de-vence/index.html;restaurants/saint-paul-de-vence/index.html;en/restaurants/saint-tropez/index.html;restaurants/saint-tropez/index.html;en/restaurants/theoule-sur-mer/index.html;restaurants/theoule-sur-mer/index.html;en/restaurants/villefranche-sur-mer/index.html;restaurants/villefranche-sur-mer/index.html;en/hotels/without-a-car/index.html;en/riviera-guide/nice/index.html;riviera-guide/nice/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/antibes/index.html;riviera-guide/antibes/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;riviera-guide/menton/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/transfert-aeroport-nice/index.html"
+        run: |
+          set -euo pipefail
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          for file in ${MAMETAS_FORCE_FILES//;/ }; do
+            test -s "compiled/$file" || { echo "::error::Missing compiled file $file"; exit 1; }
+            mkdir -p "$(dirname "$file")"
+            cp "compiled/$file" "$file"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          cities=("nice","antibes","cannes","grasse","menton","monaco","mougins","saint-paul-de-vence","saint-tropez","theoule-sur-mer","villefranche-sur-mer")
+          css=Path("assets/mametas-foundation.css").read_text(encoding="utf-8")
+          assert "MAMETAS RESTAURANT / MAP / CAR-FREE RECIPE" in css
+          for city in cities:
+              for lang in ("en/",""):
+                  path=Path(lang+"restaurants/"+city+"/index.html")
+                  s=path.read_text(encoding="utf-8")
+                  assert 'mametas-restaurant-detail' in s,path
+                  assert "/assets/mametas-foundation.css?v=1.5" in s,path
+                  assert 'class="place"' in s,path
+          car=Path("en/hotels/without-a-car/index.html").read_text(encoding="utf-8")
+          assert 'mametas-car-free-guide' in car and 'class="fact-grid"' in car
+          assert "/assets/mametas-foundation.css?v=1.5" in car
+          for city in ("nice","cannes","antibes","villefranche-cap-ferrat","monaco","menton","eze","saint-paul-de-vence","saint-tropez"):
+              for lang in ("en/",""):
+                  page=Path(lang+"riviera-guide/"+city+"/index.html").read_text(encoding="utf-8")
+                  assert "/assets/mametas-foundation.css?v=1.5" in page,(lang,city)
+          print("FINAL RESTAURANT, GUIDE MAP, CAR-FREE COMPILED FILES VERIFIED",flush=True)
+          PY
+      - name: Install SFTP dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+      - name: Publish only targeted site pages and final CSS
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;en/restaurants/nice/index.html;restaurants/nice/index.html;en/restaurants/antibes/index.html;restaurants/antibes/index.html;en/restaurants/cannes/index.html;restaurants/cannes/index.html;en/restaurants/grasse/index.html;restaurants/grasse/index.html;en/restaurants/menton/index.html;restaurants/menton/index.html;en/restaurants/monaco/index.html;restaurants/monaco/index.html;en/restaurants/mougins/index.html;restaurants/mougins/index.html;en/restaurants/saint-paul-de-vence/index.html;restaurants/saint-paul-de-vence/index.html;en/restaurants/saint-tropez/index.html;restaurants/saint-tropez/index.html;en/restaurants/theoule-sur-mer/index.html;restaurants/theoule-sur-mer/index.html;en/restaurants/villefranche-sur-mer/index.html;restaurants/villefranche-sur-mer/index.html;en/hotels/without-a-car/index.html;en/riviera-guide/nice/index.html;riviera-guide/nice/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/antibes/index.html;riviera-guide/antibes/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;riviera-guide/menton/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html;en/good-finds/nice-airport-transfer/index.html;bons-plans/transfert-aeroport-nice/index.html"
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+      - name: Verify live restaurant and map typography release markers
+        run: |
+          python - <<'PY'
+          from urllib.request import Request,urlopen
+          import time
+          def get(path):
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?renderqa="+str(time.time_ns())
+                  try:
+                      with urlopen(Request(url,headers={"Cache-Control":"no-cache,no-store","User-Agent":"MametasFamilyLiveQA/1.0"}),timeout=25) as r:
+                          if r.status==200:return r.read().decode("utf-8","replace")
+                  except Exception as e:
+                      print("Retry",path,type(e).__name__,flush=True)
+                  time.sleep(3)
+              raise RuntimeError("Unreachable public page: "+path)
+          css=get("/assets/mametas-foundation.css")
+          assert "MAMETAS RESTAURANT / MAP / CAR-FREE RECIPE" in css
+          cities=("nice","antibes","cannes","grasse","menton","monaco","mougins","saint-paul-de-vence","saint-tropez","theoule-sur-mer","villefranche-sur-mer")
+          for city in cities:
+              for lang in ("/en/","/"):
+                  path=lang+"restaurants/"+city+"/"
+                  s=get(path)
+                  assert "mametas-restaurant-detail" in s,path
+                  assert "/assets/mametas-foundation.css?v=1.5" in s,path
+                  print("LIVE RESTAURANT",path,flush=True)
+          p="/en/hotels/without-a-car/"
+          car=get(p)
+          assert "mametas-car-free-guide" in car and "/assets/mametas-foundation.css?v=1.5" in car
+          print("LIVE CAR FREE",p,flush=True)
+          for city in ("nice","cannes","antibes","villefranche-cap-ferrat","monaco","menton","eze","saint-paul-de-vence","saint-tropez"):
+              for lang in ("/en/","/"):
+                  path=lang+"riviera-guide/"+city+"/"
+                  html=get(path)
+                  assert "/assets/mametas-foundation.css?v=1.5" in html,path
+                  print("LIVE MAP TYPOGRAPHY",path,flush=True)
+          for path in ("/en/good-finds/nice-airport-transfer/","/bons-plans/transfert-aeroport-nice/"):
+              html=get(path)
+              assert "/assets/mametas-foundation.css?v=1.5" in html,path
+              print("LIVE AIRPORT TYPOGRAPHY",path,flush=True)
+          print("MAMETAS RESTAURANT / MAP / CAR-FREE PUBLIC RELEASE VERIFIED",flush=True)
+          PY
