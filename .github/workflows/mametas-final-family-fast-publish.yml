@@ -1,0 +1,111 @@
+name: Mametas family final focused production publish
+
+on:
+  push:
+    branches:
+      - mametas-fast-release-2026-10-10
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: mametas-fast-release-2026-10-10
+  cancel-in-progress: false
+
+jobs:
+  targeted-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout same released source
+        uses: actions/checkout@v4
+
+      - name: Download already-built, QA-checked production archive
+        uses: actions/download-artifact@v4
+        with:
+          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
+          run-id: 38035905075
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: artifact
+
+      - name: Restore only compiled public pages and styles from that exact archive
+        run: |
+          set -euo pipefail
+          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
+          for file in ${MAMETAS_FORCE_FILES//;/ }; do
+            test -s "compiled/$file" || { echo "::error::Missing release output $file"; exit 1; }
+            mkdir -p "$(dirname "$file")"
+            cp "compiled/$file" "$file"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          css=Path("assets/mametas-foundation.css").read_text()
+          assert "MAMETAS 2026-10-10 RECIPE / ONE ACCENT" in css
+          assert "Three practical decisions" in Path("assets/practical-layer.js").read_text()
+          for lang in ("en/",""):
+              for city in ("nice","cannes"):
+                  page=Path(lang+"riviera-guide/"+city+"/index.html").read_text()
+                  assert page.count('data-mametas-destination-fit="one"')==1,(lang,city)
+              cannes=Path(lang+"riviera-guide/cannes/index.html").read_text()
+              assert "<h2>"+("Sources vérifiées" if not lang else "Sources checked")+"</h2>" in cannes
+          for city in ("antibes","villefranche-cap-ferrat","monaco","menton"):
+              for prefix in ("en/",""):
+                  p=Path(prefix+"riviera-guide/"+city+"/index.html")
+                  s=p.read_text()
+                  assert s.count('data-mametas-destination-fit="one"')==1, p
+                  assert len(re.findall(r'href=["\']/(?:en/)?hotels/finder/',s))==1, p
+          for p in (Path("escapades/index.html"),Path("en/day-trips/index.html")):
+              s=p.read_text()
+              assert 'mametas-activity-grid' in s and 'mametas-activity-cta' in s, p
+          print("Compiled release bundle contains every required family correction.")
+          PY
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;assets/practical-layer.js;assets/activity-affiliates.css;index.html;fr/index.html;en/riviera-chooser/index.html;riviera-chooser/index.html;escapades/index.html;en/day-trips/index.html;en/riviera-guide/nice/index.html;riviera-guide/nice/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/antibes/index.html;riviera-guide/antibes/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;riviera-guide/menton/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html"
+
+      - name: Install SFTP dependency
+        run: python -m pip install --disable-pip-version-check --quiet paramiko
+
+      - name: Publish targeted corrected pages and assets to OVH
+        env:
+          MAMETAS_FORCE_FILES: "assets/mametas-foundation.css;assets/practical-layer.js;assets/activity-affiliates.css;index.html;fr/index.html;en/riviera-chooser/index.html;riviera-chooser/index.html;escapades/index.html;en/day-trips/index.html;en/riviera-guide/nice/index.html;riviera-guide/nice/index.html;en/riviera-guide/cannes/index.html;riviera-guide/cannes/index.html;en/riviera-guide/antibes/index.html;riviera-guide/antibes/index.html;en/riviera-guide/villefranche-cap-ferrat/index.html;riviera-guide/villefranche-cap-ferrat/index.html;en/riviera-guide/monaco/index.html;riviera-guide/monaco/index.html;en/riviera-guide/menton/index.html;riviera-guide/menton/index.html;en/riviera-guide/eze/index.html;riviera-guide/eze/index.html;en/riviera-guide/saint-paul-de-vence/index.html;riviera-guide/saint-paul-de-vence/index.html;en/riviera-guide/saint-tropez/index.html;riviera-guide/saint-tropez/index.html"
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify live URL markers across both languages
+        run: |
+          python - <<'PY'
+          from urllib.request import urlopen, Request
+          import re,time
+          paths=["/assets/mametas-foundation.css"]
+          paths += [f"/{prefix}riviera-guide/{city}/" for city in ("antibes","villefranche-cap-ferrat","monaco","menton") for prefix in ("en/","")]
+          paths += ["/escapades/","/en/day-trips/","/en/riviera-guide/nice/","/riviera-guide/nice/","/en/riviera-guide/cannes/","/riviera-guide/cannes/"]
+          for path in paths:
+              for attempt in range(5):
+                  url="https://www.mametas.com"+path+"?recipe=focused-20261010-"+str(attempt)
+                  try:
+                      with urlopen(Request(url,headers={"User-Agent":"MametasFamilyFocusedPublish/1.0","Cache-Control":"no-cache,no-store"}),timeout=25) as r:
+                          body=r.read().decode("utf-8","replace")
+                          if path.endswith(".css"):
+                              valid="MAMETAS 2026-10-10 RECIPE / ONE ACCENT" in body
+                          elif path in ("/escapades/","/en/day-trips/"):
+                              valid="mametas-activity-grid" in body and "mametas-activity-cta" in body
+                          else:
+                              valid=body.count('data-mametas-destination-fit="one"')==1
+                              if valid and (path.endswith("/cannes/") or path.endswith("/nice/")):
+                                  canonical="Sources vérifiées" if not path.startswith("/en/") else "Sources checked"
+                                  valid=f"<h2>{canonical}</h2>" in body
+                          if valid:
+                              print("LIVE OK",path,flush=True)
+                              break
+                  except Exception as exc:
+                      print("Retry",path,type(exc).__name__,flush=True)
+                  time.sleep(4)
+              else:
+                  raise RuntimeError(f"LIVE PUBLIC RELEASE MARKER MISSING: {path}")
+          print("FULL FAMILY SCOPED PUBLICATION VERIFIED")
+          PY
