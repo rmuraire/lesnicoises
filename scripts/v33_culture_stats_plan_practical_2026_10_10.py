@@ -91,7 +91,7 @@ def culture(s,rel):
 def main():
     modified=[]
     if update_file("en/french-riviera-tourism-statistics/index.html",stats):modified.append("statistics")
-    if update_file("fr/planifier/index.html",plan_fr):modified.append("Plan FR")
+    if update_file("fr/planifier/index.html",plan_fr,required=False):modified.append("Plan FR")
     for rel in ("en/good-finds/nice-airport-transfer/index.html",
                 "bons-plans/transfert-aeroport-nice/index.html"):
         if update_file(rel,lambda s,r:article(s,"mametas-arrival-guide"),required=rel.startswith("en/")):
