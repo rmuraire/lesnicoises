@@ -12,16 +12,9 @@ jobs:
     timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v4
-        with:
-          name: Mametas_V3_FINAL_USER_DELIVERY_2026-09-27
-          run-id: 38047128241
-          github-token: \${{ secrets.GITHUB_TOKEN }}
-          path: artifact
-      - name: Unpack and inspect compiled files, actual media and CSS
+      - name: Inspect live HTML, actual media and CSS
         run: |
           pip -q install pillow
-          unzip -oq artifact/Mametas_V3_FINAL_USER_DELIVERY_2026-09-27.zip -d compiled
           python - <<'PY'
           import re,io
           from pathlib import Path
@@ -35,10 +28,12 @@ jobs:
             'en/culture/matisse-museum/index.html','culture/musee-matisse/index.html',
             'en/culture/fondation-maeght/index.html','culture/fondation-maeght/index.html'
           ):
-              p=Path('compiled')/path
-              print('===',path,p.exists(),flush=True)
-              if not p.exists():continue
-              s=p.read_text(encoding='utf-8')
+              try:
+                  req=Request('https://www.mametas.com/'+path+'?mqa=live',headers={'Cache-Control':'no-cache','User-Agent':'MametasQACheck/1.0'})
+                  with urlopen(req,timeout=18) as res:s=res.read().decode('utf-8','replace')
+                  print('===',path,len(s),flush=True)
+              except Exception as exc:
+                  print('MISSING',path,repr(exc),flush=True);continue
               patterns=[r'<body[^>]*>',r'<div[^>]*(?:ownership|cta|signature|hero|chooser|next)[^>]*>',
                         r'<section[^>]*(?:hero|cta|chooser|practical|emergency)[^>]*>',
                         r'<a[^>]*>[^<]*(?:Riviera Fit|VERDICT|Verdict|verdict|Riviera fit)[^<]*</a>',
@@ -60,12 +55,6 @@ jobs:
             'assets/editorial/culture-musee-matisse-v2.webp',
             'assets/editorial/musee-matisse-alyona-nagel-pexels.webp'
           ):
-              p=Path('compiled')/asset
-              print('ASSET',asset,'exists',p.exists(),'size',p.stat().st_size if p.exists() else None,flush=True)
-              if p.exists():
-                  try:
-                      with Image.open(p) as im:print('DIMENSIONS',asset,im.size,im.format,flush=True)
-                  except Exception as exc:print('BROKEN',asset,str(exc),flush=True)
               try:
                   req=Request('https://www.mametas.com/'+asset,headers={'Cache-Control':'no-cache','User-Agent':'Mametas-QA'})
                   with urlopen(req,timeout=15) as res:
