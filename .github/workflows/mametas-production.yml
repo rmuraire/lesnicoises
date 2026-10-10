@@ -437,6 +437,12 @@ jobs:
       - name: Normalize final Hotel Fit bridges and inline navigation
         run: python scripts/v32_inline_links_hotel_cta_navigation_2026_10_10.py
 
+      - name: Restore decodable licensed Fondation Maeght photo
+        run: python scripts/v33_repair_maeght_photo_2026_10_10.py
+
+      - name: Fix final Culture, Plan and Practical family presentations
+        run: python scripts/v33_culture_stats_plan_practical_2026_10_10.py
+
       - name: Run Claude final recipe static gate
         run: python scripts/v18_final_audit_recipe_gate_2026_10_07.py
 
