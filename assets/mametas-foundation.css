@@ -2302,3 +2302,173 @@ body.mametas-culture-detail .culture-copy .sources li a {
     padding-bottom:32px!important;
   }
 }
+
+
+/* MAMETAS FAMILY PARITY OCT 2026
+   Final release recipe: shared typography and visible inline actions.
+   Narrow scoping avoids changing global hero scales and hotel BOOK panels. */
+body a.mametas-map-inline,
+body a.mametas-map-inline:visited,
+body a.mametas-map-inline:hover {
+  box-sizing:content-box!important;
+  display:inline!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0 0 1px!important;
+  border:0!important;
+  border-bottom:1px solid #b9903f!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  color:#0e5265!important;
+  font:600 13px/1.55 Inter,Arial,sans-serif!important;
+  letter-spacing:normal!important;
+  text-transform:none!important;
+  text-decoration:none!important;
+  text-underline-offset:3px!important;
+}
+body a.mametas-map-inline:focus-visible {
+  outline:2px solid #ad492f!important;
+  outline-offset:3px!important;
+}
+
+/* Explore's mission pages: compact verdicts and the same text hierarchy. */
+body.mametas-explore-detail .intent-detail .article-body,
+body.mametas-explore-detail .intent-detail .article-body > p,
+body.mametas-explore-detail .intent-detail .article-body .place p {
+  font-size:15.5px!important;
+  line-height:1.7!important;
+}
+body.mametas-explore-detail .intent-detail .article-body > p:first-child {
+  font:400 16px/1.7 Inter,Arial,sans-serif!important;
+}
+body.mametas-explore-detail .intent-detail .article-body .verdict,
+body.mametas-explore-detail .intent-detail .article-body .verdict-box {
+  box-sizing:border-box!important;
+  padding:22px 26px!important;
+  margin:24px 0 34px!important;
+}
+body.mametas-explore-detail .intent-detail .article-body .verdict p,
+body.mametas-explore-detail .intent-detail .article-body .verdict-box p {
+  font:400 18px/1.52 "Fraunces",Georgia,serif!important;
+  letter-spacing:normal!important;
+  margin:8px 0 0!important;
+}
+body.mametas-explore-detail .intent-detail .article-body .verdict p strong,
+body.mametas-explore-detail .intent-detail .article-body .verdict-box p strong {
+  font-weight:600!important;
+}
+body.mametas-explore-detail .intent-detail .article-body h2 {
+  font-size:clamp(27px,2.75vw,33px)!important;
+  line-height:1.2!important;
+  margin:41px 0 15px!important;
+}
+body.mametas-explore-detail .intent-detail .article-body h3 {
+  font-size:clamp(21px,2.15vw,25px)!important;
+  line-height:1.22!important;
+}
+
+/* Solo female subguides: restrained body size, clear action hierarchy and
+   breathing room for numbered instructions, hotel cards and links. */
+body.mametas-solo-detail main article,
+body.mametas-solo-detail .article-body,
+body.mametas-solo-detail .culture-copy {
+  min-width:0!important;
+}
+body.mametas-solo-detail .article-body,
+body.mametas-solo-detail .article-body > p,
+body.mametas-solo-detail .article-body li,
+body.mametas-solo-detail .culture-copy > p,
+body.mametas-solo-detail .culture-copy li {
+  font-size:15px!important;
+  line-height:1.7!important;
+}
+body.mametas-solo-detail .article-body > p:first-child {
+  font:400 15.5px/1.7 Inter,Arial,sans-serif!important;
+}
+body.mametas-solo-detail .article-body h2,
+body.mametas-solo-detail .culture-copy h2 {
+  font:500 clamp(26px,2.8vw,31px)/1.23 "Fraunces",Georgia,serif!important;
+  margin:37px 0 14px!important;
+}
+body.mametas-solo-detail .article-body h3,
+body.mametas-solo-detail .culture-copy h3 {
+  font:500 clamp(21px,2.2vw,24px)/1.27 "Fraunces",Georgia,serif!important;
+  margin:24px 0 11px!important;
+}
+body.mametas-solo-detail .article-body .verdict p,
+body.mametas-solo-detail .article-body .verdict-box p {
+  font:400 18px/1.52 "Fraunces",Georgia,serif!important;
+}
+body.mametas-solo-detail .article-body .place,
+body.mametas-solo-detail .article-body .note {
+  margin:20px 0 25px!important;
+  padding:20px 23px!important;
+}
+body.mametas-solo-detail .article-body .hotel-card,
+body.mametas-solo-detail .article-body .scouting-card {
+  box-sizing:border-box!important;
+  min-width:0!important;
+}
+body.mametas-solo-detail .article-body a[href^="/en/hotels/"]:not(.btn):not(.button):not(.rate-link):not(.mametas-hotel-fit-primary),
+body.mametas-solo-detail .article-body a[href^="/hotels/"]:not(.btn):not(.button):not(.rate-link):not(.mametas-hotel-fit-primary) {
+  display:inline!important;
+  background:transparent!important;
+  border:0!important;
+  border-bottom:1px solid #b9903f!important;
+  box-shadow:none!important;
+  padding:0 0 1px!important;
+  color:#0e5265!important;
+  font:600 13px/1.55 Inter,Arial,sans-serif!important;
+  text-transform:none!important;
+  letter-spacing:normal!important;
+  text-decoration:none!important;
+}
+
+/* Hotel Fit is the primary product action, not another editorial text link. */
+body a.mametas-hotel-fit-primary,
+body a.mametas-hotel-fit-primary:visited,
+body a.mametas-hotel-fit-primary:hover,
+body.mametas-solo-detail .article-body a.btn[href*="/hotels/finder/"],
+body.mametas-solo-detail .article-body a.button[href*="/hotels/finder/"] {
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  min-height:44px!important;
+  width:auto!important;
+  max-width:100%!important;
+  margin:13px 0 18px!important;
+  padding:11px 18px!important;
+  background:#ad492f!important;
+  color:#fff!important;
+  border:1px solid #ad492f!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  font:700 11px/1.35 Inter,Arial,sans-serif!important;
+  letter-spacing:.055em!important;
+  text-transform:uppercase!important;
+  text-align:center!important;
+  text-decoration:none!important;
+  white-space:normal!important;
+}
+
+/* Single-column rhythm on smaller screens, with readable card padding. */
+@media(max-width:760px) {
+  body.mametas-explore-detail .intent-detail .article-body .verdict,
+  body.mametas-explore-detail .intent-detail .article-body .verdict-box {
+    padding:20px!important;
+  }
+  body.mametas-explore-detail .intent-detail .article-body .verdict p,
+  body.mametas-explore-detail .intent-detail .article-body .verdict-box p,
+  body.mametas-solo-detail .article-body .verdict p {
+    font-size:17px!important;
+    line-height:1.52!important;
+  }
+  body.mametas-solo-detail .article-body .place,
+  body.mametas-solo-detail .article-body .note {
+    padding:17px 18px!important;
+  }
+}
