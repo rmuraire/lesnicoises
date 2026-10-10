@@ -1247,7 +1247,7 @@ jobs:
               f"https://www.mametas.com/stay/nice/?deploy={sha}": (
                   'hotel-choice-grid',
                   '/en/hotels/nice/hotel-66/',
-                  '/en/hotels/finder/',
+                  '/en/hotels/nice/boutique-hotel-nice-cote-dazur/',
               ),
           }
           for url, needles in checks.items():
