@@ -72,6 +72,11 @@ PAGES = [
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
+    ("/cote-dazur-femme-solo/securite/", "editorial"),
+    ("/cote-dazur-femme-solo/ou-dormir/", "editorial"),
+    ("/cote-dazur-femme-solo/se-deplacer-sans-voiture/", "editorial"),
+    ("/cote-dazur-femme-solo/manger-sortir-seule/", "editorial"),
+    ("/cote-dazur-femme-solo/itineraire-5-jours/", "editorial"),
     ("/en/solo-female-french-riviera/where-to-stay/", "editorial"),
     ("/en/solo-female-french-riviera/safety/", "editorial"),
     ("/en/solo-female-french-riviera/", "editorial"),
@@ -558,7 +563,7 @@ def main() -> None:
                         continue
                     page.wait_for_timeout(120)
 
-                    if any(k in path for k in ("/solo-female-french-riviera/", "/explore/retire-french-riviera/", "/practical/safety-emergencies/")):
+                    if any(k in path for k in ("/solo-female-french-riviera/", "/cote-dazur-femme-solo/", "/explore/retire-french-riviera/", "/practical/safety-emergencies/")):
                         debug = page.evaluate("""() => {
                           const sel=(q) => [...document.querySelectorAll(q)].filter(n=>n.getBoundingClientRect().height>0);
                           const one=(n)=>{ const x=getComputedStyle(n),r=n.getBoundingClientRect(); return {tag:n.tagName,cls:String(n.className).slice(0,100),text:(n.innerText||'').trim().slice(0,60),font:x.fontSize,line:x.lineHeight,display:x.display,bg:x.backgroundColor,border:x.borderBottomWidth,rect:[Math.round(r.width),Math.round(r.height)],parent:n.parentElement?.className||''}; };
@@ -583,11 +588,15 @@ def main() -> None:
                             bodies=[x for x in debug["content"] if "article-body" in x["cls"]]
                             if not bodies or bodies[0]["rect"][0] < 650:
                                 errors.append(f"{label}: article still stranded in narrow sidebar grid track {bodies}")
-                        if path in ("/en/solo-female-french-riviera/where-to-stay/", "/en/solo-female-french-riviera/safety/"):
+                        if path.startswith("/cote-dazur-femme-solo/") or path in ("/en/solo-female-french-riviera/where-to-stay/", "/en/solo-female-french-riviera/safety/"):
                             h1=next((h for h in debug["headings"] if h["tag"]=="H1"),None)
                             limit=56 if viewport_name=="desktop" else 45
                             if not h1 or float(h1["font"].removesuffix("px")) > limit:
                                 errors.append(f"{label}: Solo Female H1 exceeds {limit}px hierarchy {h1}")
+                            if path.startswith("/cote-dazur-femme-solo/"):
+                                h2=next((h for h in debug["headings"] if h["tag"]=="H2" and "SOURCES" not in h["text"].upper()),None)
+                                if h2 and float(h2["font"].removesuffix("px")) > 32:
+                                    errors.append(f"{label}: French Solo Female H2 not normalized {h2}")
 
                     if viewport_name == "desktop" and path == "/hotels/antibes/":
                         debug = page.evaluate("""() => {
