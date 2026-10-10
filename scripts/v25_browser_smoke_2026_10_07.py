@@ -72,6 +72,15 @@ PAGES = [
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
+    ("/en/solo-female-french-riviera/where-to-stay/", "editorial"),
+    ("/en/solo-female-french-riviera/safety/", "editorial"),
+    ("/en/solo-female-french-riviera/", "editorial"),
+    ("/en/explore/retire-french-riviera/", "editorial"),
+    ("/en/explore/french-riviera-honeymoon/", "editorial"),
+    ("/en/practical/safety-emergencies/", "editorial"),
+    ("/en/good-finds/nice-airport-transfer/", "editorial"),
+    ("/en/culture/villa-ephrussi/", "editorial"),
+
     ("/en/culture/villa-ephrussi/", "editorial"),
     ("/culture/villa-ephrussi/", "editorial"),
     ("/en/explore/retire-french-riviera/", "editorial"),
@@ -548,6 +557,14 @@ def main() -> None:
                         errors.append(f"{label}: HTTP {response.status if response else 'no response'}")
                         continue
                     page.wait_for_timeout(120)
+
+                    if any(k in path for k in ("/solo-female-french-riviera/", "/explore/retire-french-riviera/", "/practical/safety-emergencies/")):
+                        debug = page.evaluate("""() => {
+                          const sel=(q) => [...document.querySelectorAll(q)].filter(n=>n.getBoundingClientRect().height>0);
+                          const one=(n)=>{ const x=getComputedStyle(n),r=n.getBoundingClientRect(); return {tag:n.tagName,cls:String(n.className).slice(0,100),text:(n.innerText||'').trim().slice(0,60),font:x.fontSize,line:x.lineHeight,display:x.display,bg:x.backgroundColor,border:x.borderBottomWidth,rect:[Math.round(r.width),Math.round(r.height)],parent:n.parentElement?.className||''}; };
+                          return {body:document.body.className,css:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>x.getAttribute('href')),content:[...document.querySelectorAll('main,article,.article-body,.culture-copy,.solo-female-content')].slice(0,7).map(one),mapLinks:sel('a[href*="google.com/maps"],a[href*="maps.app.goo.gl"]').slice(0,6).map(one),hotelLinks:sel('a[href*="/hotels/"]').slice(0,8).map(one),cta:sel('a[href*="/hotels/finder/"]').slice(0,4).map(one),headings:sel('h1,h2,h3').slice(0,8).map(one)};
+                        }""")
+                        print("TARGET_FAMILY_VISUAL", label, debug, flush=True)
 
                     if viewport_name == "desktop" and path == "/hotels/antibes/":
                         debug = page.evaluate("""() => {
