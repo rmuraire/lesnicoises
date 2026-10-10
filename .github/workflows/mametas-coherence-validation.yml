@@ -255,3 +255,28 @@ jobs:
         run: |
           ! grep -q '<loc>https://www.mametas.com/en/hotels/nice/</loc>' sitemap.xml
           ! grep -q '<loc>https://www.mametas.com/hotels/nice/</loc>' sitemap.xml
+
+  # Standalone live inspection; deliberately never builds or deploys CSS.
+  visual-inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Check out fixed visual baseline
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install browser audit dependencies
+        run: python -m pip install --quiet playwright
+      - name: Inventory every live sitemap page in desktop and mobile
+        run: python -u scripts/mametas_final_visual_inventory_2026_10_10.py --max-pages 350
+      - name: Publish complete non-mutating visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mametas-final-visual-253-pages
+          path: final-visual-audit/
+          if-no-files-found: warn
+          retention-days: 5
+          compression-level: 5
