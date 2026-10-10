@@ -566,6 +566,29 @@ def main() -> None:
                         }""")
                         print("TARGET_FAMILY_VISUAL", label, debug, flush=True)
 
+                        # Family-specific acceptance criteria, tied to the
+                        # user's actual visual defects rather than CSS tokens.
+                        if path == "/en/solo-female-french-riviera/where-to-stay/":
+                            maps=debug["mapLinks"]
+                            hotel_actions=[a for a in debug["hotelLinks"] if "MAMETAS HOTEL PAGE" in a["text"].upper()]
+                            if not maps or not hotel_actions:
+                                errors.append(f"{label}: missing visible map/hotel editorial links")
+                            for a in maps + hotel_actions:
+                                font=float(a["font"].removesuffix("px"))
+                                if font > 14.0 or a["display"] != "inline" or a["rect"][1] > 27:
+                                    errors.append(f"{label}: link typography not aligned {a}")
+                            if not debug["cta"] or any(c["rect"][1] > 72 for c in debug["cta"]):
+                                errors.append(f"{label}: missing or oversized Hotel Fit primary action")
+                        if path == "/en/explore/retire-french-riviera/" and viewport_name == "desktop":
+                            bodies=[x for x in debug["content"] if "article-body" in x["cls"]]
+                            if not bodies or bodies[0]["rect"][0] < 650:
+                                errors.append(f"{label}: article still stranded in narrow sidebar grid track {bodies}")
+                        if path in ("/en/solo-female-french-riviera/where-to-stay/", "/en/solo-female-french-riviera/safety/"):
+                            h1=next((h for h in debug["headings"] if h["tag"]=="H1"),None)
+                            limit=56 if viewport_name=="desktop" else 45
+                            if not h1 or float(h1["font"].removesuffix("px")) > limit:
+                                errors.append(f"{label}: Solo Female H1 exceeds {limit}px hierarchy {h1}")
+
                     if viewport_name == "desktop" and path == "/hotels/antibes/":
                         debug = page.evaluate("""() => {
                           const link=[...document.querySelectorAll('a.rate-link')].find(a => (a.getAttribute('href')||'').includes('hotel-belles-rives')); const n=link?.closest('.hotel-choice-card');
