@@ -1125,9 +1125,20 @@ jobs:
           # No deploy query string is allowed here, otherwise stale HTML can hide.
           pages = {
               "https://www.mametas.com/": (
-                  "/assets/editorial/fondation-maeght-waterborough.webp",
                   "/assets/v3.css",
                   "/en/solo-female-french-riviera/",
+              ),
+              # Maeght's image is a Culture page asset, not a required homepage element.
+              "https://www.mametas.com/en/culture/": (
+                  "/assets/editorial/fondation-maeght-waterborough.webp",
+              ),
+              "https://www.mametas.com/en/culture/fondation-maeght/": (
+                  "/assets/editorial/fondation-maeght-waterborough.webp",
+                  "mametas-culture-detail",
+              ),
+              "https://www.mametas.com/en/culture/matisse-museum/": (
+                  "/assets/editorial/culture-musee-matisse.webp",
+                  "mametas-culture-detail",
               ),
               "https://www.mametas.com/plan/": ("core-hub-final", "/assets/v3.css"),
               "https://www.mametas.com/en/riviera-guide/": ("core-hub-final", "/assets/v3.css"),
