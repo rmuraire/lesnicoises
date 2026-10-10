@@ -19,7 +19,7 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 FOUNDATION = ROOT / "assets" / "mametas-foundation.css"
-FOUNDATION_HREF = "/assets/mametas-foundation.css?v=1.8"
+FOUNDATION_HREF = "/assets/mametas-foundation.css?v=1.9"
 LEGACY_TARGETS = (ROOT / "assets" / "site.css", ROOT / "assets" / "v3.css")
 START = "/* MAMETAS CANONICAL FOUNDATION:BEGIN */"
 END = "/* MAMETAS CANONICAL FOUNDATION:END */"
