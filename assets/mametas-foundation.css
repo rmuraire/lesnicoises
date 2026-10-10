@@ -1552,23 +1552,32 @@ body.mametas-restaurant-detail .place > a.place-link:focus-visible {
 }
 
 /* "Next decision" is clearly interactive even on older navy verdicts. */
+/* Restaurant next-decision cards: pure white links and pure white
+   underlines in every state. Light practical panels remain blue. */
 body.mametas-restaurant-detail .verdict a,
-body.mametas-restaurant-detail .culture-practical a {
-  color:#fff0c8!important;
+body.mametas-restaurant-detail .verdict a:link,
+body.mametas-restaurant-detail .verdict a:visited,
+body.mametas-restaurant-detail .verdict a:hover,
+body.mametas-restaurant-detail .verdict a:focus-visible,
+body.mametas-restaurant-detail .verdict a:active {
+  color:#fff!important;
   text-decoration:underline!important;
-  text-decoration-color:#e4ac53!important;
+  text-decoration-color:#fff!important;
+  border-bottom-color:#fff!important;
   text-underline-offset:4px!important;
   text-decoration-thickness:1px!important;
   font-weight:650!important;
 }
-body.mametas-restaurant-detail .verdict a:hover,
-body.mametas-restaurant-detail .verdict a:focus-visible,
+body.mametas-restaurant-detail .culture-practical a {
+  color:#095168!important;
+  text-decoration:underline!important;
+  text-decoration-color:#a57b36!important;
+  text-underline-offset:4px!important;
+  text-decoration-thickness:1px!important;
+  font-weight:650!important;
+}
 body.mametas-restaurant-detail .culture-practical a:hover,
 body.mametas-restaurant-detail .culture-practical a:focus-visible {
-  color:#fff!important;
-  text-decoration-thickness:2px!important;
-}
-body.mametas-restaurant-detail .culture-practical a {
   color:#095168!important;
   text-decoration-color:#a57b36!important;
 }
