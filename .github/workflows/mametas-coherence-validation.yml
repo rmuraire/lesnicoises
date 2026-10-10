@@ -71,6 +71,36 @@ jobs:
             scripts/v19_final_post_parity_cleanup_2026_10_07.py scripts/v20_final_audit_heading_hierarchy_2026_10_07.py scripts/v21_final_audit_hotel_depth_2026_10_07.py \
             scripts/v22_final_hotel_fit_wording_guard_2026_10_07.py scripts/v23_css_foundation_2026_10_07.py scripts/v24_final_presentation_stabilization_2026_10_07.py scripts/v25_browser_smoke_2026_10_07.py scripts/v26_global_browser_sweep_2026_10_07.py
 
+      - name: Apply solo female Riviera vertical
+        run: |
+          cat scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part00 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part01 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part02 scripts/v4_solo_female_vertical_2026_09_29.py.gz.b64.part03 | base64 -d | gzip -dc > scripts/v4_solo_female_vertical_2026_09_29.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("scripts/v4_solo_female_vertical_2026_09_29.py")
+          src=p.read_text(encoding="utf-8")
+          src=src.replace("s.find('class=\"lgbtq-banner\"')","s.find('class=\"lgbtq-banner')")
+          replacements = {
+              "Meilleure première base : Nice": "Meilleur premier point de chute : Nice",
+              "Choisissez la base en pensant au soir": "Choisissez le point de chute en pensant au soir",
+              "La base solo la plus facile.": "Le point de chute solo le plus simple.",
+              "c’est la base solo la plus simple": "c’est le point de chute solo le plus simple",
+              "Une base, quatre journées faciles": "Un point de chute, quatre journées faciles",
+              "Une bonne base à Cannes": "Un bon point de chute à Cannes",
+              "pas la base la plus efficace de toute la côte": "pas le point de chute le plus efficace de toute la côte",
+              "Base : Nice, 5 nuits": "Point de chute : Nice, 5 nuits",
+              "meilleure base, sécurité": "meilleur point de chute, sécurité",
+              "base à Nice, Villefranche": "point de chute à Nice, Villefranche",
+              "une base, sans voiture": "un point de chute, sans voiture",
+              "garde Nice comme base": "garde Nice comme point de chute",
+              "en faire la base solo": "en faire le point de chute solo",
+          }
+          for old_text,new_text in replacements.items():
+              src=src.replace(old_text,new_text)
+          p.write_text(src,encoding="utf-8")
+          PY
+          python scripts/v4_solo_female_vertical_2026_09_29.py
+
+
       - name: Preserve source metadata
         run: python scripts/v6_preserve_sources_dates_credits_2026_10_02.py
 
