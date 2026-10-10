@@ -83,9 +83,28 @@ def culture(s,rel):
                       '<figcaption>Image from the Mametas Culture selection.</figcaption>',
                       inside,count=1)
         s=s[:m.start()]+m.group(1)+inside+m.group(3)+s[m.end():]
-        # Remove only the photo citation that referred to the PREVIOUS hero.
-        s=re.sub(r'<li><a\b[^>]*href="https://commons\.wikimedia\.org/wiki/File:Mus%C3%A9e_Matisse_de_Nice\.jpg"[^>]*>[\s\S]*?</a></li>',
-                 '',s,flags=re.I)
+        # The old Yair Haklai source credited a different hero. Remove only
+        # that stale photo-credit list item, tolerating extra HTML attributes
+        # and whitespace introduced by intermediate materialization passes.
+        def remove_stale_photo_credit(match):
+            item=match.group(0)
+            if ("Yair Haklai" in item or
+                "File:Mus%C3%A9e_Matisse_de_Nice.jpg" in item):
+                return ""
+            return item
+        s=re.sub(r'<li\b[^>]*>[\s\S]*?</li>',
+                 remove_stale_photo_credit,s,flags=re.I)
+        if "Yair Haklai" in s:
+            raise RuntimeError("Former Matisse photo credit survived hero replacement")
+    return s
+
+def home_culture(s,rel):
+    """Use the same verified local Fondation Maeght image on both homepages."""
+    target="/assets/editorial/fondation-maeght-waterborough.webp"
+    pat=re.compile(r'(<a\b[^>]*\bclass="[^"]*base-card--culture[^"]*"[^>]*>\s*<img\b[^>]*\bsrc=")[^"]+(")',re.I)
+    s,n=pat.subn(lambda m:m.group(1)+target+m.group(2),s,count=1)
+    if n!=1:
+        raise RuntimeError("Homepage Culture image not found: "+rel)
     return s
 
 def main():
@@ -110,6 +129,8 @@ def main():
         if update_file(rel,culture):modified.append(rel)
         details+=1
     if details<20:raise RuntimeError(f"Culture guide family incomplete: {details}")
+    for rel in ("index.html","fr/index.html"):
+        if update_file(rel,home_culture):modified.append(rel)
     # Existing release gate rejects ASCII blanks before French high punctuation
     # in hotels/sans-voiture; fix only visible text nodes, never tags or hrefs.
     car=ROOT/"hotels/sans-voiture/index.html"
