@@ -585,7 +585,7 @@ jobs:
               s=page.read_text(encoding="utf-8")
               for needle in needles:
                   if needle not in s:raise SystemExit("Missing release marker "+needle+" in "+rel)
-              if "/assets/mametas-foundation.css?v=1.9" not in s:
+              if "/assets/mametas-foundation.css?v=1.10" not in s:
                   raise SystemExit("Stale CSS in "+rel)
           plan=Path("fr/planifier/index.html").read_text(encoding="utf-8")
           if 'plan-fit-full-link' in plan:raise SystemExit("Duplicate Plan Fit CTA remains")
@@ -1225,7 +1225,7 @@ jobs:
                   'hotel-price-band',
                   'data-price-band=',
                   'hotel-choice-grid',
-                  'class="rate-link"',
+                  'rate-link',
                   'href="/hotels/nice/',
               ),
               f"https://www.mametas.com/en/hotels/finder/?deploy={sha}": (

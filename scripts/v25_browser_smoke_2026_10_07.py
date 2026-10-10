@@ -72,6 +72,15 @@ PAGES = [
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
+    ("/en/solo-female-french-riviera/where-to-stay/", "editorial"),
+    ("/en/solo-female-french-riviera/safety/", "editorial"),
+    ("/en/solo-female-french-riviera/", "editorial"),
+    ("/en/explore/retire-french-riviera/", "editorial"),
+    ("/en/explore/french-riviera-honeymoon/", "editorial"),
+    ("/en/practical/safety-emergencies/", "editorial"),
+    ("/en/good-finds/nice-airport-transfer/", "editorial"),
+    ("/en/culture/villa-ephrussi/", "editorial"),
+
     ("/en/culture/villa-ephrussi/", "editorial"),
     ("/culture/villa-ephrussi/", "editorial"),
     ("/en/explore/retire-french-riviera/", "editorial"),
@@ -548,6 +557,37 @@ def main() -> None:
                         errors.append(f"{label}: HTTP {response.status if response else 'no response'}")
                         continue
                     page.wait_for_timeout(120)
+
+                    if any(k in path for k in ("/solo-female-french-riviera/", "/explore/retire-french-riviera/", "/practical/safety-emergencies/")):
+                        debug = page.evaluate("""() => {
+                          const sel=(q) => [...document.querySelectorAll(q)].filter(n=>n.getBoundingClientRect().height>0);
+                          const one=(n)=>{ const x=getComputedStyle(n),r=n.getBoundingClientRect(); return {tag:n.tagName,cls:String(n.className).slice(0,100),text:(n.innerText||'').trim().slice(0,60),font:x.fontSize,line:x.lineHeight,display:x.display,bg:x.backgroundColor,border:x.borderBottomWidth,rect:[Math.round(r.width),Math.round(r.height)],parent:n.parentElement?.className||''}; };
+                          return {body:document.body.className,css:[...document.querySelectorAll('link[rel=stylesheet]')].map(x=>x.getAttribute('href')),content:[...document.querySelectorAll('main,article,.article-body,.culture-copy,.solo-female-content')].slice(0,7).map(one),mapLinks:sel('a[href*="google.com/maps"],a[href*="maps.app.goo.gl"]').slice(0,6).map(one),hotelLinks:sel('a[href*="/hotels/"]').slice(0,8).map(one),cta:sel('a[href*="/hotels/finder/"]').slice(0,4).map(one),headings:sel('h1,h2,h3').slice(0,8).map(one)};
+                        }""")
+                        print("TARGET_FAMILY_VISUAL", label, debug, flush=True)
+
+                        # Family-specific acceptance criteria, tied to the
+                        # user's actual visual defects rather than CSS tokens.
+                        if path == "/en/solo-female-french-riviera/where-to-stay/":
+                            maps=debug["mapLinks"]
+                            hotel_actions=[a for a in debug["hotelLinks"] if "MAMETAS HOTEL PAGE" in a["text"].upper()]
+                            if not maps or not hotel_actions:
+                                errors.append(f"{label}: missing visible map/hotel editorial links")
+                            for a in maps + hotel_actions:
+                                font=float(a["font"].removesuffix("px"))
+                                if font > 14.0 or a["display"] != "inline" or a["rect"][1] > 27:
+                                    errors.append(f"{label}: link typography not aligned {a}")
+                            if not debug["cta"] or any(c["rect"][1] > 72 for c in debug["cta"]):
+                                errors.append(f"{label}: missing or oversized Hotel Fit primary action")
+                        if path == "/en/explore/retire-french-riviera/" and viewport_name == "desktop":
+                            bodies=[x for x in debug["content"] if "article-body" in x["cls"]]
+                            if not bodies or bodies[0]["rect"][0] < 650:
+                                errors.append(f"{label}: article still stranded in narrow sidebar grid track {bodies}")
+                        if path in ("/en/solo-female-french-riviera/where-to-stay/", "/en/solo-female-french-riviera/safety/"):
+                            h1=next((h for h in debug["headings"] if h["tag"]=="H1"),None)
+                            limit=56 if viewport_name=="desktop" else 45
+                            if not h1 or float(h1["font"].removesuffix("px")) > limit:
+                                errors.append(f"{label}: Solo Female H1 exceeds {limit}px hierarchy {h1}")
 
                     if viewport_name == "desktop" and path == "/hotels/antibes/":
                         debug = page.evaluate("""() => {

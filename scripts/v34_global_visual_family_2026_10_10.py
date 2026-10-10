@@ -64,7 +64,7 @@ def normalize_anchor(m):
 
 def final_stylesheet(s):
     """All generated pages receive the same FINAL CSS, after late rewrites."""
-    link='<link rel="stylesheet" href="/assets/mametas-foundation.css?v=1.9">'
+    link='<link rel="stylesheet" href="/assets/mametas-foundation.css?v=1.10">'
     s=re.sub(r'<link\b[^>]*href=["\']/assets/mametas-foundation\.css(?:\?[^"\']*)?["\'][^>]*>\s*','',s,flags=re.I)
     close=re.search(r'</head>',s,re.I)
     if not close:raise RuntimeError("HTML without head close")
