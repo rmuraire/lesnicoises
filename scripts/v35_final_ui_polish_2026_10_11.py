@@ -50,6 +50,8 @@ def fix_fr_gay_faq(s):
         raise RuntimeError("FR Gay hub: insertion point changed")
     faq='<section class="mametas-faq-parity"><h2>FAQ</h2>'
     faq+=''.join(detail(q,a) for q,a in fr_faq)+'</section>'
+    # French punctuation uses non-breaking spacing for ? ! : ; across the site.
+    faq=re.sub(r' (?=[!?;:])','\u00a0',faq)
     return s.replace(anchor,faq+anchor,1)
 
 def fix_en_gay_faq(s):
