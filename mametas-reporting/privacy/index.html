@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mametas Reporting privacy | Mametas</title>
+  <meta name="description" content="How the private Mametas Reporting utility accesses and stores Google Analytics and Search Console data.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="canonical" href="https://www.mametas.com/mametas-reporting/privacy/">
+  <meta name="theme-color" content="#f4efe4">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,500&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/v3.css?v=0.4">
+  <link href="/favicon.svg" rel="icon" type="image/svg+xml">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="v3-header"><div class="v3-header-inner"><a class="v3-brand" href="/" aria-label="Mametas, home"><span class="v3-brand-name">Mametas</span><span class="v3-brand-line">They know the Riviera.</span></a><nav class="v3-nav" aria-label="Navigation"><ul><li><a href="/">Back to Mametas</a></li><li><a href="/mametas-reporting/privacy/">Reporting privacy</a></li></ul></nav></div></header>
+  <main id="main" class="policy-shell"><article class="policy-copy">
+    <p class="eyebrow">Google data use</p>
+    <h1>Mametas Reporting — privacy notice</h1>
+    <p class="policy-lead">This notice applies only to Mametas Reporting, a private Google Apps Script used by the operator of mametas.com. It is separate from the website's <a href="/privacy/">visitor privacy policy</a>.</p>
+
+    <h2>What data is accessed</h2>
+    <p>When the operator explicitly authorises access through Google OAuth, the script reads Google Analytics 4 aggregate website performance data, such as sessions, engagement, traffic sources, landing pages and dates. It also reads Google Search Console search performance data, including search queries, page URLs, clicks, impressions, click-through rates, average ranking positions and dates.</p>
+    <p>The script requests Google Sheets edit access to write reports to a particular spreadsheet controlled by the same operator. Although Google's permission wording covers spreadsheets more broadly, the current script uses only the configured reporting spreadsheet. The script does not request access to Gmail, contacts, advertising accounts or Google Drive files outside that spreadsheet.</p>
+
+    <h2>Purpose and lawful use</h2>
+    <p>These data are used solely to monitor mametas.com's organic search visibility and website traffic, and to support editorial decisions. The reporting script does not personalise advertising, profile individual visitors or sell Google user data.</p>
+
+    <h2>Where the data goes</h2>
+    <p>API requests are made directly to Google Analytics and Google Search Console. The resulting metrics are saved in a private Google Sheets spreadsheet in the authorised Google account. Google Apps Script runs the scheduled refresh using the operator's permissions. The script does not send these metrics to the public Mametas site or to an external reporting vendor.</p>
+    <p>Access to the spreadsheet is determined by its Google Drive sharing settings. The spreadsheet is not intentionally published on the Mametas website.</p>
+
+    <h2>Retention and deletion</h2>
+    <p>The automated Google reports use rolling 28-day windows and replace previous report contents when refreshed. Data persist in Google Sheets until overwritten or deleted by the operator. Google may retain execution and authentication logs under its own policies. The operator can delete the report spreadsheet or disable the Apps Script schedule.</p>
+
+    <h2>Permissions and revocation</h2>
+    <p>The operator grants access through the Google authorisation screen and can revoke the application's access from their Google Account's third-party connection settings. Revoking access stops future retrieval but does not automatically erase report cells already stored in Google Sheets.</p>
+
+    <h2>Data-sharing and contact</h2>
+    <p>The reporting script does not sell the accessed Google data or disclose them to advertising platforms. Data are processed using Google's services under the operator's account permissions. For questions or deletion requests relating to this private utility, contact <a href="mailto:mametas.riviera@gmail.com">mametas.riviera@gmail.com</a>.</p>
+    <p><small>Last updated: 11 October 2026.</small></p>
+
+    <p><a href="/mametas-reporting/">← About Mametas Reporting</a></p>
+  </article></main>
+  <footer class="v3-footer"><div class="wrap"><div class="footer-bottom"><span>© 2026 Mametas · Internal reporting information</span><span><a href="/">Mametas home</a> · <a href="/mametas-reporting/privacy/">Reporting privacy</a></span></div></div></footer>
+</body>
+</html>
