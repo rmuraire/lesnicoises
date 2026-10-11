@@ -168,6 +168,30 @@
   margin-top:8px!important;
 }
 
+/* Event-guide hotel cards (IRONMAN, MIPIM, Carnival): "Google Maps · Mametas
+   page" is one link group, spaced from the description above and from the
+   booking button below. Both links take the editorial look already used for
+   this pair in the Solo guides (13px, teal, gold rule, no extra underline).
+   The " · " text separator is not rendered (font-size:0): the gap separates
+   the links, so a dot can never be left alone at a line break. The hidden
+   separator still sits between the links, so the column gap counts twice
+   (2 x 9px = 18px between the two links). */
+.hotel-card-body>p.hotel-card-links{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:6px 9px;
+  margin:12px 0 22px;
+  font-size:0;
+}
+body .hotel-card .hotel-card-body>p.hotel-card-links>a[href]{
+  padding:0 0 1px!important;
+  border-bottom:1px solid #b9903f!important;
+  color:#0e5265!important;
+  font:600 13px/1.55 Inter,Arial,sans-serif!important;
+  text-decoration:none!important;
+}
+
 @media(min-width:761px){
   .hotel-choice-copy .rate-link,
   .hotel-choice-copy>.btn{
@@ -346,6 +370,12 @@ body.rg-destination .article-aside a{
   .practical-title h2,
   .family-section-heading{
     font-size:clamp(29px,8vw,36px)!important;
+  }
+  /* The "Sources vérifiées" heading is a small label (as on desktop), not a
+     section title: the list above must not enlarge it on hotel and
+     restaurant pages. */
+  .sources>h2{
+    font-size:11px!important;
   }
 
   .home-journey-inner{
@@ -2457,6 +2487,42 @@ body.mametas-solo-detail .article-body a.button[href*="/hotels/finder/"] {
   text-align:center!important;
   text-decoration:none!important;
   white-space:normal!important;
+}
+/* Inside an action row the row spaces its own items. The article margins
+   above would stretch the neighbouring button (homepage: 44px vs 75px) or
+   push the companion link away (hub steps, hotel "next decision"). */
+body .hotel-selection-actions>a.mametas-hotel-fit-primary,
+body .hub-next-actions>a.mametas-hotel-fit-primary,
+body .hotel-next-decision>p>a.mametas-hotel-fit-primary{
+  margin:0!important;
+}
+
+/* Hotel pages — "La prochaine décision": aligned on the 760px article column
+   instead of running edge to edge, with the Hotel Fit button and the guide
+   link on one row. The " · " text separator is not rendered (font-size:0):
+   the gap separates them, so it can never cling to the button (the hidden
+   separator sits between them: 2 x 11px = 22px). */
+.hotel-detail>.hotel-next-decision{
+  box-sizing:border-box;
+  width:calc(100% - 2 * var(--gutter));
+  max-width:calc(760px - 2 * var(--gutter));
+  margin:38px auto;
+}
+.hotel-next-decision>p{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:12px 11px;
+  font-size:0;
+}
+.hotel-next-decision>p>a:not(.btn){
+  font-size:15px;
+}
+
+/* Hotel pages: the "Vérifié en …" date above the sources is the same small
+   label as on destination pages, not 16px body copy. */
+body.hotel-detail-page .hotel-copy p.mametas-source-date{
+  font-size:10px!important;
 }
 
 /* Single-column rhythm on smaller screens, with readable card padding. */
