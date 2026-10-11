@@ -59,21 +59,30 @@ def fix_fr_gay_faq(s):
     return s.replace(anchor,faq+anchor,1)
 
 def fix_en_gay_faq(s):
-    # In production, the earlier editorial materializer already normalizes
-    # static five-question FAQs into native <details> disclosures.
-    if 'class="mametas-faq-parity"' in s or (
-        s.count('<details') >= 5 and ('faq-list' in s or '<h2>FAQ</h2>' in s)
-    ): return s
-    start=s.find('<h2>FAQ</h2>')
-    end=s.find('<h2>Four useful doors</h2>',start)
-    if start<0 or end<start:raise RuntimeError("EN Gay FAQ boundaries missing")
-    raw=s[start+len('<h2>FAQ</h2>'):end]
-    matches=FAQ_PLACE.findall(raw)
-    if len(matches)!=5:raise RuntimeError(f"EN Gay FAQ: expected 5 questions, got {len(matches)}")
-    if FAQ_PLACE.sub('',raw).strip():raise RuntimeError("Unexpected content in Gay FAQ")
-    faq='<section class="mametas-faq-parity"><h2>FAQ</h2>'
-    faq+=''.join(detail(q,a) for q,a in matches)+'</section>'
-    return s[:start]+faq+s[end:]
+    # Production and CI materializers do not always leave the same headings
+    # after the FAQ. Never depend on the next H2's editorial wording.
+    if 'class="mametas-faq-parity"' in s:
+        return s
+    if s.count('<details') >= 5 and ('faq-list' in s or '<summary' in s):
+        return s
+    heading = re.search(r'<h2[^>]*>\s*FAQ\s*</h2>', s, re.I)
+    if heading is None:
+        at = s.lower().find('faq')
+        raise RuntimeError(f"EN Gay FAQ heading absent; details={s.count('<details')}; context={s[max(0,at-100):at+900]!r}")
+    cursor = heading.end()
+    qa = []
+    for _ in range(5):
+        spaces = re.match(r'\s*', s[cursor:])
+        cursor += spaces.end()
+        match = FAQ_PLACE.match(s, cursor)
+        if match is None:
+            raise RuntimeError(f"EN Gay FAQ has only {len(qa)} expected Q&A items; next={s[cursor:cursor+500]!r}")
+        qa.append(match.groups())
+        cursor = match.end()
+    faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+    faq += ''.join(detail(q, a) for q, a in qa) + '</section>'
+    return s[:heading.start()] + faq + s[cursor:]
+
 
 def fix_en_gay_subguide_faq(s, rel):
     """Respect native FAQ accordions already materialized by earlier passes."""
