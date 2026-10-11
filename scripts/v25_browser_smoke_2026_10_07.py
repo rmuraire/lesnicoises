@@ -628,7 +628,7 @@ def main() -> None:
                             agenda_ok=polish["agendaTiles"]>=3 and polish["agendaClickable"]==polish["agendaTiles"]
                             if not (semantic_ok or agenda_ok):
                                 errors.append(f"{label}: Good Finds cards not fully clickable {polish}")
-                        if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and polish["disclosures"]!=5:
+                        if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and (polish["disclosures"]+polish["nativeFaq"])!=5:
                             errors.append(f"{label}: Gay FAQ is not five functional disclosures")
                         if path in ("/en/gay-nice/",
                                     "/en/gay-french-riviera/where-to-stay/",
