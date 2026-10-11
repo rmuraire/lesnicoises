@@ -3164,3 +3164,13 @@ a.dialect-inline,.article-body a.dialect-inline,.article p a.dialect-inline{bord
 @media(max-width:650px){.solo-neighbourhood-call{margin:24px 0;padding:20px 18px}}
 
 .practical-core-grid--four{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:1100px){.practical-core-grid--four{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:800px){.practical-core-grid--four{grid-template-columns:1fr}}
+.month-table-wrap{overflow-x:auto;margin:22px 0 10px;border:1px solid var(--line);-webkit-overflow-scrolling:touch}
+.month-table{width:100%;min-width:900px;border-collapse:collapse;font-size:12.5px;line-height:1.45;background:rgba(255,255,255,.32)}
+.month-table th,.month-table td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;color:var(--ink-soft)}
+.month-table thead th{font-size:9px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--coral);background:var(--paper)}
+.month-table tbody th{position:sticky;left:0;background:var(--paper);font-family:var(--serif);font-size:17px;font-weight:500;color:var(--ink);white-space:nowrap}
+.month-table td.num{white-space:nowrap;color:var(--ink)}
+.month-table tbody tr:last-child th,.month-table tbody tr:last-child td{border-bottom:0}
+.month-table-note{font-size:12px!important;line-height:1.55!important;color:var(--ink-soft);margin:0 0 30px!important}
+.phase4-decision-table.phase4-car-cases{grid-template-columns:1fr}
+.phase4-car-cases p+p{margin-top:10px}
