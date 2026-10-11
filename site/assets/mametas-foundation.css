@@ -26,6 +26,7 @@
   letter-spacing:-.045em!important;
   line-height:.98!important;
   text-transform:none!important;
+  text-wrap:balance;
 }
 
 .section h2,
@@ -54,8 +55,7 @@ body.home-page .v3-section .section-heading h2{
 .decision-card h3,
 .practical-link h3,
 .article-body h3,
-.hotel-engine-result h3,
-.chooser-hotel-card h4{
+.hotel-engine-result h3{
   font-family:"Fraunces",Georgia,serif!important;
   font-size:clamp(24px,2.25vw,29px)!important;
   font-weight:500!important;
@@ -705,6 +705,20 @@ a[href*="maps.app.goo.gl"]{
   height:100%!important;
   object-fit:cover!important;
 }
+/* Riviera Fit also runs on Préparer and Plan, which do not load
+   hotel-batch.css: the hotel photos drawn from the shared sprite need the
+   sprite image here too, or the card shows an empty box. */
+.chooser-hotel-media .batch-thumb{
+  display:block;
+  background-color:var(--ink,#14213d);
+  background-image:url('/assets/hotels/batch-sprite.jpg?v=3.0');
+  background-repeat:no-repeat;
+  background-size:600% 500%;
+}
+.chooser-hotel-media .batch-thumb.batch-thumb-13{
+  background-image:url('/assets/hotels/batch-sprite-2026-09-13.jpg?v=2.0');
+  background-size:500% 900%;
+}
 .chooser-hotel-card>p{
   margin-bottom:14px!important;
 }
@@ -1243,21 +1257,64 @@ body.hotel-fit-page .engine-controls .engine-base-gate a.engine-base-gate-cta:ho
   letter-spacing:.1em!important;
   color:#84631f!important;
 }
+/* Sources: one format across the site. On a computer the sources run as
+   one line of links separated by a light "/", each link kept whole; the
+   separator that would open a line sits in a clipped strip. On a phone,
+   one source per line. */
 .article .sources ul,
 .article-body .sources ul,
-.intent-detail .sources ul {
-  display:grid!important;
-  grid-template-columns:repeat(auto-fit,minmax(210px,1fr))!important;
-  gap:9px 20px!important;
+.intent-detail .sources ul,
+main .sources > ul {
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px 0!important;
   list-style:none!important;
-  margin:0!important;
+  margin:0 0 0 -22px!important;
   padding:0!important;
+  clip-path:inset(0 0 0 22px)!important;
 }
 .article .sources li,
 .article-body .sources li,
-.intent-detail .sources li {
+.intent-detail .sources li,
+main .sources > ul > li {
+  position:relative!important;
   margin:0!important;
-  font:400 12px/1.5 Inter,Arial,sans-serif!important;
+  padding:0 0 0 22px!important;
+  font:400 12px/1.55 Inter,Arial,sans-serif!important;
+}
+.article .sources li::before,
+.article-body .sources li::before,
+.intent-detail .sources li::before,
+main .sources > ul > li::before {
+  content:"/";
+  position:absolute;
+  top:0;
+  left:8px;
+  color:#b5a78c;
+}
+@media(max-width:650px) {
+  .article .sources ul,
+  .article-body .sources ul,
+  .intent-detail .sources ul,
+  main .sources > ul {
+    display:block!important;
+    margin:0!important;
+    clip-path:none!important;
+  }
+  .article .sources li,
+  .article-body .sources li,
+  .intent-detail .sources li,
+  main .sources > ul > li {
+    display:block!important;
+    padding:0!important;
+    margin:0 0 7px!important;
+  }
+  .article .sources li::before,
+  .article-body .sources li::before,
+  .intent-detail .sources li::before,
+  main .sources > ul > li::before {
+    content:none;
+  }
 }
 
 /* V3 'Continue' is a navigation strip, NEVER a second source box. */
@@ -1421,27 +1478,34 @@ section.practical-decision-layer[data-static-editorial="true"] > .verdict a {
   color:#926c29!important;
 }
 .article .mametas-sources-section .sources > ul {
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:10px 20px!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px 0!important;
   padding:0!important;
-  margin:0!important;
+  margin:0 0 0 -22px!important;
   list-style:none!important;
+  clip-path:inset(0 0 0 22px)!important;
 }
 .article .mametas-sources-section .sources li {
   min-width:0!important;
-  padding:0!important;
+  padding:0 0 0 22px!important;
   margin:0!important;
   font:400 12px/1.55 Inter,Arial,sans-serif!important;
 }
 .article .mametas-sources-section .sources li > a {
   display:inline!important;
   white-space:normal!important;
-  overflow-wrap:anywhere!important;
 }
 @media(max-width:650px) {
   .article .mametas-sources-section .sources > ul {
-    grid-template-columns:minmax(0,1fr)!important;
+    display:block!important;
+    margin:0!important;
+    clip-path:none!important;
+  }
+  .article .mametas-sources-section .sources li {
+    display:block!important;
+    padding:0!important;
+    margin:0 0 7px!important;
   }
 }
 
@@ -1647,7 +1711,7 @@ body .article .route-step p.spot-logistics a[href*="google.com/maps"] {
   display:inline!important;
   font-family:Inter,Arial,sans-serif!important;
   font-weight:700!important;
-  font-size:inherit!important;
+  font-size:.9em!important;
   line-height:inherit!important;
   letter-spacing:normal!important;
   text-transform:none!important;
@@ -1814,6 +1878,7 @@ body.mametas-car-free-guide .article .ownership-note--split a {
   text-decoration-color:#bc7850!important;
   text-underline-offset:3px!important;
   font:inherit!important;
+  font-size:.9em!important;
   font-weight:700!important;
   color:#095168!important;
 }
@@ -2304,25 +2369,24 @@ body.mametas-culture-detail .culture-copy .sources > h2 {
 }
 body.mametas-culture-detail .culture-copy .sources ul {
   box-sizing:border-box!important;
-  margin:0!important;
-  padding-left:22px!important;
-  display:block!important;
-  list-style:disc outside!important;
+  margin:0 0 0 -22px!important;
+  padding:0!important;
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:5px 0!important;
+  list-style:none!important;
+  clip-path:inset(0 0 0 22px)!important;
 }
 body.mametas-culture-detail .culture-copy .sources li {
-  margin:0 0 10px!important;
-  padding:0!important;
-  font:400 12px/1.65 Inter,Arial,sans-serif!important;
+  position:relative!important;
+  margin:0!important;
+  padding:0 0 0 22px!important;
+  font:400 12px/1.55 Inter,Arial,sans-serif!important;
   min-width:0!important;
-  overflow-wrap:anywhere!important;
-}
-body.mametas-culture-detail .culture-copy .sources li:last-child {
-  margin-bottom:0!important;
 }
 body.mametas-culture-detail .culture-copy .sources li a {
   display:inline!important;
   vertical-align:baseline!important;
-  overflow-wrap:anywhere!important;
   text-decoration:underline!important;
   text-decoration-color:#b9903f!important;
   text-underline-offset:3px!important;
@@ -2348,6 +2412,18 @@ body.mametas-culture-detail .culture-copy .sources li a {
   }
   body.mametas-culture-detail .culture-copy:last-child {
     padding-bottom:32px!important;
+  }
+}
+@media(max-width:650px) {
+  body.mametas-culture-detail .culture-copy .sources ul {
+    display:block!important;
+    margin:0!important;
+    clip-path:none!important;
+  }
+  body.mametas-culture-detail .culture-copy .sources li {
+    display:block!important;
+    padding:0!important;
+    margin:0 0 7px!important;
   }
 }
 
@@ -2657,3 +2733,42 @@ body.mametas-solo-detail .article .place a.place-link.link-cta.mametas-map-inlin
   letter-spacing:normal!important;
   text-transform:none!important;
 }
+
+
+/* MAMETAS LINKS — 2026-10-11
+   An in-text link is never bigger than the text around it. A link set in
+   bold looks bigger at the same size, so it is set at 0.9em of its text.
+   In the 9–10px method notes the weight is lowered instead. */
+html body .spot-logistics a,
+html body .article .spot-logistics a,
+html body .culture-detail .spot-logistics a,
+html body .article p.spot-logistics a,
+html body .culture-detail p.spot-logistics a,
+html body.rg-destination .spot-logistics a,
+html body .ownership-note a,
+html body .solo-voices-method a,
+html body .gay-stay-links a,
+html body .culture-logistics-grid a,
+html body .verdict p > a:not(.dialect-inline),
+html body.mametas-restaurant-detail .verdict a,
+html body.mametas-restaurant-detail .culture-practical a,
+html body.mametas-solo-detail .article p > a.mametas-map-inline {
+  font-size:.9em!important;
+}
+html body .traveller-voice-method a,
+html body .home-hotel-voice-method a {
+  font-weight:500!important;
+}
+
+/* The "Try Riviera Fit" button inside a closing note: on its own line,
+   in the coral used by every other Riviera Fit button. */
+html body .ownership-note > a.btn {
+  display:flex!important;
+  width:max-content!important;
+  margin-top:12px!important;
+  font-size:11px!important;
+  background:#ad492f!important;
+  border-color:#ad492f!important;
+  color:#fff!important;
+}
+
