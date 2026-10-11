@@ -117,6 +117,8 @@ def run():
         old=s
         if rel in ('plages/autour-de-nice/index.html','en/beaches/around-nice/index.html'):
             s=fix_beaches_around_nice_images(s)
+        if rel.startswith(('restaurants/','en/restaurants/')) and 'class="article"' in s:
+            s=add_body_class(s,'mametas-restaurant-detail')
         if rel=='en/gay-french-riviera/index.html':s=fix_en_gay_faq(s)
         if rel=='cote-dazur-gay/index.html':s=fix_fr_gay_faq(s)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
