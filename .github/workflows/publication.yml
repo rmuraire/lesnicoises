@@ -52,7 +52,7 @@ jobs:
 
       - name: Conserver les versions remplacées
         if: always() && hashFiles('avant-publication/**') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: avant-publication-${{ github.sha }}
           path: avant-publication
