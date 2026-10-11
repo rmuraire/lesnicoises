@@ -122,7 +122,7 @@ class _DivBounds(HTMLParser):
     """Find balanced div elements without reserializing/altering page HTML."""
     def __init__(self, source):
         super().__init__()
-        self.line_starts = [0] + [m.end() for m in re.finditer(r"\\n", source)]
+        self.line_starts = [0] + [m.end() for m in re.finditer(r"\n", source)]
         self.stack = []
         self.bounds = []
 
@@ -156,7 +156,7 @@ def fix_fr_hotels(s):
         if (
             end - start < 18000
             and all(name in text for name in FR_EXTRA_HOTELS)
-            and len(re.findall(r"<h3\\b", fragment, re.I)) >= 6
+            and len(re.findall(r"<h3\b", fragment, re.I)) >= 6
             and "La règle Mametas" not in text
             and "Hotel Fit" not in text
         ):
