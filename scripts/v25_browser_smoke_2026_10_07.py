@@ -589,6 +589,7 @@ def main() -> None:
                           const pick=q=>[...document.querySelectorAll(q)].filter(e=>e.getBoundingClientRect().height>0);
                           const style=n=>n?getComputedStyle(n):null;
                           const docs=pick('.mametas-faq-parity details');
+                          const nativeFaq=pick('.faq-list details');
                           const paras=pick('.article > p:not(.standfirst):not(.back), .article > h2');
                           const verdict=pick('.intent-detail .article-body .verdict p');
                           const links=pick('.article .spot-logistics a');
@@ -609,6 +610,7 @@ def main() -> None:
                                 Boolean(a.getAttribute('aria-label'));
                             }).length,
                             disclosures:docs.length,
+                            nativeFaq:nativeFaq.length,
                             typ:paras.slice(0,8).map(n=>({tag:n.tagName,font:parseFloat(style(n).fontSize)})),
                             verdicts:verdict.slice(0,2).map(n=>parseFloat(style(n).fontSize)),
                             badLinks:links.filter(n=>style(n).textDecorationLine==='none'||parseFloat(style(n).borderBottomWidth)>1).map(n=>n.textContent.trim()),
@@ -630,7 +632,7 @@ def main() -> None:
                             errors.append(f"{label}: Gay FAQ is not five functional disclosures")
                         if path in ("/en/gay-nice/",
                                     "/en/gay-french-riviera/where-to-stay/",
-                                    "/en/gay-french-riviera/beaches-without-a-car/") and polish["disclosures"]!=3:
+                                    "/en/gay-french-riviera/beaches-without-a-car/") and (polish["disclosures"]+polish["nativeFaq"])!=3:
                             errors.append(f"{label}: Gay subguide FAQ is not three functional disclosures")
                         if path in ("/bons-plans/train-ou-bus/","/plages/autour-de-nice/") and (
                             not polish["compact"] or any(x["font"]>32.5 for x in polish["typ"] if x["tag"]=="H2")):
