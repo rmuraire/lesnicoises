@@ -99,7 +99,12 @@ def run():
             card_count+=len(cards)
         # CSS is a tiny scoped extra stylesheet, appended last, and works
         # across currently materialized HTML/links without changing source CSS.
-        if '</head>' in s and CSS not in s:
+        needs_css = ('class="article"' in s or 'class="intent-detail' in s
+            or 'spot-logistics' in s or 'class="grid"' in s
+            or rel.startswith(('cote-dazur-gay/','en/gay-french-riviera/',
+                'explore/','en/explore/','bons-plans/','en/good-finds/',
+                'plages/','en/beaches/','riviera-guide/','en/riviera-guide/')))
+        if needs_css and '</head>' in s and CSS not in s:
             s=s.replace('</head>',CSS+'</head>',1)
         if s!=old:
             f.write_text(s,encoding='utf-8')
