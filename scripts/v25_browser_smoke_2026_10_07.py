@@ -74,6 +74,7 @@ PAGES = [
     ("/en/culture/", "editorial"),
     ("/bons-plans/train-ou-bus/", "editorial"),
     ("/plages/autour-de-nice/", "editorial"),
+    ("/en/beaches/around-nice/", "editorial"),
     ("/guide-gay-nice/", "editorial"),
     ("/explore/retraite-cote-d-azur/", "editorial"),
     ("/explore/vivre-antibes-expatrie/", "editorial"),
