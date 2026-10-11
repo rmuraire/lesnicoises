@@ -107,6 +107,31 @@ def fix_beaches_around_nice_images(s):
     )
     return s
 
+# These three source filenames were never shipped. Restore photo delivery
+# from the correctly identified original Wikimedia Commons files. Attribution
+# and beach-specific alt text are maintained. No substitute beach imagery.
+BEACH_REMOTE = {
+    "/assets/editorial/beaches/fossettes-commons.jpg?v=20260926-final":
+        "https://commons.wikimedia.org/wiki/Special:FilePath/Cap-Ferrat_les_Fossettes.jpg?width=1280",
+    "/assets/editorial/beaches/passable-pexels.jpg?v=20260926-final":
+        "https://commons.wikimedia.org/wiki/Special:FilePath/Plage_de_Passable.jpg?width=1280",
+    "/assets/editorial/beaches/mala-commons.jpg?v=20260926-final":
+        "https://commons.wikimedia.org/wiki/Special:FilePath/Plage_Mala%2C_Cap_d%27Ail_-_panoramio.jpg?width=1280",
+}
+def fix_beaches(s):
+    for local, remote in BEACH_REMOTE.items():
+        if local not in s and remote not in s:
+            raise RuntimeError("Beach photo marker has changed: "+local)
+        s=s.replace(local,remote)
+    # The old Pexels credit no longer matches the actual Passable photograph.
+    if '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/"' in s:
+        s=s.replace(
+            '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>',
+            '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_Passable.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · domaine public</a>')
+    for remote in BEACH_REMOTE.values():
+        if remote not in s: raise RuntimeError("Beach photo remote reference missing: "+remote)
+    return s
+
 def run():
     modified=0; compact=0; card_count=0
     files=list(ROOT.rglob('index.html'))
@@ -122,6 +147,7 @@ def run():
         if rel=='en/gay-french-riviera/index.html':s=fix_en_gay_faq(s)
         if rel=='cote-dazur-gay/index.html':s=fix_fr_gay_faq(s)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
+        if rel=='plages/autour-de-nice/index.html':s=fix_beaches(s)
         # One consistent small-scale editorial hierarchy for standard site.css
         # articles (beaches, Practical, Gay, Good Finds, etc.), not V3 intent.
         if 'class="article"' in s and 'site.css' in s:
