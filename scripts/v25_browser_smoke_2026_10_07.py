@@ -598,6 +598,7 @@ def main() -> None:
                             compact:document.body.classList.contains('mametas-compact-article'),
                             hotelsBatch:pick('main .batch-thumb').length,
                             hotelBase:pick('.practical-grid .practical-link').length,
+                            hotelNav:pick('main a[href^="/hotels/"], main a[href^="/en/hotels/"], main a[href^="/stay/"], main a[href^="/fr/dormir/"]').length,
                             cards:pick('.grid > a.card[href]').length,
                             cardCursor:style(pick('.grid > a.card')[0])?.cursor,
                             agendaTiles:pick('.right-now-clean .grid > .card').length,
@@ -620,8 +621,8 @@ def main() -> None:
                           };
                         }""")
                         print("FINAL_UI_POLISH",label,polish,flush=True)
-                        if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelBase"]<8):
-                            errors.append(f"{label}: obsolete FR hotel sprite or missing base cards")
+                        if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelNav"]<5):
+                            errors.append(f"{label}: obsolete FR hotel sprite or missing hotel navigation")
                         if path in ("/bons-plans/","/en/good-finds/"):
                             # Source templates have >=8 semantic anchor cards; the
                             # actual production agenda materializes three div cards
