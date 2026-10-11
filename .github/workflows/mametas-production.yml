@@ -446,6 +446,9 @@ jobs:
       - name: Harmonize final visual families and Villa Ephrussi image
         run: python scripts/v34_global_visual_family_2026_10_10.py
 
+      - name: Apply final UI polish and cross-family parity
+        run: python scripts/v35_final_ui_polish_2026_10_11.py
+
       - name: Validate bilingual Culture artist spotlight
         run: python scripts/validate_culture_artist_spotlight_2026_10_10.py
 
