@@ -45,8 +45,10 @@ def add_body_class(html, token):
     return html[:m.start()]+new+html[m.end():]
 
 def fix_fr_gay_faq(s):
-    # EN FAQ uses genuine Q+A records; give FR exactly the same functional UX.
-    if 'class="mametas-faq-parity"' in s: return s
+    # Prior materializers may already have created accessible native accordions.
+    if 'class="mametas-faq-parity"' in s or (
+        s.count('<details') >= 5 and ('faq-list' in s or '<h2>FAQ</h2>' in s)
+    ): return s
     anchor='<h2>Quatre portes utiles</h2>'
     if s.count(anchor)!=1:
         raise RuntimeError("FR Gay hub: insertion point changed")
@@ -57,7 +59,11 @@ def fix_fr_gay_faq(s):
     return s.replace(anchor,faq+anchor,1)
 
 def fix_en_gay_faq(s):
-    if 'class="mametas-faq-parity"' in s:return s
+    # In production, the earlier editorial materializer already normalizes
+    # static five-question FAQs into native <details> disclosures.
+    if 'class="mametas-faq-parity"' in s or (
+        s.count('<details') >= 5 and ('faq-list' in s or '<h2>FAQ</h2>' in s)
+    ): return s
     start=s.find('<h2>FAQ</h2>')
     end=s.find('<h2>Four useful doors</h2>',start)
     if start<0 or end<start:raise RuntimeError("EN Gay FAQ boundaries missing")
@@ -231,8 +237,11 @@ def run():
             raise RuntimeError(f"{path}: hotel base guide missing")
     fr=(ROOT/'cote-dazur-gay/index.html').read_text(encoding='utf-8')
     en=(ROOT/'en/gay-french-riviera/index.html').read_text(encoding='utf-8')
-    if '<section class="mametas-faq-parity">' not in fr or '<section class="mametas-faq-parity">' not in en:
-        raise RuntimeError("Gay FAQ parity missing")
+    for lang, html in (('FR',fr),('EN',en)):
+        our_disclosure='<section class="mametas-faq-parity">' in html
+        previous_disclosure=('faq-list' in html or '<h2>FAQ</h2>' in html) and html.count('<details')>=5
+        if not (our_disclosure or previous_disclosure):
+            raise RuntimeError(f"{lang} Gay FAQ parity missing")
     if fr.count('<details>')!=en.count('<details>'):
         raise RuntimeError("Gay FAQ disclosure count mismatch")
     for path in ('en/gay-nice/index.html',
