@@ -11,7 +11,7 @@ from html import escape, unescape
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-CSS = '<link rel="stylesheet" href="/assets/mametas-v35-ui-polish.css?v=1">'
+CSS = '<link rel="stylesheet" href="/assets/mametas-v35-ui-polish.css?v=2">'
 FAQ_PLACE = re.compile(
     r'<div class="place">\s*<h3>(.*?)</h3>\s*<p class="why">(.*?)</p>\s*</div>',
     re.S,
