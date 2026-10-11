@@ -69,6 +69,25 @@ def fix_en_gay_faq(s):
     faq+=''.join(detail(q,a) for q,a in matches)+'</section>'
     return s[:start]+faq+s[end:]
 
+def fix_en_gay_subguide_faq(s, rel):
+    """Convert an existing static Q&A cluster, never alter its actual answers."""
+    if 'class="mametas-faq-parity"' in s:
+        return s
+    pattern = re.compile(
+        r'<h2>FAQ</h2>\\s*((?:<div class="place">\\s*<h3>.*?</h3>\\s*<p class="why">.*?</p>\\s*</div>\\s*)+)',
+        re.S,
+    )
+    matches = list(pattern.finditer(s))
+    if len(matches) != 1:
+        raise RuntimeError(f"{rel}: expected exactly one existing FAQ cluster, got {len(matches)}")
+    questions = FAQ_PLACE.findall(matches[0].group(1))
+    if len(questions) != 3 or FAQ_PLACE.sub('', matches[0].group(1)).strip():
+        raise RuntimeError(f"{rel}: unexpected FAQ markup, not modifying")
+    faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+    faq += ''.join(detail(q, a) for q, a in questions) + '</section>'
+    return s[:matches[0].start()] + faq + s[matches[0].end():]
+
+
 def fix_fr_hotels(s):
     # The broken affiliate-sprite selection has no EN-equivalent asset treatment.
     # Keep the fully functional 10-base guide, delete only its obsolete tail.
@@ -165,6 +184,12 @@ def run():
             s=add_body_class(s,'mametas-restaurant-detail')
         if rel=='en/gay-french-riviera/index.html':s=fix_en_gay_faq(s)
         if rel=='cote-dazur-gay/index.html':s=fix_fr_gay_faq(s)
+        if rel in (
+            'en/gay-nice/index.html',
+            'en/gay-french-riviera/where-to-stay/index.html',
+            'en/gay-french-riviera/beaches-without-a-car/index.html',
+        ):
+            s=fix_en_gay_subguide_faq(s,rel)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
         # One consistent small-scale editorial hierarchy for standard site.css
         # articles (beaches, Practical, Gay, Good Finds, etc.), not V3 intent.
@@ -206,6 +231,12 @@ def run():
         raise RuntimeError("Gay FAQ parity missing")
     if fr.count('<details>')!=en.count('<details>'):
         raise RuntimeError("Gay FAQ disclosure count mismatch")
+    for path in ('en/gay-nice/index.html',
+                 'en/gay-french-riviera/where-to-stay/index.html',
+                 'en/gay-french-riviera/beaches-without-a-car/index.html'):
+        h=(ROOT/path).read_text(encoding='utf-8')
+        if h.count('<section class="mametas-faq-parity">')!=1 or h.count('<details>')!=3:
+            raise RuntimeError(f"{path}: FAQ accordion parity incomplete")
     print(f"V35 PRESENTATION: {modified} pages, {compact} compact editorial pages, "
           f"{card_count} semantic Good Finds cards, {fr.count('<details>')} Gay FAQ pairs, "
           "removed broken FR hotel batch; CSS component rules loaded.")
