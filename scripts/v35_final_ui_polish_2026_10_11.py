@@ -128,7 +128,11 @@ def run():
             s=add_body_class(s,'mametas-compact-article')
             compact+=1
         if rel in ('bons-plans/index.html','en/good-finds/index.html'):
-            cards=re.findall(r'<a class="card" href="[^"]+"',s)
+            # Additional presentation classes are legitimately appended by the
+            # previous materializers; do not require class="card" exactly.
+            cards = [m.group() for m in re.finditer(r'<a\\b[^>]*>', s, re.I)
+                     if re.search(r'class=["\\\'][^"\\\']*(?:^|\\s)card(?:\\s|$)', m.group())
+                     and re.search(r'\\bhref\\s*=', m.group())]
             if len(cards)<8:raise RuntimeError(f"{rel}: card links are not full-card anchors")
             card_count+=len(cards)
         # CSS is a tiny scoped extra stylesheet, appended last, and works
