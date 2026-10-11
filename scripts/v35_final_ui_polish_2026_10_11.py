@@ -242,8 +242,15 @@ def run():
         page=(ROOT/path).read_text(encoding='utf-8')
         if path.startswith('hotels/') and 'batch-thumb' in page:
             raise RuntimeError("FR hotel batch still present")
-        if 'class="practical-grid"' not in page:
-            raise RuntimeError(f"{path}: hotel base guide missing")
+        # Production can replace the legacy .practical-grid with a new layout.
+        # Test the actual destination anchors, not a brittle CSS class.
+        links = set(re.findall(r'<a\b[^>]*href="([^"]+)"', page))
+        bases = [href for href in links if href.startswith(
+            ('/hotels/', '/en/hotels/', '/stay/', '/fr/dormir/')
+        )]
+        if len(bases) < 5:
+            snippet = page[page.find('<main'):][:1100]
+            raise RuntimeError(f"{path}: hotel base navigation missing; links={bases[:10]}; snippet={snippet!r}")
     fr=(ROOT/'cote-dazur-gay/index.html').read_text(encoding='utf-8')
     en=(ROOT/'en/gay-french-riviera/index.html').read_text(encoding='utf-8')
     for lang, html in (('FR',fr),('EN',en)):
