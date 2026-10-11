@@ -15,16 +15,16 @@ FAQ_PLACE = re.compile(
     re.S,
 )
 fr_faq = [
-    ("La Côte d’Azur est-elle gay-friendly ?",
+    ("La Côte d’Azur est-elle gay-friendly ?",
      "Nice possède l’infrastructure LGBTQ+ la plus visible du littoral. Ailleurs, choisissez surtout votre destination en fonction de ce que vous avez envie de faire."),
-    ("Nice ou Cannes pour un séjour gay ?",
+    ("Nice ou Cannes pour un séjour gay ?",
      "Nice pour la vie communautaire et la base sans voiture. Cannes si l’ouest de la Riviera est au centre de votre séjour."),
-    ("Monaco est-il gay-friendly ?",
+    ("Monaco est-il gay-friendly ?",
      "Pour la plupart des voyageurs, Monaco fonctionne mieux comme excursion. Nice reste la meilleure base pour sortir."),
-    ("Quand a lieu la Pride de Nice ?",
+    ("Quand a lieu la Pride de Nice ?",
      "Les dates évoluent. Vérifiez le calendrier LGBTQIA+ officiel avant de réserver autour de l’événement."),
-    ("Faut-il une voiture ?",
-     "Pas pour un premier séjour basé à Nice : train, tram et marche couvrent l’essentiel de la côte. Une voiture aide davantage pour certains hébergements à l’intérieur des terres."),
+    ("Faut-il une voiture ?",
+     "Pas pour un premier séjour basé à Nice : train, tram et marche couvrent l’essentiel de la côte. Une voiture aide davantage pour certains hébergements à l’intérieur des terres."),
 ]
 
 def detail(q, a):
