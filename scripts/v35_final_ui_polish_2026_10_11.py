@@ -74,7 +74,7 @@ def fix_en_gay_subguide_faq(s, rel):
     if 'class="mametas-faq-parity"' in s:
         return s
     pattern = re.compile(
-        r'<h2>FAQ</h2>\\s*((?:<div class="place">\\s*<h3>.*?</h3>\\s*<p class="why">.*?</p>\\s*</div>\\s*)+)',
+        r'<h2>FAQ</h2>\s*((?:<div class="place">\s*<h3>.*?</h3>\s*<p class="why">.*?</p>\s*</div>\s*)+)',
         re.S,
     )
     matches = list(pattern.finditer(s))
