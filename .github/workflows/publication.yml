@@ -1,0 +1,68 @@
+# Circuit de publication : seul chemin vers OVH.
+# Déclenché par chaque modification de la branche de production.
+# Ordre strict : contrôles bloquants, envoi des seules différences, puis
+# vérification de la production. Si un contrôle échoue, rien n'est envoyé.
+# Une seule publication à la fois ; une publication en cours n'est jamais
+# interrompue par la suivante.
+name: Publication
+
+on:
+  push:
+    branches:
+      - mametas-v3
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-ovh
+  cancel-in-progress: false
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Récupérer la version à publier
+        uses: actions/checkout@v4
+
+      - name: Préparer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Préparer Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Contrôles bloquants (avant tout envoi)
+        run: python outils/controles.py
+
+      - name: Installer l'outil SFTP
+        run: python -m pip install --disable-pip-version-check --quiet paramiko==5.0.0
+
+      - name: Envoyer les fichiers différents
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python outils/publier_ovh.py envoyer --sauvegarde avant-publication
+
+      - name: Conserver les versions remplacées
+        if: always() && hashFiles('avant-publication/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: avant-publication-${{ github.sha }}
+          path: avant-publication
+          include-hidden-files: true
+          retention-days: 90
+
+      - name: Vérifier la production
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python outils/publier_ovh.py verifier
