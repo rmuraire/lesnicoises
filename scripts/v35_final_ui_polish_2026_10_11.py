@@ -286,12 +286,7 @@ def run():
             'en/gay-french-riviera/beaches-without-a-car/index.html',
         ):
             s=fix_en_gay_subguide_faq(s,rel)
-        if rel in (
-            'guide-gay-nice/index.html',
-            'cote-dazur-gay/ou-dormir/index.html',
-            'cote-dazur-gay/plages-sans-voiture/index.html',
-            'cote-dazur-gay/itineraire-5-jours/index.html',
-        ):
+        if rel == 'guide-gay-nice/index.html' or rel.startswith('cote-dazur-gay/'):
             s=fix_fr_gay_subguide_faq(s,rel)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
         # One consistent small-scale editorial hierarchy for standard site.css
