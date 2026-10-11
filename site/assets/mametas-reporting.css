@@ -1,0 +1,46 @@
+/* Mametas Reporting — follow the post-audit inner-page type scale.
+   Scoped to the two OAuth pages; do not change the site's general policy template. */
+body.mametas-reporting-page .policy-shell {
+  padding: 64px 24px 96px;
+}
+body.mametas-reporting-page .policy-copy h1 {
+  margin: 10px 0 24px;
+  font-family: var(--serif, "Fraunces", Georgia, serif);
+  font-size: 55px;
+  font-weight: 500;
+  letter-spacing: -.045em;
+  line-height: 1.03;
+}
+body.mametas-reporting-page .policy-copy h2 {
+  margin: 38px 0 12px;
+  font-family: var(--serif, "Fraunces", Georgia, serif);
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -.03em;
+  line-height: 1.12;
+}
+body.mametas-reporting-page .policy-copy .policy-lead {
+  margin-bottom: 38px;
+  font-size: 19px !important;
+  line-height: 1.5 !important;
+}
+@media (max-width: 650px) {
+  body.mametas-reporting-page .policy-shell {
+    padding: 42px 20px 68px;
+  }
+  body.mametas-reporting-page .policy-copy h1 {
+    margin-bottom: 20px;
+    font-size: 38px;
+    line-height: 1.04;
+  }
+  body.mametas-reporting-page .policy-copy h2 {
+    margin-top: 32px;
+    font-size: 26px;
+    line-height: 1.15;
+  }
+  body.mametas-reporting-page .policy-copy .policy-lead {
+    margin-bottom: 30px;
+    font-size: 17px !important;
+    line-height: 1.5 !important;
+  }
+}
