@@ -7,6 +7,7 @@ Runs after V34 and before the browser sweep / OVH deploy. No global CSS edits.
 """
 from pathlib import Path
 from html.parser import HTMLParser
+from html import escape
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,6 +109,35 @@ def fix_beaches_around_nice_images(s):
     )
     return s
 
+def make_event_cards_clickable(s, rel):
+    """Clickable event tiles without breaking their independent official/map links."""
+    if 'right-now-clean' not in s:
+        return s  # Other Good Finds templates already use full <a class="card">.
+    if 'mametas-card-overlay' in s:
+        return s
+    pat = re.compile(r'(<div class="card">)(.*?)(</div>)', re.S)
+    count = [0]
+
+    def wrap(m):
+        inner = m.group(2)
+        cta = re.search(r'<a class="more" href="([^"]+)"', inner)
+        heading = re.search(r'<h3[^>]*>(.*?)</h3>', inner, re.S)
+        if not cta or not heading:
+            raise RuntimeError(f"{rel}: agenda tile missing primary destination or H3")
+        count[0] += 1
+        title = re.sub(r'<[^>]+>', '', heading.group(1)).strip()
+        lang = 'fr' if rel.startswith('bons-plans/') else 'en'
+        label = ('Ouvrir : ' if lang == 'fr' else 'Open: ') + title
+        overlay = (f'<a class="mametas-card-overlay" href="{escape(cta.group(1), quote=True)}" '
+                   f'aria-label="{escape(label, quote=True)}"></a>')
+        return m.group(1) + overlay + inner + m.group(3)
+
+    s, _ = pat.subn(wrap, s)
+    if count[0] < 3:
+        raise RuntimeError(f"{rel}: only {count[0]} agenda cards are fully clickable")
+    return add_body_class(s, 'mametas-good-finds-hub')
+
+
 class CardAnchorCounter(HTMLParser):
     """Count real semantic card anchors, regardless of attribute order/classes."""
     def __init__(self):
@@ -142,13 +172,14 @@ def run():
             s=add_body_class(s,'mametas-compact-article')
             compact+=1
         if rel in ('bons-plans/index.html','en/good-finds/index.html'):
+            s=make_event_cards_clickable(s,rel)
             # Additional presentation classes are legitimately appended by the
             # previous materializers; do not require class="card" exactly.
             parser = CardAnchorCounter()
             parser.feed(s)
-            if parser.count < 8:
+            if parser.count < 8 and s.count('class="mametas-card-overlay"') < 3:
                 raise RuntimeError(
-                    f"{rel}: only {parser.count} full-card anchors found (need 8)"
+                    f"{rel}: no complete clickable card set (anchors={parser.count})"
                 )
             card_count+=parser.count
         # CSS is a tiny scoped extra stylesheet, appended last, and works
