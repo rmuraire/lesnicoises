@@ -245,44 +245,44 @@
       },
       hotels:{
         nice:[
-          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e',note:'Station-friendly and built for easy departures.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://expedia.com/affiliates/nice-hotels-villa-victoria.lh2gcVM',note:'Central calm when you want Nice nearby without putting the city in the bedroom.'},
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-6DtP9e',note:'Station-friendly and built for easy departures.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-wS4XWf',note:'Central calm when you want Nice nearby without putting the city in the bedroom.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'Choose it when the hotel is allowed to become part of the trip.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-provence.PzpsLqs',note:'A smaller, calmer answer when you do not need palace scale.'},
-          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://expedia.com/affiliates/cannes-hotels-cavendish.aINZKEt',note:'Boutique Cannes with enough polish and less ceremony.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://expedia.com/affiliates/cannes-hotels-hotel-martinez.HiABD4g',note:'The Croisette in full Riviera mode.'}
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'A smaller, calmer answer when you do not need palace scale.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Boutique Cannes with enough polish and less ceremony.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'The Croisette in full Riviera mode.'}
         ],
         antibes:[
-          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-letoile.sselo5i',note:'Central and rational when the town matters more than the lobby.'},
-          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://expedia.com/affiliates/cannes-hotels-hotel-la-villa-port-d-antibes-spa.eh0bX1K',note:'A polished, walkable Antibes answer with the port and old town close at hand.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://expedia.com/affiliates/antibes-hotels-hotel-belles-rives.LV3AtZi',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central and rational when the town matters more than the lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'A polished, walkable Antibes answer with the port and old town close at hand.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, the train and a quieter base before hotel theatre.'},
-          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://expedia.com/affiliates/nice-hotels-welcome-hotel.JcZAjpo',note:'The harbour fantasy, with the geography doing most of the seducing.'},
-          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, the train and a quieter base before hotel theatre.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'The harbour fantasy, with the geography doing most of the seducing.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
         ],
         menton:[
-          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'A rational eastern base when the room is not the main event.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://expedia.com/affiliates/monaco-hotels-hotel-napoleon.IbOR18k',note:'Sea + pool for a slower stay without palace economics.'},
-          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://expedia.com/affiliates/monaco-hotels-villa-genesis.4oRKrZj',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-p5q29z',note:'A rational eastern base when the room is not the main event.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Sea + pool for a slower stay without palace economics.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://expedia.com/affiliates/monaco-hotels-monte-carlo-bay-hotel-resort.bfOGHJs',note:'The less ceremonial Monaco answer: resort logic, space and fewer palace rituals.'},
-          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-hermitage-monte-carlo.3aoB6Yg',note:'Classic Monte-Carlo polish without making every minute a performance.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-de-paris-monte-carlo.FVHdPEk',note:'The full palace answer. Choose it because the hotel itself is part of the Monaco decision.'}
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'The less ceremonial Monaco answer: resort logic, space and fewer palace rituals.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Classic Monte-Carlo polish without making every minute a performance.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'The full palace answer. Choose it because the hotel itself is part of the Monaco decision.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://expedia.com/affiliates/gassin-hotels-kube-hotel-saint-tropez.8plL7QK',note:'A more measured peninsula answer when you want access without sleeping in the village theatre.'},
-          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://expedia.com/affiliates/ramatuelle-hotels-la-ferme-daugustin.ffyJPA4',note:'A softer peninsula stay when beach time matters.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://expedia.com/affiliates/saint-tropez-hotels-hotel-la-ponche.tnuw1I6',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'A more measured peninsula answer when you want access without sleeping in the village theatre.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'A softer peninsula stay when beach time matters.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
         ],
         saintpaul:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://expedia.com/affiliates/nice-hotels-hotel-les-messugues.k8B02QK',note:'A quieter village-area stay without making the hotel the whole event.'},
-          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://expedia.com/affiliates/nice-hotels-toile-blanche.4pRKZOK',note:'Art-led, grown-up and suitably removed from the coastal machine.'},
-          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://expedia.com/affiliates/nice-hotels-le-domaine-du-mas-de-pierre.AZB0L82',note:'The retreat version, where staying in is a legitimate part of the plan.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-3YDTgm',note:'A quieter village-area stay without making the hotel the whole event.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-MhrpPEn',note:'Art-led, grown-up and suitably removed from the coastal machine.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'The retreat version, where staying in is a legitimate part of the plan.'}
         ]
       }
     },
@@ -308,7 +308,7 @@
       pace:{
         slow:'Rythme tranquille : le point de chute doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
         balanced:'Rythme équilibré : le point de chute compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
-        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, et la voiture ou le train servent à couvrir davantage de Riviera intelligemment.'
+        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, avec la meilleure liaison disponible, pour couvrir davantage de Riviera intelligemment.'
       },
       priorities:{
         nice:{
@@ -377,44 +377,44 @@
       },
       hotels:{
         nice:[
-          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-66.6jm7Q6e',note:'Près de la gare et pensé pour des départs faciles.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://expedia.com/affiliates/nice-hotels-villa-victoria.lh2gcVM',note:'Du calme au centre quand vous voulez Nice à proximité sans l’avoir dans la chambre.'},
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-6DtP9e',note:'Près de la gare et pensé pour des départs faciles.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-wS4XWf',note:'Du calme au centre quand vous voulez Nice à proximité sans l’avoir dans la chambre.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'À choisir quand l’hôtel a le droit de devenir une partie du voyage.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-provence.PzpsLqs',note:'Une réponse plus petite et plus calme sans échelle palace.'},
-          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://expedia.com/affiliates/cannes-hotels-cavendish.aINZKEt',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://expedia.com/affiliates/cannes-hotels-hotel-martinez.HiABD4g',note:'La Croisette en mode Riviera intégral.'}
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'Une réponse plus petite et plus calme sans échelle palace.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'La Croisette en mode Riviera intégral.'}
         ],
         antibes:[
-          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://expedia.com/affiliates/cannes-hotels-hotel-de-letoile.sselo5i',note:'Central et rationnel quand la ville compte plus que le lobby.'},
-          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://expedia.com/affiliates/cannes-hotels-hotel-la-villa-port-d-antibes-spa.eh0bX1K',note:'Une réponse soignée et piétonne, avec le port et la vieille ville à portée de pas.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://expedia.com/affiliates/antibes-hotels-hotel-belles-rives.LV3AtZi',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central et rationnel quand la ville compte plus que le lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'Une réponse soignée et piétonne, avec le port et la vieille ville à portée de pas.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://expedia.com/affiliates/nice-hotels-hotel-comte-de-nice.T9U8MPv',note:'Beaulieu, le train et un point de chute plus calme avant le théâtre hôtelier.'},
-          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://expedia.com/affiliates/nice-hotels-welcome-hotel.JcZAjpo',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
-          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://expedia.com/affiliates/nice-hotels-grand-hotel-du-cap-ferrat.5mfM9gJ',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, le train et un point de chute plus calme avant le théâtre hôtelier.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
         ],
         menton:[
-          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://expedia.com/affiliates/monaco-hotels-ibis-roquebrune-cap-martin.BShUhQL',note:'Un point de chute rationnel à l’est quand la chambre n’est pas l’événement principal.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://expedia.com/affiliates/monaco-hotels-hotel-napoleon.IbOR18k',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
-          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://expedia.com/affiliates/monaco-hotels-villa-genesis.4oRKrZj',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-p5q29z',note:'Un point de chute rationnel à l’est quand la chambre n’est pas l’événement principal.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://expedia.com/affiliates/monaco-hotels-monte-carlo-bay-hotel-resort.bfOGHJs',note:'La réponse Monaco la moins cérémonielle : logique resort, espace et moins de rituel palace.'},
-          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-hermitage-monte-carlo.3aoB6Yg',note:'Le poli Monte-Carlo classique sans transformer chaque minute en représentation.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://expedia.com/affiliates/monaco-hotels-hotel-de-paris-monte-carlo.FVHdPEk',note:'La réponse palace intégrale. À choisir parce que l’hôtel fait partie de la décision Monaco.'}
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'La réponse Monaco la moins cérémonielle : logique resort, espace et moins de rituel palace.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Le poli Monte-Carlo classique sans transformer chaque minute en représentation.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'La réponse palace intégrale. À choisir parce que l’hôtel fait partie de la décision Monaco.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://expedia.com/affiliates/gassin-hotels-kube-hotel-saint-tropez.8plL7QK',note:'Une réponse plus mesurée sur la presqu’île quand vous voulez l’accès sans dormir dans le théâtre du village.'},
-          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://expedia.com/affiliates/ramatuelle-hotels-la-ferme-daugustin.ffyJPA4',note:'Une version plus douce de la presqu’île quand la plage compte.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://expedia.com/affiliates/saint-tropez-hotels-hotel-la-ponche.tnuw1I6',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'Une réponse plus mesurée sur la presqu’île quand vous voulez l’accès sans dormir dans le théâtre du village.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'Une version plus douce de la presqu’île quand la plage compte.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
         ],
         saintpaul:[
-          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://expedia.com/affiliates/nice-hotels-hotel-les-messugues.k8B02QK',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
-          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://expedia.com/affiliates/nice-hotels-toile-blanche.4pRKZOK',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
-          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://expedia.com/affiliates/nice-hotels-le-domaine-du-mas-de-pierre.AZB0L82',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-3YDTgm',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-MhrpPEn',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
         ]
       }
     }
@@ -488,7 +488,17 @@
     }
 
     var order = (profile.mobility === 'car' ? data.carOrder : data.defaultOrder)[profile.mood] || data.defaultOrder.decide;
-    var exclude = REGIONAL_EXCLUDES[baseId] || [];
+    var exclude = (REGIONAL_EXCLUDES[baseId] || []).slice();
+    // If Cannes wins a balanced, car-free glamour trip, the editorial rule explicitly
+    // says not to turn the stay into an automatic Monaco/Menton day. Keep the
+    // "go further" suggestions on the western/central Riviera so the verdict
+    // and the follow-up recommendations tell the same story.
+    if (baseId === 'cannes' && profile.mobility === 'nocar' &&
+        profile.mood === 'glamour' && profile.pace === 'balanced') {
+      ['monaco','menton'].forEach(function (id) {
+        if (exclude.indexOf(id) < 0) exclude.push(id);
+      });
+    }
     var count = regionalCount(profile, baseId);
     var out = [];
     order.forEach(function (id) {
@@ -600,7 +610,7 @@
       antibes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
       villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less seamless',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
       menton:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€ à €€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
-      monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne: relief + budget',frictionEn:'Medium: hills + spend'},
+      monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne : relief + budget',frictionEn:'Medium: hills + spend'},
       sainttropez:{car:'Voiture ou transferts à prévoir',carEn:'Car or transfers needed',budget:'€€€ à €€€€',friction:'Élevée',frictionEn:'High'},
       saintpaul:{car:'Voiture très utile',carEn:'Car highly useful',budget:'€€ à €€€€',friction:'Moyenne à élevée',frictionEn:'Medium to high'}
     }[baseId];
@@ -1014,6 +1024,7 @@
         }
         state[button.getAttribute('data-group')] = button.getAttribute('data-choice');
         syncButtons();
+        if (typeof button.blur === 'function') button.blur();
         var next = root.querySelector('[data-step]:not([hidden]) [data-choice].is-active');
         return;
       }

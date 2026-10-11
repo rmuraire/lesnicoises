@@ -37,6 +37,7 @@
   function renderRegional() {
     var home = path === "/" || path === "/fr/" || path === "/fr";
     if (!home || document.getElementById("riviera-first-trip-edit")) return;
+    if (Array.from(document.querySelectorAll("h2")).some(function (h) { return /ten reasons to look up|dix raisons|10 raisons/i.test(h.textContent || ""); })) return; // data-static-home-experiences
     var anchor = document.getElementById(fr ? "bases" : "bases") || document.getElementById(fr ? "lieux" : "places");
     if (!anchor) return;
 
@@ -47,7 +48,7 @@
     var cards = items.map(function (item, index) {
       return '<div class="day-card"><span class="day">' + String(index + 1).padStart(2, "0") + '</span><h3>' + item[0] + '</h3><p>' + item[1] + '</p><p><strong>' + (fr ? "Le tri : " : "The edit: ") + '</strong>' + item[3] + '</p><p>' + link(item[2], fr ? "Décider en détail →" : "Make the detailed decision →") + '</p></div>';
     }).join("");
-    section.innerHTML = '<div class="wrap"><div class="section-heading"><div><p class="eyebrow">' + (fr ? "Le premier séjour, vraiment édité" : "The first trip, properly edited") + '</p><h2>' + (fr ? "10 expériences qui structurent vraiment la Côte d’Azur" : "10 experiences that actually shape a first Riviera trip") + '</h2></div><p>' + (fr ? "Pas un Top 50. Dix choix qui donnent une colonne vertébrale à trois, cinq ou sept jours — et quelques permissions très utiles de ne pas tout faire." : "Not a Top 50. Ten choices that give three, five or seven days a spine — plus a few useful permissions not to do everything.") + '</p></div><div class="article-body">' + cards + '</div></div>';
+    section.innerHTML = '<div class="wrap"><div class="section-heading"><div><p class="eyebrow">' + (fr ? "Le premier séjour, vraiment édité" : "The first trip, properly edited") + '</p><h2>' + (fr ? "10 expériences qui structurent vraiment la Côte d’Azur" : "10 experiences that actually shape a first Riviera trip") + '</h2></div><p>' + (fr ? "Pas un Top 50. Dix choix qui donnent une colonne vertébrale à trois, cinq ou sept jours: et quelques permissions très utiles de ne pas tout faire." : "Not a Top 50. Ten choices that give three, five or seven days a spine: plus a few useful permissions not to do everything.") + '</p></div><div class="article-body">' + cards + '</div></div>';
     anchor.parentNode.insertBefore(section, anchor.nextSibling);
   }
 
@@ -63,8 +64,8 @@
     box.id = "mametas-trip-length-edit";
     box.className = "verdict-box";
     box.innerHTML = fr
-      ? '<span>3, 5 ou 7 jours : la vraie différence</span><p><strong>3 jours :</strong> Nice + une journée à l’est + une journée à l’ouest. Coupez, ne compressez pas. <strong>5 jours :</strong> le bon équilibre pour Villefranche, Monaco/Menton et Antibes sans changer d’hôtel. <strong>7 jours :</strong> ajoutez de l’air — une journée lente et une excursion intérieure ou Cannes — plutôt qu’une nouvelle obligation quotidienne.</p><p>' + link('/fr/#riviera-first-trip-edit', 'Voir les 10 expériences qui méritent vraiment le temps →') + '</p>'
-      : '<span>3, 5 or 7 days: what actually changes</span><p><strong>3 days:</strong> Nice + one eastern day + one western day. Cut; do not compress. <strong>5 days:</strong> the sweet spot for Villefranche, Monaco/Menton and Antibes without moving hotels. <strong>7 days:</strong> add air — one slow day and one inland excursion or Cannes — rather than a new obligation every morning.</p><p>' + link('/#riviera-first-trip-edit', 'See the 10 experiences that really deserve the time →') + '</p>';
+      ? '<span>3, 5 ou 7 jours : la vraie différence</span><p><strong>3 jours :</strong> Nice + une journée à l’est + une journée à l’ouest. Coupez, ne compressez pas. <strong>5 jours :</strong> le bon équilibre pour Villefranche, Monaco/Menton et Antibes sans changer d’hôtel. <strong>7 jours :</strong> ajoutez de l’air: une journée lente et une excursion intérieure ou Cannes: plutôt qu’une nouvelle obligation quotidienne.</p><p>' + link('/fr/#riviera-first-trip-edit', 'Voir les 10 expériences qui méritent vraiment le temps →') + '</p>'
+      : '<span>3, 5 or 7 days: what actually changes</span><p><strong>3 days:</strong> Nice + one eastern day + one western day. Cut; do not compress. <strong>5 days:</strong> the sweet spot for Villefranche, Monaco/Menton and Antibes without moving hotels. <strong>7 days:</strong> add air: one slow day and one inland excursion or Cannes: rather than a new obligation every morning.</p><p>' + link('/#riviera-first-trip-edit', 'See the 10 experiences that really deserve the time →') + '</p>';
     target.parentNode.insertBefore(box, target);
   }
 
@@ -75,8 +76,8 @@
     "/riviera-guide/villefranche-cap-ferrat/": [["/fr/planifier/cinq-jours-nice-sans-voiture/#jour-deux", "L’intégrer aux 5 jours"], ["/restaurants/villefranche-sur-mer/", "Choisir le déjeuner sur la rade"], ["/escapades/", "Comparer une autre excursion"]],
     "/en/riviera-guide/antibes/": [["/plan/five-days-nice-no-car/#day-four", "Put Antibes into the itinerary"], ["/en/restaurants/antibes/", "Choose where to eat"], ["/en/beaches/antibes/", "Choose the swim"]],
     "/riviera-guide/antibes/": [["/fr/planifier/cinq-jours-nice-sans-voiture/#jour-quatre", "Mettre Antibes dans le parcours"], ["/restaurants/antibes/", "Choisir où manger"], ["/plages/antibes/", "Choisir la baignade"]],
-    "/en/riviera-guide/monaco/": [["/plan/five-days-nice-no-car/#day-three", "Fit Monaco into the 5-day plan"], ["/en/riviera-guide/menton/", "Continue to Menton — or do not"], ["/en/restaurants/monaco/", "Choose where to eat"]],
-    "/riviera-guide/monaco/": [["/fr/planifier/cinq-jours-nice-sans-voiture/#jour-trois", "Mettre Monaco dans le parcours"], ["/riviera-guide/menton/", "Continuer vers Menton — ou pas"], ["/restaurants/monaco/", "Choisir où manger"]],
+    "/en/riviera-guide/monaco/": [["/plan/five-days-nice-no-car/#day-three", "Fit Monaco into the 5-day plan"], ["/en/riviera-guide/menton/", "Continue to Menton: or do not"], ["/en/restaurants/monaco/", "Choose where to eat"]],
+    "/riviera-guide/monaco/": [["/fr/planifier/cinq-jours-nice-sans-voiture/#jour-trois", "Mettre Monaco dans le parcours"], ["/riviera-guide/menton/", "Continuer vers Menton: ou pas"], ["/restaurants/monaco/", "Choisir où manger"]],
     "/en/riviera-guide/menton/": [["/plan/five-days-nice-no-car/#day-three", "See how Menton fits the plan"], ["/en/riviera-guide/monaco/", "Compare the Monaco pairing"], ["/en/restaurants/menton/", "Choose where to eat"]],
     "/riviera-guide/menton/": [["/fr/planifier/cinq-jours-nice-sans-voiture/#jour-trois", "Voir comment Menton tient dans le parcours"], ["/riviera-guide/monaco/", "Comparer le duo avec Monaco"], ["/restaurants/menton/", "Choisir où manger"]]
   };
@@ -88,10 +89,11 @@
     if (!article) return;
     var body = article.querySelector(".article-body");
     if (!body) return;
+    if (Array.from(body.querySelectorAll(".verdict, .verdict-box")).some(function (node) { return /next decision|prochaine décision/i.test(node.textContent || ""); })) return; // data-static-next-decision
     var block = document.createElement("div");
     block.id = "mametas-next-decision";
     block.className = "verdict-box";
-    block.innerHTML = '<span>' + (fr ? "La prochaine décision" : "The next decision") + '</span><p>' + (fr ? "Vous avez compris le lieu. Maintenant, faites avancer le voyage plutôt que de remonter au menu." : "You understand the place. Now move the trip forward instead of climbing back to the menu.") + '</p><p>' + links.map(function (item) { return link(item[0], item[1] + ' →'); }).join(' &nbsp; ') + '</p>';
+    block.innerHTML = '<span>' + (fr ? "La prochaine décision" : "The next decision") + '</span><p>' + (fr ? "Choisissez maintenant la suite du séjour." : "Choose the next part of the trip.") + '</p><p>' + links.map(function (item) { return link(item[0], item[1] + ' →'); }).join(' &nbsp; ') + '</p>';
     body.appendChild(block);
   }
 

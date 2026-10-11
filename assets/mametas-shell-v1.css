@@ -901,3 +901,569 @@ body.hotel-detail-page .affiliate-cta > a.cta-button.btn--affiliate:focus-visibl
   border-color:#FFFFFF!important;
   color:#14213D!important;
 }
+
+/* Traveller persona transparency — 2026-10-02 */
+.traveller-voice-method,
+.home-hotel-voice-method,
+.solo-voices-method{
+  margin-top:9px!important;
+  padding-top:9px;
+  border-top:1px solid rgba(20,33,61,.12);
+  color:#5f6570!important;
+  font-family:var(--mg-sans,Inter,Arial,sans-serif)!important;
+  font-size:9.5px!important;
+  line-height:1.48!important;
+  opacity:.8;
+}
+.solo-voices-method{
+  max-width:820px;
+  margin-top:14px!important;
+}
+.traveller-voice-method a,
+.home-hotel-voice-method a,
+.solo-voices-method a{
+  color:var(--mg-blue,#176f83)!important;
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px solid currentColor;
+}
+
+
+/* Claude final audit core fixes — 2026-10-06 */
+.btn{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-height:44px!important;
+  padding:0 20px!important;
+  box-sizing:border-box!important;
+  border:1px solid #14213D!important;
+  border-radius:0!important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  text-decoration:none!important;
+}
+.btn--primary{background:#14213D!important;color:#FFFDF8!important}
+.btn--secondary,
+.btn--affiliate{background:transparent!important;color:#14213D!important}
+.btn--affiliate{white-space:normal!important}
+.engine-output,
+.engine-summary{scroll-margin-top:96px!important}
+.engine-base-gate,
+.engine-note{font-size:14px!important;line-height:1.5!important}
+
+/* RF3: result copy that carries decisions must stay readable. */
+.chooser-result-head>p:not(.eyebrow),
+.chooser-alt-grid span,
+.chooser-skip p,
+.chooser-further-head>p,
+.chooser-further-card small,
+.chooser-hotels-head>p,
+.chooser-hotel-card p{
+  font-size:14px!important;
+  line-height:1.55!important;
+}
+
+
+/* Claude final audit lots 1-2 — 2026-10-07 */
+
+/* B6: cross-promo links must remain readable on their light card. */
+body.rg-destination .verdict.ux-cross-promo a{
+  color:#14213D!important;
+  text-decoration:underline!important;
+}
+
+/* B7: destination next-decision copy cannot inherit cream-on-cream verdict colours. */
+body.rg-destination .verdict:not(.ux-cross-promo) .label,
+body.rg-destination .verdict:not(.ux-cross-promo) h2,
+body.rg-destination .verdict:not(.ux-cross-promo) strong{
+  color:inherit;
+}
+
+/* B8 */
+.rg-legacy .mametas-checked{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  white-space:normal!important;
+}
+
+/* B9 */
+@media(max-width:700px){
+  body.about-page h1,
+  body.page-about h1,
+  .about-hero h1{
+    font-size:clamp(34px,9vw,51px)!important;
+    overflow-wrap:break-word!important;
+    hyphens:auto;
+  }
+}
+
+/* C1 / B13: one rule-card and facts primitive outside intent-detail. */
+.verdict:not(.ux-cross-promo){
+  margin:32px 0;
+  padding:24px 28px;
+  background:#14213D;
+  color:#FFFDF8;
+}
+.verdict:not(.ux-cross-promo) .label{
+  display:block;
+  margin:0 0 10px;
+  font:700 11px/1.3 Inter,sans-serif;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:#F7C966;
+}
+.verdict:not(.ux-cross-promo) p{
+  margin:0 0 12px;
+  font-family:var(--serif,"Fraunces",Georgia,serif);
+  font-size:20px;
+  line-height:1.45;
+  color:#FFFDF8;
+}
+.verdict:not(.ux-cross-promo) p:last-child{margin-bottom:0}
+.fact-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:0 0 36px;
+}
+.fact{
+  padding:18px;
+  border:1px solid rgba(20,33,61,.14);
+  background:rgba(255,253,248,.5);
+}
+.fact b{
+  display:block;
+  margin-bottom:6px;
+  font:600 11px/1.3 Inter,sans-serif;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#7A5B1B;
+}
+.fact span{
+  display:block;
+  font-family:var(--serif,"Fraunces",Georgia,serif);
+  font-size:20px;
+  line-height:1.25;
+  color:#14213D;
+}
+/* Practical cards in V3 destinations remain light. */
+body.rg-destination .culture-practical .verdict,
+body.rg-destination .ux-contained-practical .verdict{
+  background:#FFFDF8!important;
+  color:#14213D!important;
+  border:1px solid rgba(122,91,27,.35)!important;
+}
+body.rg-destination .culture-practical .verdict .label,
+body.rg-destination .ux-contained-practical .verdict .label{
+  color:#7A5B1B!important;
+}
+body.rg-destination .culture-practical .verdict p,
+body.rg-destination .ux-contained-practical .verdict p{
+  color:#14213D!important;
+  font-family:Inter,sans-serif!important;
+  font-size:16px!important;
+}
+
+/* C3: long serif decision copy must not become display typography. */
+.verdict-box p,
+.decision-first,
+.traveller-voice blockquote{
+  font-size:20px!important;
+  line-height:1.5!important;
+}
+@media(max-width:700px){
+  .fact-grid{grid-template-columns:1fr}
+  .verdict:not(.ux-cross-promo) p,
+  .verdict-box p,
+  .decision-first,
+  .traveller-voice blockquote{font-size:18px!important}
+}
+
+/* C6: minimum readable sizes. */
+.hotel-hero-media figcaption,
+.culture-hero figcaption,
+.article-visual figcaption{font-size:12px!important;line-height:1.45!important}
+.source-box,
+.sources,
+.sources li,
+.source-list,
+.source-list li,
+.affiliate-note,
+.affiliate-disclosure,
+.traveller-voice-method,
+.home-hotel-voice-method,
+.solo-voices-method,
+.phase4-budget-grid small,
+.style-nav small{font-size:12px!important;line-height:1.5!important}
+.chooser-option,
+.chooser-option span,
+.hotel-engine-choice,
+.hotel-engine-choice span,
+.engine-base-gate,
+.engine-note{font-size:14px!important;line-height:1.45!important}
+
+/* C7 */
+.tag,
+.eyebrow.terracotta,
+.address,
+.place-link,
+.gold,
+.terracotta{color:#7A5B1B}
+a.place-link{color:#14213D!important}
+
+/* C8: tactile text links on mobile. */
+@media(max-width:700px){
+  a.place-link,
+  .style-nav a,
+  .duration-switch a,
+  .plan-duration a,
+  .link-cta{
+    display:inline-flex;
+    align-items:center;
+    min-height:44px;
+  }
+}
+
+/* C20: footer cookie control and disabled Riviera Fit action. */
+.v3-footer [data-cookie-settings],
+.v3-footer .cookie-choices,
+footer [data-cookie-settings],
+footer .cookie-choices{
+  font-size:12px!important;
+  line-height:1.4!important;
+}
+[data-chooser-submit]:disabled{
+  color:#14213D!important;
+  background:#E4E1DA!important;
+  border-color:#E4E1DA!important;
+  opacity:1!important;
+}
+@media(max-width:700px){
+  [data-chooser-submit]{white-space:nowrap!important;font-size:12px!important}
+}
+
+/* C19 early safety: keep prose readable on wide screens. */
+.article-body>p,
+.intent-detail>p,
+.content-wrap>p,
+.hotel-fit-page p,
+.plan-page p{max-width:68ch}
+
+
+/* Claude final audit lot 1 — B6 B7 B8 B9 B13 — 2026-10-07 */
+/* B6: cross-promos on pale cards must never inherit white verdict links. */
+body.rg-destination .verdict.ux-cross-promo a{
+  color:#14213D!important;
+  text-decoration:underline!important;
+}
+
+/* B7/B13: global rule/fact primitives outside intent-detail. */
+.verdict:not(.ux-cross-promo){
+  margin:32px 0!important;
+  padding:24px 28px!important;
+  background:#14213D!important;
+  color:#FFFDF8!important;
+}
+.verdict:not(.ux-cross-promo) .label{
+  display:block!important;
+  margin:0 0 10px!important;
+  font:700 11px/1.3 Inter,sans-serif!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+  color:#F7C966!important;
+}
+.verdict:not(.ux-cross-promo) p,
+.verdict:not(.ux-cross-promo) p strong,
+.verdict:not(.ux-cross-promo) a{
+  color:#FFFDF8!important;
+}
+.verdict:not(.ux-cross-promo) p{
+  margin:0 0 10px!important;
+  font-family:var(--serif)!important;
+  font-size:20px!important;
+  line-height:1.45!important;
+}
+.fact-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:10px!important;
+  margin:0 0 36px!important;
+}
+.fact{
+  padding:18px!important;
+  border:1px solid rgba(20,33,61,.14)!important;
+  background:rgba(255,253,248,.5)!important;
+}
+.fact b{
+  display:block!important;
+  margin-bottom:6px!important;
+  font:600 11px/1.3 Inter,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-transform:uppercase!important;
+  color:#7A5B1B!important;
+}
+.fact span{
+  display:block!important;
+  font-family:var(--serif)!important;
+  font-size:20px!important;
+  line-height:1.25!important;
+  color:#14213D!important;
+}
+
+/* Keep the V3 practical catch light: only its label typography is shared. */
+body.rg-destination.rg-v3 .practical-decision-layer .label{
+  font:700 11px/1.3 Inter,sans-serif!important;
+  letter-spacing:.14em!important;
+  text-transform:uppercase!important;
+  color:#7A5B1B!important;
+}
+
+/* B8: legacy verification badge must stay inside the viewport. */
+.rg-legacy .mametas-checked{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* B9: long institutional H1s must wrap at 390px. */
+@media (max-width:700px){
+  body.about-page h1,
+  body[class*="about"] h1,
+  .about-hero h1{
+    font-size:clamp(34px,9vw,51px)!important;
+    overflow-wrap:break-word!important;
+    hyphens:auto!important;
+  }
+  .fact-grid{grid-template-columns:1fr!important}
+  .verdict:not(.ux-cross-promo) p{font-size:18px!important}
+}
+
+
+/* Claude final audit lot 2 — shared components — 2026-10-07 */
+/* One CTA system. Legacy classes inherit the geometry while HTML is migrated. */
+.btn,
+a.rate-link,
+a.hotel-card-cta,
+a.hotel-card-take,
+a.cta-button,
+a.mametas-activity-cta{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:8px!important;
+  min-height:44px!important;
+  padding:0 20px!important;
+  box-sizing:border-box!important;
+  border-radius:0!important;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-size:12px!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.08em!important;
+  text-transform:uppercase!important;
+  text-decoration:none!important;
+}
+.btn--primary{background:#14213D!important;border:1px solid #14213D!important;color:#FFFDF8!important}
+.btn--secondary,.btn--affiliate{background:transparent!important;border:1px solid #14213D!important;color:#14213D!important}
+a.btn--affiliate{white-space:normal!important}
+
+/* C2: one readable FAQ visual language, including converted legacy gay FAQs. */
+.faq-list{margin:18px 0 42px;border-top:1px solid rgba(20,33,61,.16)}
+.faq-item{border-bottom:1px solid rgba(20,33,61,.16)}
+.faq-item>summary{
+  min-height:52px;
+  padding:15px 34px 15px 0;
+  display:flex;
+  align-items:center;
+  position:relative;
+  cursor:pointer;
+  list-style:none;
+  color:#14213D;
+  font-family:var(--mg-serif,var(--serif,Georgia,serif));
+  font-size:18px;
+  font-weight:600;
+  line-height:1.35;
+}
+.faq-item>summary::-webkit-details-marker{display:none}
+.faq-item>summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-family:Inter,sans-serif;font-size:18px}
+.faq-item[open]>summary::after{content:"−"}
+.faq-answer{padding:0 0 18px}
+.faq-answer p{max-width:68ch!important;margin:0!important;font-family:Inter,sans-serif!important;font-size:16px!important;line-height:1.6!important}
+
+/* C3: oversized serif prose belongs to display headings, not long explanations. */
+.verdict-box p,
+.decision-first,
+.traveller-voice blockquote{
+  font-size:20px!important;
+  line-height:1.5!important;
+}
+body.rg-destination .verdict p{font-size:20px!important}
+@media(max-width:700px){
+  .verdict-box p,.decision-first,.traveller-voice blockquote,
+  body.rg-destination .verdict p{font-size:18px!important}
+}
+body.nice-or-cannes .standfirst,
+.nice-or-cannes .standfirst{font-size:20px!important;line-height:1.55!important}
+
+/* C4: shared hotel-card visual grammar. Structural/missing-card content is lot 4. */
+.hotel-card img,
+.hotel-card-media img,
+.hotel-choice-card img,
+.hotel-pick-card img{
+  width:100%!important;
+  aspect-ratio:3/2!important;
+  object-fit:cover!important;
+}
+.hotel-card h3,.hotel-choice-card h3,.hotel-pick-card h3{
+  font-family:var(--mg-serif,var(--serif,Georgia,serif))!important;
+  font-size:24px!important;
+  line-height:1.12!important;
+}
+.hotel-card-actions{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:14px!important}
+@media(max-width:640px){.hotel-card-actions{display:grid!important;grid-template-columns:1fr!important}.hotel-card-actions .btn{width:100%!important}}
+
+/* C6: readable minimums. */
+.hotel-hero-media figcaption,
+.culture-hero figcaption,
+.article-cover figcaption,
+.source-box,.source-box li,.sources,.sources li,
+.affiliate-inline,.affiliate-note,
+.traveller-voice-method,.home-hotel-voice-method,.solo-voices-method,
+.style-nav small,.phase4-budget-grid small{
+  font-size:12px!important;
+  line-height:1.5!important;
+}
+.chooser-option,.chooser-answer,.engine-option,.engine-answer,
+.chooser-step label,.hotel-fit-page label{
+  font-size:14px!important;
+}
+@media(max-width:600px){
+  .mood-card p,.by-mood-card p,.explore-mood-card p{
+    font-size:14px!important;
+    line-height:1.5!important;
+  }
+}
+
+/* C7: accessible text accents on pale backgrounds. */
+a.place-link{color:#7A5B1B!important}
+.article-body .address,
+.article-body .kicker,
+.article-body .label:not(.verdict .label){
+  color:#A3452D;
+}
+
+/* C8: mobile tap targets. */
+a.place-link,.plan-switcher a,.duration-switcher a,.link-cta{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:44px!important;
+  box-sizing:border-box!important;
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+}
+
+
+/* Claude final audit lot 5 — 2026-10-07 */
+
+/* C9: editorial heading hierarchy should look like one family. */
+.article h2,
+.article-body h2,
+.intent-detail h2,
+.rg-v3-final .article-body h2{
+  font-family:var(--mg-serif,var(--serif,Georgia,serif))!important;
+}
+
+/* C10: legacy destination pages should not feel typographically older. */
+.rg-legacy-final article.article>p,
+.rg-legacy-final .route-step p,
+.rg-legacy-final p.mini-rule{
+  font-size:17px!important;
+  line-height:1.65!important;
+}
+@media(min-width:900px){
+  .rg-legacy-final article.article>h1{font-size:58px!important;line-height:1.02!important}
+}
+@media(max-width:700px){
+  .rg-legacy-final article.article>h1{font-size:clamp(40px,11vw,52px)!important}
+}
+
+/* C11: keep V3 cover/reality-check spacing compact and aligned. */
+.rg-v3-final .article-cover{margin-top:24px!important;margin-bottom:24px!important}
+.rg-v3-final .article-aside h2{text-align:left!important}
+.rg-v3-final .article-layout{align-items:start!important}
+
+/* C13: next-decision links are actions, not inline prose. */
+.next-decision-list{
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:0!important;
+  margin:4px 0 28px!important;
+}
+.next-decision-list .link-cta{
+  width:max-content;
+  max-width:100%;
+  min-height:44px;
+  padding:12px 0!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  color:#14213D!important;
+  font-size:14px!important;
+  font-weight:600!important;
+  line-height:1.35!important;
+  text-decoration:underline!important;
+}
+
+/* C19: comfortable reading measure on wide screens. */
+article.article>p,
+.article-body>p,
+.intent-detail .article-body>p,
+.page-hero .lead,
+.article-hero .article-deck,
+.article .standfirst,
+.intent-detail .standfirst{
+  max-width:68ch!important;
+}
+
+/* C20: small global finishing. */
+.consent-settings{
+  font-size:12px!important;
+  line-height:1.4!important;
+  vertical-align:baseline!important;
+}
+[data-chooser-submit]:disabled,
+.chooser-submit:disabled{
+  background:#E4E1DA!important;
+  border-color:#C8C4BB!important;
+  color:#14213D!important;
+  opacity:1!important;
+}
+@media(max-width:600px){
+  [data-chooser-submit],
+  .chooser-submit{
+    white-space:nowrap!important;
+    font-size:12px!important;
+    letter-spacing:.04em!important;
+    padding-left:12px!important;
+    padding-right:12px!important;
+  }
+  .base-grid .base-card-content p,
+  .mood-card p,
+  .by-mood-card p,
+  .explore-mood-card p{
+    font-size:14px!important;
+    line-height:1.5!important;
+  }
+  .mood-grid,.by-mood-grid,.explore-mood-grid{grid-template-columns:1fr!important}
+  .public-log,.contact-box,.corrections-list,.press-list{
+    margin-left:0!important;margin-right:0!important;
+    max-width:100%!important;box-sizing:border-box!important;
+  }
+}
+
+/* Restaurant price strings must not split (€ / €€€). */
+.price,.price-level,.restaurant-price{white-space:nowrap!important}

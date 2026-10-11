@@ -20,6 +20,22 @@
   var submit = root.querySelector('[data-engine-submit]');
   var cache = {};
   var unsafeAffiliateIds = { 'apollinaire-nice': true };
+  var invalidDetailPaths = {
+    '/en/hotels/nice/hotel-64-nice/': true,
+    '/hotels/nice/hotel-64-nice/': true,
+    '/en/hotels/nice/hotel-florence-nice/': true,
+    '/hotels/nice/hotel-florence-nice/': true,
+    '/en/hotels/nice/hotel-byakko-nice/': true,
+    '/hotels/nice/hotel-byakko-nice/': true,
+    '/en/hotels/nice/hotel-khla-nice/': true,
+    '/hotels/nice/hotel-khla-nice/': true,
+    '/en/hotels/nice/hotel-amour-nice/': true,
+    '/hotels/nice/hotel-amour-nice/': true,
+    '/en/hotels/nice/hotel-aston-la-scala/': true,
+    '/hotels/nice/hotel-aston-la-scala/': true,
+    '/en/hotels/nice/hotel-west-end-nice-promenade/': true,
+    '/hotels/nice/hotel-west-end-nice-promenade/': true
+  };
 
   var bases = fr ? [
     { id:'nice', label:'Nice', path:'/fr/dormir/nice/', dataPath:'/assets/hotel-finder-nice.json?v=2', stationFriendly:true, noCarFriendly:true },
@@ -51,6 +67,7 @@
     chooseBase:'Choisissez d’abord votre base. Si vous hésitez encore entre les villes, commencez par Riviera Fit.',
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
     none:'Aucune adresse Mametas disponible pour cette base.',
+    budgetFallback:function(symbol){ return 'Aucune adresse de cette base ne respecte ce plafond. Voici les options Mametas les plus proches en ' + symbol + ', clairement signalées comme au-dessus du budget.'; },
     closest:function(n){ return 'Aucune correspondance exacte. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ', avec les critères qu’il faut accepter de relâcher.'; },
     count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
     bestFor:'Idéal pour',
@@ -67,6 +84,7 @@
     chooseBase:'Choose your base first. If you are still deciding between towns, start with Riviera Fit.',
     changed:'Your choices changed. Run the shortlist again when you are done.',
     none:'No Mametas hotel is currently available for this base.',
+    budgetFallback:function(symbol){ return 'Nothing in this base sits within that budget ceiling. Here are the closest Mametas options at ' + symbol + ', clearly flagged as above budget.'; },
     closest:function(n){ return 'No exact match. Here ' + (n === 1 ? 'is the closest Mametas compromise' : 'are the ' + n + ' closest Mametas compromises') + ', with the trade-offs made explicit.'; },
     count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
     bestFor:'Best for',
@@ -442,20 +460,24 @@
     return '';
   }
 
-  function render(shortlist, rankedSelection, relaxed) {
-    summary.textContent = relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length);
+  function render(shortlist, rankedSelection, relaxed, budgetRaised, budgetSymbol) {
+    summary.textContent = budgetRaised ? labels.budgetFallback(budgetSymbol) : (relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length));
     results.innerHTML = shortlist.map(function(hotel, index){
       var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
       var bestFor = bestForText(hotel);
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+      if (budgetRaised) {
+        tradeOff = (fr ? 'Budget : ' : 'Budget: ') + (priceSymbol[hotel.priceBand] || budgetSymbol || '') + (fr ? ', au-dessus de votre plafond. ' : ', above your ceiling. ') + tradeOff;
+      }
       var actions = [];
       var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
-      if (hotel.detailPath) {
-        actions.push('<a class="button hotel-engine-editorial" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>');
+      if (fitStatus && budgetRaised) fitStatus += fr ? ' · AU-DESSUS DU BUDGET' : ' · ABOVE BUDGET';
+      if (hotel.detailPath && !invalidDetailPaths[hotel.detailPath]) {
+        actions.push('<a class="btn btn--primary hotel-engine-editorial" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>');
       }
       if (hotel.affiliate) {
-        actions.push('<a class="button secondary hotel-engine-affiliate" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>');
+        actions.push('<a class="btn btn--affiliate hotel-engine-affiliate" href="' + esc(hotel.affiliate) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="' + affiliateNetwork(hotel.affiliate) + '" data-affiliate-hotel="' + esc(hotel.id) + '">' + labels.rates + '</a>');
       }
       var action = actions.join('');
       return '<article class="hotel-engine-result' + (hotel.media ? ' has-media' : '') + '">' +
@@ -477,7 +499,7 @@
     results.insertAdjacentHTML('afterend',
       '<div class="hotel-engine-after-results" data-engine-after-results>' +
         '<p class="engine-disclosure" data-engine-disclosure>' + labels.disclosure + '</p>' +
-        '<button class="button secondary hotel-engine-reset" type="button" data-engine-reset>' + labels.reset + '</button>' +
+        '<button class="btn btn--secondary hotel-engine-reset" type="button" data-engine-reset>' + labels.reset + '</button>' +
       '</div>'
     );
   }
@@ -528,10 +550,35 @@
       }
 
       var relaxed = false;
+      var budgetRaised = false;
+      var budgetSymbol = '';
       var rankedSource = matching;
       if (!rankedSource.length) {
         relaxed = true;
         rankedSource = inventory.filter(function(h){ return state.base === 'any' || h.base === state.base; });
+
+        if (state.budget !== 'any') {
+          var ceiling = priceLevel[state.budget] || 4;
+          var withinCeiling = rankedSource.filter(function(h){
+            var hotelPrice = priceLevel[h.priceBand] || 0;
+            return hotelPrice > 0 && hotelPrice <= ceiling;
+          });
+          if (withinCeiling.length) {
+            rankedSource = withinCeiling;
+          } else {
+            var aboveCeiling = rankedSource.filter(function(h){
+              return (priceLevel[h.priceBand] || 0) > ceiling;
+            });
+            if (aboveCeiling.length) {
+              var nearestLevel = Math.min.apply(null, aboveCeiling.map(function(h){ return priceLevel[h.priceBand] || 99; }));
+              rankedSource = aboveCeiling.filter(function(h){ return (priceLevel[h.priceBand] || 0) === nearestLevel; });
+              budgetRaised = true;
+              budgetSymbol = rankedSource.length ? (priceSymbol[rankedSource[0].priceBand] || '') : '';
+            } else {
+              rankedSource = [];
+            }
+          }
+        }
       }
 
       var ranked = rankedSource
@@ -539,7 +586,7 @@
         .sort(function(a,b){ return b._score - a._score || (a._order || 0) - (b._order || 0) || a.name.localeCompare(b.name); });
       var candidates = selectDiverse(ranked, 12);
       return Promise.all(candidates.map(resolveAffiliate)).then(function(resolved){
-        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed };
+        return { hotels:resolved.filter(Boolean), wholeBase:false, relaxed:relaxed, budgetRaised:budgetRaised, budgetSymbol:budgetSymbol };
       });
     }).then(function(payload){
       var clean = payload.hotels;
@@ -549,7 +596,7 @@
         results.innerHTML = '';
         return;
       }
-      render(shortlist, !payload.wholeBase, !!payload.relaxed);
+      render(shortlist, !payload.wholeBase, !!payload.relaxed, !!payload.budgetRaised, payload.budgetSymbol || '');
       track('hotel_fit_shortlist', {
         base: state.base,
         style: state.style,
@@ -578,6 +625,7 @@
         other.classList.toggle('is-active', active);
         other.setAttribute('aria-pressed', active ? 'true' : 'false');
       });
+      if (typeof button.blur === 'function') button.blur();
       if (!output.hidden) {
         clearDisclosure();
         results.innerHTML = '';

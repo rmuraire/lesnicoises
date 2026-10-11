@@ -13,8 +13,8 @@
           ["Castle Hill", "The fastest way to understand Nice geographically: Baie des Anges on one side, port on the other. There is no castle. The view has coped.", "#", "Worth it: for a first visit, yes."],
           ["The Port + Cap de Nice", "Walk east from Port Lympia towards Franck Pilatte for a less ceremonial coastline and a city that suddenly lowers its voice.", "/en/beaches/nice/", "The catch: save proper shoes for the coastal path."],
           ["One proper swim", "Nice is not a seaside backdrop. Get in. Ponchettes is easy; La Réserve and Coco Beach change the mood.", "/en/beaches/nice/", "Skip if: rough sea or conditions say no. The Mediterranean wins arguments."],
-          ["Cimiez — if you have a second day", "Matisse, Roman remains, olive gardens and the monastery gardens make this the useful counterpoint to seafront Nice.", "/en/culture/", "Worth it: with two days. Skip if: you are compressing Nice into one."],
-          ["The Promenade — but not all of it", "Walk enough of the Promenade des Anglais to understand the scale of the bay. Seven kilometres is a fact, not an assignment.", "/en/riviera-guide/nice/", "Mametas edit: see it; do not spend the entire day proving you did."]
+          ["Cimiez: if you have a second day", "Matisse, Roman remains, olive gardens and the monastery gardens make this the useful counterpoint to seafront Nice.", "/en/culture/", "Worth it: with two days. Skip if: you are compressing Nice into one."],
+          ["The Promenade: but not all of it", "Walk enough of the Promenade des Anglais to understand the scale of the bay. Seven kilometres is a fact, not an assignment.", "/en/riviera-guide/nice/", "Mametas edit: see it; do not spend the entire day proving you did."]
         ]
       },
       fr: {
@@ -25,8 +25,8 @@
           ["La Colline du Château", "Le moyen le plus rapide de comprendre Nice : baie des Anges d’un côté, port de l’autre. Le château n’existe plus. La vue s’en remet très bien.", "#", "À faire : oui, pour une première visite."],
           ["Le Port + le Cap de Nice", "Marchez vers l’est depuis Port Lympia jusqu’à Franck Pilatte : la côte devient moins cérémonieuse et la ville baisse soudain d’un ton.", "/plages/nice/", "Le piège : prévoyez de vraies chaussures pour le sentier littoral."],
           ["Une vraie baignade", "Nice n’est pas un décor maritime. Entrez dans l’eau. Ponchettes est simple ; La Réserve et Coco Beach changent l’ambiance.", "/plages/nice/", "À ignorer si la mer est mauvaise. Sur ce point, elle décide."],
-          ["Cimiez — si vous avez un deuxième jour", "Matisse, vestiges romains, oliveraie et jardins du monastère offrent le bon contrepoint au Nice du bord de mer.", "/culture/", "À faire : avec deux jours. À laisser : si vous compressez Nice en une journée."],
-          ["La Promenade — mais pas ses 7 km", "Marchez assez sur la Promenade des Anglais pour comprendre l’échelle de la baie. Sept kilomètres est une mesure, pas une consigne.", "/riviera-guide/nice/", "Le tri Mametas : la voir, oui ; y consacrer toute la journée, non."]
+          ["Cimiez: si vous avez un deuxième jour", "Matisse, vestiges romains, oliveraie et jardins du monastère offrent le bon contrepoint au Nice du bord de mer.", "/culture/", "À faire : avec deux jours. À laisser : si vous compressez Nice en une journée."],
+          ["La Promenade: mais pas ses 7 km", "Marchez assez sur la Promenade des Anglais pour comprendre l’échelle de la baie. Sept kilomètres est une mesure, pas une consigne.", "/riviera-guide/nice/", "Le tri Mametas : la voir, oui ; y consacrer toute la journée, non."]
         ]
       }
     },
@@ -35,28 +35,28 @@
         ["Villefranche old town + harbour","Walk down through the old town to the waterfront before doing anything ambitious. The bay is not the transfer point; it is the reason you came.","/en/restaurants/villefranche-sur-mer/","Worth it: first, before the peninsula."],
         ["A swim in Villefranche","This is one of the places where building the day around a swim makes sense rather than feeling like lost sightseeing time.","/en/beaches/","The catch: summer rewards an early start."],
         ["One Cap-Ferrat coastal walk","Choose a section of coast and actually walk it. The peninsula makes more sense at foot speed than through a taxi window.","/en/day-trips/cap-ferrat-a-pied/","Worth it: if shoes and heat agree."],
-        ["Villa Ephrussi — if gardens are your thing","A strong single cultural stop on the peninsula. Pair it with a walk or swim, not an inventory of every villa nearby.","/en/culture/","Skip if: gardens leave you cold. Beauty is not compulsory homework."],
+        ["Villa Ephrussi: if gardens are your thing","A strong single cultural stop on the peninsula. Pair it with a walk or swim, not an inventory of every villa nearby.","/en/culture/","Skip if: gardens leave you cold. Beauty is not compulsory homework."],
         ["One long lunch, not three rushed sights","Villefranche and Cap-Ferrat reward slack in the schedule. Protect some.","/en/restaurants/villefranche-sur-mer/","Mametas rule: one peninsula, one main objective."]]},
       fr: {title:"Les indispensables : Villefranche & Cap-Ferrat",intro:"La rade est le sujet. Inutile de l’enterrer sous douze étapes.",items:[
         ["Vieille ville + port de Villefranche","Descendez par la vieille ville jusqu’au front de mer avant toute ambition supplémentaire. La rade n’est pas un point de correspondance : c’est la raison de venir.","/restaurants/villefranche-sur-mer/","À faire : en premier, avant la presqu’île."],
         ["Une baignade à Villefranche","Ici, construire la journée autour d’une baignade a du sens ; ce n’est pas du temps volé aux visites.","/plages/","Le piège : en été, commencez tôt."],
         ["Un morceau du sentier du Cap-Ferrat","Choisissez une portion de côte et marchez-la vraiment. La presqu’île se comprend mieux à vitesse humaine que depuis un taxi.","/escapades/cap-ferrat-a-pied/","À faire : si chaussures et chaleur sont d’accord."],
-        ["Villa Ephrussi — si les jardins vous parlent","Un excellent grand arrêt culturel sur la presqu’île. Associez-le à une marche ou une baignade, pas à l’inventaire des villas voisines.","/culture/","À laisser si les jardins vous indiffèrent. La beauté n’est pas un devoir scolaire."],
+        ["Villa Ephrussi: si les jardins vous parlent","Un excellent grand arrêt culturel sur la presqu’île. Associez-le à une marche ou une baignade, pas à l’inventaire des villas voisines.","/culture/","À laisser si les jardins vous indiffèrent. La beauté n’est pas un devoir scolaire."],
         ["Un long déjeuner plutôt que trois visites pressées","Villefranche et Cap-Ferrat récompensent le vide dans l’agenda. Protégez-en un peu.","/restaurants/villefranche-sur-mer/","Règle Mametas : une presqu’île, un objectif principal."]]}
     },
     antibes: {
       en:{title:"What not to miss in Antibes",intro:"Antibes works because the essentials fit together. Resist the urge to add an entire cape before lunch.",items:[
-        ["Old Antibes + the ramparts","Walk the old town, market area and ramparts as one sequence. This is the core of Antibes, not the warm-up.","/en/restaurants/antibes/","Worth it: absolutely."],
+        ["Old Antibes + the ramparts","Walk the old town, market area and ramparts as one sequence. This is the core of Antibes, not the warm-up.","/en/riviera-guide/antibes/#what-not-to-miss","Worth it: absolutely."],
         ["Picasso Museum","The museum occupies the Château Grimaldi and is the cultural stop that most naturally belongs in a first Antibes day.","/en/culture/picasso-museum-antibes/","The catch: closed Mondays; check current hours."],
         ["La Gravette","A sandy beach beside the old town is an unusually convenient Riviera proposition. Use it.","/en/beaches/antibes/","Worth it: for an easy swim without reorganising the day."],
-        ["Cap d’Antibes — only with time","The Cap deserves a separate rhythm: coves, walks and hotels rather than a quick extension of the centre.","/en/beaches/antibes/","Skip if: you only have one day and are already enjoying town."],
-        ["Cannes — only if you want Cannes","The train makes it easy. That does not make it mandatory.","/en/riviera-guide/nice-or-cannes/","Mametas edit: add the Croisette for glamour, not for completionism."]]},
+        ["Cap d’Antibes: only with time","The Cap deserves a separate rhythm: coves, walks and hotels rather than a quick extension of the centre.","/en/riviera-guide/antibes/#cap","Skip if: you only have one day and are already enjoying town."],
+        ["Cannes: only if you want Cannes","The train makes it easy. That does not make it mandatory.","/en/riviera-guide/nice-or-cannes/","Mametas edit: add the Croisette for glamour, not for completionism."]]},
       fr:{title:"Les choses à voir absolument à Antibes",intro:"Antibes fonctionne parce que l’essentiel tient bien ensemble. Résistez à l’envie d’ajouter tout le Cap avant le déjeuner.",items:[
-        ["Vieil Antibes + remparts","Faites vieille ville, marché et remparts dans un même mouvement. C’est le cœur d’Antibes, pas l’échauffement.","/restaurants/antibes/","À faire : sans hésiter."],
+        ["Vieil Antibes + remparts","Faites vieille ville, marché et remparts dans un même mouvement. C’est le cœur d’Antibes, pas l’échauffement.","/riviera-guide/antibes/#indispensables","À faire : sans hésiter."],
         ["Musée Picasso","Installé dans le château Grimaldi, c’est l’arrêt culturel qui s’intègre le plus naturellement à une première journée à Antibes.","/culture/musee-picasso-antibes/","Le piège : fermé le lundi ; vérifiez les horaires."],
         ["La Gravette","Une plage de sable collée à la vieille ville est une proposition assez rare sur la Riviera. Profitez-en.","/plages/antibes/","À faire : pour se baigner sans réorganiser toute la journée."],
-        ["Cap d’Antibes — seulement si vous avez le temps","Le Cap mérite un autre rythme : criques, promenades et hôtels plutôt qu’une extension rapide du centre.","/plages/antibes/","À laisser : si vous n’avez qu’une journée et que la ville vous retient déjà."],
-        ["Cannes — seulement si vous voulez vraiment Cannes","Le train rend l’ajout facile. Il ne le rend pas obligatoire.","/riviera-guide/nice-ou-cannes/","Le tri Mametas : ajoutez la Croisette pour le glamour, pas pour compléter une collection."]]}
+        ["Cap d’Antibes: seulement si vous avez le temps","Le Cap mérite un autre rythme : criques, promenades et hôtels plutôt qu’une extension rapide du centre.","/riviera-guide/antibes/#cap","À laisser : si vous n’avez qu’une journée et que la ville vous retient déjà."],
+        ["Cannes: seulement si vous voulez vraiment Cannes","Le train rend l’ajout facile. Il ne le rend pas obligatoire.","/riviera-guide/nice-ou-cannes/","Le tri Mametas : ajoutez la Croisette pour le glamour, pas pour compléter une collection."]]}
     },
     monaco: {
       en:{title:"What not to miss in Monaco",intro:"Monaco is small enough to edit hard. Four priorities are plenty for a first day.",items:[
@@ -64,13 +64,13 @@
         ["Oceanographic Museum","If you choose one major attraction, this is the most distinctive first-trip candidate and sits naturally on the Rock.","/en/culture/","The catch: allow real time; it is not a twenty-minute photo stop."],
         ["Port Hercule on foot","Walk between the Rock and Monte-Carlo rather than teleporting between icons. The harbour explains a lot about the place.","/en/restaurants/monaco/","Worth it: as the connective tissue, not another box."],
         ["Monte-Carlo + Casino square","See the architecture and spectacle even if gambling and luxury shopping are not your hobbies.","/en/riviera-guide/monaco/","Skip if: you planned an afternoon of shop-window anthropology."],
-        ["Menton afterwards — only if Monaco stays edited","The pair works by contrast: Monaco performs, Menton exhales.","/en/riviera-guide/menton/","The catch: two full museum programmes do not fit into one civilised day."]]},
+        ["Menton afterwards: only if Monaco stays edited","The pair works by contrast: Monaco performs, Menton exhales.","/en/riviera-guide/menton/","The catch: two full museum programmes do not fit into one civilised day."]]},
       fr:{title:"Les choses à voir absolument à Monaco",intro:"Monaco est assez petit pour trier sévèrement. Quatre priorités suffisent largement à une première journée.",items:[
         ["Le Rocher + Monaco-Ville","Commencez par la vieille ville et le secteur du Palais. Vous aurez l’histoire et la hauteur avant le théâtre plus poli d’en bas.","/riviera-guide/monaco/","À faire : oui. La verticalité fait partie de la visite."],
         ["Musée océanographique","S’il faut choisir une grande visite, c’est la candidate la plus singulière pour une première fois et elle s’insère naturellement sur le Rocher.","/culture/","Le piège : prévoyez du temps ; ce n’est pas un arrêt photo de vingt minutes."],
         ["Port Hercule à pied","Marchez entre le Rocher et Monte-Carlo plutôt que de téléporter votre visite d’icône en icône. Le port explique beaucoup de Monaco.","/restaurants/monaco/","À faire : comme lien entre les lieux, pas comme case supplémentaire."],
         ["Monte-Carlo + place du Casino","Regardez l’architecture et le spectacle même si le jeu et le shopping de luxe ne sont pas vos hobbies.","/riviera-guide/monaco/","À laisser : l’après-midi entier à observer les vitrines et leurs propriétaires."],
-        ["Menton ensuite — seulement si Monaco reste édité","Le duo fonctionne par contraste : Monaco montre, Menton respire.","/riviera-guide/menton/","Le piège : deux programmes complets de musées ne tiennent pas dans une journée civilisée."]]}
+        ["Menton ensuite: seulement si Monaco reste édité","Le duo fonctionne par contraste : Monaco montre, Menton respire.","/riviera-guide/menton/","Le piège : deux programmes complets de musées ne tiennent pas dans une journée civilisée."]]}
     },
     menton: {
       en:{title:"What not to miss in Menton",intro:"Menton is best when you stop trying to justify the train ride with quantity.",items:[
@@ -106,6 +106,7 @@
       return;
     }
     var body = document.querySelector(".article-body") || document.querySelector("article.article");
+    if (document.querySelector(".city-must-list")) return;
     if (!body || body.querySelector("[data-mametas-must-see]")) return;
     var section = document.createElement("section");
     section.setAttribute("data-mametas-must-see", "true");

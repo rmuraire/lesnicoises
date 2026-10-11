@@ -204,7 +204,15 @@
     button.setAttribute("data-consent-settings","true");
     button.textContent = copy.settings;
     button.addEventListener("click",function(){showBanner(true);});
-    var links = footer.querySelector(".privacy-links") || footer;
+    var links = footer.querySelector(".privacy-links");
+    var wrap = footer.querySelector(":scope > .wrap") || footer.querySelector(".wrap");
+    if(!links){
+      links = document.createElement("div");
+      links.className = "privacy-links";
+      (wrap || footer).appendChild(links);
+    }else if(wrap && links.parentElement === footer){
+      wrap.appendChild(links);
+    }
     links.appendChild(button);
   }
 

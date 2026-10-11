@@ -23,13 +23,13 @@
       if (path.indexOf("/riviera-guide/") === 0) return 1;
       if (path.indexOf("/fr/dormir/") === 0 || path.indexOf("/hotels/") === 0) return 2;
       if (path.indexOf("/explore/") === 0 || path.indexOf("/culture/") === 0 || path.indexOf("/restaurants/") === 0 || path.indexOf("/plages/") === 0 || path.indexOf("/escapades/") === 0) return 3;
-      if (path.indexOf("/pratique/") === 0 || path.indexOf("/bons-plans/transfert-aeroport-nice/") === 0 || path.indexOf("/bons-plans/train-ou-bus/") === 0 || path.indexOf("/bons-plans/que-reserver/") === 0 || path.indexOf("/bons-plans/nice-quand-il-pleut/") === 0) return 4;
+      if (path.indexOf("/pratique/") === 0 || path.indexOf("/bons-plans/transfert-aeroport-nice/") === 0 || path.indexOf("/bons-plans/train-ou-bus/") === 0 || path.indexOf("/bons-plans/que-reserver/") === 0 || path.indexOf("/bons-plans/nice-quand-il-pleut/") === 0 || path.indexOf("/bons-plans/erreurs-riviera/") === 0) return 4;
     } else {
       if (path.indexOf("/en/riviera-fit/") === 0 || path.indexOf("/plan/") === 0) return 0;
       if (path.indexOf("/en/riviera-guide/") === 0) return 1;
       if (path.indexOf("/stay/") === 0 || path.indexOf("/en/hotels/") === 0) return 2;
       if (path.indexOf("/en/explore/") === 0 || path.indexOf("/en/culture/") === 0 || path.indexOf("/en/restaurants/") === 0 || path.indexOf("/en/beaches/") === 0 || path.indexOf("/en/day-trips/") === 0) return 3;
-      if (path.indexOf("/en/practical/") === 0 || path.indexOf("/en/good-finds/nice-airport-transfer/") === 0 || path.indexOf("/en/good-finds/train-or-bus/") === 0 || path.indexOf("/en/good-finds/what-to-book/") === 0 || path.indexOf("/en/good-finds/nice-in-the-rain/") === 0) return 4;
+      if (path.indexOf("/en/practical/") === 0 || path.indexOf("/en/good-finds/nice-airport-transfer/") === 0 || path.indexOf("/en/good-finds/train-or-bus/") === 0 || path.indexOf("/en/good-finds/what-to-book/") === 0 || path.indexOf("/en/good-finds/nice-in-the-rain/") === 0 || path.indexOf("/en/good-finds/riviera-mistakes/") === 0) return 4;
     }
     return -1;
   }
@@ -525,3 +525,6 @@
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run,{once:true}); else run();
 })();
+
+/* mametas-affiliate-outbound-2026-10-01 */
+document.addEventListener('click',function(e){var a=e.target.closest('a[data-affiliate-network]');if(!a)return;if(typeof window.gtag==='function'){window.gtag('event','affiliate_outbound',{affiliate_network:a.getAttribute('data-affiliate-network')||'',hotel:a.getAttribute('data-affiliate-hotel')||'',page_path:location.pathname});}});
