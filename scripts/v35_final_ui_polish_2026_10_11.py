@@ -77,6 +77,34 @@ def fix_fr_hotels(s):
         raise RuntimeError("Refusing to remove a non-batch Stay section")
     return s[:start]+s[end:]
 
+def fix_beaches_around_nice_images(s):
+    # Three 2026-local image paths in FR+EN pointed to files never committed.
+    # Use verified exact-location public-domain/CC Commons sources instead
+    # of quietly displaying broken image rectangles.
+    photos = {
+        '/assets/editorial/beaches/fossettes-commons.jpg?v=20260926-final':
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Cap-Ferrat_les_Fossettes.jpg',
+        '/assets/editorial/beaches/passable-pexels.jpg?v=20260926-final':
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Plage_de_Passable.jpg',
+        '/assets/editorial/beaches/mala-commons.jpg?v=20260926-final':
+            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Plage_Mala%2C_Cap_d%27Ail_-_panoramio.jpg',
+    }
+    for before,after in photos.items():
+        if before not in s and after not in s:
+            raise RuntimeError(f"Missing source photo markup: {before}")
+        s=s.replace(before,after)
+    # License/source for Passable changed: Pexels generic coast -> documented
+    # exact Plage de Passable image by Tangopaso (public domain).
+    s=s.replace(
+        '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>',
+        '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_Passable.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · domaine public</a>',
+    )
+    s=s.replace(
+        '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>',
+        '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_Passable.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
+    )
+    return s
+
 def run():
     modified=0; compact=0; card_count=0
     files=list(ROOT.rglob('index.html'))
@@ -85,6 +113,8 @@ def run():
         rel=f.relative_to(ROOT).as_posix()
         s=f.read_text(encoding='utf-8')
         old=s
+        if rel in ('plages/autour-de-nice/index.html','en/beaches/around-nice/index.html'):
+            s=fix_beaches_around_nice_images(s)
         if rel=='en/gay-french-riviera/index.html':s=fix_en_gay_faq(s)
         if rel=='cote-dazur-gay/index.html':s=fix_fr_gay_faq(s)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
