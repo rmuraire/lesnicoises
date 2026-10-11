@@ -49,13 +49,13 @@ def fix_scripts():
         # affiliate materializer. Insert its intended listener in that case.
         if AFFILIATE_MARK not in text:
             text += (
-                "\\n/* " + AFFILIATE_MARK + " */\\n"
+                "\n/* " + AFFILIATE_MARK + " */\n"
                 "document.addEventListener('click',function(e){"
                 "var a=e.target.closest('a[data-affiliate-network]');if(!a)return;"
                 "if(typeof window.gtag==='function'){window.gtag('event','affiliate_outbound',"
                 "{affiliate_network:a.getAttribute('data-affiliate-network')||'',"
                 "hotel:a.getAttribute('data-affiliate-hotel')||'',page_path:location.pathname});}"
-                "});\\n"
+                "});\n"
             )
         if text.count(AFFILIATE_MARK) != 1:
             raise RuntimeError(rel + ": outbound tracking marker absent/duplicated")
