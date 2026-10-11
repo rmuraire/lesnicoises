@@ -6,6 +6,7 @@ five existing FAQ answers into the FR Gay hub to match its EN sibling.
 Runs after V34 and before the browser sweep / OVH deploy. No global CSS edits.
 """
 from pathlib import Path
+from html.parser import HTMLParser
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,6 +108,19 @@ def fix_beaches_around_nice_images(s):
     )
     return s
 
+class CardAnchorCounter(HTMLParser):
+    """Count real semantic card anchors, regardless of attribute order/classes."""
+    def __init__(self):
+        super().__init__()
+        self.count = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != 'a':
+            return
+        data = dict(attrs)
+        if data.get('href') and 'card' in (data.get('class') or '').split():
+            self.count += 1
+
 def run():
     modified=0; compact=0; card_count=0
     files=list(ROOT.rglob('index.html'))
@@ -130,11 +144,13 @@ def run():
         if rel in ('bons-plans/index.html','en/good-finds/index.html'):
             # Additional presentation classes are legitimately appended by the
             # previous materializers; do not require class="card" exactly.
-            cards = [m.group() for m in re.finditer(r'<a\\b[^>]*>', s, re.I)
-                     if re.search(r'class=["\\\'][^"\\\']*(?:^|\\s)card(?:\\s|$)', m.group())
-                     and re.search(r'\\bhref\\s*=', m.group())]
-            if len(cards)<8:raise RuntimeError(f"{rel}: card links are not full-card anchors")
-            card_count+=len(cards)
+            parser = CardAnchorCounter()
+            parser.feed(s)
+            if parser.count < 8:
+                raise RuntimeError(
+                    f"{rel}: only {parser.count} full-card anchors found (need 8)"
+                )
+            card_count+=parser.count
         # CSS is a tiny scoped extra stylesheet, appended last, and works
         # across currently materialized HTML/links without changing source CSS.
         needs_css = ('class="article"' in s or 'class="intent-detail' in s
