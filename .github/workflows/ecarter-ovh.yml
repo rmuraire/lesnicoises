@@ -1,0 +1,35 @@
+# Mise à l'écart contrôlée des anciens fichiers du serveur OVH.
+# Se déclenche à chaque envoi de cette branche. Le mode est lu dans le
+# fichier MODE : « apercu » (rien n'est modifié) ou « deplacer » (les
+# fichiers listés sont déplacés hors du dossier web, jamais supprimés).
+name: Mise à l'écart OVH
+
+on:
+  push:
+    branches:
+      - nettoyage/ovh-mise-a-l-ecart
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publication-ovh
+  cancel-in-progress: false
+
+jobs:
+  ecarter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check --quiet paramiko==5.0.0
+      - name: Mise à l'écart
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python outils/ecarter_ovh.py "$(tr -d '[:space:]' < MODE)"
