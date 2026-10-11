@@ -120,32 +120,32 @@ def fix_fr_hotels(s):
     return s[:start]+s[end:]
 
 def fix_beaches_around_nice_images(s):
-    # Three 2026-local image paths in FR+EN pointed to files never committed.
-    # Use verified exact-location public-domain/CC Commons sources instead
-    # of quietly displaying broken image rectangles.
-    photos = {
-        '/assets/editorial/beaches/fossettes-commons.jpg?v=20260926-final':
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Cap-Ferrat_les_Fossettes.jpg',
-        '/assets/editorial/beaches/passable-pexels.jpg?v=20260926-final':
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Plage_de_Passable.jpg',
-        '/assets/editorial/beaches/mala-commons.jpg?v=20260926-final':
-            'https://commons.wikimedia.org/wiki/Special:Redirect/file/Plage_Mala%2C_Cap_d%27Ail_-_panoramio.jpg',
-    }
-    for before,after in photos.items():
-        if before not in s and after not in s:
-            raise RuntimeError(f"Missing source photo markup: {before}")
-        s=s.replace(before,after)
-    # License/source for Passable changed: Pexels generic coast -> documented
-    # exact Plage de Passable image by Tangopaso (public domain).
-    s=s.replace(
-        '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>',
-        '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_Passable.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · domaine public</a>',
+    """Suppress only missing photo panels, never substitute a false location.
+
+    The three source files have never been committed. External Commons
+    redirects are not supported by the release's image provenance policy.
+    Preserve all surviving licensed local beach photos and written guidance.
+    """
+    missing = (
+        'fossettes-commons.jpg',
+        'passable-pexels.jpg',
+        'mala-commons.jpg',
     )
-    s=s.replace(
-        '<a href="https://www.pexels.com/fr-fr/photo/baie-rochers-cailloux-cote-13781215/" target="_blank" rel="noopener">Pexels</a>',
-        '<a href="https://commons.wikimedia.org/wiki/File:Plage_de_Passable.jpg" target="_blank" rel="noopener">Tangopaso / Wikimedia Commons · public domain</a>',
-    )
+    for filename in missing:
+        # Match a figure with the missing *image src*, including its caption.
+        pat = re.compile(
+            r'<figure\b[^>]*class="beach-place-visual"[^>]*>'
+            r'(?:(?!</figure>).)*?'
+            r'<img\b[^>]*src="[^"]*/' + re.escape(filename) +
+            r'(?:\?[^"]*)?"[^>]*>'
+            r'(?:(?!</figure>).)*?</figure>',
+            re.S
+        )
+        s, count = pat.subn('', s)
+        if count != 1:
+            raise RuntimeError(f"Expected one absent beach photo figure: {filename}, got {count}")
     return s
+
 
 def make_event_cards_clickable(s, rel):
     """Clickable event tiles without breaking their independent official/map links."""
