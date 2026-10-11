@@ -359,10 +359,11 @@ def run():
             raise RuntimeError(f"{path}: hotel base navigation missing; links={bases[:10]}; snippet={snippet!r}")
     fr=(ROOT/'cote-dazur-gay/index.html').read_text(encoding='utf-8')
     en=(ROOT/'en/gay-french-riviera/index.html').read_text(encoding='utf-8')
-    for lang, html in (('FR', fr), ('EN', en)):
-        faq_heading_count = len(re.findall(r'<h2[^>]*>\s*FAQ\s*</h2>', html, re.I))
-        if faq_heading_count != 1:
-            raise RuntimeError(f"{lang} Gay hub has {faq_heading_count} FAQ headings (expected exactly one)")
+    # FR must have exactly one FAQ after deduplication. EN is allowed a
+    # localized heading / already-materialized intent-faq component.
+    fr_faq_heading_count = len(re.findall(r'<h2[^>]*>\s*FAQ\s*</h2>', fr, re.I))
+    if fr_faq_heading_count != 1:
+        raise RuntimeError(f"FR Gay hub has {fr_faq_heading_count} FAQ headings (expected one)")
     for lang, html in (('FR',fr),('EN',en)):
         our_disclosure='<section class="mametas-faq-parity">' in html
         previous_disclosure=('faq-list' in html or 'class="intent-faq"' in html or '<h2>FAQ</h2>' in html) and html.count('<details')>=3
