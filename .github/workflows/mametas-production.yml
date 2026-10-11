@@ -487,6 +487,52 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
+      - name: Publish final Gay FAQ and Solo grid fixes to OVH
+        env:
+          MAMETAS_FORCE_FILES: assets/mametas-v35-ui-polish.css;cote-dazur-gay/index.html;cote-dazur-gay/ou-dormir/index.html;cote-dazur-gay/plages-sans-voiture/index.html;cote-dazur-gay/itineraire-5-jours/index.html;guide-gay-nice/index.html;en/gay-french-riviera/index.html;en/gay-french-riviera/where-to-stay/index.html;en/gay-french-riviera/beaches-without-a-car/index.html;en/gay-french-riviera/5-day-itinerary/index.html;en/gay-nice/index.html;cote-dazur-femme-solo/index.html;en/solo-female-french-riviera/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Verify Gay FAQ and Solo fixes on LIVE pages
+        run: |
+          python - <<'PY'
+          import re
+          from urllib.request import Request, urlopen
+          base='https://www.mametas.com'
+          faq_pages=(
+              "/cote-dazur-gay/","/cote-dazur-gay/ou-dormir/",
+              "/cote-dazur-gay/plages-sans-voiture/","/guide-gay-nice/",
+              "/en/gay-french-riviera/","/en/gay-french-riviera/where-to-stay/",
+              "/en/gay-french-riviera/beaches-without-a-car/","/en/gay-nice/",
+          )
+          def get(route):
+              request=Request(base+route+'?faq-v36='+str(20261011),
+                              headers={"User-Agent":"MametasReleaseQA/1.0","Cache-Control":"no-cache, no-store"})
+              with urlopen(request,timeout=30) as resp:
+                  if resp.status!=200:raise SystemExit(route+" HTTP "+str(resp.status))
+                  return resp.read().decode("utf-8","replace")
+          for route in faq_pages:
+              s=get(route)
+              if s.count('<section class="intent-faq">')!=1:
+                  raise SystemExit(route+": expected exactly one Babymoon FAQ")
+              if "mametas-gay-faq" not in s or "/assets/mametas-v35-ui-polish.css?v=2" not in s:
+                  raise SystemExit(route+": FAQ CSS or body marker missing")
+              if "mametas-faq-parity" in s or 'class="faq-list"' in s:
+                  raise SystemExit(route+": legacy FAQ component remains")
+              if s.count("<summary")<3:raise SystemExit(route+": FAQ missing questions")
+              print("LIVE FAQ PASS",route,flush=True)
+          for route in ("/cote-dazur-femme-solo/","/en/solo-female-french-riviera/"):
+              s=get(route)
+              if 'gay-door btn btn--primary mametas-hotel-fit-primary' in s:
+                  raise SystemExit(route+": extra Hotel Fit in decision grid")
+              if s.count('class="gay-door"')!=5:
+                  raise SystemExit(route+": expected five decision cards")
+              print("LIVE SOLO PASS",route,flush=True)
+          print('V36 targeted public release is verified')
+          PY
       - name: Check Share surfaces live
         run: |
           python - <<'PY'
