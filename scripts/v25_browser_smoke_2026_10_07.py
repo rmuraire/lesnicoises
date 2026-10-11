@@ -642,7 +642,7 @@ def main() -> None:
                             errors.append(f"{label}: Gay FAQ lacks functional Explore-style disclosures")
                         if path in ("/en/gay-nice/",
                                     "/en/gay-french-riviera/where-to-stay/",
-                                    "/en/gay-french-riviera/beaches-without-a-car/") and (polish["disclosures"]+polish["nativeFaq"])!=3:
+                                    "/en/gay-french-riviera/beaches-without-a-car/") and (polish["disclosures"]+polish["nativeFaq"]+polish["intentFaq"])!=3:
                             errors.append(f"{label}: Gay subguide FAQ is not three functional disclosures")
                         if path in ("/bons-plans/train-ou-bus/","/plages/autour-de-nice/") and (
                             not polish["compact"] or any(x["font"]>32.5 for x in polish["typ"] if x["tag"]=="H2")):
@@ -652,6 +652,14 @@ def main() -> None:
                             errors.append(f"{label}: highlighted intro too large")
                         if polish["badLinks"]:
                             errors.append(f"{label}: source/map underline not harmonized: {polish['badLinks'][:2]}")
+
+                    if path in ("/cote-dazur-femme-solo/", "/en/solo-female-french-riviera/"):
+                        solo_grid=page.evaluate("""() => ({
+                            cards:document.querySelectorAll('main .gay-door-grid > a.gay-door').length,
+                            stray:document.querySelectorAll('main .gay-door-grid > a.mametas-hotel-fit-primary').length
+                        })""")
+                        if solo_grid["cards"]!=5 or solo_grid["stray"]!=0:
+                            errors.append(f"{label}: Solo hub should show five guides without stray Hotel Fit tile: {solo_grid}")
 
                     if any(k in path for k in ("/solo-female-french-riviera/", "/cote-dazur-femme-solo/", "/explore/retire-french-riviera/", "/practical/safety-emergencies/")):
                         debug = page.evaluate("""() => {
