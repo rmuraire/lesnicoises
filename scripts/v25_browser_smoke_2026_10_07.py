@@ -592,6 +592,16 @@ def main() -> None:
                             hotelBase:pick('.practical-grid .practical-link').length,
                             cards:pick('.grid > a.card[href]').length,
                             cardCursor:style(pick('.grid > a.card')[0])?.cursor,
+                            agendaTiles:pick('.right-now-clean .grid > .card').length,
+                            agendaClickable:pick('.right-now-clean .grid > .card').filter(n=>{
+                              const a=n.querySelector(':scope > a.mametas-card-overlay[href]');
+                              const call=n.querySelector('a.more[href]');
+                              if(!a || !call || a.getAttribute('href')!==call.getAttribute('href'))return false;
+                              const c=n.getBoundingClientRect(),r=a.getBoundingClientRect();
+                              return style(n).cursor==='pointer' && style(a).position==='absolute' &&
+                                r.width>=c.width-3 && r.height>=c.height-3 &&
+                                Boolean(a.getAttribute('aria-label'));
+                            }).length,
                             disclosures:docs.length,
                             typ:paras.slice(0,8).map(n=>({tag:n.tagName,font:parseFloat(style(n).fontSize)})),
                             verdicts:verdict.slice(0,2).map(n=>parseFloat(style(n).fontSize)),
@@ -602,8 +612,14 @@ def main() -> None:
                         print("FINAL_UI_POLISH",label,polish,flush=True)
                         if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelBase"]<8):
                             errors.append(f"{label}: obsolete FR hotel sprite or missing base cards")
-                        if path in ("/bons-plans/","/en/good-finds/") and (polish["cards"]<8 or polish["cardCursor"]!="pointer"):
-                            errors.append(f"{label}: Good Finds cards not full-card clickable")
+                        if path in ("/bons-plans/","/en/good-finds/"):
+                            # Source templates have >=8 semantic anchor cards; the
+                            # actual production agenda materializes three div cards
+                            # with independent official/map links plus a full-area CTA.
+                            semantic_ok=polish["cards"]>=8 and polish["cardCursor"]=="pointer"
+                            agenda_ok=polish["agendaTiles"]>=3 and polish["agendaClickable"]==polish["agendaTiles"]
+                            if not (semantic_ok or agenda_ok):
+                                errors.append(f"{label}: Good Finds cards not fully clickable {polish}")
                         if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and polish["disclosures"]!=5:
                             errors.append(f"{label}: Gay FAQ is not five functional disclosures")
                         if path in ("/bons-plans/train-ou-bus/","/plages/autour-de-nice/") and (
