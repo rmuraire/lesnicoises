@@ -1,0 +1,1138 @@
+(function (rootFactory) {
+  var api = rootFactory();
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function () { api.mount(); }, { once:true });
+    } else {
+      api.mount();
+    }
+  }
+  if (typeof process !== 'undefined' && process.argv && process.argv.indexOf('--self-test') >= 0) {
+    api.selfTest();
+  }
+})(function () {
+  'use strict';
+
+  var BASES = {
+    nice: { type:'default', hub:3, scores:{ decide:3, sea:2, food:3, culture:3, glamour:2, peace:1 } },
+    cannes: { type:'default', hub:2.5, scores:{ decide:2.2, sea:3, food:2.2, culture:1.2, glamour:3, peace:1.2 } },
+    antibes: { type:'default', hub:2.2, scores:{ decide:2.5, sea:3.15, food:2.2, culture:2.2, glamour:2, peace:2.2 } },
+    villefranche: { type:'default', hub:1.5, scores:{ decide:1.9, sea:3.25, food:1.3, culture:1.3, glamour:2.1, peace:3.3 } },
+    menton: { type:'default', hub:2, scores:{ decide:1.8, sea:2.1, food:2, culture:2.1, glamour:1.2, peace:3 } },
+    monaco: { type:'intentional', hub:1.6, scores:{ decide:1, sea:1.2, food:2.8, culture:2, glamour:3, peace:1 } },
+    sainttropez: { type:'intentional', hub:.5, scores:{ decide:.8, sea:3, food:2.4, culture:1, glamour:3, peace:1.5 } },
+    saintpaul: { type:'intentional', hub:.5, scores:{ decide:1, sea:0, food:2, culture:3, glamour:2, peace:3 } }
+  };
+
+  var PACE_HUB = { slow:.25, balanced:1, ambitious:1.6 };
+  var MOBILITY_HUB = { nocar:1.25, either:1, car:.65 };
+  var DURATION_HUB = { '3':1.25, '5':1, '7':.8 };
+
+  // Season is a modifier, not a fifth vote of equal weight.
+  // It adjusts how viable each base is once duration, mobility, mood and pace
+  // have established the shape of the trip.
+  var SEASON_SCORE = {
+    winter: { nice:1.1, cannes:.35, antibes:-.15, villefranche:.1, menton:.9, monaco:.75, sainttropez:-4.5, saintpaul:.45 },
+    spring: { nice:.15, cannes:.2, antibes:.3, villefranche:.35, menton:.25, monaco:.1, sainttropez:-.2, saintpaul:.3 },
+    summer: { nice:0, cannes:.35, antibes:.45, villefranche:.4, menton:-.1, monaco:0, sainttropez:1, saintpaul:-.1 },
+    autumn:{ nice:.35, cannes:.1, antibes:.2, villefranche:.3, menton:.55, monaco:.2, sainttropez:-.8, saintpaul:.35 }
+  };
+
+  function seasonOf(profile) {
+    return profile.season && SEASON_SCORE[profile.season] ? profile.season : 'summer';
+  }
+
+
+  var REGIONAL = {
+    en:{
+      items:{
+        nice:{label:'Nice properly',body:'Old Nice, the Promenade and one proper swim. It is a destination, not just the airport.',href:'/en/riviera-guide/nice/'},
+        capferrat:{label:'Villefranche + Cap-Ferrat',body:'The water-and-scenery day: bay, coast path or coves. Worth the eastbound move.',href:'/en/riviera-guide/villefranche-cap-ferrat/'},
+        antibes:{label:'Antibes',body:'Old town, Picasso and actual sand. One of the coast’s easiest full-day contrasts.',href:'/en/riviera-guide/antibes/'},
+        saintpaul:{label:'Saint-Paul-de-Vence',body:'Use the car properly: village + Fondation Maeght, preferably before or after peak day-tripper hours.',href:'/en/riviera-guide/saint-paul-de-vence/'},
+        cannes:{label:'Cannes + Lérins',body:'Sand, Croisette and an island escape if you want the western Riviera in one day.',href:'/en/riviera-guide/cannes/'},
+        monaco:{label:'Monaco',body:'Use it for one concentrated contrast day: architecture, sea views and unapologetic polish.',href:'/en/riviera-guide/monaco/'},
+        menton:{label:'Menton',body:'Colour, gardens and an eastern edge that feels noticeably different from Nice or Cannes.',href:'/en/riviera-guide/menton/'},
+        eze:{label:'Èze',body:'Spectacular, yes. Go early or late, and remember the village and the beach are not the same place.',href:'/en/riviera-guide/eze/'}
+      },
+      defaultOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','monaco','menton','cannes','eze'],
+        sea:['capferrat','nice','antibes','cannes','menton','monaco','eze','saintpaul'],
+        food:['nice','antibes','cannes','monaco','menton','saintpaul','capferrat','eze'],
+        culture:['saintpaul','nice','antibes','eze','monaco','menton','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','capferrat','antibes','saintpaul','menton','eze'],
+        peace:['capferrat','menton','saintpaul','eze','antibes','nice','cannes','monaco']
+      },
+      carOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','cannes','menton','monaco','eze'],
+        sea:['capferrat','nice','saintpaul','cannes','antibes','menton','eze','monaco'],
+        food:['nice','antibes','saintpaul','cannes','menton','monaco','capferrat','eze'],
+        culture:['saintpaul','nice','eze','antibes','menton','monaco','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','saintpaul','capferrat','antibes','menton','eze'],
+        peace:['capferrat','saintpaul','menton','eze','antibes','nice','cannes','monaco']
+      }
+    },
+    fr:{
+      items:{
+        nice:{label:'Nice, vraiment',body:'Vieux-Nice, Promenade et une vraie baignade. C’est une destination, pas seulement l’aéroport.',href:'/riviera-guide/nice/'},
+        capferrat:{label:'Villefranche + Cap-Ferrat',body:'La journée eau et paysages : baie, sentier côtier ou criques. Le déplacement vers l’est vaut le coup.',href:'/riviera-guide/villefranche-cap-ferrat/'},
+        antibes:{label:'Antibes',body:'Vieille ville, Picasso et vraie plage de sable. Un des contrastes les plus faciles de la côte.',href:'/riviera-guide/antibes/'},
+        saintpaul:{label:'Saint-Paul-de-Vence',body:'Servez-vous vraiment de la voiture : village + Fondation Maeght, de préférence avant ou après le pic des excursionnistes.',href:'/riviera-guide/saint-paul-de-vence/'},
+        cannes:{label:'Cannes + Lérins',body:'Sable, Croisette et échappée sur les îles si vous voulez la Riviera ouest en une journée.',href:'/riviera-guide/cannes/'},
+        monaco:{label:'Monaco',body:'Gardez-le pour une journée de contraste concentrée : architecture, vues mer et polish assumé.',href:'/riviera-guide/monaco/'},
+        menton:{label:'Menton',body:'Couleur, jardins et une extrémité est qui ne ressemble franchement ni à Nice ni à Cannes.',href:'/riviera-guide/menton/'},
+        eze:{label:'Èze',body:'Spectaculaire, oui. Allez-y tôt ou tard, et souvenez-vous que le village et la plage ne sont pas au même endroit.',href:'/riviera-guide/eze/'}
+      },
+      defaultOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','monaco','menton','cannes','eze'],
+        sea:['capferrat','nice','antibes','cannes','menton','monaco','eze','saintpaul'],
+        food:['nice','antibes','cannes','monaco','menton','saintpaul','capferrat','eze'],
+        culture:['saintpaul','nice','antibes','eze','monaco','menton','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','capferrat','antibes','saintpaul','menton','eze'],
+        peace:['capferrat','menton','saintpaul','eze','antibes','nice','cannes','monaco']
+      },
+      carOrder:{
+        decide:['nice','capferrat','saintpaul','antibes','cannes','menton','monaco','eze'],
+        sea:['capferrat','nice','saintpaul','cannes','antibes','menton','eze','monaco'],
+        food:['nice','antibes','saintpaul','cannes','menton','monaco','capferrat','eze'],
+        culture:['saintpaul','nice','eze','antibes','menton','monaco','cannes','capferrat'],
+        glamour:['cannes','monaco','nice','saintpaul','capferrat','antibes','menton','eze'],
+        peace:['capferrat','saintpaul','menton','eze','antibes','nice','cannes','monaco']
+      }
+    }
+  };
+
+  var REGIONAL_EXCLUDES = {
+    nice:['nice'], cannes:['cannes'], antibes:['antibes'], villefranche:['capferrat'],
+    menton:['menton'], monaco:['monaco'], sainttropez:[], saintpaul:['saintpaul']
+  };
+
+  function scoreBase(id, profile) {
+    var base = BASES[id];
+    var hubWeight = PACE_HUB[profile.pace] * MOBILITY_HUB[profile.mobility] * DURATION_HUB[profile.days];
+    var score = (base.scores[profile.mood] || 0) * 3 + base.hub * hubWeight;
+    var season = seasonOf(profile);
+    score += (SEASON_SCORE[season] && SEASON_SCORE[season][id]) || 0;
+    if (profile.days === '3' && id === 'nice') score += .5;
+    return score;
+  }
+
+  function intentionalCandidates(profile) {
+    var candidates = [];
+    if (profile.mood === 'glamour' && profile.days === '7' && profile.pace === 'slow') {
+      candidates.push({ id:'monaco', bonus:2.2 });
+    }
+    if ((profile.mood === 'sea' || profile.mood === 'glamour') &&
+        profile.days === '7' && profile.mobility !== 'nocar' &&
+        (profile.pace === 'slow' || profile.pace === 'balanced') &&
+        seasonOf(profile) !== 'winter') {
+      var saintTropezBonus = seasonOf(profile) === 'summer' ? 3 : (seasonOf(profile) === 'spring' ? 2.4 : 1.6);
+      candidates.push({ id:'sainttropez', bonus:saintTropezBonus });
+    }
+    if ((profile.mood === 'culture' || profile.mood === 'peace') &&
+        profile.days === '7' && profile.mobility !== 'nocar' && profile.pace === 'slow') {
+      candidates.push({ id:'saintpaul', bonus:2.5 });
+    }
+    return candidates;
+  }
+
+  function chooseBase(profile) {
+    var defaults = Object.keys(BASES).filter(function (id) { return BASES[id].type === 'default'; })
+      .map(function (id) { return { id:id, score:scoreBase(id, profile) }; })
+      .sort(function (a,b) { return b.score - a.score || a.id.localeCompare(b.id); });
+    var provisional = defaults[0];
+    var intent = intentionalCandidates(profile)
+      .map(function (item) { return { id:item.id, score:scoreBase(item.id, profile) + item.bonus }; })
+      .sort(function (a,b) { return b.score - a.score; });
+    for (var i=0; i<intent.length; i++) {
+      if (intent[i].score >= provisional.score + 1) {
+        return { base:intent[i].id, defaultBase:provisional.id, intentional:true };
+      }
+    }
+    return { base:provisional.id, defaultBase:provisional.id, intentional:false };
+  }
+
+  var CONTENT = {
+    en: {
+      bases: {
+        nice:{name:'Nice',guide:'/en/riviera-guide/nice/',hotels:'/stay/nice/',why:'The most useful all-round base on the coast. It gives you a real city at night and the strongest transport spine by day.'},
+        cannes:{name:'Cannes',guide:'/en/riviera-guide/cannes/',hotels:'/en/hotels/cannes/',why:'The western Riviera works better from here when sand, polished hotels and an easier beach rhythm matter.'},
+        antibes:{name:'Antibes / Juan-les-Pins',guide:'/en/riviera-guide/antibes/',hotels:'/en/hotels/antibes/',why:'Old town, sand and a useful station make this the rare Riviera compromise that does not feel like one.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/en/riviera-guide/villefranche-cap-ferrat/',hotels:'/en/hotels/villefranche-sur-mer/',why:'Choose beauty and water first. You give up some hub efficiency in exchange for waking up somewhere that already feels like an excursion.'},
+        menton:{name:'Menton',guide:'/en/riviera-guide/menton/',hotels:'/en/hotels/menton/',why:'The slower eastern base. It suits travellers who want colour, gardens and breathing room without losing the train entirely.'},
+        monaco:{name:'Monaco',guide:'/en/riviera-guide/monaco/',hotels:'/en/hotels/monaco/',why:'This is the intentional version: stay because Monte-Carlo and the hotel experience are part of the point, not because it is the easiest answer.'},
+        sainttropez:{name:'Saint-Tropez',guide:'/en/riviera-guide/saint-tropez/',hotels:'/en/hotels/saint-tropez/',why:'This is a commitment, not a clever central base. Your answers say the peninsula itself is the trip, so Mametas is letting it win.'},
+        saintpaul:{name:'Saint-Paul-de-Vence',guide:'/en/riviera-guide/saint-paul-de-vence/',hotels:'/en/hotels/saint-paul-de-vence/',why:'An intentional inland stay for art, stone and a slower rhythm. It only wins when the coast is no longer the main character.'}
+      },
+      moodLine:{
+        decide:'You asked us to decide, so we are choosing the trip with the fewest unnecessary compromises.',
+        sea:'Your trip is being organised around swimming and the sea, not around collecting famous postcodes.',
+        food:'Restaurants and a real evening atmosphere matter, so the base needs to keep working after the day trips come home.',
+        culture:'Art and villages matter most, so access to strong cultural stops beats pure beach convenience.',
+        glamour:'You want Riviera theatre. Fine. We still refuse to make logistics ridiculous for the sake of a lobby.',
+        peace:'Beauty and quiet matter more than maximum connectivity, so we are deliberately accepting a little less efficiency.'
+      },
+      pace:{
+        slow:'Slow means the base should do more of the work. Plan fewer departures and leave one half-day completely unclaimed.',
+        balanced:'Balanced means the base still matters, but two proper regional outings belong in the trip. You did not come this far to inspect one postcode.',
+        ambitious:'Ambitious means we widen the map. Keep one direction per day and use the best available connection to cover more of the Riviera intelligently.'
+      },
+      priorities:{
+        nice:{
+          decide:['Nice properly','Villefranche + Cap-Ferrat','Antibes or Monaco/Menton'],
+          sea:['A proper Nice swim','Villefranche + Cap-Ferrat','Antibes for sand'],
+          food:['Nice markets + dinner','Antibes old town','One eastbound lunch day'],
+          culture:['Matisse / Chagall in Nice','Saint-Paul + Fondation Maeght','Picasso in Antibes'],
+          glamour:['A dressed-up Nice evening','Monaco as the spectacle day','Cannes for the western contrast'],
+          peace:['Villefranche + Cap-Ferrat','Menton','One deliberately slow Nice day']
+        },
+        cannes:{
+          decide:['Cannes + Le Suquet','Antibes','Lérins Islands'],
+          sea:['Cannes beach time','Lérins Islands','Antibes / Juan-les-Pins'],
+          food:['Forville + Le Suquet','Antibes dinner day','One properly chosen Cannes table'],
+          culture:['Antibes + Picasso','Lérins Islands','Saint-Paul if you have a car'],
+          glamour:['Croisette without apology','A hotel-led half-day','Antibes for contrast'],
+          peace:['Lérins Islands','Théoule / Corniche d’Or if driving','Antibes at a slower pace']
+        },
+        antibes:{
+          decide:['Old Antibes','Cannes','One Cap d’Antibes day'],
+          sea:['La Gravette or Salis','Cap d’Antibes','Juan-les-Pins'],
+          food:['Old Antibes','Cannes market + dinner','One long lunch instead of another town'],
+          culture:['Picasso Museum','Saint-Paul if driving','Nice museums'],
+          glamour:['Cap d’Antibes','Cannes','Juan-les-Pins after dark'],
+          peace:['Cap d’Antibes','Old Antibes early','One beach day with no second stop']
+        },
+        villefranche:{
+          decide:['Villefranche properly','Cap-Ferrat','Nice or Monaco, not both'],
+          sea:['Villefranche bay','Cap-Ferrat coves','Beaulieu'],
+          food:['Villefranche lunch','Nice dinner','One Monaco meal if you want theatre'],
+          culture:['Nice museums','Èze','Monaco for a very different day'],
+          glamour:['Cap-Ferrat','Monaco','One dressed-up Nice evening'],
+          peace:['Villefranche bay','Cap-Ferrat on foot','Beaulieu with no agenda']
+        },
+        menton:{
+          decide:['Menton properly','Monaco','One Nice day'],
+          sea:['Menton seafront','Roquebrune-Cap-Martin','Monaco only if you want contrast'],
+          food:['Menton','Monaco for one big meal','A market-led day with no train'],
+          culture:['Cocteau in Menton','Monaco museums','Nice for the major collections'],
+          glamour:['Monaco','A better hotel in Menton','Cap-Martin for the view'],
+          peace:['Menton gardens','Roquebrune-Cap-Martin','One day with absolutely no westbound train']
+        },
+        monaco:{decide:['Monaco properly','Menton','Cap-Ferrat'],glamour:['Monte-Carlo properly','One palace / spa half-day','Menton for the exhale'],food:['Monaco restaurants','Menton','Nice for contrast']},
+        sainttropez:{decide:['Saint-Tropez village','Pampelonne','Ramatuelle / the peninsula'],sea:['Pampelonne properly','One quieter peninsula beach','Saint-Tropez village late'],glamour:['Saint-Tropez village','A hotel-led afternoon','Pampelonne when you actually want the scene']},
+        saintpaul:{decide:['Saint-Paul after the day-trippers','Fondation Maeght','Vence'],culture:['Fondation Maeght','Saint-Paul village','Vence / Matisse chapel'],peace:['Saint-Paul early and late','One long hotel afternoon','Vence or a single coast day']}
+      },
+      whyNot:{
+        nice:'More versatile than specialised. If transport reach becomes the priority, Nice climbs back quickly.',
+        cannes:'Strong for sand and polish, weaker than Nice for reaching the eastern Riviera repeatedly.',
+        antibes:'An excellent compromise, but not as efficient as Nice for a trip built around many day trips.',
+        villefranche:'Beauty wins here, logistics less so. Transfers and slopes add friction to a busy itinerary.',
+        menton:'Calm and colourful, but far east. It becomes a poor base if Cannes and Antibes still matter a lot.',
+        monaco:'Spectacular and expensive, with real verticality. It is not the coast’s most forgiving all-purpose base.',
+        sainttropez:'The peninsula asks for time, money and transport planning. It only makes sense when it is genuinely the point.',
+        saintpaul:'Wonderful for art and a slower inland stay, weak for a sea-first or rail-heavy Riviera trip.'
+      },
+      skips:{
+        nice:'Skip Saint-Tropez unless it is genuinely one of the reasons you came. It eats too much of a short Riviera trip.',
+        cannes:'Skip the automatic Monaco/Menton day. You chose the western Riviera; use it properly.',
+        antibes:'Skip crossing the whole coast just because the train makes it technically possible.',
+        villefranche:'Skip the western checklist. Cannes and Antibes can survive one trip without you.',
+        menton:'Skip the Cannes-and-Antibes collection run. East is not a consolation prize.',
+        monaco:'Skip using Monaco as a launch pad for daily coast-hopping. If you sleep here, let Monaco be part of the holiday.',
+        sainttropez:'Skip the eastern Riviera this time. You chose the peninsula, so stop pretending Nice and Menton also need attendance.',
+        saintpaul:'Skip daily coast commuting. The point of sleeping inland is to stop behaving as if the sea is taking attendance.'
+      },
+      hotels:{
+        nice:[
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-6DtP9e',note:'Station-friendly and built for easy departures.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-wS4XWf',note:'Central calm when you want Nice nearby without putting the city in the bedroom.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'Choose it when the hotel is allowed to become part of the trip.'}
+        ],
+        cannes:[
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'A smaller, calmer answer when you do not need palace scale.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Boutique Cannes with enough polish and less ceremony.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'The Croisette in full Riviera mode.'}
+        ],
+        antibes:[
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central and rational when the town matters more than the lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'A polished, walkable Antibes answer with the port and old town close at hand.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
+        ],
+        villefranche:[
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, the train and a quieter base before hotel theatre.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'The harbour fantasy, with the geography doing most of the seducing.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
+        ],
+        menton:[
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-p5q29z',note:'A rational eastern base when the room is not the main event.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Sea + pool for a slower stay without palace economics.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
+        ],
+        monaco:[
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'The less ceremonial Monaco answer: resort logic, space and fewer palace rituals.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Classic Monte-Carlo polish without making every minute a performance.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'The full palace answer. Choose it because the hotel itself is part of the Monaco decision.'}
+        ],
+        sainttropez:[
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'A more measured peninsula answer when you want access without sleeping in the village theatre.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'A softer peninsula stay when beach time matters.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
+        ],
+        saintpaul:[
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-3YDTgm',note:'A quieter village-area stay without making the hotel the whole event.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-MhrpPEn',note:'Art-led, grown-up and suitably removed from the coastal machine.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'The retreat version, where staying in is a legitimate part of the plan.'}
+        ]
+      }
+    },
+    fr: {
+      bases: {
+        nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'Le point de chute le plus polyvalent de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
+        cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera fonctionne mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
+        antibes:{name:'Antibes / Juan-les-Pins',guide:'/riviera-guide/antibes/',hotels:'/hotels/antibes/',why:'Vieille ville, sable et gare utile : l’un des rares compromis azuréens qui ne ressemble pas à un compromis.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme point de chute pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
+        menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'Le point de chute plus lent à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
+        monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version intentionnelle : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
+        sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas un point de chute central astucieux. Vos réponses disent que la presqu’île est le voyage, donc Mametas la laisse gagner.'},
+        saintpaul:{name:'Saint-Paul-de-Vence',guide:'/riviera-guide/saint-paul-de-vence/',hotels:'/hotels/saint-paul-de-vence/',why:'Un séjour volontairement intérieur pour l’art, la pierre et un rythme plus lent. Il ne gagne que lorsque la côte cesse d’être le personnage principal.'}
+      },
+      moodLine:{
+        decide:'Vous nous avez demandé de décider. On choisit donc le séjour avec le moins de compromis inutiles.',
+        sea:'On organise le voyage autour de la baignade et de la mer, pas autour d’une collection de codes postaux célèbres.',
+        food:'Les restaurants et une vraie vie le soir comptent : le point de chute doit continuer à fonctionner une fois les excursions rentrées.',
+        culture:'L’art et les villages passent devant. L’accès aux bons arrêts culturels compte plus que la commodité balnéaire pure.',
+        glamour:'Vous voulez le théâtre Riviera. Très bien. On refuse quand même de rendre la logistique absurde pour un lobby.',
+        peace:'La beauté et le calme comptent plus que la connexion maximale. On accepte volontairement un peu moins d’efficacité.'
+      },
+      pace:{
+        slow:'Rythme tranquille : le point de chute doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
+        balanced:'Rythme équilibré : le point de chute compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
+        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, avec la meilleure liaison disponible, pour couvrir davantage de Riviera intelligemment.'
+      },
+      priorities:{
+        nice:{
+          decide:['Nice correctement','Villefranche + Cap-Ferrat','Antibes ou Monaco/Menton'],
+          sea:['Une vraie baignade à Nice','Villefranche + Cap-Ferrat','Antibes pour le sable'],
+          food:['Marchés + dîner à Nice','Vieille ville d’Antibes','Une journée déjeuner vers l’est'],
+          culture:['Matisse / Chagall à Nice','Saint-Paul + Fondation Maeght','Picasso à Antibes'],
+          glamour:['Une belle soirée à Nice','Monaco pour le spectacle','Cannes pour le contraste ouest'],
+          peace:['Villefranche + Cap-Ferrat','Menton','Une journée Nice volontairement lente']
+        },
+        cannes:{
+          decide:['Cannes + Le Suquet','Antibes','Îles de Lérins'],
+          sea:['Plage à Cannes','Îles de Lérins','Antibes / Juan-les-Pins'],
+          food:['Forville + Le Suquet','Un dîner à Antibes','Une vraie table cannoise'],
+          culture:['Antibes + Picasso','Îles de Lérins','Saint-Paul si vous avez une voiture'],
+          glamour:['Croisette sans complexe','Une demi-journée où l’hôtel compte','Antibes pour le contraste'],
+          peace:['Îles de Lérins','Théoule / Corniche d’Or si vous conduisez','Antibes au ralenti']
+        },
+        antibes:{
+          decide:['Vieil Antibes','Cannes','Une journée Cap d’Antibes'],
+          sea:['La Gravette ou Salis','Cap d’Antibes','Juan-les-Pins'],
+          food:['Vieil Antibes','Marché + dîner à Cannes','Un long déjeuner plutôt qu’une ville de plus'],
+          culture:['Musée Picasso','Saint-Paul si vous conduisez','Musées de Nice'],
+          glamour:['Cap d’Antibes','Cannes','Juan-les-Pins le soir'],
+          peace:['Cap d’Antibes','Vieil Antibes tôt','Une journée plage sans deuxième arrêt']
+        },
+        villefranche:{
+          decide:['Villefranche correctement','Cap-Ferrat','Nice ou Monaco, pas les deux'],
+          sea:['Baie de Villefranche','Criques du Cap-Ferrat','Beaulieu'],
+          food:['Déjeuner à Villefranche','Dîner à Nice','Un repas à Monaco si vous voulez le théâtre'],
+          culture:['Musées de Nice','Èze','Monaco pour une journée très différente'],
+          glamour:['Cap-Ferrat','Monaco','Une belle soirée à Nice'],
+          peace:['Baie de Villefranche','Cap-Ferrat à pied','Beaulieu sans programme']
+        },
+        menton:{
+          decide:['Menton correctement','Monaco','Une journée à Nice'],
+          sea:['Front de mer de Menton','Roquebrune-Cap-Martin','Monaco seulement pour le contraste'],
+          food:['Menton','Monaco pour un grand repas','Une journée marché sans train'],
+          culture:['Cocteau à Menton','Musées de Monaco','Nice pour les grandes collections'],
+          glamour:['Monaco','Un meilleur hôtel à Menton','Cap-Martin pour la vue'],
+          peace:['Jardins de Menton','Roquebrune-Cap-Martin','Une journée sans aucun train vers l’ouest']
+        },
+        monaco:{decide:['Monaco correctement','Menton','Cap-Ferrat'],glamour:['Monte-Carlo correctement','Une demi-journée palace / spa','Menton pour respirer'],food:['Restaurants de Monaco','Menton','Nice pour le contraste']},
+        sainttropez:{decide:['Village de Saint-Tropez','Pampelonne','Ramatuelle / la presqu’île'],sea:['Pampelonne correctement','Une plage plus calme de la presqu’île','Saint-Tropez en fin de journée'],glamour:['Village de Saint-Tropez','Un après-midi où l’hôtel compte','Pampelonne quand vous voulez vraiment la scène']},
+        saintpaul:{decide:['Saint-Paul après les visiteurs','Fondation Maeght','Vence'],culture:['Fondation Maeght','Village de Saint-Paul','Vence / chapelle Matisse'],peace:['Saint-Paul tôt et tard','Un long après-midi à l’hôtel','Vence ou une seule journée sur la côte']}
+      },
+      whyNot:{
+        nice:'Plus polyvalente que spécialisée. Si le réseau de transport redevient prioritaire, Nice remonte très vite.',
+        cannes:'Très forte pour le sable et le décor, moins efficace que Nice pour rayonner souvent vers l’est.',
+        antibes:'Un excellent compromis, mais moins efficace que Nice si le séjour repose sur beaucoup d’excursions.',
+        villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances ajoutent de la friction.',
+        menton:'Douce et colorée, mais très à l’est. Mauvais point de chute si Cannes et Antibes restent des priorités fortes.',
+        monaco:'Spectaculaire, chère et verticale. Ce n’est pas le point de chute le plus indulgent pour un premier tour complet de la côte.',
+        sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le sujet.',
+        saintpaul:'Formidable pour l’art et un séjour intérieur plus lent, faible pour une Riviera centrée sur la mer ou le train.'
+      },
+      skips:{
+        nice:'Laissez Saint-Tropez de côté sauf si c’est réellement une des raisons de votre voyage. Sur un séjour court, il mange trop de Riviera.',
+        cannes:'Laissez tomber la journée Monaco/Menton automatique. Vous avez choisi l’ouest : utilisez-le correctement.',
+        antibes:'Évitez de traverser toute la côte simplement parce que le train rend la chose techniquement possible.',
+        villefranche:'Laissez la checklist de l’ouest tranquille. Cannes et Antibes survivront très bien à votre absence.',
+        menton:'Pas de collection Cannes + Antibes par réflexe. L’est n’est pas un lot de consolation.',
+        monaco:'N’utilisez pas Monaco comme piste de lancement pour traverser la côte tous les jours. Si vous dormez ici, laissez Monaco faire partie des vacances.',
+        sainttropez:'Laissez l’est de la Riviera pour une autre fois. Vous avez choisi la presqu’île, Nice et Menton n’ont pas besoin de votre feuille de présence.',
+        saintpaul:'Pas de navette quotidienne vers la côte. Dormir dans l’arrière-pays sert précisément à arrêter de se comporter comme si la mer faisait l’appel.'
+      },
+      hotels:{
+        nice:[
+          {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-6DtP9e',note:'Près de la gare et pensé pour des départs faciles.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-wS4XWf',note:'Du calme au centre quand vous voulez Nice à proximité sans l’avoir dans la chambre.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'À choisir quand l’hôtel a le droit de devenir une partie du voyage.'}
+        ],
+        cannes:[
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'Une réponse plus petite et plus calme sans échelle palace.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'La Croisette en mode Riviera intégral.'}
+        ],
+        antibes:[
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central et rationnel quand la ville compte plus que le lobby.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'Une réponse soignée et piétonne, avec le port et la vieille ville à portée de pas.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
+        ],
+        villefranche:[
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, le train et un point de chute plus calme avant le théâtre hôtelier.'},
+          {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
+          {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
+        ],
+        menton:[
+          {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-p5q29z',note:'Un point de chute rationnel à l’est quand la chambre n’est pas l’événement principal.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
+          {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
+        ],
+        monaco:[
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'La réponse Monaco la moins cérémonielle : logique resort, espace et moins de rituel palace.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Le poli Monte-Carlo classique sans transformer chaque minute en représentation.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'La réponse palace intégrale. À choisir parce que l’hôtel fait partie de la décision Monaco.'}
+        ],
+        sainttropez:[
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'Une réponse plus mesurée sur la presqu’île quand vous voulez l’accès sans dormir dans le théâtre du village.'},
+          {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'Une version plus douce de la presqu’île quand la plage compte.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
+        ],
+        saintpaul:[
+          {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-3YDTgm',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
+          {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-MhrpPEn',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
+        ]
+      }
+    }
+  };
+
+  function seasonalPriorities(content, base, profile, list) {
+    if (seasonOf(profile) !== 'winter' || profile.mood !== 'sea') return list;
+    var fr = content === CONTENT.fr;
+    var winterSea = fr ? {
+      nice:['Baie des Anges et littoral à pied','Villefranche + Cap-Ferrat au bord de l’eau','Antibes pour la vieille ville et la côte'],
+      cannes:['Croisette + front de mer','Le Suquet','Antibes pour le contraste'],
+      antibes:['Vieil Antibes + bord de mer','Cap d’Antibes à pied','Juan-les-Pins côté promenade'],
+      villefranche:['Rade de Villefranche','Cap-Ferrat à pied','Beaulieu sans programme'],
+      menton:['Front de mer de Menton','Roquebrune-Cap-Martin','Monaco pour le contraste'],
+      monaco:['Monaco côté mer','Port Hercule','Menton pour respirer'],
+      sainttropez:['Village de Saint-Tropez','Sentier côtier de la presqu’île','Ramatuelle'],
+      saintpaul:['Saint-Paul','Fondation Maeght','Une seule journée côte']
+    } : {
+      nice:['Baie des Anges and a coastal walk','Villefranche + Cap-Ferrat by the water','Antibes for old town and coastline'],
+      cannes:['Croisette + seafront','Le Suquet','Antibes for contrast'],
+      antibes:['Old Antibes + seafront','Cap d’Antibes on foot','Juan-les-Pins promenade'],
+      villefranche:['Villefranche bay','Cap-Ferrat on foot','Beaulieu with no agenda'],
+      menton:['Menton seafront','Roquebrune-Cap-Martin','Monaco for contrast'],
+      monaco:['Monaco by the water','Port Hercule','Menton for the exhale'],
+      sainttropez:['Saint-Tropez village','Peninsula coastal path','Ramatuelle'],
+      saintpaul:['Saint-Paul','Fondation Maeght','One coast day']
+    };
+    return winterSea[base] ? winterSea[base].slice(0, list.length || 3) : list;
+  }
+
+  function prioritiesFor(content, base, profile) {
+    var group = content.priorities[base] || {};
+    var list = (group[profile.mood] || group.decide || []).slice(0,3);
+
+    // 3 days + car + Art & villages + Ambitious:
+    // widen the geography without diluting the mood or repeating Saint-Paul.
+    if (base === 'nice' && profile.days === '3' && profile.mobility === 'car' &&
+        profile.mood === 'culture' && profile.pace === 'ambitious') {
+      return content === CONTENT.fr
+        ? ['Matisse / Chagall à Nice','Saint-Paul + Fondation Maeght']
+        : ['Matisse / Chagall in Nice','Saint-Paul + Fondation Maeght'];
+    }
+
+    list = seasonalPriorities(content, base, profile, list);
+    if (profile.pace === 'slow' && list.length >= 3) {
+      list[2] = content === CONTENT.fr ? 'Gardez une demi-journée vide. Oui, vraiment.' : 'Keep one half-day empty. Yes, really.';
+    }
+    return list;
+  }
+
+
+  function regionalCount(profile, baseId) {
+    if (profile.pace === 'slow') return 0;
+    var count = profile.pace === 'ambitious' ? 3 : 2;
+    if (profile.days === '3') count = 1;
+    if (BASES[baseId] && BASES[baseId].type === 'intentional') count = Math.min(count, profile.pace === 'ambitious' ? 2 : 1);
+    return count;
+  }
+
+  function regionalFor(profile, baseId, lang) {
+    var data = REGIONAL[lang];
+
+    if (baseId === 'nice' && profile.days === '3' && profile.mobility === 'car' &&
+        profile.mood === 'culture' && profile.pace === 'ambitious') {
+      return [
+        data.items.eze,
+        lang === 'fr'
+          ? {label:'Antibes + Picasso',body:'Picasso, vieille ville et contraste côtier : assez de culture pour élargir le séjour, sans transformer trois jours en marathon de musées.',href:'/riviera-guide/antibes/'}
+          : {label:'Antibes + Picasso',body:'Picasso, old town and a coastal contrast: enough culture to widen the trip without turning three days into a museum marathon.',href:'/en/riviera-guide/antibes/'}
+      ];
+    }
+
+    var order = (profile.mobility === 'car' ? data.carOrder : data.defaultOrder)[profile.mood] || data.defaultOrder.decide;
+    var exclude = (REGIONAL_EXCLUDES[baseId] || []).slice();
+    // If Cannes wins a balanced, car-free glamour trip, the editorial rule explicitly
+    // says not to turn the stay into an automatic Monaco/Menton day. Keep the
+    // "go further" suggestions on the western/central Riviera so the verdict
+    // and the follow-up recommendations tell the same story.
+    if (baseId === 'cannes' && profile.mobility === 'nocar' &&
+        profile.mood === 'glamour' && profile.pace === 'balanced') {
+      ['monaco','menton'].forEach(function (id) {
+        if (exclude.indexOf(id) < 0) exclude.push(id);
+      });
+    }
+    var count = regionalCount(profile, baseId);
+    var out = [];
+    order.forEach(function (id) {
+      if (out.length >= count || exclude.indexOf(id) >= 0 || !data.items[id]) return;
+      var regionalItem = data.items[id];
+      if (id === 'saintpaul' && profile.mobility === 'nocar') {
+        regionalItem = {
+          label:regionalItem.label,
+          href:regionalItem.href,
+          body:lang === 'fr'
+            ? 'Sans voiture, combinez le village et la Fondation Maeght en prévoyant davantage de temps de liaison. Partez tôt et vérifiez les bus du jour.'
+            : 'Without a car, combine the village and Fondation Maeght with extra transfer time. Start early and check the day’s bus timetable.'
+        };
+      }
+      out.push(regionalItem);
+    });
+    return out;
+  }
+
+  function skipFor(content, baseId, profile, lang) {
+    if (profile.pace === 'ambitious') {
+      return lang === 'fr'
+        ? 'Ne faites pas les deux extrémités de la côte le même jour. Un rythme ambitieux veut dire plus de Riviera, pas plus de pare-brise.'
+        : 'Do not do both ends of the coast in the same day. Ambitious means more Riviera, not more windscreen.';
+    }
+    return content.skips[baseId];
+  }
+
+  function reasonForSeason(profile, content, lang) {
+    if (seasonOf(profile) === 'winter' && profile.mood === 'sea') {
+      return lang === 'fr'
+        ? 'Vous avez choisi la mer. En hiver, on traduit cela par littoral, vues, promenades et déjeuners face à l’eau plutôt que par une journée construite autour de la baignade.'
+        : 'You chose the sea. In winter, we translate that into coastline, views, walks and lunches by the water rather than building the day around swimming.';
+    }
+    return content.moodLine[profile.mood];
+  }
+
+  function seasonNoteFor(profile, baseId, lang) {
+    var season = seasonOf(profile);
+    var fr = lang === 'fr';
+    if (season === 'winter') {
+      return fr
+        ? 'Hors saison, la mer reste dans le voyage mais les plages privées et une partie de l’offre saisonnière comptent moins. On privilégie les villes qui restent vivantes, les jardins, les musées, les marchés et les balades littorales.'
+        : 'Out of season, the sea still matters but private beaches and part of the seasonal offer matter less. We favour towns that stay alive, gardens, museums, markets and coastal walks.';
+    }
+    if (season === 'spring') {
+      return fr
+        ? 'Le printemps garde presque toute la logique Riviera avec moins de chaleur et moins de saturation. C’est une saison très facile pour élargir la carte.'
+        : 'Spring keeps almost all of the Riviera logic with less heat and less crowding. It is an easy season for widening the map.';
+    }
+    if (season === 'autumn') {
+      return fr
+        ? 'En septembre et octobre, la mer reste pertinente mais l’activité balnéaire commence à se réduire. On garde le littoral sans dépendre entièrement des établissements saisonniers.'
+        : 'In September and October the sea still matters, but the beach season starts thinning out. We keep the coast without depending entirely on seasonal venues.';
+    }
+    return fr
+      ? 'En plein été, plages, îles et établissements saisonniers comptent davantage. La foule et la chaleur aussi, donc on évite de surcharger les journées.'
+      : 'In high summer, beaches, islands and seasonal venues count more. So do crowds and heat, so we avoid overloading the days.';
+  }
+
+  function escapeFor(profile, winner, lang) {
+    var fr = lang === 'fr';
+    if (profile.mood === 'glamour' && winner !== 'monaco') {
+      return {base:'monaco', title:fr?'Vous êtes vraiment venu pour Monte-Carlo ?':'Really here for Monte-Carlo?',
+        body:fr?'C’est un autre choix de point de chute, pas un simple upgrade hôtelier.':'That changes the base itself; it is not a hotel upgrade.'};
+    }
+    if (profile.mood === 'sea' && profile.days !== '3' && profile.mobility !== 'nocar' &&
+        winner !== 'sainttropez' && seasonOf(profile) !== 'winter') {
+      return {base:'sainttropez', title:fr?'La presqu’île est en réalité le voyage ?':'Is the peninsula actually the trip?',
+        body:fr?'Alors assumez Saint-Tropez comme point de chute intentionnel au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
+    }
+    if ((profile.mood === 'culture' || profile.mood === 'peace') && profile.days !== '3' && profile.mobility !== 'nocar' && winner !== 'saintpaul') {
+      return {base:'saintpaul', title:fr?'Vous voulez vraiment quitter la côte ?':'Do you actually want to leave the coast?',
+        body:fr?'Saint-Paul devient un vrai point de chute seulement si l’arrière-pays fait partie du séjour.':'Saint-Paul becomes a real base only when the inland Riviera is part of the stay.'};
+    }
+    return null;
+  }
+
+  function alternativesFor(profile, chosenId, lang) {
+    var content = CONTENT[lang];
+    var intentional = intentionalCandidates(profile);
+    var pool = Object.keys(BASES).map(function (id) {
+      var score = scoreBase(id, profile);
+      var extra = intentional.filter(function (item) { return item.id === id; })[0];
+      if (extra) score += extra.bonus;
+      return { id:id, score:score };
+    }).filter(function (item) {
+      if (item.id === chosenId) return false;
+      if (BASES[item.id].type === 'intentional') {
+        return intentional.some(function (candidate) { return candidate.id === item.id; });
+      }
+      return true;
+    }).sort(function (a,b) { return b.score - a.score || a.id.localeCompare(b.id); });
+    return pool.slice(0,2).map(function (item) {
+      return {
+        id:item.id,
+        name:content.bases[item.id].name,
+        guide:content.bases[item.id].guide,
+        whyNot:(content.whyNot && content.whyNot[item.id]) || ''
+      };
+    });
+  }
+
+  function realityFor(baseId, profile, lang) {
+    var fr = lang === 'fr';
+    var baseReality = {
+      nice:{car:'Excellent sans voiture',carEn:'Excellent without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
+      cannes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
+      antibes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
+      villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less seamless',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
+      menton:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€ à €€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
+      monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne : relief + budget',frictionEn:'Medium: hills + spend'},
+      sainttropez:{car:'Voiture ou transferts à prévoir',carEn:'Car or transfers needed',budget:'€€€ à €€€€',friction:'Élevée',frictionEn:'High'},
+      saintpaul:{car:'Voiture très utile',carEn:'Car highly useful',budget:'€€ à €€€€',friction:'Moyenne à élevée',frictionEn:'Medium to high'}
+    }[baseId];
+    return {
+      mobility: fr ? baseReality.car : baseReality.carEn,
+      budget: fr ? baseReality.budget : baseReality.budget.replace(/ à /g, ' to '),
+      friction: fr ? baseReality.friction : baseReality.frictionEn,
+      season: seasonNoteFor(profile, baseId, lang)
+    };
+  }
+
+  function resultModel(profile, overrideBase, lang) {
+    var decision = chooseBase(profile);
+    var baseId = overrideBase || decision.base;
+    var content = CONTENT[lang];
+    var base = content.bases[baseId];
+    return {
+      baseId:baseId,
+      base:base,
+      intentional:BASES[baseId].type === 'intentional',
+      originalBase:decision.base,
+      override:!!overrideBase,
+      reason:reasonForSeason(profile, content, lang),
+      pace:content.pace[profile.pace],
+      season:seasonNoteFor(profile, baseId, lang),
+      priorities:prioritiesFor(content, baseId, profile),
+      further:regionalFor(profile, baseId, lang),
+      skip:skipFor(content, baseId, profile, lang),
+      hotels:content.hotels[baseId] || [],
+      alternatives:alternativesFor(profile, baseId, lang),
+      reality:realityFor(baseId, profile, lang),
+      escape:escapeFor(profile, baseId, lang)
+    };
+  }
+
+  function esc(value) {
+    return String(value || '').replace(/[&<>"']/g, function (ch) {
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];
+    });
+  }
+
+  var chooserHotelMediaFallback = {
+    'hotel 66 nice':'/assets/hotels/hotel-66/hero.jpg',
+    'hotel villa victoria':'/assets/hotels/villa-victoria/hero.jpg',
+    'hotel du couvent':'/assets/hotels/hotel-du-couvent/exterieur.jpg',
+    'hotel de provence':'/assets/hotels/hotel-de-provence-cannes/batch-thumb.svg',
+    'le cavendish':'/assets/hotels/le-cavendish/hero.jpg',
+    'hotel martinez':'/assets/hotels/hotel-martinez/hero.jpg',
+    'hotel de l etoile':'/assets/hotels/hotel-de-letoile-antibes/batch-thumb.svg',
+    'la villa port d antibes':'/assets/hotels/la-villa-port-antibes/hero.jpg',
+    'hotel belles rives':'/assets/hotels/hotel-belles-rives/batch-thumb.svg',
+    'hotel comte de nice':'/assets/hotels/hotel-le-comte-de-nice/hero.jpg',
+    'welcome hotel':'/assets/hotels/welcome-hotel/hero.jpg',
+    'grand hotel du cap ferrat':'/assets/hotels/grand-hotel-du-cap-ferrat/batch-thumb.svg',
+    'ibis roquebrune cap martin menton':'/assets/hotels/ibis-roquebrune-cap-martin/batch-thumb.svg',
+    'hotel napoleon':'/assets/hotels/hotel-napoleon/hero.jpg',
+    'villa genesis':'/assets/hotels/villa-genesis/hero.jpg',
+    'monte carlo bay hotel resort':'/assets/hotels/monte-carlo-bay/batch-thumb.svg',
+    'hotel hermitage monte carlo':'/assets/hotels/hotel-hermitage-monte-carlo/batch-thumb.svg',
+    'hotel de paris monte carlo':'/assets/hotels/hotel-de-paris-monte-carlo/hero.jpg',
+    'kube saint tropez':'/assets/hotels/kube-saint-tropez/batch-thumb.svg',
+    'la ferme d augustin':'/assets/hotels/la-ferme-daugustin/batch-thumb.svg',
+    'hotel la ponche':'/assets/hotels/la-ponche-saint-tropez/batch-thumb.svg',
+    'hotel les messugues':'/assets/hotels/hotel-les-messugues/batch-thumb.svg',
+    'toile blanche':'/assets/hotels/toile-blanche/batch-thumb.svg',
+    'le domaine du mas de pierre':'/assets/hotels/domaine-du-mas-de-pierre/batch-thumb.svg'
+  };
+
+  function mount() {
+    var root = document.querySelector('[data-riviera-chooser]');
+    if (!root) return;
+    var lang = (document.documentElement.lang || '').toLowerCase().indexOf('fr') === 0 ? 'fr' : 'en';
+    var state = { days:'', season:'', mobility:'', mood:'', pace:'' };
+    var lastModel = null;
+    var started = false;
+    var completed = false;
+
+    function track(name, detail) {
+      if (typeof window.gtag !== 'function') return;
+      var payload = detail || {};
+      payload.tool = 'riviera_fit';
+      payload.page_language = lang;
+      window.gtag('event', name, payload);
+    }
+
+    var params = new URLSearchParams(window.location.search);
+    var allowedParams = {
+      days:['3','5','7'],
+      season:['winter','spring','summer','autumn'],
+      mobility:['nocar','car','either'],
+      mood:['decide','sea','food','culture','glamour','peace'],
+      pace:['slow','balanced','ambitious']
+    };
+    Object.keys(allowedParams).forEach(function (key) {
+      var value = params.get(key);
+      if (allowedParams[key].indexOf(value) >= 0) state[key] = value;
+    });
+    var requestedBase = params.get('base');
+    if (!requestedBase || !BASES[requestedBase]) requestedBase = null;
+
+    var labels = lang === 'fr' ? {
+      incomplete:'Répondez aux cinq questions. Ensuite, Mametas tranche.',
+      verdict:'RIVIERA FIT · LE VERDICT',
+      stay:'Dormez à ',
+      whyThis:'Pourquoi ce point de chute',
+      whyNot:'Pourquoi pas les autres',
+      reality:'À savoir',
+      mobility:'Déplacements',
+      budget:'Budget',
+      friction:'Logistique',
+      seasonLabel:'Saison',
+      do:'Indispensable',
+      further:'Pour aller plus loin',
+      furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre point de chute.',
+      furtherAmbitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance que vous avez choisie.',
+      skip:'Ce qu’on laisserait tomber',
+      hotel:'Trois niveaux. Même point de chute.',
+      hotelNote:'La catégorie est éditoriale ; les € sont des repères relatifs Mametas, jamais un tarif en temps réel.',
+      allHotels:'Voir toute la sélection hôtels',
+      guide:'Voir le guide de cette ville',
+      escape:'Voir cette version',
+      back:'Revenir au choix Mametas',
+      intentional:'POINT DE CHUTE INTENTIONNEL',
+      shareResult:'Partager mon Riviera Fit',
+      shareCopied:'Lien du résultat copié',
+      reset:'Recommencer'
+    } : {
+      incomplete:'Answer all five questions. Then Mametas makes the call.',
+      verdict:'RIVIERA FIT · THE VERDICT',
+      stay:'Stay in ',
+      whyThis:'Why this base',
+      whyNot:'Why not the others',
+      reality:'Reality Check',
+      mobility:'Getting around',
+      budget:'Budget',
+      friction:'Logistics',
+      seasonLabel:'Season',
+      do:'The essentials',
+      further:'Go further',
+      furtherBalanced:'Balanced pace: two regional detours are genuinely worth leaving the base for.',
+      furtherAmbitious:'Ambitious pace: widen the map without diluting the mood you chose.',
+      skip:'What we would skip',
+      hotel:'Three levels. Same base.',
+      hotelNote:'The categories are editorial; € symbols are Mametas relative guides, never a live rate.',
+      allHotels:'See the full hotel selection',
+      guide:'See the base guide',
+      escape:'Show me this version',
+      back:'Back to the Mametas pick',
+      intentional:'INTENTIONAL BASE',
+      shareResult:'Share my Riviera Fit',
+      shareCopied:'Result link copied',
+      reset:'Start again'
+    };
+
+    function syncButtons() {
+      root.querySelectorAll('[data-choice]').forEach(function (button) {
+        var group = button.getAttribute('data-group');
+        var value = button.getAttribute('data-choice');
+        var active = state[group] === value;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      });
+      var ready = state.days && state.season && state.mobility && state.mood && state.pace;
+      var submit = root.querySelector('[data-chooser-submit]');
+      if (submit) {
+        submit.disabled = !ready;
+        var note = root.querySelector('[data-chooser-incomplete-note]');
+        if (!note) {
+          note = document.createElement('p');
+          note.className = 'chooser-submit-note';
+          note.setAttribute('data-chooser-incomplete-note', '');
+          submit.insertAdjacentElement('afterend', note);
+        }
+        note.textContent = ready ? '' : labels.incomplete;
+        note.hidden = ready;
+      }
+      root.querySelectorAll('[data-step]').forEach(function (step) {
+        step.hidden = false;
+      });
+    }
+
+    function buildShareUrl() {
+      var url = new URL(window.location.origin + window.location.pathname);
+      ['days','season','mobility','mood','pace'].forEach(function (key) {
+        if (state[key]) url.searchParams.set(key, state[key]);
+      });
+      if (lastModel && lastModel.override && lastModel.baseId) {
+        url.searchParams.set('base', lastModel.baseId);
+      }
+      return url.toString();
+    }
+
+    function showShareStatus(message) {
+      var status = root.querySelector('[data-chooser-share-status]');
+      if (!status) return;
+      status.textContent = message;
+      window.setTimeout(function () { status.textContent = ''; }, 2400);
+    }
+
+    function copyShareUrl(url) {
+      function copied() {
+        showShareStatus(labels.shareCopied);
+        track('riviera_fit_share', { method:'copy_link', recommended_base:lastModel ? lastModel.baseId : '' });
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(copied).catch(function () {
+          var input = document.createElement('textarea');
+          input.value = url;
+          input.setAttribute('readonly','');
+          input.style.position = 'fixed';
+          input.style.opacity = '0';
+          document.body.appendChild(input);
+          input.select();
+          try { document.execCommand('copy'); copied(); } finally { input.remove(); }
+        });
+        return;
+      }
+      var input = document.createElement('textarea');
+      input.value = url;
+      input.setAttribute('readonly','');
+      input.style.position = 'fixed';
+      input.style.opacity = '0';
+      document.body.appendChild(input);
+      input.select();
+      try { document.execCommand('copy'); copied(); } finally { input.remove(); }
+    }
+
+    function shareResult() {
+      if (!lastModel) return;
+      var url = buildShareUrl();
+      var title = lang === 'fr'
+        ? 'Mon Riviera Fit Mametas : ' + lastModel.base.name
+        : 'My Mametas Riviera Fit: ' + lastModel.base.name;
+      if (navigator.share) {
+        navigator.share({ title:title, url:url }).then(function () {
+          track('riviera_fit_share', { method:'native_share', recommended_base:lastModel.baseId || '' });
+        }).catch(function (error) {
+          if (!error || error.name !== 'AbortError') copyShareUrl(url);
+        });
+        return;
+      }
+      copyShareUrl(url);
+    }
+
+    function hotelKey(value) {
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    }
+
+
+    function hydrateHotelMedia(model, out) {
+      if (!model || !model.base || !model.base.hotels || typeof fetch === 'undefined') return;
+      fetch(model.base.hotels, { credentials:'same-origin', cache:'no-store' })
+        .then(function (response) { if (!response.ok) throw new Error('hotel media'); return response.text(); })
+        .then(function (htmlText) {
+          var doc = new DOMParser().parseFromString(htmlText, 'text/html');
+          var mediaByName = {};
+          doc.querySelectorAll('.hotel-choice-card').forEach(function (card) {
+            var heading = card.querySelector('h3');
+            if (!heading) return;
+            var key = hotelKey(heading.textContent);
+            if (!key) return;
+            var img = card.querySelector('.hotel-choice-media img[src]');
+            if (img) {
+              mediaByName[key] = { type:'img', src:img.getAttribute('src') || '', alt:img.getAttribute('alt') || heading.textContent.trim() };
+              return;
+            }
+            var sprite = card.querySelector('.hotel-choice-media .batch-thumb');
+            if (sprite) {
+              var classes = ['batch-thumb'];
+              if (sprite.classList.contains('batch-thumb-13')) classes.push('batch-thumb-13');
+              var style = sprite.getAttribute('style') || '';
+              var pos = (style.match(/background-position\s*:\s*[^;]+/i) || [''])[0];
+              mediaByName[key] = { type:'sprite', classes:classes.join(' '), style:pos };
+            }
+          });
+          out.querySelectorAll('.chooser-hotel-card[data-hotel-name]').forEach(function (target) {
+            if (target.querySelector('.chooser-hotel-media')) return;
+            var key = hotelKey(target.getAttribute('data-hotel-name'));
+            var media = mediaByName[key];
+            if (!media && chooserHotelMediaFallback[key]) {
+              media = { type:'img', src:chooserHotelMediaFallback[key], alt:target.getAttribute('data-hotel-name') || '' };
+            }
+            if (!media) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'chooser-hotel-media';
+            if (media.type === 'img' && media.src) {
+              var img = document.createElement('img');
+              img.src = media.src;
+              img.alt = media.alt || '';
+              img.loading = 'lazy';
+              wrap.appendChild(img);
+            } else if (media.type === 'sprite') {
+              var span = document.createElement('span');
+              span.className = media.classes;
+              if (media.style) span.setAttribute('style', media.style);
+              span.setAttribute('aria-hidden','true');
+              wrap.appendChild(span);
+            } else {
+              return;
+            }
+            target.insertBefore(wrap, target.firstChild);
+          });
+        })
+        .catch(function () {
+          out.querySelectorAll('.chooser-hotel-card[data-hotel-name]').forEach(function (target) {
+            if (target.querySelector('.chooser-hotel-media')) return;
+            var key = hotelKey(target.getAttribute('data-hotel-name'));
+            var src = chooserHotelMediaFallback[key];
+            if (!src) return;
+            var wrap = document.createElement('div');
+            wrap.className = 'chooser-hotel-media';
+            var img = document.createElement('img');
+            img.src = src;
+            img.alt = target.getAttribute('data-hotel-name') || '';
+            img.loading = 'lazy';
+            wrap.appendChild(img);
+            target.insertBefore(wrap, target.firstChild);
+          });
+        });
+    }
+
+    function render(overrideBase) {
+      if (!(state.days && state.season && state.mobility && state.mood && state.pace)) return;
+      var model = resultModel(state, overrideBase, lang);
+      lastModel = model;
+      var out = root.querySelector('[data-chooser-result]');
+      var profileLabels = lang === 'fr'
+        ? {
+            season:{winter:'novembre à mars',spring:'avril à juin',summer:'juillet et août',autumn:'septembre et octobre'},
+            mood:{decide:'Mametas décide',sea:'mer & baignade',food:'restaurants & vie de ville',culture:'art & villages',glamour:'glamour de la Riviera',peace:'calme & beauté'},
+            pace:{slow:'tranquille',balanced:'équilibré',ambitious:'ambitieux'}
+          }
+        : {
+            season:{winter:'November to March',spring:'April to June',summer:'July and August',autumn:'September and October'},
+            mood:{decide:'decide for me',sea:'sea & swimming',food:'food & city life',culture:'art & villages',glamour:'Riviera glamour',peace:'peace & beauty'},
+            pace:{slow:'slow',balanced:'balanced',ambitious:'ambitious'}
+          };
+      var profileText = [
+        state.days === '7' ? '7+' : state.days,
+        profileLabels.season[state.season] || state.season,
+        state.mobility === 'nocar' ? (lang==='fr'?'sans voiture':'no car') : (state.mobility === 'car' ? (lang==='fr'?'voiture':'car') : (lang==='fr'?'mobilité flexible':'flexible mobility')),
+        profileLabels.mood[state.mood] || state.mood,
+        profileLabels.pace[state.pace] || state.pace
+      ].join(' · ');
+      var priorities = model.priorities.map(function (p, i) {
+        return '<li><span>0' + (i+1) + '</span><strong>' + esc(p) + '</strong></li>';
+      }).join('');
+      var further = '';
+      if (model.further && model.further.length) {
+        var furtherCards = model.further.map(function (item, i) {
+          return '<a class="chooser-further-card" href="' + esc(item.href) + '"><span>0' + (i+1) + '</span><strong>' + esc(item.label) + '</strong><small>' + esc(item.body) + '</small></a>';
+        }).join('');
+        further = '<section class="chooser-further"><div class="chooser-further-head"><div><p class="eyebrow">' + (lang==='fr'?'LA RIVIERA AU-DELÀ DU POINT DE CHUTE':'BEYOND THE BASE') + '</p><h3>' + labels.further + '</h3></div><p>' + (state.pace === 'ambitious' ? labels.furtherAmbitious : labels.furtherBalanced) + '</p></div><div class="chooser-further-grid">' + furtherCards + '</div></section>';
+      }
+      var hotelCards = model.hotels.map(function (h) {
+        var cta = lang === 'fr' ? 'Voir les tarifs →' : 'Check rates →';
+        return '<a class="chooser-hotel-card" href="' + esc(h.url) + '" rel="sponsored nofollow noopener" target="_blank" data-affiliate-network="booking_or_partner" data-affiliate-hotel="' + esc(h.name) + '" data-hotel-name="' + esc(h.name) + '"><div class="chooser-hotel-meta"><span>' + esc(h.tier) + '</span><b>' + esc(h.price) + '</b></div><h4>' + esc(h.name) + '</h4><p>' + esc(h.note) + '</p><span class="chooser-hotel-cta">' + cta + '</span></a>';
+      }).join('');
+      var escape = '';
+      if (!model.override && model.escape) {
+        escape = '<aside class="chooser-escape"><span class="eyebrow">' + (lang==='fr'?'OPTION INTENTIONNELLE':'INTENTIONAL ALTERNATIVE') + '</span><h3>' + esc(model.escape.title) + '</h3><p>' + esc(model.escape.body) + '</p><button type="button" class="button secondary" data-chooser-escape="' + esc(model.escape.base) + '">' + labels.escape + '</button></aside>';
+      } else if (model.override) {
+        escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. Le point de chute change ; le tier hôtelier, lui, restera une décision séparée.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
+      }
+      out.innerHTML =
+        '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><h3 class="chooser-decision-label">' + labels.whyThis + '</h3><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +
+        '<section class="chooser-reality"><div><p class="eyebrow">' + labels.reality + '</p><h3>' + (lang==='fr'?'Ce que ce choix implique vraiment':'What this choice really implies') + '</h3></div><dl><div><dt>' + labels.mobility + '</dt><dd>' + esc(model.reality.mobility) + '</dd></div><div><dt>' + labels.budget + '</dt><dd>' + esc(model.reality.budget) + '</dd></div><div><dt>' + labels.friction + '</dt><dd>' + esc(model.reality.friction) + '</dd></div><div><dt>' + labels.seasonLabel + '</dt><dd>' + esc(model.reality.season) + '</dd></div></dl></section>' +
+        '<section class="chooser-alternatives"><p class="eyebrow">' + labels.whyNot + '</p><div class="chooser-alt-grid">' + model.alternatives.map(function(alt){ return '<a href="' + esc(alt.guide) + '"><strong>' + esc(alt.name) + '</strong><span>' + esc(alt.whyNot) + '</span></a>'; }).join('') + '</div></section>' +
+        '<div class="chooser-result-grid"><section class="chooser-do"><h3>' + labels.do + '</h3><ol>' + priorities + '</ol></section><section class="chooser-skip"><h3>' + labels.skip + '</h3><p>' + esc(model.skip) + '</p></section></div>' +
+        further +
+        escape +
+        '<section class="chooser-hotels"><div class="chooser-hotels-head"><div><p class="eyebrow">' + (lang==='fr'?'SÉLECTION COURTE · VOTRE HÔTEL':'SHORT SELECTION · YOUR HOTEL') + '</p><h3>' + labels.hotel + '</h3></div><p>' + labels.hotelNote + ' ' + (lang==='fr'?'Ces trois adresses sont des repères, pas une liste exhaustive.':'These three addresses are reference points, not the full list.') + '</p></div><div class="chooser-hotel-grid">' + hotelCards + '</div><div class="chooser-actions"><a class="button" href="' + (lang==='fr'?'/hotels/finder/?base=':'/en/hotels/finder/?base=') + esc(model.baseId === 'saintpaul' ? 'saint-paul' : (model.baseId === 'sainttropez' ? 'saint-tropez' : model.baseId)) + '">' + (lang==='fr'?'Ouvrir Hotel Fit':'Open Hotel Fit') + '</a><a class="button secondary" href="' + esc(model.base.guide) + '">' + labels.guide + '</a></div></section>' +
+        '<div class="chooser-share-row"><button type="button" class="button secondary chooser-share-button" data-chooser-share>' + labels.shareResult + '</button><span class="mametas-share-status chooser-share-status" data-chooser-share-status role="status" aria-live="polite"></span></div>' +
+        '<button type="button" class="chooser-reset" data-chooser-reset>' + labels.reset + '</button>';
+      out.hidden = false;
+      hydrateHotelMedia(model, out);
+      out.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+
+    root.addEventListener('click', function (event) {
+      if (event.target.closest('[data-chooser-share]')) {
+        shareResult();
+        return;
+      }
+
+      var affiliate = event.target.closest('[data-affiliate-network][data-affiliate-hotel]');
+      if (affiliate) {
+        track('affiliate_click', {
+          affiliate_network: affiliate.getAttribute('data-affiliate-network') || '',
+          hotel_id: affiliate.getAttribute('data-affiliate-hotel') || '',
+          page_path: window.location.pathname,
+          source_tool: 'riviera_fit',
+          recommended_base: lastModel ? lastModel.baseId : ''
+        });
+        return;
+      }
+
+      var hotelFit = event.target.closest('.chooser-actions a[href*="/hotels/finder/"]');
+      if (hotelFit) {
+        track('riviera_fit_hotel_fit_click', {
+          recommended_base: lastModel ? lastModel.baseId : ''
+        });
+        return;
+      }
+
+      var button = event.target.closest('[data-choice]');
+      if (button) {
+        if (!started) {
+          started = true;
+          track('riviera_fit_start', { first_question: button.getAttribute('data-group') || '' });
+        }
+        state[button.getAttribute('data-group')] = button.getAttribute('data-choice');
+        syncButtons();
+        if (typeof button.blur === 'function') button.blur();
+        var next = root.querySelector('[data-step]:not([hidden]) [data-choice].is-active');
+        return;
+      }
+      var escapeButton = event.target.closest('[data-chooser-escape]');
+      if (escapeButton) { render(escapeButton.getAttribute('data-chooser-escape')); return; }
+      if (event.target.closest('[data-chooser-back]')) { render(null); return; }
+      if (event.target.closest('[data-chooser-reset]')) {
+        state = {days:'',season:'',mobility:'',mood:'',pace:''};
+        started = false;
+        completed = false;
+        lastModel = null;
+        history.replaceState(null,'',window.location.pathname);
+        root.querySelector('[data-chooser-result]').hidden = true;
+        syncButtons();
+        root.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+
+    var submit = root.querySelector('[data-chooser-submit]');
+    if (submit) submit.addEventListener('click', function () {
+      render(null);
+      if (!completed && lastModel) {
+        completed = true;
+        track('riviera_fit_complete', {
+          days: state.days,
+          season: state.season,
+          mobility: state.mobility,
+          mood: state.mood,
+          pace: state.pace,
+          recommended_base: lastModel.baseId || ''
+        });
+      }
+    });
+    syncButtons();
+    if (state.days && state.season && state.mobility && state.mood && state.pace) {
+      render(requestedBase);
+      completed = true;
+    }
+  }
+
+  function selfTest() {
+    var mediaKey=function(value){
+      return String(value || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+    };
+    var days=['3','5','7'], seasons=['winter','spring','summer','autumn'], mobility=['nocar','car','either'], moods=['decide','sea','food','culture','glamour','peace'], pace=['slow','balanced','ambitious'];
+    var count=0, errors=[];
+    days.forEach(function(d){ seasons.forEach(function(s){ mobility.forEach(function(m){ moods.forEach(function(md){ pace.forEach(function(p){
+      var profile={days:d,season:s,mobility:m,mood:md,pace:p};
+      var result=chooseBase(profile); count++;
+      if (!BASES[result.base]) errors.push('unknown base '+JSON.stringify(profile));
+      if (d==='3' && BASES[result.base].type==='intentional') errors.push('3-day intentional '+JSON.stringify(profile));
+      if (m==='nocar' && (result.base==='sainttropez' || result.base==='saintpaul')) errors.push('no-car friction '+JSON.stringify(profile));
+      if (s==='winter' && result.base==='sainttropez') errors.push('winter Saint-Tropez should not win '+JSON.stringify(profile));
+    }); }); }); }); });
+    var fixtures=[
+      [{days:'5',season:'summer',mobility:'nocar',mood:'glamour',pace:'balanced'},'cannes'],
+      [{days:'7',season:'summer',mobility:'nocar',mood:'glamour',pace:'slow'},'monaco'],
+      [{days:'7',season:'summer',mobility:'car',mood:'sea',pace:'slow'},'sainttropez'],
+      [{days:'7',season:'summer',mobility:'car',mood:'culture',pace:'slow'},'saintpaul'],
+      [{days:'3',season:'summer',mobility:'nocar',mood:'decide',pace:'balanced'},'nice']
+    ];
+    fixtures.forEach(function(f){ var got=chooseBase(f[0]).base; if (got!==f[1]) errors.push('fixture '+JSON.stringify(f[0])+' expected '+f[1]+' got '+got); });
+    var balancedSeaCar = resultModel({days:'5',season:'summer',mobility:'car',mood:'sea',pace:'balanced'}, null, 'en');
+    var balancedLabels = balancedSeaCar.further.map(function(x){ return x.label; });
+    if (balancedSeaCar.baseId !== 'antibes') errors.push('5-day car sea balanced should stay Antibes');
+    if (balancedLabels.indexOf('Nice properly') < 0 || balancedLabels.indexOf('Villefranche + Cap-Ferrat') < 0) errors.push('balanced sea/car must include Nice and Cap-Ferrat');
+    var ambitiousSeaCar = resultModel({days:'5',season:'summer',mobility:'car',mood:'sea',pace:'ambitious'}, null, 'en');
+    var ambitiousLabels = ambitiousSeaCar.further.map(function(x){ return x.label; });
+    if (ambitiousLabels.indexOf('Saint-Paul-de-Vence') < 0) errors.push('ambitious sea/car must add Saint-Paul-de-Vence');
+
+    var cultureAmbitious3Car = resultModel({days:'3',season:'summer',mobility:'car',mood:'culture',pace:'ambitious'}, null, 'en');
+    var cultureAmbitiousLabels = cultureAmbitious3Car.further.map(function(x){ return x.label; });
+    if (cultureAmbitious3Car.baseId !== 'nice') errors.push('3-day car culture ambitious should stay Nice');
+    if (cultureAmbitious3Car.priorities.length !== 2 ||
+        cultureAmbitious3Car.priorities.indexOf('Matisse / Chagall in Nice') < 0 ||
+        cultureAmbitious3Car.priorities.indexOf('Saint-Paul + Fondation Maeght') < 0) {
+      errors.push('3-day car culture ambitious essentials must be Nice art + Saint-Paul/Maeght');
+    }
+    if (cultureAmbitiousLabels.indexOf('Èze') < 0 || cultureAmbitiousLabels.indexOf('Antibes + Picasso') < 0 ||
+        cultureAmbitiousLabels.indexOf('Villefranche + Cap-Ferrat') >= 0 ||
+        cultureAmbitiousLabels.indexOf('Saint-Paul-de-Vence') >= 0) {
+      errors.push('3-day car culture ambitious further must be Èze + Antibes/Picasso, without Villefranche or duplicate Saint-Paul');
+    }
+    var noCarCulture = resultModel({days:'5',season:'summer',mobility:'nocar',mood:'culture',pace:'balanced'}, null, 'en');
+    var noCarSaintPaul = noCarCulture.further.filter(function(x){ return x.label === 'Saint-Paul-de-Vence'; })[0];
+    if (noCarSaintPaul && /use the car|drive/i.test(noCarSaintPaul.body)) errors.push('no-car Saint-Paul copy must not tell traveller to drive');
+    if (/\bà\b/.test(noCarCulture.reality.budget)) errors.push('English budget range must not use French à');
+    var ambitiousNoCar = resultModel({days:'7',season:'summer',mobility:'nocar',mood:'culture',pace:'ambitious'}, null, 'en');
+    if (/car or train/i.test(ambitiousNoCar.pace)) errors.push('ambitious no-car pace copy must be mobility-neutral');
+
+    var winterCalmCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'peace',pace:'slow'}, null, 'en');
+    if (winterCalmCar.baseId === 'sainttropez') errors.push('winter calm/car must not choose Saint-Tropez');
+    var winterSeaCar = resultModel({days:'7',season:'winter',mobility:'car',mood:'sea',pace:'slow'}, null, 'en');
+    if (winterSeaCar.escape && winterSeaCar.escape.base === 'sainttropez') errors.push('winter sea profile must not offer Saint-Tropez escape');
+
+    ['en','fr'].forEach(function(lang){
+      Object.keys(CONTENT[lang].hotels).forEach(function(base){
+        CONTENT[lang].hotels[base].forEach(function(h){
+          if (!h.url || h.url.indexOf('https://') !== 0) errors.push('missing affiliate '+lang+' '+base+' '+h.name);
+          var key=mediaKey(h.name);
+          if (!chooserHotelMediaFallback[key]) errors.push('missing local media '+lang+' '+base+' '+h.name);
+        });
+      });
+    });
+    if (errors.length) { throw new Error('Riviera Chooser self-test failed:\n'+errors.join('\n')); }
+    if (typeof console !== 'undefined') console.log('Riviera Chooser self-test passed: '+count+' profiles + '+fixtures.length+' doctrine fixtures.');
+    return true;
+  }
+
+  return { chooseBase:chooseBase, resultModel:resultModel, mount:mount, selfTest:selfTest };
+});
