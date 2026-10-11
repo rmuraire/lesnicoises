@@ -7,7 +7,7 @@ Runs after V34 and before the browser sweep / OVH deploy. No global CSS edits.
 """
 from pathlib import Path
 from html.parser import HTMLParser
-from html import escape
+from html import escape, unescape
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -107,17 +107,68 @@ def fix_en_gay_subguide_faq(s, rel):
     return s[:matches[0].start()] + faq + s[matches[0].end():]
 
 
+# The six legacy FR-only cards must not survive the final rendered HTML,
+# regardless of CSS class, image replacement, or the materializer version.
+FR_EXTRA_HOTELS = (
+    "Hôtel Belles Rives",
+    "Five Seas Hotel Cannes",
+    "Grand-Hôtel du Cap-Ferrat",
+    "Hôtel Hermitage Monte-Carlo",
+    "Le Domaine du Mas de Pierre",
+    "Hôtel La Ponche",
+)
+
+class _DivBounds(HTMLParser):
+    """Find balanced div elements without reserializing/altering page HTML."""
+    def __init__(self, source):
+        super().__init__()
+        self.line_starts = [0] + [m.end() for m in re.finditer(r"\n", source)]
+        self.stack = []
+        self.bounds = []
+
+    def _pos(self):
+        line, col = self.getpos()
+        return self.line_starts[line - 1] + col
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() == "div":
+            self.stack.append(self._pos())
+
+    def handle_endtag(self, tag):
+        if tag.lower() == "div" and self.stack:
+            self.bounds.append((self.stack.pop(), self._pos() + len("</div>")))
+
+
 def fix_fr_hotels(s):
-    # The broken affiliate-sprite selection has no EN-equivalent asset treatment.
-    # Keep the fully functional 10-base guide, delete only its obsolete tail.
-    if 'batch-thumb' not in s: return s
-    start=s.rfind('<section class="v3-section">')
-    end=s.find('</main>',start)
-    if start<0 or end<start:raise RuntimeError("French Stay hub structure changed")
-    removed=s[start:end]
-    if 'batch-thumb' not in removed or 'place-grid' not in removed:
-        raise RuntimeError("Refusing to remove a non-batch Stay section")
-    return s[:start]+s[end:]
+    """Preserve the FR rule and ten-base routing, remove only the extra six-card grid."""
+    decoded = unescape(s)
+    present = [name for name in FR_EXTRA_HOTELS if name in decoded]
+    if not present:
+        return s
+    if len(present) != len(FR_EXTRA_HOTELS):
+        raise RuntimeError(f"FR Stay hub has partial legacy selection: {present}")
+    parser = _DivBounds(s)
+    parser.feed(s)
+    options = []
+    for start, end in parser.bounds:
+        fragment = s[start:end]
+        text = unescape(fragment)
+        if (
+            end - start < 18000
+            and all(name in text for name in FR_EXTRA_HOTELS)
+            and len(re.findall(r"<h3\b", fragment, re.I)) >= 6
+            and "La règle Mametas" not in text
+            and "Hotel Fit" not in text
+        ):
+            options.append((end - start, start, end))
+    if not options:
+        raise RuntimeError("FR Stay hub: cannot isolate six-card block safely")
+    _, start, end = min(options)
+    cleaned = s[:start] + s[end:]
+    if any(name in unescape(cleaned) for name in FR_EXTRA_HOTELS):
+        raise RuntimeError("FR Stay hub: legacy hotel cards remain after removal")
+    return cleaned
+
 
 def fix_beaches_around_nice_images(s):
     """Suppress only missing photo panels, never substitute a false location.
@@ -240,8 +291,11 @@ def run():
             modified+=1
     for path in ('hotels/index.html','en/hotels/index.html'):
         page=(ROOT/path).read_text(encoding='utf-8')
-        if path.startswith('hotels/') and 'batch-thumb' in page:
-            raise RuntimeError("FR hotel batch still present")
+        if path.startswith('hotels/'):
+            if 'batch-thumb' in page or any(name in unescape(page) for name in FR_EXTRA_HOTELS):
+                raise RuntimeError("FR hotel hub still contains the six unwanted cards")
+            if "La règle Mametas" not in unescape(page):
+                raise RuntimeError("FR hotel hub lost the editorial rule")
         # Production can replace the legacy .practical-grid with a new layout.
         # Test the actual destination anchors, not a brittle CSS class.
         links = set(re.findall(r'<a\b[^>]*href="([^"]+)"', page))

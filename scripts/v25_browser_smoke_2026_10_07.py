@@ -597,6 +597,7 @@ def main() -> None:
                           return {
                             compact:document.body.classList.contains('mametas-compact-article'),
                             hotelsBatch:pick('main .batch-thumb').length,
+                            hotelsExtras:['Hôtel Belles Rives','Five Seas Hotel Cannes','Grand-Hôtel du Cap-Ferrat','Hôtel Hermitage Monte-Carlo','Le Domaine du Mas de Pierre','Hôtel La Ponche'].filter(name=>pick('main h3').some(h=>h.textContent.includes(name))).length,
                             hotelBase:pick('.practical-grid .practical-link').length,
                             hotelNav:pick('main a[href^="/hotels/"], main a[href^="/en/hotels/"], main a[href^="/stay/"], main a[href^="/fr/dormir/"]').length,
                             cards:pick('.grid > a.card[href]').length,
@@ -621,8 +622,8 @@ def main() -> None:
                           };
                         }""")
                         print("FINAL_UI_POLISH",label,polish,flush=True)
-                        if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelNav"]<5):
-                            errors.append(f"{label}: obsolete FR hotel sprite or missing hotel navigation")
+                        if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelsExtras"] or polish["hotelNav"]<5):
+                            errors.append(f"{label}: extra FR-only hotel cards / obsolete sprites or missing hotel navigation")
                         if path in ("/bons-plans/","/en/good-finds/"):
                             # Source templates have >=8 semantic anchor cards; the
                             # actual production agenda materializes three div cards
