@@ -17,8 +17,8 @@ SOURCE_LABELS = {
         "Booking.com: 2026 travel personalization research",
     ),
     "explore/lune-de-miel-cote-d-azur/index.html": (
-        "Booking.com : progression des recherches septembre–octobre 2026",
-        "Booking.com : tendances voyage 2026 et ultra-personnalisation",
+        "Booking.com : progression des recherches septembre–octobre 2026",
+        "Booking.com : tendances voyage 2026 et ultra-personnalisation",
     ),
 }
 NEWS_ANCHOR = re.compile(
