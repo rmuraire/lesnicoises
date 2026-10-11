@@ -70,7 +70,11 @@ def fix_en_gay_faq(s):
     return s[:start]+faq+s[end:]
 
 def fix_en_gay_subguide_faq(s, rel):
-    """Convert an existing static Q&A cluster, never alter its actual answers."""
+    """Respect native FAQ accordions already materialized by earlier passes."""
+    if '<div class="faq-list">' in s:
+        if s.count('class="faq-item"') < 3:
+            raise RuntimeError(f"{rel}: existing FAQ accordion is incomplete")
+        return s
     if 'class="mametas-faq-parity"' in s:
         return s
     pattern = re.compile(
@@ -79,9 +83,7 @@ def fix_en_gay_subguide_faq(s, rel):
     )
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
-        at = s.find('<h2>FAQ</h2>')
-        glimpse = s[at:at+1500] if at >= 0 else s[-900:]
-        raise RuntimeError(f"{rel}: expected exactly one FAQ cluster, got {len(matches)}; at={at}; snippet={glimpse!r}")
+        raise RuntimeError(f"{rel}: expected existing FAQ questions, got {len(matches)}")
     questions = FAQ_PLACE.findall(matches[0].group(1))
     if len(questions) != 3 or FAQ_PLACE.sub('', matches[0].group(1)).strip():
         raise RuntimeError(f"{rel}: unexpected FAQ markup, not modifying")
@@ -237,7 +239,9 @@ def run():
                  'en/gay-french-riviera/where-to-stay/index.html',
                  'en/gay-french-riviera/beaches-without-a-car/index.html'):
         h=(ROOT/path).read_text(encoding='utf-8')
-        if h.count('<section class="mametas-faq-parity">')!=1 or h.count('<details>')!=3:
+        normalized = h.count('<section class="mametas-faq-parity">')==1 and h.count('<details>')==3
+        existing = '<div class="faq-list">' in h and h.count('class="faq-item"') >= 3
+        if not (normalized or existing):
             raise RuntimeError(f"{path}: FAQ accordion parity incomplete")
     print(f"V35 PRESENTATION: {modified} pages, {compact} compact editorial pages, "
           f"{card_count} semantic Good Finds cards, {fr.count('<details>')} Gay FAQ pairs, "
