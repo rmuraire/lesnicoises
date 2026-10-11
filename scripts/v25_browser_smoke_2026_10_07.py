@@ -69,6 +69,9 @@ PAGES = [
     ("/plages/nice/", "editorial"),
     ("/en/gay-french-riviera/", "editorial"),
     ("/cote-dazur-gay/", "editorial"),
+    ("/en/gay-nice/", "editorial"),
+    ("/en/gay-french-riviera/where-to-stay/", "editorial"),
+    ("/en/gay-french-riviera/beaches-without-a-car/", "editorial"),
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
@@ -576,7 +579,10 @@ def main() -> None:
                         "/bons-plans/train-ou-bus/", "/plages/autour-de-nice/",
                         "/bons-plans/", "/en/good-finds/",
                         "/guide-gay-nice/", "/cote-dazur-gay/",
-                        "/en/gay-french-riviera/", "/explore/retraite-cote-d-azur/",
+                        "/en/gay-french-riviera/", "/en/gay-nice/",
+                        "/en/gay-french-riviera/where-to-stay/",
+                        "/en/gay-french-riviera/beaches-without-a-car/",
+                        "/explore/retraite-cote-d-azur/",
                         "/explore/vivre-antibes-expatrie/", "/hotels/", "/en/hotels/",
                     ):
                         polish=page.evaluate("""() => {
@@ -622,6 +628,10 @@ def main() -> None:
                                 errors.append(f"{label}: Good Finds cards not fully clickable {polish}")
                         if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and polish["disclosures"]!=5:
                             errors.append(f"{label}: Gay FAQ is not five functional disclosures")
+                        if path in ("/en/gay-nice/",
+                                    "/en/gay-french-riviera/where-to-stay/",
+                                    "/en/gay-french-riviera/beaches-without-a-car/") and polish["disclosures"]!=3:
+                            errors.append(f"{label}: Gay subguide FAQ is not three functional disclosures")
                         if path in ("/bons-plans/train-ou-bus/","/plages/autour-de-nice/") and (
                             not polish["compact"] or any(x["font"]>32.5 for x in polish["typ"] if x["tag"]=="H2")):
                             errors.append(f"{label}: editorial type scale not aligned")
