@@ -179,7 +179,7 @@
       var ceiling = priceLevel[state.budget] || 4;
       var hotelPrice = priceLevel[hotel.priceBand] || 0;
       if (hotelPrice === ceiling) value += 7;
-      else if (hotelPrice && hotelPrice < ceiling) value += 4;
+      else if (hotelPrice && hotelPrice < ceiling) value += 4 - (ceiling - hotelPrice);
     }
     if (hotel.copy) value += 1;
     return value;
