@@ -248,14 +248,13 @@ button { color: inherit; font: inherit; }
 .hotel-style-heading h2 { max-width: 13ch; margin: 12px 0 0; font-family: var(--serif); font-size: clamp(39px, 5vw, 64px); font-weight: 500; letter-spacing: -.04em; line-height: 1; }
 .hotel-style-heading > p { max-width: 600px; margin: 0; color: var(--ink-soft); font-size: 15px; line-height: 1.75; }
 .hotel-choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
-.hotel-choice-card { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--paper); }
-.alt .hotel-choice-card { background: var(--white); }
+.hotel-choice-card { min-width: 0; display: flex; flex-direction: column; border: 1px solid var(--line); background: var(--white); }
 .hotel-choice-media { aspect-ratio: 4 / 3; overflow: hidden; background: var(--ink); }
 .hotel-choice-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 320ms ease, opacity 180ms ease; }
 .hotel-choice-card:hover .hotel-choice-media img { opacity: .9; transform: scale(1.025); }
 .hotel-choice-copy { height: 100%; padding: 24px; display: flex; flex-direction: column; }
 .hotel-choice-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.hotel-choice-tags span { padding: 5px 7px; background: rgba(23,111,131,.1); color: var(--blue-deep); font-size: 8px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
+.hotel-choice-tags span, .hotel-choice-copy > .hotel-price-band { padding: 5px 7px; background: rgba(23,111,131,.1); color: var(--blue-deep); font-size: 8px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; }
 .hotel-choice-copy h3 { margin: 18px 0 9px; font-family: var(--serif); font-size: 29px; font-weight: 500; line-height: 1.08; }
 .hotel-choice-copy h3 a:hover, .hotel-choice-copy h3 a:focus-visible { color: var(--blue-deep); }
 .hotel-choice-copy > p { margin: 0 0 18px; color: var(--ink-soft); font-size: 13px; line-height: 1.62; }
@@ -1686,7 +1685,7 @@ button { color: inherit; font: inherit; }
 
 /* V5 intent detail layout closure — 2026-10-01 */
 .intent-detail .article-hero .wrap{
-  width:min(100%,980px);
+  width:min(100%,calc(780px + 2 * var(--gutter)));
 }
 .intent-detail .article-hero{
   text-align:left;
@@ -2314,13 +2313,10 @@ button { color: inherit; font: inherit; }
   text-transform:uppercase;color:var(--med-blue,#3c7186)
 }
 .article .sources ul,.intent-detail .sources ul{
-  display:flex;flex-wrap:wrap;gap:7px 0;list-style:none;margin:0;padding:0;
+  display:flex;flex-wrap:wrap;gap:7px 18px;list-style:none;margin:0;padding:0;
 }
 .article .sources li,.intent-detail .sources li{
   display:inline;margin:0;padding:0;color:var(--ink);font-size:11px;line-height:1.5;
-}
-.article .sources li:not(:last-child)::after,.intent-detail .sources li:not(:last-child)::after{
-  content:"·";display:inline-block;margin:0 10px;color:rgba(20,33,61,.35);
 }
 .article .sources a,.intent-detail .sources a{text-decoration:underline;text-underline-offset:3px}
 
@@ -2869,7 +2865,8 @@ button { color: inherit; font: inherit; }
 /* v1.1 — denser hubs, explicit hierarchy, Agenda and city parity */
 
 /* Hub decisions: information should not float inside oversized cards. */
-.core-hub-final .section-heading{
+.core-hub-final .section-heading,
+.journey-next-section .section-heading{
   margin-bottom:18px!important;
 }
 .core-hub-final .decision-grid,
@@ -2877,11 +2874,13 @@ button { color: inherit; font: inherit; }
   gap:16px!important;
 }
 .core-hub-final .decision-card,
+.journey-next-section .decision-card,
 .plan-harmonised .architecture-card{
   min-height:0!important;
   padding:22px 24px!important;
 }
 .core-hub-final .decision-card .decision-number,
+.journey-next-section .decision-card .decision-number,
 .plan-harmonised .architecture-card>span{
   margin-bottom:12px!important;
 }
@@ -2892,12 +2891,14 @@ button { color: inherit; font: inherit; }
   line-height:1.05!important;
 }
 .core-hub-final .decision-card p,
+.journey-next-section .decision-card p,
 .plan-harmonised .architecture-card p{
   margin:0 0 16px!important;
   font-size:13px!important;
   line-height:1.5!important;
 }
 .core-hub-final .decision-card .text-link,
+.journey-next-section .decision-card .text-link,
 .plan-harmonised .architecture-card b{
   margin-top:4px!important;
 }

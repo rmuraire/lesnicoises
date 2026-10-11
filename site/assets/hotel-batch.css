@@ -14,11 +14,19 @@
 }
 
 /* Destination pages: editorial hierarchy without a second oversized hero. */
-.v3-section.hotel-chooser{padding-top:clamp(52px,5.5vw,76px);padding-bottom:clamp(46px,5vw,68px);}
-.chooser-intro{margin-bottom:32px;}
-.chooser-intro h2{max-width:22ch;font-size:clamp(29px,3vw,42px);line-height:1.08;letter-spacing:-.035em;}
-.style-nav a{min-height:150px;}
+.v3-section.hotel-chooser{padding-top:clamp(44px,4.5vw,64px);padding-bottom:clamp(40px,4vw,56px);}
+.chooser-intro{margin-bottom:26px;}
+/* The style and budget choosers are navigation aids, not section titles:
+   a compact heading on a wider column, and tiles sized to their content. */
+.chooser-intro h2{max-width:none;font-size:clamp(26px,2.4vw,34px);line-height:1.1;letter-spacing:-.03em;}
+@media (min-width:761px){
+  .hotel-chooser .chooser-intro{grid-template-columns:minmax(0,1.25fr) minmax(300px,.75fr);gap:clamp(28px,4vw,56px);}
+}
 .style-nav strong{font-size:24px;}
+/* The tiles jump to the sections below the chooser: the arrow says so. */
+.hotel-chooser .style-nav a{position:relative;min-height:0;padding:18px 44px 18px 20px;}
+.hotel-chooser .style-nav a::after{content:"↓";position:absolute;top:17px;right:18px;color:var(--coral);font-size:15px;line-height:1;}
+.hotel-chooser .style-nav strong{margin-top:10px;}
 .hotel-style-section{padding:clamp(52px,6vw,78px) 0;}
 .hotel-style-heading{margin-bottom:34px;}
 .hotel-style-heading h2{max-width:21ch;font-size:clamp(28px,3vw,42px);line-height:1.08;letter-spacing:-.035em;}
@@ -29,8 +37,10 @@
 @media (max-width:760px){
   .practical-title-above h2{font-size:34px;}
   .practical-grid-ten .practical-link{min-height:150px;}
-  .chooser-intro h2,.hotel-style-heading h2{font-size:32px;}
+  .chooser-intro h2{font-size:26px;}
+  .hotel-style-heading h2{font-size:32px;}
+  .hotel-chooser .style-nav a{align-items:flex-start;}
 }
 
 
-.hotel-choice-tags .hotel-price-band{font-weight:800;letter-spacing:.08em;color:#17365f;background:#f4ead8;border:1px solid rgba(23,54,95,.14);border-radius:999px;padding:3px 8px}
+.hotel-choice-tags .hotel-price-band,.hotel-choice-copy>.hotel-price-band{font-weight:800;letter-spacing:.08em;color:#17365f;background:#f4ead8;border:1px solid rgba(23,54,95,.14);border-radius:999px;padding:3px 8px}

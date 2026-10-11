@@ -1816,13 +1816,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   text-transform:uppercase;color:var(--med-blue,#3c7186)
 }
 .article .sources ul,.intent-detail .sources ul{
-  display:flex;flex-wrap:wrap;gap:7px 0;list-style:none;margin:0;padding:0;
+  display:flex;flex-wrap:wrap;gap:7px 18px;list-style:none;margin:0;padding:0;
 }
 .article .sources li,.intent-detail .sources li{
   display:inline;margin:0;padding:0;color:var(--ink);font-size:11px;line-height:1.5;
-}
-.article .sources li:not(:last-child)::after,.intent-detail .sources li:not(:last-child)::after{
-  content:"·";display:inline-block;margin:0 10px;color:rgba(20,33,61,.35);
 }
 .article .sources a,.intent-detail .sources a{text-decoration:underline;text-underline-offset:3px}
 
