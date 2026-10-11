@@ -79,7 +79,9 @@ def fix_en_gay_subguide_faq(s, rel):
     )
     matches = list(pattern.finditer(s))
     if len(matches) != 1:
-        raise RuntimeError(f"{rel}: expected exactly one existing FAQ cluster, got {len(matches)}")
+        at = s.find('<h2>FAQ</h2>')
+        glimpse = s[at:at+1500] if at >= 0 else s[-900:]
+        raise RuntimeError(f"{rel}: expected exactly one FAQ cluster, got {len(matches)}; at={at}; snippet={glimpse!r}")
     questions = FAQ_PLACE.findall(matches[0].group(1))
     if len(questions) != 3 or FAQ_PLACE.sub('', matches[0].group(1)).strip():
         raise RuntimeError(f"{rel}: unexpected FAQ markup, not modifying")
