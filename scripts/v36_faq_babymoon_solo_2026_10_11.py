@@ -60,13 +60,31 @@ def run():
         if new!=old:
             p.write_text(new,encoding='utf-8')
             count+=1
-    solo=ROOT/'cote-dazur-femme-solo/index.html'
-    if solo.is_file():
-        s=solo.read_text(encoding='utf-8')
-        print('SOLO_DIAGNOSTIC main_end=',s.rfind('</main>'),'size=',len(s),flush=True)
-        matches=list(re.finditer(r'<a\b[^>]*href="[^"]*(?:hotels/finder|fr/dormir)[^"]*"[^>]*>.*?</a>',s,re.I|re.S))
-        for m in matches[-8:]:
-            print('SOLO_HOTELFIT',m.start(),repr(s[max(0,m.start()-300):m.end()+300])[:1100],flush=True)
+    # V4 injected an unrelated sixth CTA into the five-door Solo Female
+    # navigation grid. Remove *only that exact tile*, not genuine Hotel Fit
+    # links in hotel recommendations, and preserve all five editorial doors.
+    solo_tiles={
+        'cote-dazur-femme-solo/index.html': (
+            '<a class="gay-door btn btn--primary mametas-hotel-fit-primary" href="/hotels/finder/">Tester Hotel Fit</a>'
+        ),
+        'en/solo-female-french-riviera/index.html': (
+            '<a class="gay-door btn btn--primary mametas-hotel-fit-primary" href="/en/hotels/finder/">Try Hotel Fit</a>'
+        ),
+    }
+    for rel,tile in solo_tiles.items():
+        path=ROOT/rel
+        if not path.is_file():raise RuntimeError(rel+": solo landing missing")
+        original=path.read_text(encoding="utf-8")
+        existing=original.count(tile)
+        if existing>1:raise RuntimeError(rel+": duplicated stray CTA")
+        cleaned=original.replace(tile,"",1)
+        if cleaned.count('class="gay-door"')!=5:
+            raise RuntimeError(rel+": solo decision grid must retain exactly five cards")
+        if 'gay-door btn btn--primary mametas-hotel-fit-primary' in cleaned:
+            raise RuntimeError(rel+": stray Hotel Fit grid tile survived")
+        if cleaned!=original:
+            path.write_text(cleaned,encoding="utf-8")
+            print("SOLO_GRID_FIXED",rel,"five cards, extra Hotel Fit removed",flush=True)
     print('V36 canonical Babymoon FAQ pages=',count,flush=True)
 
 if __name__=='__main__':run()
