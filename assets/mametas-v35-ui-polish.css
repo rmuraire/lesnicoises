@@ -95,3 +95,23 @@ body .mametas-faq-parity summary::after{content:"+";position:absolute;right:3px;
 body .mametas-faq-parity details[open] summary::after{content:"−"}
 body .mametas-faq-parity details > p {padding:0 30px 18px 0;margin:0;color:#30394d;font:400 15.5px/1.68 Inter,Arial,sans-serif}
 body .mametas-faq-parity summary:focus-visible{outline:2px solid #ad492f;outline-offset:3px}
+
+/* Restaurant SOURCE / MICHELIN and GOOGLE MAPS: same physical underline baseline.
+   Normalized Maps links also carry mametas-map-inline, whose older global
+   selector removed its border; restore one (and only one) consistent line. */
+body.mametas-restaurant-detail .article .place > a.place-link,
+body.mametas-restaurant-detail .article .place > a.place-link.mametas-map-inline,
+body.mametas-restaurant-detail .article .place > a.place-link:visited {
+  box-sizing:border-box!important;
+  display:inline-flex!important;align-items:center!important;
+  vertical-align:baseline!important;
+  height:26px!important;min-height:26px!important;
+  margin:10px 16px 0 0!important;
+  padding:0 0 4px!important;
+  background:transparent!important;
+  border:0!important;border-bottom:1px solid currentColor!important;
+  border-radius:0!important;box-shadow:none!important;
+  text-decoration:none!important;
+  font:700 11px/1.45 Inter,Arial,sans-serif!important;
+  letter-spacing:.09em!important;text-transform:uppercase!important;
+}
