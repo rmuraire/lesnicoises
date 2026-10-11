@@ -7,6 +7,7 @@ Runs after V34 and before the browser sweep / OVH deploy. No global CSS edits.
 """
 from pathlib import Path
 from html.parser import HTMLParser
+from html import escape
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +69,29 @@ def fix_en_gay_faq(s):
     faq+=''.join(detail(q,a) for q,a in matches)+'</section>'
     return s[:start]+faq+s[end:]
 
+def fix_en_gay_subguide_faq(s, rel):
+    """Respect native FAQ accordions already materialized by earlier passes."""
+    if '<div class="faq-list">' in s:
+        if s.count('class="faq-item"') < 3:
+            raise RuntimeError(f"{rel}: existing FAQ accordion is incomplete")
+        return s
+    if 'class="mametas-faq-parity"' in s:
+        return s
+    pattern = re.compile(
+        r'<h2>FAQ</h2>\s*((?:<div class="place">\s*<h3>.*?</h3>\s*<p class="why">.*?</p>\s*</div>\s*)+)',
+        re.S,
+    )
+    matches = list(pattern.finditer(s))
+    if len(matches) != 1:
+        raise RuntimeError(f"{rel}: expected existing FAQ questions, got {len(matches)}")
+    questions = FAQ_PLACE.findall(matches[0].group(1))
+    if len(questions) != 3 or FAQ_PLACE.sub('', matches[0].group(1)).strip():
+        raise RuntimeError(f"{rel}: unexpected FAQ markup, not modifying")
+    faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+    faq += ''.join(detail(q, a) for q, a in questions) + '</section>'
+    return s[:matches[0].start()] + faq + s[matches[0].end():]
+
+
 def fix_fr_hotels(s):
     # The broken affiliate-sprite selection has no EN-equivalent asset treatment.
     # Keep the fully functional 10-base guide, delete only its obsolete tail.
@@ -108,6 +132,35 @@ def fix_beaches_around_nice_images(s):
     )
     return s
 
+def make_event_cards_clickable(s, rel):
+    """Clickable event tiles without breaking their independent official/map links."""
+    if 'right-now-clean' not in s:
+        return s  # Other Good Finds templates already use full <a class="card">.
+    if 'mametas-card-overlay' in s:
+        return s
+    pat = re.compile(r'(<div class="card">)(.*?)(</div>)', re.S)
+    count = [0]
+
+    def wrap(m):
+        inner = m.group(2)
+        cta = re.search(r'<a class="more" href="([^"]+)"', inner)
+        heading = re.search(r'<h3[^>]*>(.*?)</h3>', inner, re.S)
+        if not cta or not heading:
+            raise RuntimeError(f"{rel}: agenda tile missing primary destination or H3")
+        count[0] += 1
+        title = re.sub(r'<[^>]+>', '', heading.group(1)).strip()
+        lang = 'fr' if rel.startswith('bons-plans/') else 'en'
+        label = ('Ouvrir : ' if lang == 'fr' else 'Open: ') + title
+        overlay = (f'<a class="mametas-card-overlay" href="{escape(cta.group(1), quote=True)}" '
+                   f'aria-label="{escape(label, quote=True)}"></a>')
+        return m.group(1) + overlay + inner + m.group(3)
+
+    s, _ = pat.subn(wrap, s)
+    if count[0] < 3:
+        raise RuntimeError(f"{rel}: only {count[0]} agenda cards are fully clickable")
+    return add_body_class(s, 'mametas-good-finds-hub')
+
+
 class CardAnchorCounter(HTMLParser):
     """Count real semantic card anchors, regardless of attribute order/classes."""
     def __init__(self):
@@ -135,6 +188,12 @@ def run():
             s=add_body_class(s,'mametas-restaurant-detail')
         if rel=='en/gay-french-riviera/index.html':s=fix_en_gay_faq(s)
         if rel=='cote-dazur-gay/index.html':s=fix_fr_gay_faq(s)
+        if rel in (
+            'en/gay-nice/index.html',
+            'en/gay-french-riviera/where-to-stay/index.html',
+            'en/gay-french-riviera/beaches-without-a-car/index.html',
+        ):
+            s=fix_en_gay_subguide_faq(s,rel)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
         # One consistent small-scale editorial hierarchy for standard site.css
         # articles (beaches, Practical, Gay, Good Finds, etc.), not V3 intent.
@@ -142,13 +201,14 @@ def run():
             s=add_body_class(s,'mametas-compact-article')
             compact+=1
         if rel in ('bons-plans/index.html','en/good-finds/index.html'):
+            s=make_event_cards_clickable(s,rel)
             # Additional presentation classes are legitimately appended by the
             # previous materializers; do not require class="card" exactly.
             parser = CardAnchorCounter()
             parser.feed(s)
-            if parser.count < 8:
+            if parser.count < 8 and s.count('class="mametas-card-overlay"') < 3:
                 raise RuntimeError(
-                    f"{rel}: only {parser.count} full-card anchors found (need 8)"
+                    f"{rel}: no complete clickable card set (anchors={parser.count})"
                 )
             card_count+=parser.count
         # CSS is a tiny scoped extra stylesheet, appended last, and works
@@ -175,6 +235,14 @@ def run():
         raise RuntimeError("Gay FAQ parity missing")
     if fr.count('<details>')!=en.count('<details>'):
         raise RuntimeError("Gay FAQ disclosure count mismatch")
+    for path in ('en/gay-nice/index.html',
+                 'en/gay-french-riviera/where-to-stay/index.html',
+                 'en/gay-french-riviera/beaches-without-a-car/index.html'):
+        h=(ROOT/path).read_text(encoding='utf-8')
+        normalized = h.count('<section class="mametas-faq-parity">')==1 and h.count('<details>')==3
+        existing = '<div class="faq-list">' in h and h.count('class="faq-item"') >= 3
+        if not (normalized or existing):
+            raise RuntimeError(f"{path}: FAQ accordion parity incomplete")
     print(f"V35 PRESENTATION: {modified} pages, {compact} compact editorial pages, "
           f"{card_count} semantic Good Finds cards, {fr.count('<details>')} Gay FAQ pairs, "
           "removed broken FR hotel batch; CSS component rules loaded.")

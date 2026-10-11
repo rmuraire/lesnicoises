@@ -69,6 +69,9 @@ PAGES = [
     ("/plages/nice/", "editorial"),
     ("/en/gay-french-riviera/", "editorial"),
     ("/cote-dazur-gay/", "editorial"),
+    ("/en/gay-nice/", "editorial"),
+    ("/en/gay-french-riviera/where-to-stay/", "editorial"),
+    ("/en/gay-french-riviera/beaches-without-a-car/", "editorial"),
     ("/en/restaurants/", "editorial"),
     ("/en/restaurants/grasse/", "editorial"),
     ("/en/culture/", "editorial"),
@@ -576,13 +579,17 @@ def main() -> None:
                         "/bons-plans/train-ou-bus/", "/plages/autour-de-nice/",
                         "/bons-plans/", "/en/good-finds/",
                         "/guide-gay-nice/", "/cote-dazur-gay/",
-                        "/en/gay-french-riviera/", "/explore/retraite-cote-d-azur/",
+                        "/en/gay-french-riviera/", "/en/gay-nice/",
+                        "/en/gay-french-riviera/where-to-stay/",
+                        "/en/gay-french-riviera/beaches-without-a-car/",
+                        "/explore/retraite-cote-d-azur/",
                         "/explore/vivre-antibes-expatrie/", "/hotels/", "/en/hotels/",
                     ):
                         polish=page.evaluate("""() => {
                           const pick=q=>[...document.querySelectorAll(q)].filter(e=>e.getBoundingClientRect().height>0);
                           const style=n=>n?getComputedStyle(n):null;
                           const docs=pick('.mametas-faq-parity details');
+                          const nativeFaq=pick('.faq-list details');
                           const paras=pick('.article > p:not(.standfirst):not(.back), .article > h2');
                           const verdict=pick('.intent-detail .article-body .verdict p');
                           const links=pick('.article .spot-logistics a');
@@ -592,7 +599,18 @@ def main() -> None:
                             hotelBase:pick('.practical-grid .practical-link').length,
                             cards:pick('.grid > a.card[href]').length,
                             cardCursor:style(pick('.grid > a.card')[0])?.cursor,
+                            agendaTiles:pick('.right-now-clean .grid > .card').length,
+                            agendaClickable:pick('.right-now-clean .grid > .card').filter(n=>{
+                              const a=n.querySelector(':scope > a.mametas-card-overlay[href]');
+                              const call=n.querySelector('a.more[href]');
+                              if(!a || !call || a.getAttribute('href')!==call.getAttribute('href'))return false;
+                              const c=n.getBoundingClientRect(),r=a.getBoundingClientRect();
+                              return style(n).cursor==='pointer' && style(a).position==='absolute' &&
+                                r.width>=c.width-3 && r.height>=c.height-3 &&
+                                Boolean(a.getAttribute('aria-label'));
+                            }).length,
                             disclosures:docs.length,
+                            nativeFaq:nativeFaq.length,
                             typ:paras.slice(0,8).map(n=>({tag:n.tagName,font:parseFloat(style(n).fontSize)})),
                             verdicts:verdict.slice(0,2).map(n=>parseFloat(style(n).fontSize)),
                             badLinks:links.filter(n=>style(n).textDecorationLine==='none'||parseFloat(style(n).borderBottomWidth)>1).map(n=>n.textContent.trim()),
@@ -602,10 +620,20 @@ def main() -> None:
                         print("FINAL_UI_POLISH",label,polish,flush=True)
                         if path=="/hotels/" and (polish["hotelsBatch"] or polish["hotelBase"]<8):
                             errors.append(f"{label}: obsolete FR hotel sprite or missing base cards")
-                        if path in ("/bons-plans/","/en/good-finds/") and (polish["cards"]<8 or polish["cardCursor"]!="pointer"):
-                            errors.append(f"{label}: Good Finds cards not full-card clickable")
+                        if path in ("/bons-plans/","/en/good-finds/"):
+                            # Source templates have >=8 semantic anchor cards; the
+                            # actual production agenda materializes three div cards
+                            # with independent official/map links plus a full-area CTA.
+                            semantic_ok=polish["cards"]>=8 and polish["cardCursor"]=="pointer"
+                            agenda_ok=polish["agendaTiles"]>=3 and polish["agendaClickable"]==polish["agendaTiles"]
+                            if not (semantic_ok or agenda_ok):
+                                errors.append(f"{label}: Good Finds cards not fully clickable {polish}")
                         if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and polish["disclosures"]!=5:
                             errors.append(f"{label}: Gay FAQ is not five functional disclosures")
+                        if path in ("/en/gay-nice/",
+                                    "/en/gay-french-riviera/where-to-stay/",
+                                    "/en/gay-french-riviera/beaches-without-a-car/") and (polish["disclosures"]+polish["nativeFaq"])!=3:
+                            errors.append(f"{label}: Gay subguide FAQ is not three functional disclosures")
                         if path in ("/bons-plans/train-ou-bus/","/plages/autour-de-nice/") and (
                             not polish["compact"] or any(x["font"]>32.5 for x in polish["typ"] if x["tag"]=="H2")):
                             errors.append(f"{label}: editorial type scale not aligned")
