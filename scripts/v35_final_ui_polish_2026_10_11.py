@@ -45,18 +45,42 @@ def add_body_class(html, token):
     return html[:m.start()]+new+html[m.end():]
 
 def fix_fr_gay_faq(s):
-    # Prior materializers may already have created accessible native accordions.
+    """Never add a second FAQ when the earlier materializers supplied one."""
+    # Existing accessible disclosures are authoritative. Do not duplicate them.
     if 'class="mametas-faq-parity"' in s or (
         s.count('<details') >= 3 and ('class="intent-faq"' in s or 'faq-list' in s)
-    ): return s
-    anchor='<h2>Quatre portes utiles</h2>'
-    if s.count(anchor)!=1:
+    ):
+        return s
+    # Real production already contains five static H3/P FAQ items. Replace
+    # *that exact section* with native accordions, preserving its original copy.
+    pattern = re.compile(
+        r'<h2[^>]*>\s*FAQ\s*</h2>\s*'
+        r'((?:<div class="place">\s*<h3>.*?</h3>\s*'
+        r'<p class="why">.*?</p>\s*</div>\s*)+)',
+        re.S | re.I,
+    )
+    matches = list(pattern.finditer(s))
+    if matches:
+        if len(matches) != 1:
+            raise RuntimeError("FR Gay hub: multiple static FAQ sections")
+        questions = FAQ_PLACE.findall(matches[0].group(1))
+        if len(questions) < 3 or FAQ_PLACE.sub('', matches[0].group(1)).strip():
+            raise RuntimeError("FR Gay hub: unexpected pre-existing FAQ markup")
+        faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+        faq += ''.join(detail(q, a) for q, a in questions) + '</section>'
+        return s[:matches[0].start()] + faq + s[matches[0].end():]
+    if re.search(r'<h2[^>]*>\s*FAQ\s*</h2>', s, re.I):
+        raise RuntimeError("FR Gay hub: FAQ heading exists but could not be converted")
+    # Some earlier generator variants omit the FAQ entirely; only these may
+    # receive a fallback section.
+    anchor = '<h2>Quatre portes utiles</h2>'
+    if s.count(anchor) != 1:
         raise RuntimeError("FR Gay hub: insertion point changed")
-    faq='<section class="mametas-faq-parity"><h2>FAQ</h2>'
-    faq+=''.join(detail(q,a) for q,a in fr_faq)+'</section>'
-    # French punctuation uses non-breaking spacing for ? ! : ; across the site.
-    faq=re.sub(r' (?=[!?;:])','\u00a0',faq)
-    return s.replace(anchor,faq+anchor,1)
+    faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+    faq += ''.join(detail(q, a) for q, a in fr_faq) + '</section>'
+    faq = re.sub(r' (?=[!?;:])', '\u00a0', faq)
+    return s.replace(anchor, faq + anchor, 1)
+
 
 def fix_en_gay_faq(s):
     # Production and CI materializers do not always leave the same headings
@@ -335,6 +359,10 @@ def run():
             raise RuntimeError(f"{path}: hotel base navigation missing; links={bases[:10]}; snippet={snippet!r}")
     fr=(ROOT/'cote-dazur-gay/index.html').read_text(encoding='utf-8')
     en=(ROOT/'en/gay-french-riviera/index.html').read_text(encoding='utf-8')
+    for lang, html in (('FR', fr), ('EN', en)):
+        faq_heading_count = len(re.findall(r'<h2[^>]*>\s*FAQ\s*</h2>', html, re.I))
+        if faq_heading_count != 1:
+            raise RuntimeError(f"{lang} Gay hub has {faq_heading_count} FAQ headings (expected exactly one)")
     for lang, html in (('FR',fr),('EN',en)):
         our_disclosure='<section class="mametas-faq-parity">' in html
         previous_disclosure=('faq-list' in html or 'class="intent-faq"' in html or '<h2>FAQ</h2>' in html) and html.count('<details')>=3
