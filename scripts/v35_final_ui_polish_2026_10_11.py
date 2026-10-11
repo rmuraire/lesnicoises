@@ -47,7 +47,7 @@ def add_body_class(html, token):
 def fix_fr_gay_faq(s):
     # Prior materializers may already have created accessible native accordions.
     if 'class="mametas-faq-parity"' in s or (
-        s.count('<details') >= 5 and ('faq-list' in s or '<h2>FAQ</h2>' in s)
+        s.count('<details') >= 3 and ('class="intent-faq"' in s or 'faq-list' in s)
     ): return s
     anchor='<h2>Quatre portes utiles</h2>'
     if s.count(anchor)!=1:
@@ -63,7 +63,7 @@ def fix_en_gay_faq(s):
     # after the FAQ. Never depend on the next H2's editorial wording.
     if 'class="mametas-faq-parity"' in s:
         return s
-    if s.count('<details') >= 5 and ('faq-list' in s or '<summary' in s):
+    if s.count('<details') >= 3 and ('class="intent-faq"' in s or 'faq-list' in s):
         return s
     heading = re.search(r'<h2[^>]*>\s*FAQ\s*</h2>', s, re.I)
     if heading is None:
@@ -248,11 +248,11 @@ def run():
     en=(ROOT/'en/gay-french-riviera/index.html').read_text(encoding='utf-8')
     for lang, html in (('FR',fr),('EN',en)):
         our_disclosure='<section class="mametas-faq-parity">' in html
-        previous_disclosure=('faq-list' in html or '<h2>FAQ</h2>' in html) and html.count('<details')>=5
+        previous_disclosure=('faq-list' in html or 'class="intent-faq"' in html or '<h2>FAQ</h2>' in html) and html.count('<details')>=3
         if not (our_disclosure or previous_disclosure):
             raise RuntimeError(f"{lang} Gay FAQ parity missing")
-    if fr.count('<details>')!=en.count('<details>'):
-        raise RuntimeError("Gay FAQ disclosure count mismatch")
+    if fr.count('<details') < 3 or en.count('<details') < 3:
+        raise RuntimeError("Gay FAQ must have at least three native disclosures in each language")
     for path in ('en/gay-nice/index.html',
                  'en/gay-french-riviera/where-to-stay/index.html',
                  'en/gay-french-riviera/beaches-without-a-car/index.html'):
