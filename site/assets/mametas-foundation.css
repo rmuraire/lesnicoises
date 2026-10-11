@@ -9,7 +9,9 @@
  */
 
 /* 1) One restrained editorial heading scale. Homepage-specific heroes remain
-   untouched: this targets the recurring page/article families only. */
+   untouched: this targets the recurring page/article families only.
+   Scale, desktop / 390px: H1 55 / 38, section H2 34 / 26, card H3 26 / 22,
+   intro 19 / 17; body text unchanged (the editorial guides' existing scale). */
 .page-hero h1,
 .article-hero h1,
 .article h1,
@@ -17,9 +19,9 @@
 .culture-detail h1,
 .core-hub-final .article-hero h1,
 .core-hub-final .page-hero h1{
-  max-width:14ch!important;
+  max-width:18ch!important;
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(46px,5.35vw,72px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   font-weight:500!important;
   letter-spacing:-.045em!important;
   line-height:.98!important;
@@ -35,10 +37,14 @@
 .explore-practical .practical-intro h2,
 .family-section-heading{
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(32px,3.6vw,46px)!important;
+  font-size:clamp(28px,2.4vw,34px)!important;
   font-weight:500!important;
   letter-spacing:-.035em!important;
   line-height:1.08!important;
+}
+/* The homepage keeps its own, larger section titles (outside this scale). */
+body.home-page .v3-section .section-heading h2{
+  font-size:clamp(32px,3.6vw,46px)!important;
 }
 
 .card h3,
@@ -353,8 +359,8 @@ body.rg-destination .article-aside a{
   .culture-detail h1,
   .core-hub-final .article-hero h1,
   .core-hub-final .page-hero h1{
-    max-width:12ch!important;
-    font-size:clamp(38px,11vw,52px)!important;
+    max-width:none!important;
+    font-size:clamp(34px,9.8vw,38px)!important;
     line-height:1!important;
   }
 
@@ -368,6 +374,9 @@ body.rg-destination .article-aside a{
   .next-step h2,
   .practical-title h2,
   .family-section-heading{
+    font-size:clamp(24px,6.7vw,26px)!important;
+  }
+  body.home-page .v3-section .section-heading h2{
     font-size:clamp(29px,8vw,36px)!important;
   }
   /* The "Sources vérifiées" heading is a small label (as on desktop), not a
@@ -960,7 +969,7 @@ body.hotel-fit-page .v3-section .hotel-fit-heading > div {
 body.hotel-fit-page .v3-section .hotel-fit-heading h2 {
   max-width:27ch!important;
   margin:8px 0 0!important;
-  font-size:clamp(32px,3.6vw,45px)!important;
+  font-size:clamp(28px,2.4vw,34px)!important;
   line-height:1.12!important;
 }
 body.hotel-fit-page .v3-section p.hotel-fit-intro-note {
@@ -1031,7 +1040,7 @@ body.hotel-fit-page .engine-controls .engine-base-gate a.engine-base-gate-cta:fo
 @media(max-width:680px) {
   body.hotel-fit-page .v3-section .hotel-fit-heading h2 {
     max-width:100%!important;
-    font-size:clamp(29px,8vw,37px)!important;
+    font-size:clamp(24px,6.7vw,26px)!important;
   }
   body.hotel-fit-page .v3-section p.hotel-fit-intro-note {
     font-size:14px!important;
@@ -1723,7 +1732,7 @@ body.mametas-car-free-guide .article > .verdict {
    templates; this closes the remaining article-vs-culture-detail mismatch. */
 body.mametas-restaurant-detail .article > h1,
 body.mametas-restaurant-detail .culture-detail h1 {
-  font:500 clamp(40px,4.4vw,58px)/1.08 "Fraunces",Georgia,serif!important;
+  font:500 clamp(38px,4vw,55px)/1.08 "Fraunces",Georgia,serif!important;
   max-width:100%!important;
   margin:10px 0 16px!important;
   letter-spacing:-.035em!important;
@@ -1731,7 +1740,7 @@ body.mametas-restaurant-detail .culture-detail h1 {
 body.mametas-restaurant-detail .article > p.standfirst,
 body.mametas-restaurant-detail .culture-detail p.standfirst {
   max-width:760px!important;
-  font:400 clamp(19px,2.1vw,23px)/1.48 "Fraunces",Georgia,serif!important;
+  font:400 clamp(17px,1.32vw,19px)/1.48 "Fraunces",Georgia,serif!important;
   color:#45536c!important;
   margin:16px 0 26px!important;
 }
@@ -1744,7 +1753,7 @@ body.mametas-restaurant-detail .culture-detail .meta {
 @media(max-width:650px) {
   body.mametas-restaurant-detail .article > h1,
   body.mametas-restaurant-detail .culture-detail h1 {
-    font-size:clamp(36px,10.5vw,48px)!important;
+    font-size:clamp(34px,9.8vw,38px)!important;
   }
 }
 

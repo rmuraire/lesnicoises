@@ -27,6 +27,19 @@
 .hotel-chooser .style-nav a{position:relative;min-height:0;padding:18px 44px 18px 20px;}
 .hotel-chooser .style-nav a::after{content:"↓";position:absolute;top:17px;right:18px;color:var(--coral);font-size:15px;line-height:1;}
 .hotel-chooser .style-nav strong{margin-top:10px;}
+/* Stay Nice — price legend: three relative price bands, for information
+   only (no links, no button look), on one compact ruled line. */
+.price-legend{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+.price-legend-item{padding:14px 20px 14px 0;}
+.price-legend-item+.price-legend-item{padding-left:20px;border-left:1px solid var(--line);}
+.price-legend-item span{margin-right:8px;color:var(--coral);font-family:var(--serif);font-size:15px;font-style:italic;}
+.price-legend-item strong{color:var(--ink);font-family:var(--serif);font-size:19px;font-weight:500;}
+.price-legend-item small{display:block;margin-top:5px;color:var(--ink-soft);font-size:12px;line-height:1.5;}
+@media (max-width:760px){
+  .price-legend{grid-template-columns:1fr;}
+  .price-legend-item,.price-legend-item+.price-legend-item{padding:12px 0;border-left:0;}
+  .price-legend-item+.price-legend-item{border-top:1px solid var(--line);}
+}
 .hotel-style-section{padding:clamp(52px,6vw,78px) 0;}
 .hotel-style-heading{margin-bottom:34px;}
 .hotel-style-heading h2{max-width:21ch;font-size:clamp(28px,3vw,42px);line-height:1.08;letter-spacing:-.035em;}

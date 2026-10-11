@@ -175,7 +175,7 @@ body.mametas-gay-faq .article .intent-faq > h2 {
   margin:0 0 18px!important;
   color:var(--ink,#14213d);
   font-family:var(--serif,Fraunces,Georgia,serif);
-  font-size:clamp(34px,4.2vw,44px)!important;
+  font-size:clamp(28px,2.4vw,34px)!important;
   font-weight:500;
   line-height:1.06;
 }
@@ -215,6 +215,6 @@ body.mametas-gay-faq .article .intent-faq summary:focus-visible {
 }
 @media(max-width:760px){
   body.mametas-gay-faq .article .intent-faq{margin-top:46px}
-  body.mametas-gay-faq .article .intent-faq > h2{font-size:34px!important}
+  body.mametas-gay-faq .article .intent-faq > h2{font-size:26px!important}
   body.mametas-gay-faq .article .intent-faq summary{font-size:17px!important}
 }

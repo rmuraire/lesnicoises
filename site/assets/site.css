@@ -28,7 +28,7 @@ a{color:inherit;text-decoration:none} img{max-width:100%;display:block}
 .mobile-nav.open{opacity:1;visibility:visible;pointer-events:auto}.mobile-nav-top{display:flex;justify-content:space-between;align-items:center}
 .mobile-nav-close{font-size:34px;line-height:1;border:0;background:none;color:var(--navy)}.mobile-nav ul{list-style:none;padding:28px 0 0;margin:0}
 .mobile-nav li a{font-family:var(--serif);font-size:30px;display:block;padding:14px 0;border-bottom:1px solid var(--line)}.mobile-nav .lang-switch{margin-top:28px;justify-content:flex-start}.mobile-nav .lang-switch a{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
-.page-hero{padding:clamp(72px,10vw,130px) 0 58px;border-bottom:1px solid var(--line)}
+.page-hero{padding:clamp(44px,4.5vw,64px) 0 48px;border-bottom:1px solid var(--line)}
 .eyebrow{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin:0 0 18px}
 h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(--serif);font-weight:500;letter-spacing:-.045em;text-transform:none}h1{font-size:clamp(48px,7vw,86px);line-height:.98;margin:0;max-width:13ch}
 .lead{font-family:var(--serif);font-size:clamp(20px,2.5vw,29px);line-height:1.4;color:var(--navy-soft);max-width:34ch;margin:28px 0 0}
@@ -60,7 +60,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .disclosure{font-size:12.5px;line-height:1.6;color:var(--ink);padding:22px 0 0}
 @media(max-width:1080px){.primary-nav{display:none}.menu-toggle{display:block}.mobile-nav{display:block}.header-inner>.lang-switch{display:none}}
 @media(max-width:980px){.grid{grid-template-columns:1fr 1fr}}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.page-hero{padding-top:54px}.article{padding-top:48px}}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.page-hero{padding-top:40px}.article{padding-top:48px}}
 .source-links{margin-top:22px;font-size:12px;line-height:1.7;color:var(--ink)}.source-links a{border-bottom:1px solid var(--gold)}.source-links a:hover{color:var(--navy)}
 
 
@@ -625,16 +625,16 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .brand-sub,.v3-brand-line{display:block!important;margin-top:8px!important;color:#176f83!important;font-family:"Fraunces",Georgia,serif!important;font-size:10px!important;font-style:italic!important;font-weight:400!important;letter-spacing:.04em!important;line-height:1!important}
 .primary-nav,.v3-nav{margin-left:auto!important}.primary-nav ul,.v3-nav ul{display:flex!important;align-items:center!important;gap:clamp(16px,2.2vw,32px)!important;margin:0!important;padding:0!important;list-style:none!important}
 .primary-nav a,.v3-nav a,.header-inner>.lang-switch a,.v3-header-inner>.lang-switch a{font-family:"Inter",Arial,sans-serif!important;font-size:11px!important;font-weight:700!important;letter-spacing:.12em!important;text-transform:uppercase!important}
-.core-hub-final .article-hero,.core-hub-final .page-hero{padding:clamp(54px,6vw,78px) 0 clamp(38px,4vw,52px)!important;background:var(--paper,#fffdf8)!important;border-bottom:1px solid rgba(20,33,61,.14)!important}
+.core-hub-final .article-hero,.core-hub-final .page-hero{padding:clamp(40px,4.2vw,60px) 0 clamp(32px,3vw,42px)!important;background:var(--paper,#fffdf8)!important;border-bottom:1px solid rgba(20,33,61,.14)!important}
 .core-hub-final .article-hero>.wrap,.core-hub-final .page-hero>.wrap{width:min(calc(100% - 48px),1180px)!important;margin:0 auto!important}
 .core-hub-final .article-hero .eyebrow,.core-hub-final .page-hero .eyebrow{margin:0 0 18px!important;color:var(--coral,#d86c4e)!important;font-family:"Inter",Arial,sans-serif!important;font-size:10px!important;font-weight:800!important;letter-spacing:.16em!important;line-height:1.2!important;text-transform:uppercase!important}
-.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:14ch!important;margin:0!important;font-family:"Fraunces",Georgia,serif!important;font-size:clamp(46px,5.35vw,72px)!important;font-weight:500!important;letter-spacing:-.045em!important;line-height:.98!important;text-transform:none!important}
-.core-hub-final .article-deck,.core-hub-final .lead{max-width:820px!important;margin:22px 0 0!important;color:var(--ink-soft,#43506a)!important;font-family:"Fraunces",Georgia,serif!important;font-size:clamp(20px,2vw,27px)!important;font-weight:400!important;letter-spacing:-.012em!important;line-height:1.45!important}
+.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:18ch!important;margin:0!important;font-family:"Fraunces",Georgia,serif!important;font-size:clamp(38px,4vw,55px)!important;font-weight:500!important;letter-spacing:-.045em!important;line-height:.98!important;text-transform:none!important}
+.core-hub-final .article-deck,.core-hub-final .lead{max-width:820px!important;margin:22px 0 0!important;color:var(--ink-soft,#43506a)!important;font-family:"Fraunces",Georgia,serif!important;font-size:clamp(17px,1.32vw,19px)!important;font-weight:400!important;letter-spacing:-.012em!important;line-height:1.45!important}
 .booking-highlight-visual{margin:20px 0 24px!important;overflow:hidden!important}.booking-highlight-visual img{display:block!important;width:100%!important;aspect-ratio:16/8.5!important;object-fit:cover!important}
 .beach-place-visual{margin:16px 0 20px!important;overflow:hidden!important}.beach-place-visual img{display:block!important;width:100%!important;aspect-ratio:16/8.5!important;object-fit:cover!important}
 .booking-highlight-visual figcaption,.beach-place-visual figcaption{margin-top:6px!important;color:#5f6570!important;font-size:9px!important;line-height:1.45!important}
 @media(max-width:1080px){.header-inner,.v3-header-inner{min-height:68px!important;padding-top:10px!important;padding-bottom:10px!important}}
-@media(max-width:650px){.core-hub-final .article-hero,.core-hub-final .page-hero{padding:42px 0 32px!important}.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:12ch!important;font-size:clamp(38px,11vw,52px)!important;line-height:1!important}.core-hub-final .article-deck,.core-hub-final .lead{max-width:100%!important;margin-top:18px!important;font-size:clamp(20px,6.1vw,24px)!important;line-height:1.42!important}}
+@media(max-width:650px){.core-hub-final .article-hero,.core-hub-final .page-hero{padding:32px 0 28px!important}.core-hub-final .article-hero h1,.core-hub-final .page-hero h1{max-width:none!important;font-size:clamp(34px,9.8vw,38px)!important;line-height:1!important}.core-hub-final .article-deck,.core-hub-final .lead{max-width:100%!important;margin-top:18px!important;font-size:clamp(16px,4.4vw,17px)!important;line-height:1.42!important}}
 
 
 
@@ -647,7 +647,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   max-width:820px!important;
   color:var(--navy-soft,var(--ink-soft,#43506a))!important;
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(20px,2vw,27px)!important;
+  font-size:clamp(17px,1.32vw,19px)!important;
   font-weight:400!important;
   letter-spacing:-.012em!important;
   line-height:1.45!important;
@@ -664,7 +664,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .culture-detail .standfirst,
   .page-hero .lead{
     max-width:100%!important;
-    font-size:clamp(20px,6.1vw,24px)!important;
+    font-size:clamp(16px,4.4vw,17px)!important;
     line-height:1.42!important
   }
 }
@@ -854,7 +854,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .restaurant-directory{border-top:1px solid var(--line);padding:0 0 72px}
 .restaurant-lead{display:grid;grid-template-columns:minmax(0,.82fr) minmax(420px,1.18fr);gap:44px;align-items:center;padding:46px 0}
 .restaurant-lead-copy>span,.restaurant-group-head>span{display:block;margin-bottom:10px;color:var(--gold);font-size:10px;font-weight:700;letter-spacing:.17em;text-transform:uppercase}
-.restaurant-lead-copy h2{margin:0 0 14px;font-size:clamp(34px,4vw,52px)}
+.restaurant-lead-copy h2{margin:0 0 14px;font-size:clamp(26px,2.4vw,34px)}
 .restaurant-lead-copy p{max-width:620px;margin:0 0 20px;color:var(--ink);font-size:16px;line-height:1.72}
 .restaurant-lead-copy a{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid var(--gold)}
 .restaurant-lead-media{margin:0;overflow:hidden;background:var(--cream-deep)}
@@ -1061,7 +1061,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 /* Core hub full layout parity 2026-09-26 */
 .core-hub-final .article-hero,
 .core-hub-final .page-hero{
-  padding:clamp(54px,6vw,78px) 0 clamp(38px,4vw,52px)!important;
+  padding:clamp(40px,4.2vw,60px) 0 clamp(32px,3vw,42px)!important;
   background:var(--paper,#fffdf8)!important;
   border-bottom:1px solid rgba(20,33,61,.14)!important;
 }
@@ -1083,10 +1083,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 }
 .core-hub-final .article-hero h1,
 .core-hub-final .page-hero h1{
-  max-width:14ch!important;
+  max-width:18ch!important;
   margin:0!important;
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(46px,5.35vw,72px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   font-weight:500!important;
   letter-spacing:-.045em!important;
   line-height:.98!important;
@@ -1099,7 +1099,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   color:var(--ink-soft,#43506a)!important;
   color:var(--ink-soft,#43506a)!important;
   font-family:"Fraunces",Georgia,serif!important;
-  font-size:clamp(20px,2vw,27px)!important;
+  font-size:clamp(17px,1.32vw,19px)!important;
   font-weight:400!important;
   letter-spacing:-.012em!important;
   line-height:1.45!important;
@@ -1109,20 +1109,20 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .core-hub-final .section{scroll-margin-top:90px}
 @media(max-width:650px){
   .core-hub-final .article-hero,
-  .core-hub-final .page-hero{padding:42px 0 32px!important}
+  .core-hub-final .page-hero{padding:32px 0 28px!important}
   .core-hub-final .article-hero .eyebrow,
   .core-hub-final .page-hero .eyebrow{margin-bottom:14px!important}
   .core-hub-final .article-hero h1,
   .core-hub-final .page-hero h1{
-    max-width:12ch!important;
-    font-size:clamp(38px,11vw,52px)!important;
+    max-width:none!important;
+    font-size:clamp(34px,9.8vw,38px)!important;
     line-height:1!important
   }
   .core-hub-final .article-deck,
   .core-hub-final .lead{
     max-width:100%!important;
     margin-top:18px!important;
-    font-size:clamp(20px,6.1vw,24px)!important;
+    font-size:clamp(16px,4.4vw,17px)!important;
     line-height:1.42!important
   }
 }
@@ -1593,7 +1593,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   }
   .intent-detail .article-deck{
     margin-top:20px;
-    font-size:20px!important;
+    font-size:17px!important;
     line-height:1.45!important;
   }
   .intent-detail .article-cover{
@@ -1875,9 +1875,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   line-height:1.04!important;
   letter-spacing:-.035em!important;
 }
+.core-hub-final .section-heading h2{font-size:clamp(28px,2.4vw,34px)!important}
 .core-hub-final .article-hero h1,
 .core-hub-final .page-hero h1{
-  font-size:clamp(44px,4.8vw,64px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   line-height:1!important;
 }
 .core-hub-final .article-deck,
@@ -1887,12 +1888,12 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .hotel-detail .standfirst,
 .culture-detail .standfirst,
 .page-hero .lead{
-  font-size:clamp(18px,1.55vw,22px)!important;
+  font-size:clamp(17px,1.32vw,19px)!important;
   line-height:1.48!important;
 }
 .template-polished .article-hero h1,
 .places-unified .article-hero h1{
-  font-size:clamp(44px,5.35vw,68px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   line-height:.99!important;
 }
 .article-body h2,
@@ -1992,7 +1993,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 }
 .hotels-harmonised .hotel-fit-launch h2{
   margin-bottom:14px!important;
-  font-size:clamp(36px,4vw,52px)!important;
+  font-size:clamp(28px,2.4vw,34px)!important;
   line-height:1.01!important;
 }
 .hotels-harmonised .hotel-fit-launch-punch{
@@ -2387,7 +2388,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .core-hub-final .decision-card h3,
 .plan-harmonised .architecture-card h3{
   margin:0 0 10px!important;
-  font-size:clamp(27px,2.6vw,34px)!important;
+  font-size:clamp(22px,1.85vw,26px)!important;
   line-height:1.05!important;
 }
 .core-hub-final .decision-card p,
@@ -2426,7 +2427,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 }
 .plan-harmonised .fit-preview-head h3{
   margin:4px 0 7px!important;
-  font-size:clamp(27px,2.5vw,34px)!important;
+  font-size:clamp(22px,1.85vw,26px)!important;
   line-height:1.05!important;
 }
 .plan-harmonised .fit-preview-head p:not(.fit-tool-label){
@@ -2449,7 +2450,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 
 /* Standalone Riviera Fit: keep the tool title clearly above question titles. */
 .riviera-fit-tool .chooser-hero h1{
-  font-size:clamp(42px,4.5vw,58px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   line-height:1!important;
 }
 .riviera-fit-tool .chooser-step h2{
@@ -2468,7 +2469,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 }
 .agenda-hub .page-hero h1{
   max-width:17ch!important;
-  font-size:clamp(44px,4.6vw,62px)!important;
+  font-size:clamp(38px,4vw,55px)!important;
   line-height:1.01!important;
   letter-spacing:-.035em!important;
 }
@@ -2559,8 +2560,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .core-hub-final .page-hero h1,
   .template-polished .article-hero h1,
   .places-unified .article-hero h1{
-    max-width:14ch!important;
-    font-size:clamp(36px,10vw,44px)!important;
+    max-width:none!important;
+    font-size:clamp(34px,9.8vw,38px)!important;
     line-height:1.02!important;
   }
   .core-hub-final .article-deck,
@@ -2568,7 +2569,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .article-deck,
   .article .standfirst,
   .page-hero .lead{
-    font-size:clamp(17px,4.8vw,20px)!important;
+    font-size:clamp(16px,4.4vw,17px)!important;
     line-height:1.48!important;
   }
   .home-page .section-heading h2,
@@ -2576,6 +2577,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
     font-size:clamp(29px,8vw,35px)!important;
     line-height:1.06!important;
   }
+  .core-hub-final .section-heading h2{font-size:clamp(24px,6.7vw,26px)!important}
   .article-body h2,
   .intent-detail .article-body h2,
   .places-unified [data-static-editorial="true"]>h2{
@@ -2594,7 +2596,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
     font-size:clamp(35px,10vw,43px)!important;
   }
   .hotels-harmonised .hotel-fit-launch h2{
-    font-size:clamp(32px,9vw,40px)!important;
+    font-size:clamp(24px,6.7vw,26px)!important;
   }
   .hotels-harmonised .hotel-fit-launch-punch{font-size:18px!important}
   .places-unified [data-static-editorial="true"] .mini-rule,
@@ -2618,13 +2620,13 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
   .core-hub-final .decision-card,
   .plan-harmonised .architecture-card{padding:17px 18px!important}
   .core-hub-final .decision-card h3,
-  .plan-harmonised .architecture-card h3{font-size:25px!important}
+  .plan-harmonised .architecture-card h3{font-size:22px!important}
   .plan-harmonised .plan-riviera-fit-panel{padding:18px!important}
-  .plan-harmonised .fit-preview-head h3{font-size:26px!important}
+  .plan-harmonised .fit-preview-head h3{font-size:22px!important}
   .plan-harmonised .chooser-step{padding-top:15px!important;padding-bottom:15px!important}
   .plan-harmonised .chooser-step h2,
   .riviera-fit-tool .chooser-step h2{font-size:22px!important}
-  .riviera-fit-tool .chooser-hero h1{font-size:clamp(35px,9.5vw,42px)!important}
+  .riviera-fit-tool .chooser-hero h1{font-size:clamp(34px,9.8vw,38px)!important}
   .agenda-hub .page-hero{padding-top:38px!important;padding-bottom:34px!important}
   .agenda-hub .page-hero h1{font-size:clamp(36px,9.5vw,43px)!important}
   .home-page .home-now-teaser{padding-top:32px!important;padding-bottom:32px!important}
