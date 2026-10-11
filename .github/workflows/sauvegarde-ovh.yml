@@ -1,0 +1,92 @@
+# Sauvegarde ponctuelle du dossier web OVH, en lecture seule.
+# Se lance une seule fois, au premier envoi de cette branche.
+# Aucune écriture, suppression ni modification sur le serveur OVH.
+name: Sauvegarde OVH (lecture seule)
+
+on:
+  push:
+    branches:
+      - sauvegarde/ovh-2026-10-11
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sauvegarde-ovh
+  cancel-in-progress: false
+
+jobs:
+  sauvegarder:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Récupérer les outils
+        uses: actions/checkout@v4
+
+      - name: Préparer Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Installer l'outil SFTP
+        run: python -m pip install --disable-pip-version-check --quiet paramiko==5.0.0
+
+      - name: Copier le dossier web OVH (lecture seule)
+        env:
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python outils/sauvegarde_ovh.py
+
+      - name: Créer l'archive
+        run: |
+          tar -czf sauvegarde-ovh-2026-10-11.tar.gz -C sauvegarde www
+          sha256sum sauvegarde-ovh-2026-10-11.tar.gz | tee archive.sha256
+          ls -l sauvegarde-ovh-2026-10-11.tar.gz
+
+      - name: Conserver l'archive (90 jours)
+        uses: actions/upload-artifact@v4
+        with:
+          name: sauvegarde-ovh-2026-10-11
+          path: |
+            sauvegarde-ovh-2026-10-11.tar.gz
+            archive.sha256
+            inventaire.tsv
+          retention-days: 90
+          compression-level: 0
+
+      - name: Verser l'inventaire et les images figées dans la branche
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add inventaire.tsv rapport.md archive.sha256 figees
+          git commit -m "Inventaire de la sauvegarde OVH et images figées depuis la production"
+          git push
+
+  verifier:
+    needs: sauvegarder
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Récupérer l'archive conservée
+        uses: actions/download-artifact@v4
+        with:
+          name: sauvegarde-ovh-2026-10-11
+
+      - name: Vérifier l'archive contre l'inventaire
+        run: |
+          sha256sum -c archive.sha256
+          mkdir restauration
+          tar -xzf sauvegarde-ovh-2026-10-11.tar.gz -C restauration
+          python3 - <<'PY'
+          import hashlib, pathlib, sys
+          rows = [l.split("\t") for l in pathlib.Path("inventaire.tsv").read_text(encoding="utf-8").splitlines()[1:]]
+          base = pathlib.Path("restauration/www")
+          bad = [r[0] for r in rows if hashlib.sha256((base / r[0]).read_bytes()).hexdigest() != r[3]]
+          extra = sum(1 for p in base.rglob("*") if p.is_file()) - len(rows)
+          msg = f"Archive restaurable : {len(rows) - len(bad)} fichiers sur {len(rows)} identiques à l'inventaire, {extra} fichier(s) en trop"
+          print(msg)
+          print(f"::notice title=Vérification de la sauvegarde::{msg}")
+          sys.exit(1 if bad or extra else 0)
+          PY
