@@ -490,6 +490,56 @@ jobs:
           OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
         run: python scripts/deploy_changed_ftps.py
 
+      - name: Publish critical QA fixes before bulk OVH sync
+        env:
+          MAMETAS_FORCE_FILES: .htaccess;404.html;assets/site.js;assets/v3.js;en/explore/french-riviera-honeymoon/index.html;explore/lune-de-miel-cote-d-azur/index.html;en/hotels/beaulieu-sur-mer/index.html;hotels/beaulieu-sur-mer/index.html
+          OVH_FTP_SERVER: ${{ secrets.OVH_FTP_SERVER }}
+          OVH_FTP_USERNAME: ${{ secrets.OVH_FTP_USERNAME }}
+          OVH_FTP_PASSWORD: ${{ secrets.OVH_FTP_PASSWORD }}
+          OVH_FTP_ROOT: ${{ secrets.OVH_FTP_ROOT }}
+        run: python scripts/deploy_changed_ftps.py
+
+      - name: Prove critical QA fixes on LIVE website
+        run: |
+          python - <<'PY'
+          import re
+          from urllib.request import Request, urlopen
+          from urllib.error import HTTPError
+          BASE='https://www.mametas.com'
+          def get(path):
+              req=Request(BASE+path,headers={'User-Agent':'MametasCriticalQA/1.0','Cache-Control':'no-cache, no-store'})
+              try:
+                  with urlopen(req,timeout=30) as response:
+                      return response.status,response.geturl(),response.read().decode('utf-8','replace')
+              except HTTPError as exc:
+                  return exc.code,exc.geturl(),exc.read().decode('utf-8','replace')
+          for rel in ('site.js','v3.js'):
+              status,url,js=get('/assets/'+rel+'?critical=20261011')
+              if status!=200 or js.count('mametas-affiliate-outbound-2026-10-01')!=1 or r'\n/* mametas-affiliate' in js:
+                  raise SystemExit('LIVE invalid/tracking-missing JS: '+rel)
+              print('LIVE JS PASS',rel,flush=True)
+          for path in ('/scripts/','/backup/','/data/'):
+              status,_,body=get(path)
+              if status not in (403,404) or 'Index of' in body:
+                  raise SystemExit('LIVE directory exposure: '+path+' '+str(status))
+          status,_,body=get('/contact/')
+          if status!=404 or 'Mametas' not in body:
+              raise SystemExit('LIVE branded 404 missing or wrong HTTP status')
+          status,url,_=get('/en/plan/')
+          if status!=200 or not url.endswith('/plan/'):
+              raise SystemExit('LIVE EN Plan redirect failed')
+          print('LIVE SECURITY & 404 PASS',flush=True)
+          for path in ('/en/explore/french-riviera-honeymoon/','/explore/lune-de-miel-cote-d-azur/'):
+              status,_,html=get(path)
+              news=re.findall(r'<a\b[^>]*href="https://news\.booking\.com/[^\"]+"[^>]*>.*?</a>',html,re.S|re.I)
+              if status!=200 or len(news)!=2 or any('btn--affiliate' in a or 'rates on Booking' in a or 'tarifs sur Booking' in a for a in news):
+                  raise SystemExit('LIVE Booking source citations incorrect: '+path)
+          for path in ('/en/hotels/beaulieu-sur-mer/','/hotels/beaulieu-sur-mer/'):
+              status,_,html=get(path)
+              if status!=200 or '<h3>La Réserve de Beaulieu</h3>' not in html:
+                  raise SystemExit('LIVE Beaulieu hotel name missing: '+path)
+          print('LIVE EDITORIAL CITATIONS & HOTEL NAME PASS',flush=True)
+          PY
       - name: Publish final Gay FAQ and Solo grid fixes to OVH
         env:
           MAMETAS_FORCE_FILES: assets/mametas-v35-ui-polish.css;cote-dazur-gay/index.html;cote-dazur-gay/ou-dormir/index.html;cote-dazur-gay/plages-sans-voiture/index.html;cote-dazur-gay/itineraire-5-jours/index.html;guide-gay-nice/index.html;en/gay-french-riviera/index.html;en/gay-french-riviera/where-to-stay/index.html;en/gay-french-riviera/beaches-without-a-car/index.html;en/gay-french-riviera/5-day-itinerary/index.html;en/gay-nice/index.html;cote-dazur-femme-solo/index.html;en/solo-female-french-riviera/index.html
