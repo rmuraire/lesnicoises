@@ -211,6 +211,9 @@ jobs:
       - name: Unify Gay FAQ with Babymoon and inspect Solo footer
         run: python scripts/v36_faq_babymoon_solo_2026_10_11.py
 
+      - name: Repair critical JS, Booking citations and hotel title
+        run: python scripts/v37_fix_claude_critical_2026_10_11.py
+
       - name: Validate bilingual Culture artist spotlight
         run: python scripts/validate_culture_artist_spotlight_2026_10_10.py
 

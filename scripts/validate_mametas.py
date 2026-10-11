@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 import sys
 import xml.etree.ElementTree as ET
 from html.parser import HTMLParser
@@ -67,6 +68,14 @@ def internal_target(value: str) -> Path | None:
 
 def main() -> int:
     errors: list[str] = []
+    # Build-time guard: the 01-Oct generated affiliate tracker corrupted both
+    # primary bundles with literal backslash-n tokens. Check every public JS.
+    for js_path in sorted((ROOT / "assets").rglob("*.js")):
+        result = subprocess.run(
+            ["node", "--check", str(js_path)], capture_output=True, text=True
+        )
+        if result.returncode:
+            errors.append(f"{js_path.relative_to(ROOT)}: invalid JS: {result.stderr[-320:]}")
     pages = active_html()
     canonical_urls: dict[str, Path] = {}
 
