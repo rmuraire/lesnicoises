@@ -1,5 +1,24 @@
 DirectoryIndex index.html
+# 2026-10-11 critical QA security and visitor error handling.
+# Never expose directory contents; keep individual public assets accessible.
+Options -Indexes
+ErrorDocument 404 /404.html
 RewriteEngine On
+
+# Build/backup/data files are not public resources, even when the file URL is known.
+RewriteRule ^(?:scripts|backup|data)(?:/|$) - [F,L]
+
+# Canonical, friendly fallbacks for obsolete hub-less directories and EN aliases.
+RewriteRule ^stay/?$ /en/hotels/ [R=301,L]
+RewriteRule ^fr/dormir/?$ /hotels/ [R=301,L]
+RewriteRule ^en/hotels/(?:eze|roquebrune-cap-martin|saint-jean-cap-ferrat)/?$ /en/hotels/ [R=301,L]
+RewriteRule ^hotels/(?:eze|roquebrune-cap-martin|saint-jean-cap-ferrat)/?$ /hotels/ [R=301,L]
+RewriteRule ^en/plan/?$ /plan/ [R=301,L]
+RewriteRule ^en/plan/(.+)$ /plan/$1 [R=301,L]
+RewriteRule ^en/privacy/?$ /privacy/ [R=301,L]
+RewriteRule ^en/stay/?$ /en/hotels/ [R=301,L]
+RewriteRule ^en/stay/(.+)$ /stay/$1 [R=301,L]
+
 
 # Preserve the language of the two former homepages during the domain move.
 RewriteCond %{HTTP_HOST} ^(www\.)?lesnicoises\.com$ [NC]
