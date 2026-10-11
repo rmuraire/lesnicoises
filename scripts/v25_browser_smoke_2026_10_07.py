@@ -615,6 +615,7 @@ def main() -> None:
                             disclosures:docs.length,
                             nativeFaq:nativeFaq.length,
                             intentFaq:intentFaq.length,
+                            faqHeading:pick('main h2').some(h=>h.textContent.trim().toLowerCase()==='faq'),
                             typ:paras.slice(0,8).map(n=>({tag:n.tagName,font:parseFloat(style(n).fontSize)})),
                             verdicts:verdict.slice(0,2).map(n=>parseFloat(style(n).fontSize)),
                             badLinks:links.filter(n=>style(n).textDecorationLine==='none'||parseFloat(style(n).borderBottomWidth)>1).map(n=>n.textContent.trim()),
@@ -632,6 +633,8 @@ def main() -> None:
                             agenda_ok=polish["agendaTiles"]>=3 and polish["agendaClickable"]==polish["agendaTiles"]
                             if not (semantic_ok or agenda_ok):
                                 errors.append(f"{label}: Good Finds cards not fully clickable {polish}")
+                        if path=="/guide-gay-nice/" and polish["faqHeading"] and (polish["disclosures"]+polish["nativeFaq"]+polish["intentFaq"])<3:
+                            errors.append(f"{label}: French Gay Nice FAQ has static questions rather than native accordions")
                         if path in ("/cote-dazur-gay/","/en/gay-french-riviera/") and (polish["disclosures"]+polish["nativeFaq"]+polish["intentFaq"])<3:
                             errors.append(f"{label}: Gay FAQ lacks functional Explore-style disclosures")
                         if path in ("/en/gay-nice/",

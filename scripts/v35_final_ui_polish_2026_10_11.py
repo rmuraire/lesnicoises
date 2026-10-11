@@ -107,6 +107,32 @@ def fix_en_gay_subguide_faq(s, rel):
     return s[:matches[0].start()] + faq + s[matches[0].end():]
 
 
+
+def fix_fr_gay_subguide_faq(s, rel):
+    """Normalize static French Gay subguide FAQs, preserving existing native accordions."""
+    if 'class="mametas-faq-parity"' in s or (
+        s.count('<details') >= 3 and ('class="intent-faq"' in s or 'faq-list' in s)
+    ):
+        return s
+    heading = re.search(r'<h2[^>]*>\s*(?:FAQ|Questions fréquentes)\s*</h2>', s, re.I)
+    if heading is None:
+        return s  # This subguide has no FAQ; do not invent editorial answers.
+    pattern = re.compile(
+        r'<h2[^>]*>\s*(?:FAQ|Questions fréquentes)\s*</h2>\s*'
+        r'((?:<div class="place">\s*<h3>.*?</h3>\s*<p class="why">.*?</p>\s*</div>\s*)+)',
+        re.S | re.I,
+    )
+    matches = list(pattern.finditer(s))
+    if len(matches) != 1:
+        raise RuntimeError(f"{rel}: static FR FAQ has unexpected markup, refusing to leave it unconverted")
+    questions = FAQ_PLACE.findall(matches[0].group(1))
+    if not (3 <= len(questions) <= 8) or FAQ_PLACE.sub('', matches[0].group(1)).strip():
+        raise RuntimeError(f"{rel}: incomplete or inconsistent FR FAQ")
+    faq = '<section class="mametas-faq-parity"><h2>FAQ</h2>'
+    faq += ''.join(detail(q, a) for q, a in questions) + '</section>'
+    return s[:matches[0].start()] + faq + s[matches[0].end():]
+
+
 # The six legacy FR-only cards must not survive the final rendered HTML,
 # regardless of CSS class, image replacement, or the materializer version.
 FR_EXTRA_HOTELS = (
@@ -260,6 +286,8 @@ def run():
             'en/gay-french-riviera/beaches-without-a-car/index.html',
         ):
             s=fix_en_gay_subguide_faq(s,rel)
+        if rel == 'guide-gay-nice/index.html' or rel.startswith('cote-dazur-gay/'):
+            s=fix_fr_gay_subguide_faq(s,rel)
         if rel=='hotels/index.html':s=fix_fr_hotels(s)
         # One consistent small-scale editorial hierarchy for standard site.css
         # articles (beaches, Practical, Gay, Good Finds, etc.), not V3 intent.
@@ -314,6 +342,19 @@ def run():
             raise RuntimeError(f"{lang} Gay FAQ parity missing")
     if fr.count('<details') < 3 or en.count('<details') < 3:
         raise RuntimeError("Gay FAQ must have at least three native disclosures in each language")
+    for path in (
+        'guide-gay-nice/index.html',
+        'cote-dazur-gay/ou-dormir/index.html',
+        'cote-dazur-gay/plages-sans-voiture/index.html',
+        'cote-dazur-gay/itineraire-5-jours/index.html',
+    ):
+        html = (ROOT/path).read_text(encoding='utf-8')
+        if re.search(r'<h2[^>]*>\s*(?:FAQ|Questions fréquentes)\s*</h2>', html, re.I) and (
+            '<section class="mametas-faq-parity">' not in html
+            and 'class="intent-faq"' not in html
+            and 'class="faq-list"' not in html
+        ):
+            raise RuntimeError(f"{path}: FR Gay FAQ remains static")
     for path in ('en/gay-nice/index.html',
                  'en/gay-french-riviera/where-to-stay/index.html',
                  'en/gay-french-riviera/beaches-without-a-car/index.html'):
