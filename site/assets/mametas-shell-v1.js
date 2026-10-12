@@ -81,14 +81,6 @@
     return "link";
   }
 
-  function network(href) {
-    if (CJ.test(href)) return "booking-cj";
-    if (/expedia\.com\/affiliates\//i.test(href)) return "expedia";
-    if (/getyourguide\./i.test(href)) return "getyourguide";
-    if (/booking\.com\//i.test(href)) return "booking";
-    return "other";
-  }
-
   const lang = (document.documentElement.lang || "en").toLowerCase().indexOf("fr") === 0 ? "fr" : "en";
   const sidFor = (link) => `${lang}-${pageKey()}-${slotOf(link)}`.slice(0, 64);
 
@@ -115,11 +107,13 @@
   function track(link) {
     const href = link.getAttribute("href") || "";
     if (!PARTNER.test(href) || typeof window.gtag !== "function") return;
+    // Source page, language, device and traffic source come from GA4's own dimensions,
+    // so the event only adds what GA4 cannot know: the slot and the hotel or activity.
+    // The CJ sid (page + slot) stays on the link for CJ reports but is not sent to GA4.
     window.gtag("event", "partner_click", {
-      aff_network: network(href),
       aff_slot: slotOf(link),
-      aff_sid: CJ.test(href) ? sidFor(link) : "",
       aff_item: itemName(link),
+      link_url: href.replace(/([?&])sid=[^&]*&?/, "$1").replace(/[?&]$/, "").slice(0, 300),
       link_domain: (href.match(/^https?:\/\/([^/?#]+)/i) || [])[1] || "",
       transport_type: "beacon"
     });
