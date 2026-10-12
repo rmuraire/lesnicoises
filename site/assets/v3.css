@@ -1026,7 +1026,7 @@ a.dialect-inline,.article-body a.dialect-inline,.article p a.dialect-inline{bord
 @media(max-width:900px){.phase4-budget-grid,.phase4-decision-table,.phase4-season-grid,.phase4-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.phase4-short-entry-inner{grid-template-columns:1fr}}
 @media(max-width:620px){.phase4-budget-grid,.phase4-decision-table,.phase4-season-grid,.phase4-days-grid,.phase4-plan-grid,.phase4-route-meta{grid-template-columns:1fr}}
 /* Home practical toolbox: keep two columns on phones so six entries stay compact */
-@media(max-width:620px){.home-toolbox .phase4-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-toolbox .phase4-plan-grid a{min-height:0;gap:14px;padding:14px}.home-toolbox .phase4-plan-grid strong{font-size:18px;line-height:1.1}}
+@media(max-width:620px){.home-toolbox .phase4-plan-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.home-toolbox .phase4-plan-grid a{min-height:0;padding:14px}.home-toolbox .phase4-plan-grid strong{font-size:18px;line-height:1.1}}
 
 
 /* V3 harmonisation and clarification 2026-09-25 */
@@ -3179,3 +3179,12 @@ a.dialect-inline,.article-body a.dialect-inline,.article p a.dialect-inline{bord
 .month-table-note{font-size:12px!important;line-height:1.55!important;color:var(--ink-soft);margin:0 0 30px!important}
 .phase4-decision-table.phase4-car-cases{grid-template-columns:1fr}
 .phase4-car-cases p+p{margin-top:10px}
+
+/* Vertical balance of rectangular cards — 2026-10-12.
+   Content sits in the vertical middle of each card; no fixed heights that leave an empty band. */
+.phase4-plan-grid a{min-height:96px;justify-content:center;gap:8px}
+.architecture-card{display:flex;flex-direction:column;justify-content:center;min-height:0}
+.now-card{justify-content:center}
+.now-card h3{margin:16px 0 12px}
+@media(min-width:761px){.now-card{min-height:200px}}
+@media(max-width:760px){.now-card{min-height:0}}
