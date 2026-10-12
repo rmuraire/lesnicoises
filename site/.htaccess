@@ -20,6 +20,8 @@ RewriteRule ^en/stay/?$ /en/hotels/ [R=301,L]
 RewriteRule ^en/stay/(.+)$ /stay/$1 [R=301,L]
 RewriteRule ^bons-plans/septembre-2026/?$ /bons-plans/octobre-2026/ [R=301,L]
 RewriteRule ^en/good-finds/september-2026/?$ /en/good-finds/october-2026/ [R=301,L]
+# Former EN alias of the Cannes explorations museum page (2026-10-12).
+RewriteRule ^en/culture/musee-explorations-cannes/?$ /en/culture/world-explorations-museum-cannes/ [R=301,L]
 
 
 # Preserve the language of the two former homepages during the domain move.

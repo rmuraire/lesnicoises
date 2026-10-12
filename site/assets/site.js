@@ -322,8 +322,6 @@
       {re:/(pichoun|pitchoun)/i,id:'pichoun'},
       {re:/(cagade)/i,id:'cagade'},
       {re:/(dégun)/i,id:'degun'},
-      {re:/(niocou)/i,id:'niocou'},
-      {re:/(paillassou)/i,id:'paillassou'},
       {re:/(empégué)/i,id:'empegue'},
       {re:/(ficanas)/i,id:'ficanas'}
     ];
