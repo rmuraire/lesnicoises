@@ -150,6 +150,7 @@ button { color: inherit; font: inherit; }
   letter-spacing: -0.055em;
   line-height: 0.76;
 }
+.home-hero h1 .eyebrow { display: block; margin: 0 0 14px; font-family: var(--sans); line-height: 1.3; }
 .home-hero h1 em {
   display: block;
   margin-top: 24px;
