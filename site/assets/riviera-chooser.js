@@ -78,9 +78,9 @@
         nice:{label:'Nice, vraiment',body:'Vieux-Nice, Promenade et une vraie baignade. C’est une destination, pas seulement l’aéroport.',href:'/riviera-guide/nice/'},
         capferrat:{label:'Villefranche + Cap-Ferrat',body:'La journée eau et paysages : baie, sentier côtier ou criques. Le déplacement vers l’est vaut le coup.',href:'/riviera-guide/villefranche-cap-ferrat/'},
         antibes:{label:'Antibes',body:'Vieille ville, Picasso et vraie plage de sable. Un des contrastes les plus faciles de la côte.',href:'/riviera-guide/antibes/'},
-        saintpaul:{label:'Saint-Paul-de-Vence',body:'Servez-vous vraiment de la voiture : village + Fondation Maeght, de préférence avant ou après le pic des excursionnistes.',href:'/riviera-guide/saint-paul-de-vence/'},
-        cannes:{label:'Cannes + Lérins',body:'Sable, Croisette et échappée sur les îles si vous voulez la Riviera ouest en une journée.',href:'/riviera-guide/cannes/'},
-        monaco:{label:'Monaco',body:'Gardez-le pour une journée de contraste concentrée : architecture, vues mer et polish assumé.',href:'/riviera-guide/monaco/'},
+        saintpaul:{label:'Saint-Paul-de-Vence',body:'Profitez vraiment de la voiture : village + Fondation Maeght, de préférence avant ou après le pic des excursionnistes.',href:'/riviera-guide/saint-paul-de-vence/'},
+        cannes:{label:'Cannes + Lérins',body:'Sable, Croisette et échappée sur les îles si vous voulez l’ouest de la Riviera en une journée.',href:'/riviera-guide/cannes/'},
+        monaco:{label:'Monaco',body:'Gardez-le pour une journée de contraste concentrée : architecture, vues mer et chic assumé.',href:'/riviera-guide/monaco/'},
         menton:{label:'Menton',body:'Couleur, jardins et une extrémité est qui ne ressemble franchement ni à Nice ni à Cannes.',href:'/riviera-guide/menton/'},
         eze:{label:'Èze',body:'Spectaculaire, oui. Allez-y tôt ou tard, et souvenez-vous que le village et la plage ne sont pas au même endroit.',href:'/riviera-guide/eze/'}
       },
@@ -230,11 +230,11 @@
         villefranche:'Beauty wins here, logistics less so. Transfers and slopes add friction to a busy itinerary.',
         menton:'Calm and colourful, but far east. It becomes a poor base if Cannes and Antibes still matter a lot.',
         monaco:'Spectacular and expensive, with real verticality. It is not the coast’s most forgiving all-purpose base.',
-        sainttropez:'The peninsula asks for time, money and transport planning. It only makes sense when it is genuinely the point.',
+        sainttropez:'The peninsula asks for time, money and transport planning. It only makes sense when it really is the point.',
         saintpaul:'Wonderful for art and a slower inland stay, weak for a sea-first or rail-heavy Riviera trip.'
       },
       skips:{
-        nice:'Skip Saint-Tropez unless it is genuinely one of the reasons you came. It eats too much of a short Riviera trip.',
+        nice:'Skip Saint-Tropez unless it is one of the real reasons you came. It eats too much of a short Riviera trip.',
         cannes:'Skip the automatic Monaco/Menton day. You chose the western Riviera; use it properly.',
         antibes:'Skip crossing the whole coast just because the train makes it technically possible.',
         villefranche:'Skip the western checklist. Cannes and Antibes can survive one trip without you.',
@@ -250,7 +250,7 @@
           {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'Choose it when the hotel is allowed to become part of the trip.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'A smaller, calmer answer when you do not need palace scale.'},
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'A smaller, calmer option when you do not need palace scale.'},
           {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Boutique Cannes with enough polish and less ceremony.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'The Croisette in full Riviera mode.'}
         ],
@@ -260,7 +260,7 @@
           {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins when Riviera history and the water are part of the point.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, the train and a quieter base before hotel theatre.'},
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, the train and a quieter base rather than hotel theatre.'},
           {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'The harbour fantasy, with the geography doing most of the seducing.'},
           {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'The intentional Cap-Ferrat version, where the hotel becomes a destination.'}
         ],
@@ -270,12 +270,12 @@
           {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Boutique luxury that fits Menton’s quieter rhythm.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'The less ceremonial Monaco answer: resort logic, space and fewer palace rituals.'},
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'The less ceremonial Monaco option: resort-style space and fewer palace rituals.'},
           {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Classic Monte-Carlo polish without making every minute a performance.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'The full palace answer. Choose it because the hotel itself is part of the Monaco decision.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'A more measured peninsula answer when you want access without sleeping in the village theatre.'},
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'A more measured peninsula option when you want access without sleeping in the village theatre.'},
           {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'A softer peninsula stay when beach time matters.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez itself, because in this version the postcode is part of the point.'}
         ],
@@ -289,35 +289,35 @@
     fr: {
       bases: {
         nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'Le point de chute le plus polyvalent de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
-        cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera fonctionne mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
+        cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera se vit mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
         antibes:{name:'Antibes / Juan-les-Pins',guide:'/riviera-guide/antibes/',hotels:'/hotels/antibes/',why:'Vieille ville, sable et gare utile : l’un des rares compromis azuréens qui ne ressemble pas à un compromis.'},
         villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme point de chute pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
         menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'Le point de chute plus lent à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
-        monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version intentionnelle : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
-        sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas un point de chute central astucieux. Vos réponses disent que la presqu’île est le voyage, donc Mametas la laisse gagner.'},
-        saintpaul:{name:'Saint-Paul-de-Vence',guide:'/riviera-guide/saint-paul-de-vence/',hotels:'/hotels/saint-paul-de-vence/',why:'Un séjour volontairement intérieur pour l’art, la pierre et un rythme plus lent. Il ne gagne que lorsque la côte cesse d’être le personnage principal.'}
+        monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version assumée : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
+        sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas un point de chute central astucieux. D’après vos réponses, la presqu’île est le voyage : Mametas la laisse donc gagner.'},
+        saintpaul:{name:'Saint-Paul-de-Vence',guide:'/riviera-guide/saint-paul-de-vence/',hotels:'/hotels/saint-paul-de-vence/',why:'Un séjour volontairement dans l’arrière-pays pour l’art, la pierre et un rythme plus lent. Il ne gagne que lorsque la côte cesse d’être le personnage principal.'}
       },
       moodLine:{
         decide:'Vous nous avez demandé de décider. On choisit donc le séjour avec le moins de compromis inutiles.',
-        sea:'On organise le voyage autour de la baignade et de la mer, pas autour d’une collection de codes postaux célèbres.',
-        food:'Les restaurants et une vraie vie le soir comptent : le point de chute doit continuer à fonctionner une fois les excursions rentrées.',
-        culture:'L’art et les villages passent devant. L’accès aux bons arrêts culturels compte plus que la commodité balnéaire pure.',
-        glamour:'Vous voulez le théâtre Riviera. Très bien. On refuse quand même de rendre la logistique absurde pour un lobby.',
-        peace:'La beauté et le calme comptent plus que la connexion maximale. On accepte volontairement un peu moins d’efficacité.'
+        sea:'On organise le voyage autour de la baignade et de la mer, pas autour d’une collection de cartes postales célèbres.',
+        food:'Les restaurants et une vraie vie le soir comptent : le point de chute doit rester vivant au retour des excursions.',
+        culture:'L’art et les villages passent devant. L’accès aux belles étapes culturelles compte plus que la commodité balnéaire pure.',
+        glamour:'Vous voulez le grand théâtre de la Riviera. Très bien. On refuse quand même de rendre la logistique absurde pour un hall d’hôtel.',
+        peace:'La beauté et le calme comptent plus que la meilleure desserte. On accepte volontairement un peu moins d’efficacité.'
       },
       pace:{
-        slow:'Rythme tranquille : le point de chute doit faire davantage du travail. Moins de départs, et une demi-journée laissée complètement libre.',
-        balanced:'Rythme équilibré : le point de chute compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul code postal.',
-        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, avec la meilleure liaison disponible, pour couvrir davantage de Riviera intelligemment.'
+        slow:'Rythme tranquille : le point de chute doit en faire davantage. Moins de départs, et une demi-journée laissée complètement libre.',
+        balanced:'Rythme équilibré : le point de chute compte toujours, mais deux vraies sorties régionales font partie du voyage. Vous n’êtes pas venu jusque-là pour inspecter un seul quartier.',
+        ambitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance choisie. Une direction par jour, avec la meilleure liaison disponible, pour voir davantage de la Riviera, intelligemment.'
       },
       priorities:{
         nice:{
-          decide:['Nice correctement','Villefranche + Cap-Ferrat','Antibes ou Monaco/Menton'],
+          decide:['Nice comme il faut','Villefranche + Cap-Ferrat','Antibes ou Monaco/Menton'],
           sea:['Une vraie baignade à Nice','Villefranche + Cap-Ferrat','Antibes pour le sable'],
           food:['Marchés + dîner à Nice','Vieille ville d’Antibes','Une journée déjeuner vers l’est'],
           culture:['Matisse / Chagall à Nice','Saint-Paul + Fondation Maeght','Picasso à Antibes'],
           glamour:['Une belle soirée à Nice','Monaco pour le spectacle','Cannes pour le contraste ouest'],
-          peace:['Villefranche + Cap-Ferrat','Menton','Une journée Nice volontairement lente']
+          peace:['Villefranche + Cap-Ferrat','Menton','Une journée à Nice volontairement lente']
         },
         cannes:{
           decide:['Cannes + Le Suquet','Antibes','Îles de Lérins'],
@@ -336,7 +336,7 @@
           peace:['Cap d’Antibes','Vieil Antibes tôt','Une journée plage sans deuxième arrêt']
         },
         villefranche:{
-          decide:['Villefranche correctement','Cap-Ferrat','Nice ou Monaco, pas les deux'],
+          decide:['Villefranche comme il faut','Cap-Ferrat','Nice ou Monaco, pas les deux'],
           sea:['Baie de Villefranche','Criques du Cap-Ferrat','Beaulieu'],
           food:['Déjeuner à Villefranche','Dîner à Nice','Un repas à Monaco si vous voulez le théâtre'],
           culture:['Musées de Nice','Èze','Monaco pour une journée très différente'],
@@ -344,77 +344,77 @@
           peace:['Baie de Villefranche','Cap-Ferrat à pied','Beaulieu sans programme']
         },
         menton:{
-          decide:['Menton correctement','Monaco','Une journée à Nice'],
+          decide:['Menton comme il faut','Monaco','Une journée à Nice'],
           sea:['Front de mer de Menton','Roquebrune-Cap-Martin','Monaco seulement pour le contraste'],
           food:['Menton','Monaco pour un grand repas','Une journée marché sans train'],
           culture:['Cocteau à Menton','Musées de Monaco','Nice pour les grandes collections'],
           glamour:['Monaco','Un meilleur hôtel à Menton','Cap-Martin pour la vue'],
           peace:['Jardins de Menton','Roquebrune-Cap-Martin','Une journée sans aucun train vers l’ouest']
         },
-        monaco:{decide:['Monaco correctement','Menton','Cap-Ferrat'],glamour:['Monte-Carlo correctement','Une demi-journée palace / spa','Menton pour respirer'],food:['Restaurants de Monaco','Menton','Nice pour le contraste']},
-        sainttropez:{decide:['Village de Saint-Tropez','Pampelonne','Ramatuelle / la presqu’île'],sea:['Pampelonne correctement','Une plage plus calme de la presqu’île','Saint-Tropez en fin de journée'],glamour:['Village de Saint-Tropez','Un après-midi où l’hôtel compte','Pampelonne quand vous voulez vraiment la scène']},
+        monaco:{decide:['Monaco comme il faut','Menton','Cap-Ferrat'],glamour:['Monte-Carlo comme il faut','Une demi-journée palace / spa','Menton pour respirer'],food:['Restaurants de Monaco','Menton','Nice pour le contraste']},
+        sainttropez:{decide:['Village de Saint-Tropez','Pampelonne','Ramatuelle / la presqu’île'],sea:['Pampelonne comme il faut','Une plage plus calme de la presqu’île','Saint-Tropez en fin de journée'],glamour:['Village de Saint-Tropez','Un après-midi où l’hôtel compte','Pampelonne quand vous voulez vraiment l’ambiance']},
         saintpaul:{decide:['Saint-Paul après les visiteurs','Fondation Maeght','Vence'],culture:['Fondation Maeght','Village de Saint-Paul','Vence / chapelle Matisse'],peace:['Saint-Paul tôt et tard','Un long après-midi à l’hôtel','Vence ou une seule journée sur la côte']}
       },
       whyNot:{
         nice:'Plus polyvalente que spécialisée. Si le réseau de transport redevient prioritaire, Nice remonte très vite.',
         cannes:'Très forte pour le sable et le décor, moins efficace que Nice pour rayonner souvent vers l’est.',
         antibes:'Un excellent compromis, mais moins efficace que Nice si le séjour repose sur beaucoup d’excursions.',
-        villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances ajoutent de la friction.',
+        villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances compliquent un programme chargé.',
         menton:'Douce et colorée, mais très à l’est. Mauvais point de chute si Cannes et Antibes restent des priorités fortes.',
-        monaco:'Spectaculaire, chère et verticale. Ce n’est pas le point de chute le plus indulgent pour un premier tour complet de la côte.',
-        sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le sujet.',
-        saintpaul:'Formidable pour l’art et un séjour intérieur plus lent, faible pour une Riviera centrée sur la mer ou le train.'
+        monaco:'Spectaculaire, chère et verticale. Ce n’est pas le point de chute le plus accommodant pour un premier tour complet de la côte.',
+        sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le but du voyage.',
+        saintpaul:'Formidable pour l’art et un séjour plus lent dans l’arrière-pays, faible pour une Riviera centrée sur la mer ou le train.'
       },
       skips:{
         nice:'Laissez Saint-Tropez de côté sauf si c’est réellement une des raisons de votre voyage. Sur un séjour court, il mange trop de Riviera.',
-        cannes:'Laissez tomber la journée Monaco/Menton automatique. Vous avez choisi l’ouest : utilisez-le correctement.',
+        cannes:'Laissez tomber la journée Monaco/Menton automatique. Vous avez choisi l’ouest : profitez-en vraiment.',
         antibes:'Évitez de traverser toute la côte simplement parce que le train rend la chose techniquement possible.',
         villefranche:'Laissez la checklist de l’ouest tranquille. Cannes et Antibes survivront très bien à votre absence.',
         menton:'Pas de collection Cannes + Antibes par réflexe. L’est n’est pas un lot de consolation.',
-        monaco:'N’utilisez pas Monaco comme piste de lancement pour traverser la côte tous les jours. Si vous dormez ici, laissez Monaco faire partie des vacances.',
-        sainttropez:'Laissez l’est de la Riviera pour une autre fois. Vous avez choisi la presqu’île, Nice et Menton n’ont pas besoin de votre feuille de présence.',
+        monaco:'N’utilisez pas Monaco comme rampe de lancement pour traverser la côte tous les jours. Si vous dormez ici, laissez Monaco faire partie des vacances.',
+        sainttropez:'Laissez l’est de la Riviera pour une autre fois. Vous avez choisi la presqu’île : Nice et Menton n’ont pas besoin de votre feuille de présence.',
         saintpaul:'Pas de navette quotidienne vers la côte. Dormir dans l’arrière-pays sert précisément à arrêter de se comporter comme si la mer faisait l’appel.'
       },
       hotels:{
         nice:[
           {tier:'Practical',price:'€€',name:'Hotel 66 Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-6DtP9e',note:'Près de la gare et pensé pour des départs faciles.'},
           {tier:'Comfort',price:'€€€',name:'Hôtel Villa Victoria',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-wS4XWf',note:'Du calme au centre quand vous voulez Nice à proximité sans l’avoir dans la chambre.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'À choisir quand l’hôtel a le droit de devenir une partie du voyage.'}
+          {tier:'Splurge',price:'€€€€',name:'Hôtel du Couvent',url:'https://expedia.com/affiliates/nice-hotels-hotel-du-couvent.cwNBKTi',note:'À choisir quand l’hôtel a le droit de faire partie du voyage.'}
         ],
         cannes:[
-          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'Une réponse plus petite et plus calme sans échelle palace.'},
-          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Cannes en boutique, assez chic et moins cérémoniel.'},
+          {tier:'Practical',price:'€€€',name:'Hôtel de Provence',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-uyU7Ij5',note:'Une adresse plus petite et plus calme, sans la démesure d’un palace.'},
+          {tier:'Comfort',price:'€€€',name:'Le Cavendish',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-5B9dxy',note:'Cannes version boutique-hôtel, assez chic et moins cérémonieux.'},
           {tier:'Splurge',price:'€€€€',name:'Hôtel Martinez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-cFinSJ',note:'La Croisette en mode Riviera intégral.'}
         ],
         antibes:[
-          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central et rationnel quand la ville compte plus que le lobby.'},
-          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'Une réponse soignée et piétonne, avec le port et la vieille ville à portée de pas.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins quand l’histoire Riviera et l’eau font partie du sujet.'}
+          {tier:'Practical',price:'€',name:'Hôtel de l’Étoile',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-bGhBOoj',note:'Central et rationnel quand la ville compte plus que le hall d’entrée.'},
+          {tier:'Comfort',price:'€€€',name:'La Villa Port d’Antibes',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-dm1SPe',note:'Une adresse soignée où tout se fait à pied, avec le port et la vieille ville à portée de pas.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel Belles Rives',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Hp8ryt8',note:'Juan-les-Pins quand l’histoire de la Riviera et l’eau font partie du sujet.'}
         ],
         villefranche:[
-          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, le train et un point de chute plus calme avant le théâtre hôtelier.'},
+          {tier:'Practical',price:'€€',name:'Hôtel Comté de Nice',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-AFFN315',note:'Beaulieu, le train et un point de chute plus calme plutôt que le théâtre hôtelier.'},
           {tier:'Comfort',price:'€€€',name:'Welcome Hotel',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-esvN35',note:'Le fantasme du port, avec la géographie qui fait l’essentiel du travail.'},
           {tier:'Splurge',price:'€€€€',name:'Grand-Hôtel du Cap-Ferrat',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-sbqlUh',note:'La version Cap-Ferrat volontaire, où l’hôtel devient une destination.'}
         ],
         menton:[
           {tier:'Practical',price:'€',name:'ibis Roquebrune Cap Martin Menton',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-p5q29z',note:'Un point de chute rationnel à l’est quand la chambre n’est pas l’événement principal.'},
-          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Mer + piscine pour ralentir sans entrer dans l’économie palace.'},
+          {tier:'Comfort',price:'€€€',name:'Hôtel Napoléon',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-I8V2LM',note:'Mer + piscine pour ralentir sans le budget d’un palace.'},
           {tier:'Splurge',price:'€€€€',name:'Villa Genesis',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-VvfgH2i',note:'Luxe boutique cohérent avec le rythme plus doux de Menton.'}
         ],
         monaco:[
-          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'La réponse Monaco la moins cérémonielle : logique resort, espace et moins de rituel palace.'},
-          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Le poli Monte-Carlo classique sans transformer chaque minute en représentation.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'La réponse palace intégrale. À choisir parce que l’hôtel fait partie de la décision Monaco.'}
+          {tier:'Practical',price:'€€€€',name:'Monte-Carlo Bay Hotel & Resort',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-tnqPyi',note:'L’adresse la moins cérémonieuse de Monaco : esprit resort, espace et moins de rituel palace.'},
+          {tier:'Comfort',price:'€€€€',name:'Hôtel Hermitage Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-11jB43',note:'Le chic classique de Monte-Carlo, sans transformer chaque minute en représentation.'},
+          {tier:'Splurge',price:'€€€€',name:'Hôtel de Paris Monte-Carlo',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-aY1ci3',note:'Le palace dans toute sa splendeur. À choisir parce que l’hôtel fait partie du choix de Monaco.'}
         ],
         sainttropez:[
-          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'Une réponse plus mesurée sur la presqu’île quand vous voulez l’accès sans dormir dans le théâtre du village.'},
+          {tier:'Practical',price:'€€€',name:'Kube Saint-Tropez',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-lSn1YJ',note:'Une adresse plus mesurée sur la presqu’île, pour en profiter sans dormir dans le théâtre du village.'},
           {tier:'Comfort',price:'€€€',name:'La Ferme d’Augustin',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-QKHIhFg',note:'Une version plus douce de la presqu’île quand la plage compte.'},
-          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez même, parce qu’ici le code postal fait partie du sujet.'}
+          {tier:'Splurge',price:'€€€€',name:'Hôtel La Ponche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-9lAclZ',note:'Saint-Tropez même, parce que dans cette version, l’adresse fait partie du sujet.'}
         ],
         saintpaul:[
           {tier:'Practical',price:'€€',name:'Hôtel Les Messugues',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-3YDTgm',note:'Une nuit plus calme près du village sans faire de l’hôtel tout le programme.'},
           {tier:'Comfort',price:'€€€',name:'Toile Blanche',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-MhrpPEn',note:'Adulte, arty et suffisamment loin de la machine côtière.'},
-          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'La version retraite, où rester à l’hôtel est une partie légitime du plan.'}
+          {tier:'Splurge',price:'€€€€',name:'Le Domaine du Mas de Pierre',url:'https://www.kqzyfj.com/click-101875476-15734754?url=https%3A%2F%2Fwww.booking.com%2FShare-Zbc32H',note:'La version refuge, où rester à l’hôtel fait légitimement partie du programme.'}
         ]
       }
     }
@@ -541,17 +541,17 @@
     var fr = lang === 'fr';
     if (season === 'winter') {
       return fr
-        ? 'Hors saison, la mer reste dans le voyage mais les plages privées et une partie de l’offre saisonnière comptent moins. On privilégie les villes qui restent vivantes, les jardins, les musées, les marchés et les balades littorales.'
+        ? 'Hors saison, la mer fait toujours partie du voyage mais les plages privées et une partie de l’offre saisonnière comptent moins. On privilégie les villes qui restent vivantes, les jardins, les musées, les marchés et les balades littorales.'
         : 'Out of season, the sea still matters but private beaches and part of the seasonal offer matter less. We favour towns that stay alive, gardens, museums, markets and coastal walks.';
     }
     if (season === 'spring') {
       return fr
-        ? 'Le printemps garde presque toute la logique Riviera avec moins de chaleur et moins de saturation. C’est une saison très facile pour élargir la carte.'
-        : 'Spring keeps almost all of the Riviera logic with less heat and less crowding. It is an easy season for widening the map.';
+        ? 'Le printemps garde presque tout l’attrait de la Riviera, avec moins de chaleur et moins de saturation. C’est une saison très facile pour élargir la carte.'
+        : 'Spring keeps almost all of the Riviera’s appeal with less heat and less crowding. It is an easy season for widening the map.';
     }
     if (season === 'autumn') {
       return fr
-        ? 'En septembre et octobre, la mer reste pertinente mais l’activité balnéaire commence à se réduire. On garde le littoral sans dépendre entièrement des établissements saisonniers.'
+        ? 'En septembre et octobre, la mer compte encore mais l’activité balnéaire commence à se réduire. On garde le littoral sans dépendre entièrement des établissements saisonniers.'
         : 'In September and October the sea still matters, but the beach season starts thinning out. We keep the coast without depending entirely on seasonal venues.';
     }
     return fr
@@ -563,12 +563,12 @@
     var fr = lang === 'fr';
     if (profile.mood === 'glamour' && winner !== 'monaco') {
       return {base:'monaco', title:fr?'Vous êtes vraiment venu pour Monte-Carlo ?':'Really here for Monte-Carlo?',
-        body:fr?'C’est un autre choix de point de chute, pas un simple upgrade hôtelier.':'That changes the base itself; it is not a hotel upgrade.'};
+        body:fr?'C’est un autre choix de point de chute, pas une simple montée en gamme d’hôtel.':'That changes the base itself; it is not a hotel upgrade.'};
     }
     if (profile.mood === 'sea' && profile.days !== '3' && profile.mobility !== 'nocar' &&
         winner !== 'sainttropez' && seasonOf(profile) !== 'winter') {
-      return {base:'sainttropez', title:fr?'La presqu’île est en réalité le voyage ?':'Is the peninsula actually the trip?',
-        body:fr?'Alors assumez Saint-Tropez comme point de chute intentionnel au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
+      return {base:'sainttropez', title:fr?'Et si la presqu’île était le vrai voyage ?':'Is the peninsula actually the trip?',
+        body:fr?'Alors faites de Saint-Tropez un point de chute assumé au lieu de l’ajouter à une checklist.':'Then commit to Saint-Tropez as an intentional base instead of adding it to a checklist.'};
     }
     if ((profile.mood === 'culture' || profile.mood === 'peace') && profile.days !== '3' && profile.mobility !== 'nocar' && winner !== 'saintpaul') {
       return {base:'saintpaul', title:fr?'Vous voulez vraiment quitter la côte ?':'Do you actually want to leave the coast?',
@@ -608,7 +608,7 @@
       nice:{car:'Excellent sans voiture',carEn:'Excellent without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
       cannes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
       antibes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
-      villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less seamless',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
+      villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less smoothly',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
       menton:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€ à €€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
       monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne : relief + budget',frictionEn:'Medium: hills + spend'},
       sainttropez:{car:'Voiture ou transferts à prévoir',carEn:'Car or transfers needed',budget:'€€€ à €€€€',friction:'Élevée',frictionEn:'High'},
@@ -724,7 +724,7 @@
       seasonLabel:'Saison',
       do:'Indispensable',
       further:'Pour aller plus loin',
-      furtherBalanced:'Rythme équilibré : deux détours régionaux valent réellement de quitter votre point de chute.',
+      furtherBalanced:'Rythme équilibré : deux escapades dans la région valent vraiment la peine de quitter votre point de chute.',
       furtherAmbitious:'Rythme ambitieux : on élargit la carte sans diluer l’ambiance que vous avez choisie.',
       skip:'Ce qu’on laisserait tomber',
       hotel:'Trois niveaux. Même point de chute.',
@@ -733,7 +733,7 @@
       guide:'Voir le guide de cette ville',
       escape:'Voir cette version',
       back:'Revenir au choix Mametas',
-      intentional:'POINT DE CHUTE INTENTIONNEL',
+      intentional:'POINT DE CHUTE ASSUMÉ',
       shareResult:'Partager mon Riviera Fit',
       shareCopied:'Lien du résultat copié',
       reset:'Recommencer'
@@ -750,11 +750,11 @@
       seasonLabel:'Season',
       do:'The essentials',
       further:'Go further',
-      furtherBalanced:'Balanced pace: two regional detours are genuinely worth leaving the base for.',
+      furtherBalanced:'Balanced pace: two regional detours are really worth leaving the base for.',
       furtherAmbitious:'Ambitious pace: widen the map without diluting the mood you chose.',
       skip:'What we would skip',
       hotel:'Three levels. Same base.',
-      hotelNote:'The categories are editorial; € symbols are Mametas relative guides, never a live rate.',
+      hotelNote:'The categories are editorial; € symbols are relative Mametas price guides, never a live rate.',
       allHotels:'See the full hotel selection',
       guide:'See the base guide',
       escape:'Show me this version',
@@ -971,9 +971,9 @@
       }).join('');
       var escape = '';
       if (!model.override && model.escape) {
-        escape = '<aside class="chooser-escape"><span class="eyebrow">' + (lang==='fr'?'OPTION INTENTIONNELLE':'INTENTIONAL ALTERNATIVE') + '</span><h3>' + esc(model.escape.title) + '</h3><p>' + esc(model.escape.body) + '</p><button type="button" class="button secondary" data-chooser-escape="' + esc(model.escape.base) + '">' + labels.escape + '</button></aside>';
+        escape = '<aside class="chooser-escape"><span class="eyebrow">' + (lang==='fr'?'OPTION ASSUMÉE':'INTENTIONAL ALTERNATIVE') + '</span><h3>' + esc(model.escape.title) + '</h3><p>' + esc(model.escape.body) + '</p><button type="button" class="button secondary" data-chooser-escape="' + esc(model.escape.base) + '">' + labels.escape + '</button></aside>';
       } else if (model.override) {
-        escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. Le point de chute change ; le tier hôtelier, lui, restera une décision séparée.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
+        escape = '<aside class="chooser-escape chooser-escape--active"><span class="eyebrow">' + labels.intentional + '</span><p>' + (lang==='fr'?'Vous avez choisi la version plus engagée du même profil. Le point de chute change ; la gamme d’hôtel, elle, reste une décision à part.':'You chose the more committed version of the same profile. The base changes; hotel tier remains a separate decision.') + '</p><button type="button" class="button secondary" data-chooser-back>' + labels.back + '</button></aside>';
       }
       out.innerHTML =
         '<div class="chooser-result-head"><p class="eyebrow">' + labels.verdict + '</p><p class="chooser-profile">' + esc(profileText) + '</p><h2>' + labels.stay + esc(model.base.name) + '.</h2><h3 class="chooser-decision-label">' + labels.whyThis + '</h3><p class="chooser-lead">' + esc(model.base.why) + '</p><p>' + esc(model.reason) + '</p><p class="chooser-pace"><strong>' + (lang==='fr'?'Rythme.':'Pace.') + '</strong> ' + esc(model.pace) + '</p></div>' +

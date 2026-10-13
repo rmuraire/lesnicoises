@@ -40,7 +40,7 @@
 
     var canonical = document.querySelector('link[rel="canonical"]');
     var shareUrl = canonical && canonical.href ? canonical.href : window.location.origin + window.location.pathname;
-    var shareTitle = h1.textContent.trim() + " — Mametas";
+    var shareTitle = h1.textContent.trim() + " | Mametas";
 
     var row = document.createElement("div");
     row.className = "mametas-share-row";
