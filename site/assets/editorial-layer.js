@@ -7,7 +7,7 @@
     nice: {
       en: {
         title: "What not to miss in Nice",
-        intro: "Five things earn their place on a first visit. The rest can negotiate for your second trip.",
+        intro: "Six things earn their place on a first visit. The rest can negotiate for your second trip.",
         items: [
           ["Old Nice + Cours Saleya", "Go in the morning, then lose the map for a while. The market and the old town belong together; treating them as two attractions is how checklists reproduce.", "/en/restaurants/nice/", "Worth it: early. Skip if: you only have time for a noon crowd."],
           ["Castle Hill", "The fastest way to understand Nice geographically: Baie des Anges on one side, port on the other. There is no castle. The view has coped.", "#", "Worth it: for a first visit, yes."],
@@ -59,13 +59,13 @@
         ["Cannes, seulement si vous voulez vraiment Cannes","Le train rend l’ajout facile. Il ne le rend pas obligatoire.","/riviera-guide/nice-ou-cannes/","Le tri Mametas : ajoutez la Croisette pour le glamour, pas pour compléter une collection."]]}
     },
     monaco: {
-      en:{title:"What not to miss in Monaco",intro:"Monaco is small enough to edit hard. Four priorities are plenty for a first day.",items:[
+      en:{title:"What not to miss in Monaco",intro:"Monaco is small enough to edit hard. Four priorities are plenty for a first day; the fifth, Menton, is optional.",items:[
         ["The Rock + old town","Start with Monaco-Ville and the Palace area. It gives the Principality history and altitude before the polished theatre below.","/en/riviera-guide/monaco/","Worth it: yes. The vertical geography is part of the visit."],
         ["Oceanographic Museum","If you choose one major attraction, this is the most distinctive first-trip candidate and sits naturally on the Rock.","/en/culture/","The catch: allow real time; it is not a twenty-minute photo stop."],
         ["Port Hercule on foot","Walk between the Rock and Monte-Carlo rather than teleporting between icons. The harbour explains a lot about the place.","/en/restaurants/monaco/","Worth it: as the connective tissue, not another box."],
         ["Monte-Carlo + Casino square","See the architecture and spectacle even if gambling and luxury shopping are not your hobbies.","/en/riviera-guide/monaco/","Skip if: you planned an afternoon of shop-window anthropology."],
         ["Menton afterwards, only if Monaco stays edited","The pair works by contrast: Monaco performs, Menton exhales.","/en/riviera-guide/menton/","The catch: two full museum programmes do not fit into one civilised day."]]},
-      fr:{title:"Les incontournables de Monaco",intro:"Monaco est assez petit pour trier sévèrement. Quatre priorités suffisent largement à une première journée.",items:[
+      fr:{title:"Les incontournables de Monaco",intro:"Monaco est assez petit pour trier sévèrement. Quatre priorités suffisent largement à une première journée ; la cinquième, Menton, est en option.",items:[
         ["Le Rocher + Monaco-Ville","Commencez par la vieille ville et le secteur du Palais. Vous aurez l’histoire et la hauteur avant le théâtre plus lisse d’en bas.","/riviera-guide/monaco/","À faire : oui. La verticalité fait partie de la visite."],
         ["Musée océanographique","S’il faut choisir une grande visite, c’est la candidate la plus singulière pour une première fois et elle s’insère naturellement sur le Rocher.","/culture/","Le piège : prévoyez du temps ; ce n’est pas un arrêt photo de vingt minutes."],
         ["Port Hercule à pied","Marchez entre le Rocher et Monte-Carlo plutôt que de téléporter votre visite d’icône en icône. Le port explique beaucoup de Monaco.","/restaurants/monaco/","À faire : comme lien entre les lieux, pas comme case supplémentaire."],
