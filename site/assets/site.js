@@ -119,7 +119,7 @@
     var sources=article&&article.querySelector('.sources');
     if(article && !article.querySelector('.journey-next')){
       var html=isFrench
-        ? '<strong>Ensuite, Pichoun.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
+        ? '<strong>Ensuite, pichoun.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
         : '<strong>Next, pichoun.</strong><br><a href="/stay/nice/">Choose your Nice hotel →</a> · <a href="/en/restaurants/">Choose where to eat →</a> · <a href="/en/beaches/">Choose a beach →</a> · <a href="/plan/five-days-nice-no-car/">Open the 5-day plan →</a>';
       var block=makeNote(html);
       if(sources) article.insertBefore(block,sources); else article.appendChild(block);
@@ -217,7 +217,7 @@
     var budget={'Mid-range':'Milieu de gamme','Upscale':'Haut de gamme','Luxury':'Luxe'};
     values[3]=budget[values[3]]||values[3];
   }
-  var labels=isFrench?['Quartier','Logique de localisation','Idéal pour','Budget']:['Area','Location logic','Best for','Budget'];
+  var labels=isFrench?['Quartier','Pourquoi cet emplacement','Idéal pour','Budget']:['Area','Why this location','Best for','Budget'];
   var facts=document.createElement('div');
   facts.className='hotel-facts';
   facts.innerHTML=values.map(function(value,i){return '<div><span>'+labels[i]+'</span><b>'+value+'</b></div>';}).join('');
@@ -411,7 +411,7 @@
     var shareUrl = canonical && canonical.href
       ? canonical.href
       : window.location.origin + window.location.pathname;
-    var shareTitle = h1.textContent.trim() + " — Mametas";
+    var shareTitle = h1.textContent.trim() + " | Mametas";
 
     var row = document.createElement("div");
     row.className = "mametas-share-row";

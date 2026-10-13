@@ -383,11 +383,11 @@
 
   function catchText(hotel) {
     var sig = hotel.signals;
-    if (sig.station && !sig.sea) return fr ? 'La logique est pratique avant d’être balnéaire.' : 'The logic is practical before it is seaside.';
+    if (sig.station && !sig.sea) return fr ? 'Un choix pratique avant d’être balnéaire.' : 'Practical first, seaside second.';
     if (sig.sea && !sig.station) return fr ? 'La mer prime ; moins évident si vous enchaînez les départs en train.' : 'Sea comes first; less obvious for train-heavy days.';
-    if (sig.quiet && !sig.active) return fr ? 'Le retrait prime ; moins pertinent si vous voulez toute la ville au pied de l’hôtel.' : 'Retreat comes first; less useful if you want the whole city at the door.';
-    if (sig.active && !sig.quiet) return fr ? 'La vie autour fait partie du choix ; le retrait absolu, moins.' : 'The life around it is part of the choice; total retreat is not.';
-    if (sig.chic) return fr ? 'L’hôtel compte dans l’expérience ; inutile de payer cette logique si la chambre ne sert qu’à dormir.' : 'The hotel is part of the experience; pointless if you only need somewhere to sleep.';
+    if (sig.quiet && !sig.active) return fr ? 'Le calme prime ; moins pertinent si vous voulez toute la ville au pied de l’hôtel.' : 'Retreat comes first; less useful if you want the whole city at the door.';
+    if (sig.active && !sig.quiet) return fr ? 'La vie autour fait partie du choix ; l’isolement total, moins.' : 'The life around it is part of the choice; total retreat is not.';
+    if (sig.chic) return fr ? 'L’hôtel compte dans l’expérience ; inutile de payer pour ça si la chambre ne sert qu’à dormir.' : 'The hotel is part of the experience; pointless if you only need somewhere to sleep.';
     return fr ? 'Bon compromis sur vos critères, sans prétendre cocher toutes les cases.' : 'A sound compromise on your criteria, without pretending to tick every box.';
   }
 
@@ -463,7 +463,7 @@
   function render(shortlist, rankedSelection, relaxed, budgetRaised, budgetSymbol) {
     summary.textContent = budgetRaised ? labels.budgetFallback(budgetSymbol) : (relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length));
     results.innerHTML = shortlist.map(function(hotel, index){
-      var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour cette logique de séjour.' : 'A Mametas pick for this trip logic.');
+      var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour ce type de séjour.' : 'A Mametas pick for this kind of trip.');
       var bestFor = bestForText(hotel);
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
@@ -471,7 +471,7 @@
         tradeOff = (fr ? 'Budget : ' : 'Budget: ') + (priceSymbol[hotel.priceBand] || budgetSymbol || '') + (fr ? ', au-dessus de votre plafond. ' : ', above your ceiling. ') + tradeOff;
       }
       var actions = [];
-      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR MATCH' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
+      var fitStatus = rankedSelection ? (relaxed ? (index === 0 ? (fr ? 'COMPROMIS LE PLUS PROCHE' : 'CLOSEST FIT') : (fr ? 'AUTRE COMPROMIS' : 'ALSO CLOSE')) : (index === 0 ? (fr ? 'MEILLEUR CHOIX' : 'BEST FIT') : (fr ? 'À CONSIDÉRER' : 'ALSO CONSIDER'))) : '';
       if (fitStatus && budgetRaised) fitStatus += fr ? ' · AU-DESSUS DU BUDGET' : ' · ABOVE BUDGET';
       if (hotel.detailPath && !invalidDetailPaths[hotel.detailPath]) {
         actions.push('<a class="btn btn--primary hotel-engine-editorial" href="' + esc(hotel.detailPath) + '">' + labels.details + '</a>');

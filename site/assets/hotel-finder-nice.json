@@ -82,7 +82,7 @@
           "en": "A beach-led stay or a hotel you want to remember as part of the trip."
         },
         "tradeOff": {
-          "fr": "Vous gagnez en logistique ce que vous perdez en Méditerranée au pied de la porte.",
+          "fr": "Vous gagnez en logistique ce que vous perdez en Méditerranée devant la porte.",
           "en": "You gain logistics and give up having the Mediterranean at the door."
         }
       }
@@ -194,7 +194,7 @@
         },
         "tradeOff": {
           "fr": "Vous choisissez le centre utile plutôt qu'un décor de bord de mer.",
-          "en": "You are choosing useful centrality rather than a seafront setting."
+          "en": "You are choosing a useful central spot over a seafront setting."
         }
       }
     },
@@ -295,11 +295,11 @@
           "hotel-as-trip"
         ],
         "why": {
-          "fr": "Simple, central et bien placé pour faire de Nice une base de déplacement.",
+          "fr": "Simple, central et bien placé pour rayonner depuis Nice.",
           "en": "Simple, central and well placed when Nice is primarily your transport base."
         },
         "notForText": {
-          "fr": "Un séjour où l'hôtel doit produire l'effet waouh.",
+          "fr": "Un séjour où l'hôtel doit faire son effet.",
           "en": "A stay where the hotel itself needs to deliver the wow factor."
         },
         "tradeOff": {
@@ -354,7 +354,7 @@
           "en": "A strong compromise between station, centre and Old Nice access. It avoids sacrificing the city for logistics."
         },
         "notForText": {
-          "fr": "Une priorité plage ou un besoin de retrait total.",
+          "fr": "Une priorité plage ou un besoin d'isolement total.",
           "en": "A beach-first stay or anyone seeking total retreat."
         },
         "tradeOff": {
@@ -515,11 +515,11 @@
           "excursions"
         ],
         "why": {
-          "fr": "Musiciens donne un Nice central mais moins agité, avec suffisamment de ville autour pour rester à pied.",
+          "fr": "Le quartier des Musiciens offre un Nice central mais moins agité, avec suffisamment de ville autour pour rester à pied.",
           "en": "Musiciens gives you central Nice with less noise, while keeping enough city around you to stay on foot."
         },
         "notForText": {
-          "fr": "Une logique plage ou gare avant tout.",
+          "fr": "Un séjour où la plage ou la gare passe avant tout.",
           "en": "A trip where beach or station comes first."
         },
         "tradeOff": {
@@ -684,11 +684,11 @@
           "en": "Masséna and Old Nice are easy on foot. Very practical for living central Nice without instructions."
         },
         "notForText": {
-          "fr": "Ceux qui cherchent du retrait ou veulent optimiser chaque départ en train.",
+          "fr": "Ceux qui cherchent l'isolement ou veulent optimiser chaque départ en train.",
           "en": "Travellers seeking retreat or trying to optimise every train departure."
         },
         "tradeOff": {
-          "fr": "Vous êtes au coeur de la ville. Le coeur de la ville n'est pas connu pour chuchoter.",
+          "fr": "Vous êtes au cœur de la ville. Le cœur de la ville n'est pas connu pour chuchoter.",
           "en": "You are in the heart of the city. The heart of the city is not famous for whispering."
         }
       }
@@ -740,7 +740,7 @@
         ],
         "why": {
           "fr": "Une vraie destination hôtelière dans le Vieux-Nice, à choisir quand l'hôtel compte autant que le programme.",
-          "en": "A genuine hotel destination in Old Nice, best when the hotel matters as much as the programme."
+          "en": "A real hotel destination in Old Nice, best when the hotel matters as much as the programme."
         },
         "notForText": {
           "fr": "Un séjour purement logistique, une priorité plage ou un budget serré.",
@@ -795,7 +795,7 @@
           "value"
         ],
         "why": {
-          "fr": "Masséna, mer et centre réunis dans une logique très haut de gamme. Le luxe sans exil.",
+          "fr": "Masséna, mer et centre réunis en version très haut de gamme. Le luxe sans exil.",
           "en": "Masséna, sea and centre in one very high-end package. Luxury without exile."
         },
         "notForText": {
@@ -803,7 +803,7 @@
           "en": "Absolute quiet or anyone optimising usefulness per euro."
         },
         "tradeOff": {
-          "fr": "Vous êtes au centre de tout, y compris de l'animation. Et le positionnement tarifaire assume clairement son adresse.",
+          "fr": "Vous êtes au centre de tout, y compris de l'animation. Et les tarifs assument clairement l'adresse.",
           "en": "You are in the middle of everything, including the activity. The price positioning knows exactly where it lives."
         }
       }
@@ -855,7 +855,7 @@
           "en": "Sea, old town and centre come together in a very easy walking radius."
         },
         "notForText": {
-          "fr": "Le retrait ou une organisation centrée sur la gare.",
+          "fr": "L'isolement ou une organisation centrée sur la gare.",
           "en": "Retreat or a trip organised around the station."
         },
         "tradeOff": {
