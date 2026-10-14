@@ -74,7 +74,7 @@
     why:'Pourquoi elle ressort',
     notFor:'Moins adapté à',
     catch:'Le compromis',
-    rates:'Voir les tarifs ↗',
+    rates:'Voir les tarifs ↗︎',
     details:'Lire notre avis',
     reset:'Recommencer',
     disclosure:'Transparence : certains liens de réservation sont affiliés. Mametas peut percevoir une commission si vous réservez, sans que cela influence la sélection.'
@@ -91,7 +91,7 @@
     why:'Why it made the cut',
     notFor:'Not for',
     catch:'The catch',
-    rates:'Check rates ↗',
+    rates:'Check rates ↗︎',
     details:'Read our take',
     reset:'Start again',
     disclosure:'Transparency: some booking links are affiliate links. Mametas may earn a commission if you book, without influencing the selection.'
