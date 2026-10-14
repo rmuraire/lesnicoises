@@ -119,10 +119,10 @@
     var sources=article&&article.querySelector('.sources');
     if(article && !article.querySelector('.journey-next')){
       var html=isFrench
-        ? '<strong>Ensuite, pichoun.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
-        : '<strong>Next, pichoun.</strong><br><a href="/stay/nice/">Choose your Nice hotel →</a> · <a href="/en/restaurants/">Choose where to eat →</a> · <a href="/en/beaches/">Choose a beach →</a> · <a href="/plan/five-days-nice-no-car/">Open the 5-day plan →</a>';
+        ? '<strong>Ensuite, <a class="dialect-inline" href="/lexique/#pichoun" title="Mini-lexique niçois">pichoun</a>.</strong><br><a href="/fr/dormir/nice/">Choisir votre hôtel à Nice →</a> · <a href="/restaurants/">Choisir où manger →</a> · <a href="/plages/">Choisir une plage →</a> · <a href="/fr/planifier/cinq-jours-nice-sans-voiture/">Ouvrir le parcours de 5 jours →</a>'
+        : '<strong>Next, <a class="dialect-inline" href="/en/lexicon/#pichoun" title="Mini Niçois lexicon">pichoun</a>.</strong><br><a href="/stay/nice/">Choose your Nice hotel →</a> · <a href="/en/restaurants/">Choose where to eat →</a> · <a href="/en/beaches/">Choose a beach →</a> · <a href="/plan/five-days-nice-no-car/">Open the 5-day plan →</a>';
       var block=makeNote(html);
-      if(sources) article.insertBefore(block,sources); else article.appendChild(block);
+      if(sources&&sources.parentNode) sources.parentNode.insertBefore(block,sources); else article.appendChild(block);
     }
   }
 
@@ -227,7 +227,7 @@
   var verdict=copy.querySelector('.verdict');
   var firstHeading=copy.querySelector('h2');
   var anchor=verdict||firstHeading;
-  if(anchor){copy.insertBefore(facts,anchor);copy.insertBefore(note,anchor);}else{copy.appendChild(facts);copy.appendChild(note);}
+  if(anchor&&anchor.parentNode){anchor.parentNode.insertBefore(facts,anchor);anchor.parentNode.insertBefore(note,anchor);}else{copy.appendChild(facts);copy.appendChild(note);}
 })();
 
 /* Affiliate CTA cleanup: provider-aware conversion copy plus one transparency line. */
