@@ -41,13 +41,15 @@ body.mametas-compact-article .article > h2 {
   margin-top:40px!important;
 }
 body.mametas-compact-article .article > h3,
-body.mametas-compact-article .article .place h3 {
+body.mametas-compact-article .article .place h3,
+body.mametas-compact-article .article .route-step h3 {
   font-size:clamp(21px,2.05vw,24px)!important;line-height:1.27!important;
 }
 body.mametas-compact-article .article > p:not(.standfirst):not(.back),
 body.mametas-compact-article .article > ul,
 body.mametas-compact-article .article > ol,
-body.mametas-compact-article .article .place > p {
+body.mametas-compact-article .article .place > p,
+body.mametas-compact-article .article .route-step > p {
   font-size:15.5px!important;line-height:1.7!important;
 }
 body.mametas-compact-article .article > .standfirst {

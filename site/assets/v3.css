@@ -820,12 +820,15 @@ a.dialect-inline,.article-body a.dialect-inline,.article p a.dialect-inline{bord
     line-height:1.14!important;
   }
   .intent-detail .article-body .place{
-    padding:16px 0 14px!important;
+    padding:16px 18px!important;
   }
   .intent-detail .article-body .place p{
     font-size:15.5px!important;
     line-height:1.62!important;
     margin-bottom:12px!important;
+  }
+  .intent-detail .article-body .place > :last-child{
+    margin-bottom:0!important;
   }
   .intent-detail .article-body .place .address{
     font-size:10px!important;
