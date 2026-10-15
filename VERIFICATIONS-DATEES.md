@@ -1,6 +1,8 @@
-# Vérifications datées — contrôle mensuel
+# Vérifications datées — contrôle bimensuel
 
-Liste suivie par le contrôle planifié du début de chaque mois. Chaque point
+Liste suivie par le contrôle planifié du 1er et du 15 de chaque mois.
+Objectif : chaque badge « Vérifié le … » (FR) / « Checked … » (EN) affiche la
+date d'une vérification réelle, vieille de deux semaines au plus. Chaque point
 se vérifie sur une source officielle ou, à défaut, une presse locale datée.
 Les pages concernées existent en français et en anglais : corriger les deux.
 
@@ -40,6 +42,15 @@ pas inventée ni supprimée d'office.
 
 ## Après chaque vérification
 
-- Mettre à jour la date « Vérifié le … » des pages corrigées.
+- Périmètre : les points ci-dessus et toutes les pages de `site/` (FR et EN)
+  qui portent un badge « Vérifié le » / « Checked ». Ordre de priorité :
+  Pratique, Agenda, Transports, Culture, puis le reste.
+- Page dont toutes les informations datées sont confirmées (inchangées ou
+  corrigées avec source) : passer la date du badge à la date du contrôle, sur
+  la page FR et sa jumelle EN, dans le format déjà utilisé par la page.
+- Page dont une information n'a pas pu être confirmée : ne pas changer sa
+  date, et signaler le point dans la PR.
+- Ne jamais rafraîchir une date sans avoir réellement vérifié la page.
 - `python outils/controles.py` doit rester vert.
-- Résumer dans la PR : vérifié, corrigé, non confirmé (avec la source).
+- Résumer dans la PR : vérifié inchangé (date rafraîchie), corrigé (avec la
+  source), non confirmé (date laissée, avec ce qui manque).
