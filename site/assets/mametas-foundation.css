@@ -3056,3 +3056,30 @@ html body.rythme-test .data-entry-card--study .data-entry-copy strong { font-siz
   html body.rythme-test .explore-time .time-entry-number,
   html body.rythme-test .data-entry-card--study .data-entry-stats { justify-content:flex-start!important; justify-self:start!important; text-align:left!important; }
 }
+
+/* CARTES LISIBLES - 2026-10-16
+   Cartes fonctionnelles (unités qu'on compare, ouvre ou consulte) : fond
+   blanc pur et filet fin homogène sur tout le site. Les blocs éditoriaux,
+   verdicts et apartés restent libres ; les bandeaux à accent de couleur
+   (étude verte, urgences, agenda) gardent leur traitement. Seule la couleur
+   du filet change, jamais son épaisseur : les accents latéraux restent.
+   :where() laisse la main aux sections volontairement sans boîtes. */
+html body :where(
+  .fact, .hotel-choice-card, .hotel-card, .segment-hotel-card, .place,
+  .culture-card, .restaurant-town-card, .home-experience-card, .travel-profile-card,
+  .phase4-short-route, .phase4-plan-grid a, .architecture-card, .mametas-activity-card,
+  .stay-card, .decision-card, .hotel-fit-demo-card, .data-entry-card, .home-profile-card,
+  .practical-agenda-card, .practical-feature-card--photo, .riviera-fit-home-demo,
+  .card, .culture-logistics
+) {
+  background-color:#FFFFFF!important;
+  border-color:rgba(20,33,61,.22)!important;
+  box-shadow:0 1px 2px rgba(20,33,61,.035)!important;
+}
+html body :where(
+  .hotel-choice-card, .hotel-card, .segment-hotel-card, .culture-card, .restaurant-town-card,
+  .home-experience-card, .travel-profile-card, .phase4-plan-grid a, .architecture-card,
+  .stay-card, .decision-card, .home-profile-card, .card
+):is(:hover, :focus-visible) {
+  border-color:rgba(20,33,61,.38)!important;
+}

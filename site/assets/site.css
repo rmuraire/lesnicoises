@@ -116,7 +116,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500}.page-hero h1{font-family:var(
 .culture-card h3{font-size:25px;line-height:1.08;margin:12px 0 10px}
 .culture-card p{font-size:14px;line-height:1.62;color:var(--ink);margin:0}
 .culture-card .more{margin-top:auto;padding-top:18px;font-size:10.5px;letter-spacing:.12em;font-weight:600;text-transform:uppercase;color:var(--gold)}
-.culture-card-text{min-height:320px;justify-content:center}
+.culture-card-text{min-height:320px;justify-content:center}@media(max-width:650px){.culture-card-text{min-height:0}}
 .culture-detail{padding:68px 0 0}
 .culture-copy{max-width:820px;margin:0 auto;padding-left:var(--gutter);padding-right:var(--gutter)}
 .culture-detail .meta{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--med-blue);margin-bottom:18px}
