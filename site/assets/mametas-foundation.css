@@ -3115,3 +3115,19 @@ html body .practical-before-go .practical-lexicon-portrait img { position:absolu
    l'en-tête collant au lieu d'être masqué par lui. */
 html body .fact[id], html body h2[id] { scroll-margin-top:104px; }
 
+/* Accueil : « Who are these ladies? » en une seule rangée - 2026-10-16
+   Photo, titre et texte côte à côte, alignés en pied, pour supprimer le
+   grand vide à droite de la photo. Mobile : photo à côté du titre, texte
+   dessous sur toute la largeur. */
+html body .about-home-strip .wrap { grid-template-columns:auto minmax(0,.85fr) minmax(0,1.15fr); grid-template-areas:"photo eyebrow text" "photo title text"; column-gap:clamp(28px,3.6vw,56px); row-gap:0; align-items:end; padding-top:clamp(40px,4.5vw,56px); padding-bottom:clamp(40px,4.5vw,56px); }
+html body .about-home-strip .wrap > div:first-child { display:contents; }
+html body .about-home-strip .about-home-portrait { grid-area:photo; align-self:end; margin:0; width:clamp(128px,12vw,168px); }
+html body .about-home-strip .eyebrow { grid-area:eyebrow; align-self:end; }
+html body .about-home-strip h2 { grid-area:title; }
+html body .about-home-strip .wrap > div:last-child { grid-area:text; align-self:end; }
+html body .about-home-strip .wrap > div:last-child p { margin-bottom:14px; }
+@media (max-width:760px) {
+  html body .about-home-strip .wrap { grid-template-columns:96px minmax(0,1fr); grid-template-areas:"photo eyebrow" "photo title" "text text"; column-gap:18px; row-gap:0; }
+  html body .about-home-strip .about-home-portrait { width:96px; }
+  html body .about-home-strip .wrap > div:last-child { margin-top:22px; }
+}
