@@ -3056,3 +3056,36 @@ html body.rythme-test .data-entry-card--study .data-entry-copy strong { font-siz
   html body.rythme-test .explore-time .time-entry-number,
   html body.rythme-test .data-entry-card--study .data-entry-stats { justify-content:flex-start!important; justify-self:start!important; text-align:left!important; }
 }
+
+/* ESSAI PALETTE SOLAIRE - 2026-10-16 (accueil, Explore, Pratique FR/EN)
+   Ivoire solaire #FFF9EC, blanc pur #FFFFFF, bleu Riviera #D9EBF0,
+   corail rosé #F4DDD6. Les cartes repassent en blanc pur pour se détacher
+   du fond. Le vert de l'étude « sans voiture » est conservé.
+   Retirer la classe palette-solaire du <body> annule l'essai. */
+html body.palette-solaire {
+  --paper:#FFF9EC; --cream:#FFF9EC; --rg-bg:#FFF9EC; --mg-paper:#FFF9EC;
+  --white:#FFFFFF;
+  --rt-ivory:#FFF9EC; --rt-blue:#D9EBF0; --rt-coral:#F4DDD6;
+  background:#FFF9EC!important;
+}
+html body.palette-solaire .mametas-global-header { background:rgba(255,249,236,.97)!important; }
+html body.palette-solaire .mametas-global-mobile-panel,
+html body.palette-solaire .mametas-global-mobile[open]>summary { background:#FFF9EC!important; }
+html body.palette-solaire .mametas-global-footer { background:#FFF9EC!important; }
+html body.palette-solaire.core-hub-final .article-hero { background:#FFF9EC!important; }
+
+/* Cartes : blanc pur, filet un peu plus net, pour qu'elles se voient */
+html body.palette-solaire :where(.home-experience-card,.stay-card,.home-profile-card,.travel-profile-card,.architecture-card,.data-entry-card,.practical-feature-card--photo,.practical-agenda-card,.riviera-fit-home-demo,.riviera-fit-home-verdict,.phase4-plan-grid a) {
+  background-color:#FFFFFF!important;
+  border-color:rgba(20,33,61,.16)!important;
+}
+
+/* Lavis plus affirmés */
+html body.palette-solaire .about-home-strip { background:#F4DDD6!important; }
+html body.palette-solaire .practical-onsite .architecture-card { background-color:transparent!important; }
+
+/* Étude « sans voiture » : identité verte conservée, y compris sur Pratique */
+html body.palette-solaire .data-entry-card--study { background-color:transparent!important; }
+html body.palette-solaire .data-entry-card--study .data-entry-stats b:first-child { color:#2e6b4f!important; }
+html body.palette-solaire .data-entry-card--study .data-entry-copy small { color:#245a41!important; }
+html body.palette-solaire .data-entry-card--study .data-entry-copy b { color:#1d4a35!important; }
