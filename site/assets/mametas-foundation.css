@@ -3131,3 +3131,42 @@ html body .about-home-strip .wrap > div:last-child p { margin-bottom:14px; }
   html body .about-home-strip .about-home-portrait { width:96px; }
   html body .about-home-strip .wrap > div:last-child { margin-top:22px; }
 }
+
+/* Cartes texte de la grille Culture : contenu centré verticalement, sans vide en bas */
+html body .culture-grid .culture-card-text { justify-content:center; }
+html body .culture-grid .culture-card-text .culture-card-body { flex:0 0 auto; }
+html body .culture-grid .culture-card-text .more { margin-top:0; padding-top:18px; }
+
+/* GRASSE - 2026-10-16
+   Destinations : les détours passent en grille 2 × 2 sur desktop, une
+   colonne sur mobile comme les autres grilles de lieux. Guide parfum :
+   fiches d'ateliers compactes en 2 × 2 dans la colonne d'article. */
+html body.rg-hub .place-grid--detours { grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px 18px!important; }
+html body.rg-hub .place-grid--detours .place-card-media { aspect-ratio:16/8!important; }
+@media(max-width:760px){
+  html body.rg-hub .place-grid--detours { grid-template-columns:1fr; }
+  html body.rg-hub .place-grid--detours .place-card-media { aspect-ratio:16/9!important; }
+}
+html body .mametas-workshop-grid { margin:22px 0 34px; gap:14px; align-items:stretch; }
+html body .mametas-workshop-grid > .mametas-activity-card { display:flex; flex-direction:column; min-width:0; }
+html body .mametas-workshop-grid .mametas-activity-copy { display:flex; flex:1 1 auto; flex-direction:column; align-items:flex-start; padding:20px 20px 22px; }
+html body .mametas-workshop-grid .mametas-activity-kicker { margin:0 0 8px; }
+html body .mametas-workshop-grid h3 { margin:0 0 14px; font-size:clamp(23px,2.2vw,27px); line-height:1.08; }
+html body .mametas-workshop-grid .mametas-workshop-facts { width:100%; margin:0 0 6px; padding:0; }
+html body .mametas-workshop-grid .mametas-workshop-facts > div { display:grid; grid-template-columns:minmax(78px,32%) 1fr; gap:12px; padding:7px 0; border-top:1px solid rgba(20,33,61,.12); font-size:13px; line-height:1.42; }
+html body .mametas-workshop-grid .mametas-workshop-facts dt { color:var(--ink-soft,#5e5a54); font:600 10px/1.6 var(--sans,"Inter",sans-serif); letter-spacing:.07em; text-transform:uppercase; }
+html body .mametas-workshop-grid .mametas-workshop-facts dd { margin:0; color:var(--ink,#14213d); }
+html body .mametas-workshop-grid .mametas-catch { margin-bottom:18px; }
+html body .mametas-workshop-grid .mametas-activity-cta { margin-top:auto; text-transform:none; letter-spacing:.01em; font-size:11px; }
+@media(max-width:760px){ html body .mametas-workshop-grid { grid-template-columns:1fr; } }
+html body .article .intent-table--compact { min-width:0; }
+html body .mametas-route-steps { list-style:none; margin:18px 0 28px; padding:0; counter-reset:leg; border-top:1px solid rgba(20,33,61,.14); }
+html body .mametas-route-steps > li { counter-increment:leg; display:grid; grid-template-columns:30px minmax(0,1fr); gap:3px 14px; margin:0; padding:14px 0 15px; border-bottom:1px solid rgba(20,33,61,.14); }
+html body .mametas-route-steps > li::before { content:counter(leg); grid-row:1 / span 2; width:28px; height:28px; border:1px solid #d86c4e; border-radius:50%; color:#ad492f; display:grid; place-items:center; font:600 12px/1 var(--sans,"Inter",sans-serif); }
+html body .mametas-route-steps > li > b { color:var(--ink,#14213d); font-family:var(--serif,"Fraunces",serif); font-size:19px; font-weight:500; line-height:1.25; }
+html body .mametas-route-steps > li > span { color:var(--ink-soft,#5e5a54); font-size:14.5px; line-height:1.6; }
+/* Accueil : quatre détours (Grasse inclus) sur une rangée en desktop ;
+   2 × 2 puis une colonne gardent les règles existantes. */
+@media(min-width:981px){
+  .mametas-city-grid[data-city-group="detour"] { grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
