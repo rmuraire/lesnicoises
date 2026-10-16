@@ -68,8 +68,15 @@
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
     none:'Aucune adresse Mametas disponible pour cette ville.',
     budgetFallback:function(symbol){ return 'Aucune adresse de cette ville ne respecte ce plafond. Voici les options Mametas les plus proches en ' + symbol + ', clairement signalées comme au-dessus du budget.'; },
-    closest:function(n){ return 'Aucune correspondance exacte. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ', avec les critères qu’il faut accepter de relâcher.'; },
-    count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
+    closest:function(n){ return 'Pas de correspondance parfaite, et on ne va pas en inventer une. Voici ' + (n > 1 ? 'les ' + (['deux', 'trois', 'quatre'][n - 2] || n) + ' compromis les plus proches' : 'le compromis le plus proche') + ', avec les critères qu’il faut accepter de relâcher.'; },
+    count:function(n){
+      var word = ['Un', 'Deux', 'Trois', 'Quatre'][n - 1] || String(n);
+      return n === 1
+        ? 'Un hôtel. Pas cent onglets à ouvrir. On a fait le tri. Voici pourquoi celui-ci mérite votre attention.'
+        : word + ' hôtels. Pas cent onglets à ouvrir. On a fait le tri. Voici pourquoi ces ' + word.toLowerCase() + '-là méritent votre attention.';
+    },
+    whole:function(n, base){ return (n === 1 ? 'L’unique adresse Mametas à ' + base : 'Les ' + n + ' adresses Mametas à ' + base) + '. Ajoutez un critère et on fait le tri.'; },
+    sameCatch:function(name){ return 'Le même que pour ' + name + '.'; },
     bestFor:'Idéal pour',
     why:'Pourquoi elle ressort',
     notFor:'Moins adapté à',
@@ -85,8 +92,15 @@
     changed:'Your choices changed. Run the shortlist again when you are done.',
     none:'No Mametas hotel is currently available for this base.',
     budgetFallback:function(symbol){ return 'Nothing in this base sits within that budget ceiling. Here are the closest Mametas options at ' + symbol + ', clearly flagged as above budget.'; },
-    closest:function(n){ return 'No exact match. Here ' + (n === 1 ? 'is the closest Mametas compromise' : 'are the ' + n + ' closest Mametas compromises') + ', with the trade-offs made explicit.'; },
-    count:function(n){ return n + (n === 1 ? ' hotel matches' : ' hotels match') + ' your choices.'; },
+    closest:function(n){ return 'No perfect match, and we won’t invent one. Here ' + (n === 1 ? 'is the closest compromise' : 'are the ' + (['two', 'three', 'four'][n - 2] || n) + ' closest compromises') + ', catch included.'; },
+    count:function(n){
+      var word = ['One', 'Two', 'Three', 'Four'][n - 1] || String(n);
+      return n === 1
+        ? 'One hotel. Not another hundred tabs. We’ve narrowed it down. Here’s why this one made the cut.'
+        : word + ' hotels. Not another hundred tabs. We’ve narrowed it down. Here’s why these ' + word.toLowerCase() + ' made the cut.';
+    },
+    whole:function(n, base){ return (n === 1 ? 'The only Mametas pick in ' + base : 'All ' + n + ' Mametas picks in ' + base) + '. Add one criterion and we’ll do the sorting.'; },
+    sameCatch:function(name){ return 'Same as for ' + name + '.'; },
     bestFor:'Best for',
     why:'Why it made the cut',
     notFor:'Not for',
@@ -461,12 +475,23 @@
   }
 
   function render(shortlist, rankedSelection, relaxed, budgetRaised, budgetSymbol) {
-    summary.textContent = budgetRaised ? labels.budgetFallback(budgetSymbol) : (relaxed ? labels.closest(shortlist.length) : labels.count(shortlist.length));
+    summary.textContent = budgetRaised ? labels.budgetFallback(budgetSymbol)
+      : (relaxed ? labels.closest(shortlist.length)
+      : (rankedSelection ? labels.count(shortlist.length) : labels.whole(shortlist.length, shortlist[0].baseLabel)));
+    /* Section-level "Not for" and "The catch" lines repeat across hotels of the same section: say them once, then point back. */
+    var firstWithNotFor = {};
+    var firstWithTradeOff = {};
     results.innerHTML = shortlist.map(function(hotel, index){
       var reason = fitText(hotel, 'why') || hotel.copy || hotel.tag || (fr ? 'Une adresse retenue par Mametas pour ce type de séjour.' : 'A Mametas pick for this kind of trip.');
       var bestFor = bestForText(hotel);
       var notFor = fitText(hotel, 'notForText');
       var tradeOff = fitText(hotel, 'tradeOff') || catchText(hotel);
+      if (notFor) {
+        if (firstWithNotFor[notFor]) notFor = '';
+        else firstWithNotFor[notFor] = hotel.name;
+      }
+      if (firstWithTradeOff[tradeOff]) tradeOff = labels.sameCatch(firstWithTradeOff[tradeOff]);
+      else firstWithTradeOff[tradeOff] = hotel.name;
       if (budgetRaised) {
         tradeOff = (fr ? 'Budget : ' : 'Budget: ') + (priceSymbol[hotel.priceBand] || budgetSymbol || '') + (fr ? ', au-dessus de votre plafond. ' : ', above your ceiling. ') + tradeOff;
       }

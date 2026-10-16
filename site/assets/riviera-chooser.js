@@ -861,8 +861,8 @@
       if (!lastModel) return;
       var url = buildShareUrl();
       var title = lang === 'fr'
-        ? 'Mon Riviera Fit Mametas : ' + lastModel.base.name
-        : 'My Mametas Riviera Fit: ' + lastModel.base.name;
+        ? 'Les Mametas m’envoient à ' + lastModel.base.name + '.'
+        : 'The Mametas sent me to ' + lastModel.base.name + '.';
       if (navigator.share) {
         navigator.share({ title:title, url:url }).then(function () {
           track('riviera_fit_share', { method:'native_share', recommended_base:lastModel.baseId || '' });
