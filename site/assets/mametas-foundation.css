@@ -3165,3 +3165,8 @@ html body .mametas-route-steps > li { counter-increment:leg; display:grid; grid-
 html body .mametas-route-steps > li::before { content:counter(leg); grid-row:1 / span 2; width:28px; height:28px; border:1px solid #d86c4e; border-radius:50%; color:#ad492f; display:grid; place-items:center; font:600 12px/1 var(--sans,"Inter",sans-serif); }
 html body .mametas-route-steps > li > b { color:var(--ink,#14213d); font-family:var(--serif,"Fraunces",serif); font-size:19px; font-weight:500; line-height:1.25; }
 html body .mametas-route-steps > li > span { color:var(--ink-soft,#5e5a54); font-size:14.5px; line-height:1.6; }
+/* Accueil : quatre détours (Grasse inclus) sur une rangée en desktop ;
+   2 × 2 puis une colonne gardent les règles existantes. */
+@media(min-width:981px){
+  .mametas-city-grid[data-city-group="detour"] { grid-template-columns:repeat(4,minmax(0,1fr)); }
+}
