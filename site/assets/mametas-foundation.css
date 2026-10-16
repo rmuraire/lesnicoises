@@ -3083,3 +3083,14 @@ html body :where(
 ):is(:hover, :focus-visible) {
   border-color:rgba(20,33,61,.38)!important;
 }
+
+/* Pratique : petit lexique incarné par une Mameta - 2026-10-16
+   Portrait discret à droite du texte, au format d'une vignette : il
+   accompagne les mots sans transformer le bloc en reportage. */
+html body .practical-before-go .practical-feature-card--lexicon-portrait { display:grid!important; grid-template-columns:minmax(0,25rem) clamp(120px,10vw,152px); justify-content:start; column-gap:clamp(24px,2.6vw,40px); align-items:start; }
+html body .practical-before-go .practical-lexicon-portrait { margin:4px 0 0; padding:0; }
+html body .practical-before-go .practical-lexicon-portrait img { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:0; filter:saturate(.92); }
+@media (max-width:760px) {
+  html body .practical-before-go .practical-feature-card--lexicon-portrait { grid-template-columns:minmax(0,1fr) 92px; justify-content:stretch; column-gap:16px; }
+  html body .practical-before-go .practical-lexicon-portrait { margin-top:2px; }
+}
