@@ -456,22 +456,90 @@
       }
     }
 
-    button.addEventListener("click", function () {
-      if (navigator.share) {
-        navigator.share({ title: shareTitle, url: shareUrl }).then(function () {
-          track("native_share");
-        }).catch(function (error) {
-          if (!error || error.name !== "AbortError") copyFallback();
-        });
-        return;
-      }
+    /* Fallback menu: in-app browsers (Instagram, Facebook, Gmail…) and some
+       desktop browsers have no native share sheet. Rather than silently
+       copying the link, offer the usual channels plus "copy link". */
+    var menu = null;
+    var enc = encodeURIComponent;
+    var isTouchDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+      (navigator.maxTouchPoints > 1 && /Macintosh/.test(navigator.userAgent));
 
+    function closeMenu() {
+      if (!menu || menu.hidden) return;
+      menu.hidden = true;
+      button.setAttribute("aria-expanded", "false");
+    }
+
+    function copyLink() {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(shareUrl).then(copied).catch(copyFallback);
         return;
       }
-
       copyFallback();
+    }
+
+    function buildMenu() {
+      if (menu) return menu;
+      var message = shareTitle + " " + shareUrl;
+      var items = [["WhatsApp", "https://wa.me/?text=" + enc(message), "whatsapp"]];
+      if (isTouchDevice) items.push([isFrench ? "SMS" : "Text message", "sms:?&body=" + enc(message), "sms"]);
+      items.push(["E-mail", "mailto:?subject=" + enc(shareTitle) + "&body=" + enc(shareUrl), "email"]);
+      items.push(["Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + enc(shareUrl), "facebook"]);
+
+      menu = document.createElement("div");
+      menu.className = "mametas-share-menu";
+      menu.id = "mametas-share-menu";
+      menu.hidden = true;
+      items.forEach(function (item) {
+        var link = document.createElement("a");
+        link.href = item[1];
+        link.textContent = item[0];
+        if (item[1].indexOf("https://") === 0) {
+          link.target = "_blank";
+          link.rel = "noopener";
+        }
+        link.addEventListener("click", function () { track(item[2]); closeMenu(); });
+        menu.appendChild(link);
+      });
+      var copy = document.createElement("button");
+      copy.type = "button";
+      copy.textContent = isFrench ? "Copier le lien" : "Copy link";
+      copy.addEventListener("click", function () { closeMenu(); copyLink(); });
+      menu.appendChild(copy);
+      row.appendChild(menu);
+      button.setAttribute("aria-controls", menu.id);
+
+      document.addEventListener("click", function (event) {
+        if (!row.contains(event.target)) closeMenu();
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") closeMenu();
+      });
+      return menu;
+    }
+
+    function openMenu() {
+      buildMenu().hidden = false;
+      button.setAttribute("aria-expanded", "true");
+    }
+
+    button.setAttribute("aria-haspopup", "true");
+    button.setAttribute("aria-expanded", "false");
+
+    button.addEventListener("click", function () {
+      if (menu && !menu.hidden) {
+        closeMenu();
+        return;
+      }
+      if (navigator.share) {
+        navigator.share({ title: shareTitle, url: shareUrl }).then(function () {
+          track("native_share");
+        }).catch(function (error) {
+          if (!error || error.name !== "AbortError") openMenu();
+        });
+        return;
+      }
+      openMenu();
     });
   }
 
