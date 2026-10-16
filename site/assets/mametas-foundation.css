@@ -3091,7 +3091,7 @@ html body :where(
    dessous sur toute la largeur. Cadrage par object-fit pour garder le
    visage, le bandeau et le doigt levé. */
 html body .practical-before-go .practical-feature-card--lexicon-portrait { display:grid!important; grid-template-columns:minmax(0,25rem) clamp(140px,11.5vw,168px); justify-content:start; column-gap:clamp(24px,2.6vw,40px); align-items:stretch; }
-html body .practical-before-go .practical-lexicon-portrait { position:relative; align-self:stretch; min-height:240px; margin:0; padding:0; overflow:hidden; }
+html body .practical-before-go .practical-lexicon-portrait { position:relative; align-self:stretch; min-height:240px; margin:0 0 3px; padding:0; overflow:hidden; }
 html body .practical-before-go .practical-lexicon-portrait img { position:absolute; inset:0; display:block; width:100%; height:100%; object-fit:cover; object-position:74% 50%; border-radius:0; filter:saturate(.92); }
 @media (max-width:760px) {
   html body .practical-before-go .practical-feature-card--lexicon-portrait { grid-template-columns:minmax(0,1fr) 104px; grid-template-areas:"label portrait" "title portrait" "words words" "cta cta"; column-gap:18px; }
@@ -3100,6 +3100,12 @@ html body .practical-before-go .practical-lexicon-portrait img { position:absolu
   html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-feature-copy strong { grid-area:title; margin-bottom:0!important; }
   html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words { grid-area:words; margin-top:18px; }
   html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-cta { grid-area:cta; justify-self:start; }
-  html body .practical-before-go .practical-lexicon-portrait { grid-area:portrait; min-height:0; }
+  html body .practical-before-go .practical-lexicon-portrait { grid-area:portrait; min-height:0; margin-bottom:0; }
+  /* Mobile : quatre mots sur une ligne (pichoun est déjà dans le titre) */
+  html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words a[href$="#pichoun"] { display:none; }
+  html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words a[href$="#mefi"] { order:1; }
+  html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words a[href$="#fada"] { order:2; }
+  html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words a[href$="#socca"] { order:3; }
+  html body .practical-before-go .practical-feature-card--lexicon-portrait .practical-lexicon-words a[href$="#pissaladiere"] { order:4; }
   html body .practical-before-go .practical-lexicon-portrait img { object-position:60% 60%; }
 }
