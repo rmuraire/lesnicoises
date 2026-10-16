@@ -2943,3 +2943,117 @@ html body .practical-lexicon-cta { display:inline-block; color:#0d596c!important
   html body .practical-before-go .practical-feature-card--safety { padding:20px 0 22px!important; }
   html body .practical-before-go .practical-feature-card--lexicon { padding:20px 0 0!important; border-left:0!important; border-top:1px solid var(--line,rgba(20,33,61,.16))!important; }
 }
+
+/* ESSAI DE RYTHME - 2026-10-16 (Explore, Pratique, Destinations FR/EN uniquement)
+   Pistes à tester, pas une nouvelle charte : fond ivoire plus clair, et deux
+   lavis très pâles (bleu, corail) utilisés selon la fonction, jamais en
+   alternance mécanique. Chaque page a sa propre séquence :
+   - Destinations : verdict typographique, photos, une surprise (aparté sur lavis corail), décisions dépouillées.
+   - Explore : photo, « 2 à 3 heures » en interruption corail, pont pratique en lavis bleu.
+   - Pratique : « Sur place » en lavis bleu sans cartes, urgences sur lavis corail, étude en grand chiffre.
+   Retirer la classe rythme-test du <body> annule tout l'essai. */
+html body.rythme-test {
+  --rt-ivory:#F8F5EF;
+  --rt-blue:#E8EFF0;
+  --rt-coral:#F6E9E2;
+  background:var(--rt-ivory)!important;
+}
+html body.rythme-test .article-hero,
+html body.rythme-test .v3-section { background:transparent!important; }
+html body.rythme-test.core-hub-final .article-hero { background:var(--rt-ivory)!important; }
+
+/* Lavis pleine largeur : la section entière change de fond, le contenu reste libre */
+html body.rythme-test .explore-time,
+html body.rythme-test .practical-before-go .practical-feature-card--safety { background:var(--rt-coral)!important; }
+html body.rythme-test .explore-practical-bridge,
+html body.rythme-test .practical-onsite,
+html body.rythme-test .hub-adoption-cue { background:var(--rt-blue)!important; border-color:transparent!important; }
+
+/* Destinations : le verdict a une vraie présence typographique */
+html body.rythme-test .hub-verdict {
+  max-width:26ch;
+  margin:18px 0 14px;
+  font-family:"Fraunces",Georgia,serif;
+  font-size:clamp(26px,2.8vw,38px);
+  font-weight:400;
+  line-height:1.1;
+  letter-spacing:-.02em;
+  color:var(--ink,#14213d);
+}
+html body.rythme-test .hub-verdict strong { font-weight:600; color:#ad492f; }
+
+/* Destinations : la surprise, un seul aparté posé sur un lavis */
+html body.rythme-test.rg-hub .mametas-aside {
+  padding:20px 24px 22px!important;
+  background:var(--rt-coral)!important;
+}
+html body.rythme-test.rg-hub .mametas-aside::before { margin-bottom:10px; }
+
+/* Destinations : les décisions sans boîtes, en colonnes et grands chiffres */
+html body.rythme-test .hesitation-compact .decision-grid { grid-template-columns:repeat(4,1fr)!important; gap:0!important; border-top:1px solid var(--line,rgba(20,33,61,.16)); }
+html body.rythme-test .hesitation-compact .decision-card {
+  min-height:0!important; padding:22px 22px 6px 0!important; margin:0!important;
+  border:0!important; border-radius:0!important; background:transparent!important; box-shadow:none!important; transform:none!important;
+}
+html body.rythme-test .hesitation-compact .decision-card + .decision-card { padding-left:22px!important; border-left:1px solid var(--line,rgba(20,33,61,.16))!important; }
+html body.rythme-test .hesitation-compact .decision-number { display:block; font:400 clamp(34px,3.4vw,46px)/1 "Fraunces",Georgia,serif; color:#ad492f; letter-spacing:-.02em; }
+html body.rythme-test .hesitation-compact .decision-card h3 { margin:12px 0 10px!important; font-size:clamp(23px,2vw,28px)!important; }
+
+/* Explore : « 2 à 3 heures » devient une interruption, pas une carte */
+html body.rythme-test .explore-time .time-entry-card {
+  grid-template-columns:auto 1fr!important; gap:clamp(24px,4vw,56px); align-items:center;
+  border:0!important; background:transparent!important; color:var(--ink,#14213d)!important;
+}
+html body.rythme-test .explore-time .time-entry-number {
+  min-height:0!important; padding:0!important; border:0!important; background:transparent!important;
+  font:400 clamp(96px,12vw,168px)/.9 "Fraunces",Georgia,serif!important; letter-spacing:-.05em; color:#ad492f!important;
+}
+html body.rythme-test .explore-time .time-entry-copy { padding:0!important; }
+html body.rythme-test .explore-time .time-entry-copy strong { font-size:clamp(26px,2.6vw,36px)!important; color:var(--ink,#14213d)!important; }
+
+/* Explore : le pont vers Pratique, ouvert sur son lavis */
+html body.rythme-test .explore-practical-bridge .practical-bridge-inner { border:0!important; background:transparent!important; padding-left:0!important; padding-right:0!important; }
+
+/* Pratique : « Sur place » sans cartes, quatre colonnes sur le lavis bleu */
+html body.rythme-test .practical-onsite .practical-core-grid--four { gap:0!important; border-top:1px solid rgba(20,33,61,.16); }
+html body.rythme-test .practical-onsite .architecture-card {
+  padding:22px 22px 4px 0!important; border:0!important; border-radius:0!important; background:transparent!important; box-shadow:none!important; transform:none!important;
+}
+html body.rythme-test .practical-onsite .architecture-card + .architecture-card { padding-left:22px!important; border-left:1px solid rgba(20,33,61,.16)!important; }
+
+/* Pratique : urgences sur lavis corail, lexique libre à côté (relief par contraste) */
+html body.rythme-test .practical-before-go .practical-safety-pair { border-top:0; align-items:stretch; }
+html body.rythme-test .practical-before-go .practical-feature-card--safety { padding:28px clamp(24px,3vw,40px) 30px!important; border-left:3px solid #ad492f!important; }
+html body.rythme-test .practical-before-go .practical-feature-card--lexicon { padding-top:28px!important; border-left:0!important; }
+html body.rythme-test .practical-lexicon-words { font-size:clamp(22px,2vw,26px); gap:4px 18px; }
+
+/* Pratique : l'étude en grand chiffre, sans boîte */
+html body.rythme-test .data-entry-card--study {
+  grid-template-columns:auto 1fr!important; gap:clamp(24px,4vw,56px); align-items:center;
+  border:0!important; background:transparent!important; padding:6px 0 26px!important; border-bottom:1px solid var(--line,rgba(20,33,61,.16))!important;
+}
+html body.rythme-test .data-entry-card--study .data-entry-stats { display:block!important; padding:0!important; border:0!important; background:transparent!important; text-align:left; }
+html body.rythme-test .data-entry-card--study .data-entry-stats b:first-child { display:block; font:400 clamp(84px,10vw,140px)/.9 "Fraunces",Georgia,serif!important; letter-spacing:-.05em; color:#ad492f!important; }
+html body.rythme-test .data-entry-card--study .data-entry-stats em:nth-of-type(1) { display:block; margin-top:6px; }
+html body.rythme-test .data-entry-card--study .data-entry-stats b:nth-of-type(2),
+html body.rythme-test .data-entry-card--study .data-entry-stats em:nth-of-type(2) { display:none; }
+html body.rythme-test .data-entry-card--study .data-entry-copy { padding:0!important; }
+html body.rythme-test .data-entry-card--study .data-entry-copy strong { font-size:clamp(25px,2.4vw,34px)!important; }
+
+@media (max-width:760px) {
+  html body.rythme-test .hesitation-compact .decision-grid,
+  html body.rythme-test .practical-onsite .practical-core-grid--four { grid-template-columns:1fr 1fr!important; }
+  html body.rythme-test .hesitation-compact .decision-card,
+  html body.rythme-test .practical-onsite .architecture-card { padding:18px 14px 8px 0!important; }
+  html body.rythme-test .hesitation-compact .decision-card:nth-child(odd),
+  html body.rythme-test .practical-onsite .architecture-card:nth-child(odd) { padding-left:0!important; border-left:0!important; }
+  html body.rythme-test .hesitation-compact .decision-card:nth-child(even),
+  html body.rythme-test .practical-onsite .architecture-card:nth-child(even) { padding-left:14px!important; }
+  html body.rythme-test .hesitation-compact .decision-card:nth-child(n+3),
+  html body.rythme-test .practical-onsite .architecture-card:nth-child(n+3) { border-top:1px solid rgba(20,33,61,.16)!important; }
+  html body.rythme-test .explore-time .time-entry-card,
+  html body.rythme-test .data-entry-card--study { grid-template-columns:1fr!important; gap:10px; }
+  html body.rythme-test .practical-before-go .practical-feature-card--lexicon { border-top:0!important; }
+  html body.rythme-test .explore-time .time-entry-number,
+  html body.rythme-test .data-entry-card--study .data-entry-stats { justify-content:flex-start!important; justify-self:start!important; text-align:left!important; }
+}
