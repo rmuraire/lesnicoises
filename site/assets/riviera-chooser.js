@@ -159,7 +159,7 @@
         nice:{name:'Nice',guide:'/en/riviera-guide/nice/',hotels:'/stay/nice/',why:'The most useful all-round base on the coast. It gives you a real city at night and the strongest transport spine by day.'},
         cannes:{name:'Cannes',guide:'/en/riviera-guide/cannes/',hotels:'/en/hotels/cannes/',why:'The western Riviera works better from here when sand, polished hotels and an easier beach rhythm matter.'},
         antibes:{name:'Antibes / Juan-les-Pins',guide:'/en/riviera-guide/antibes/',hotels:'/en/hotels/antibes/',why:'Old town, sand and a useful station make this the rare Riviera compromise that does not feel like one.'},
-        villefranche:{name:'Villefranche / Beaulieu',guide:'/en/riviera-guide/villefranche-cap-ferrat/',hotels:'/en/hotels/villefranche-sur-mer/',why:'Choose beauty and water first. You give up some hub efficiency in exchange for waking up somewhere that already feels like an excursion.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/en/riviera-guide/villefranche-cap-ferrat/',hotels:'/en/hotels/villefranche-sur-mer/',why:'Choose beauty and water first. Without a car, the station by the bay keeps most of the coast almost as easy to reach as from Nice, and you wake up somewhere that already feels like an excursion.'},
         menton:{name:'Menton',guide:'/en/riviera-guide/menton/',hotels:'/en/hotels/menton/',why:'The slower eastern base. It suits travellers who want colour, gardens and breathing room without losing the train entirely.'},
         monaco:{name:'Monaco',guide:'/en/riviera-guide/monaco/',hotels:'/en/hotels/monaco/',why:'This is the intentional version: stay because Monte-Carlo and the hotel experience are part of the point, not because it is the easiest answer.'},
         sainttropez:{name:'Saint-Tropez',guide:'/en/riviera-guide/saint-tropez/',hotels:'/en/hotels/saint-tropez/',why:'This is a commitment, not a clever central base. Your answers say the peninsula itself is the trip, so Mametas is letting it win.'},
@@ -227,7 +227,7 @@
         nice:'More versatile than specialised. If transport reach becomes the priority, Nice climbs back quickly.',
         cannes:'Strong for sand and polish, weaker than Nice for reaching the eastern Riviera repeatedly.',
         antibes:'An excellent compromise, but not as efficient as Nice for a trip built around many day trips.',
-        villefranche:'Beauty wins here, logistics less so. Transfers and slopes add friction to a busy itinerary.',
+        villefranche:'Quieter evenings and fewer hotels than Nice. Trains keep it almost as well connected, but hillside addresses add slopes: stay near the station or the harbour.',
         menton:'Calm and colourful, but far east. It becomes a poor base if Cannes and Antibes still matter a lot.',
         monaco:'Spectacular and expensive, with real verticality. It is not the coast’s most forgiving all-purpose base.',
         sainttropez:'The peninsula asks for time, money and transport planning. It only makes sense when it really is the point.',
@@ -291,7 +291,7 @@
         nice:{name:'Nice',guide:'/riviera-guide/nice/',hotels:'/fr/dormir/nice/',why:'Le point de chute le plus polyvalent de la côte. Une vraie ville le soir et le meilleur axe de transport pour rayonner la journée.'},
         cannes:{name:'Cannes',guide:'/riviera-guide/cannes/',hotels:'/hotels/cannes/',why:'L’ouest de la Riviera se vit mieux d’ici lorsque le sable, les beaux hôtels et un rythme plus balnéaire comptent.'},
         antibes:{name:'Antibes / Juan-les-Pins',guide:'/riviera-guide/antibes/',hotels:'/hotels/antibes/',why:'Vieille ville, sable et gare utile : l’un des rares compromis azuréens qui ne ressemble pas à un compromis.'},
-        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. On perd un peu en efficacité comme point de chute pour se réveiller dans un endroit qui ressemble déjà à une excursion.'},
+        villefranche:{name:'Villefranche / Beaulieu',guide:'/riviera-guide/villefranche-cap-ferrat/',hotels:'/hotels/villefranche-sur-mer/',why:'On choisit d’abord la beauté et l’eau. Sans voiture, la gare au bord de la rade permet de rejoindre l’essentiel de la côte presque aussi facilement que depuis Nice, et l’on se réveille dans un endroit qui ressemble déjà à une excursion.'},
         menton:{name:'Menton',guide:'/riviera-guide/menton/',hotels:'/hotels/menton/',why:'Le point de chute plus lent à l’est. Couleur, jardins et respiration, sans renoncer complètement au train.'},
         monaco:{name:'Monaco',guide:'/riviera-guide/monaco/',hotels:'/hotels/monaco/',why:'La version assumée : on dort ici parce que Monte-Carlo et l’hôtel font partie du voyage, pas parce que c’est la réponse la plus facile.'},
         sainttropez:{name:'Saint-Tropez',guide:'/riviera-guide/saint-tropez/',hotels:'/hotels/saint-tropez/',why:'C’est un engagement, pas un point de chute central astucieux. D’après vos réponses, la presqu’île est le voyage : Mametas la laisse donc gagner.'},
@@ -359,7 +359,7 @@
         nice:'Plus polyvalente que spécialisée. Si le réseau de transport redevient prioritaire, Nice remonte très vite.',
         cannes:'Très forte pour le sable et le décor, moins efficace que Nice pour rayonner souvent vers l’est.',
         antibes:'Un excellent compromis, mais moins efficace que Nice si le séjour repose sur beaucoup d’excursions.',
-        villefranche:'La beauté gagne, la logistique un peu moins. Relief et correspondances compliquent un programme chargé.',
+        villefranche:'Soirées plus calmes et moins d’hôtels qu’à Nice. Le train la garde presque aussi bien reliée, mais les adresses à flanc de colline ajoutent du relief : visez la gare ou le port.',
         menton:'Douce et colorée, mais très à l’est. Mauvais point de chute si Cannes et Antibes restent des priorités fortes.',
         monaco:'Spectaculaire, chère et verticale. Ce n’est pas le point de chute le plus accommodant pour un premier tour complet de la côte.',
         sainttropez:'La presqu’île demande du temps, du budget et de la logistique. Elle n’a de sens que si elle est vraiment le but du voyage.',
@@ -499,6 +499,16 @@
         if (exclude.indexOf(id) < 0) exclude.push(id);
       });
     }
+    // Without a car, do not send travellers from one end of the coast to the
+    // other end as a "go further" idea: the Mametas door-to-door timing study
+    // puts these trips among the longest by public transport (Menton to
+    // Saint-Paul, Antibes or Cannes; Cannes to Menton or Èze village).
+    var NOCAR_FAR = { menton:['saintpaul','antibes','cannes'], cannes:['menton','eze'] };
+    if (profile.mobility === 'nocar' && NOCAR_FAR[baseId]) {
+      NOCAR_FAR[baseId].forEach(function (id) {
+        if (exclude.indexOf(id) < 0) exclude.push(id);
+      });
+    }
     var count = regionalCount(profile, baseId);
     var out = [];
     order.forEach(function (id) {
@@ -592,7 +602,16 @@
       }
       return true;
     }).sort(function (a,b) { return b.score - a.score || a.id.localeCompare(b.id); });
-    return pool.slice(0,2).map(function (item) {
+    var shown = pool.slice(0,2);
+    // Car-free "decide" trips are mixed east-west trips: the Mametas
+    // door-to-door study puts Villefranche almost level with Nice there, so
+    // it is always offered as an alternative. Presentation only: scores and
+    // the winning base are unchanged.
+    if (profile.mobility === 'nocar' && profile.mood === 'decide' && chosenId !== 'villefranche' &&
+        !shown.some(function (item) { return item.id === 'villefranche'; })) {
+      shown = [shown[0], { id:'villefranche' }];
+    }
+    return shown.map(function (item) {
       return {
         id:item.id,
         name:content.bases[item.id].name,
@@ -606,11 +625,11 @@
     var fr = lang === 'fr';
     var baseReality = {
       nice:{car:'Excellent sans voiture',carEn:'Excellent without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
-      cannes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
+      cannes:{car:'Bon sans voiture, surtout vers l’ouest',carEn:'Good without a car, best for the west',budget:'€€ à €€€€',friction:'Faible vers l’ouest, plus longue vers l’est',frictionEn:'Low westward, longer trips east'},
       antibes:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible',frictionEn:'Low'},
-      villefranche:{car:'Possible sans voiture, moins fluide',carEn:'Car-free works, less smoothly',budget:'€€ à €€€€',friction:'Moyenne',frictionEn:'Medium'},
-      menton:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€ à €€€',friction:'Faible à moyenne',frictionEn:'Low to medium'},
-      monaco:{car:'Sans voiture recommandé',carEn:'No car recommended',budget:'€€€ à €€€€',friction:'Moyenne : relief + budget',frictionEn:'Medium: hills + spend'},
+      villefranche:{car:'Très bon sans voiture',carEn:'Very good without a car',budget:'€€ à €€€€',friction:'Faible à moyenne : relief selon l’adresse',frictionEn:'Low to medium: slopes depend on the address'},
+      menton:{car:'Bon sans voiture vers l’est, trajets longs vers l’ouest',carEn:'Good without a car for the east, long trips west',budget:'€ à €€€',friction:'Moyenne pour rayonner sur toute la côte',frictionEn:'Medium for touring the whole coast'},
+      monaco:{car:'Laissez la voiture. L’ouest reste loin',carEn:'Leave the car behind. The west is a long trip',budget:'€€€ à €€€€',friction:'Moyenne : relief + budget',frictionEn:'Medium: hills + spend'},
       sainttropez:{car:'Voiture ou transferts à prévoir',carEn:'Car or transfers needed',budget:'€€€ à €€€€',friction:'Élevée',frictionEn:'High'},
       saintpaul:{car:'Voiture très utile',carEn:'Car highly useful',budget:'€€ à €€€€',friction:'Moyenne à élevée',frictionEn:'Medium to high'}
     }[baseId];
