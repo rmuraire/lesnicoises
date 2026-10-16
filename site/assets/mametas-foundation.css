@@ -2945,7 +2945,7 @@ html body .practical-lexicon-cta { display:inline-block; color:#0d596c!important
 }
 
 /* ESSAI DE RYTHME - 2026-10-16 (Explore, Pratique, Destinations FR/EN uniquement)
-   Pistes à tester, pas une nouvelle charte : fond ivoire plus clair, et deux
+   Pistes à tester, pas une nouvelle charte : fond ivoire lumineux et peu grisé (#FBF8F3), et deux
    lavis très pâles (bleu, corail) utilisés selon la fonction, jamais en
    alternance mécanique. Chaque page a sa propre séquence :
    - Destinations : verdict typographique, photos, une surprise (aparté sur lavis corail), décisions dépouillées.
@@ -2953,7 +2953,7 @@ html body .practical-lexicon-cta { display:inline-block; color:#0d596c!important
    - Pratique : « Sur place » en lavis bleu sans cartes, urgences sur lavis corail, étude en grand chiffre.
    Retirer la classe rythme-test du <body> annule tout l'essai. */
 html body.rythme-test {
-  --rt-ivory:#F8F5EF;
+  --rt-ivory:#FBF8F3;
   --rt-blue:#E8EFF0;
   --rt-coral:#F6E9E2;
   background:var(--rt-ivory)!important;
@@ -2961,6 +2961,7 @@ html body.rythme-test {
 html body.rythme-test .article-hero,
 html body.rythme-test .v3-section { background:transparent!important; }
 html body.rythme-test.core-hub-final .article-hero { background:var(--rt-ivory)!important; }
+html body.rythme-test .mametas-global-header { background:rgba(251,248,243,.97)!important; }
 
 /* Lavis pleine largeur : la section entière change de fond, le contenu reste libre */
 html body.rythme-test .explore-time,
