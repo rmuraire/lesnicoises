@@ -64,10 +64,10 @@
   var labels = fr ? {
     loading:'On passe la sélection Mametas au crible…',
     choose:'Choisissez au moins un critère avant de lancer la recherche.',
-    chooseBase:'Choisissez d’abord votre base. Si vous hésitez encore entre les villes, commencez par Riviera Fit.',
+    chooseBase:'Choisissez d’abord votre ville. Si vous hésitez encore entre les villes, commencez par Riviera Fit.',
     changed:'Vous avez changé un critère. Relancez quand c’est bon.',
-    none:'Aucune adresse Mametas disponible pour cette base.',
-    budgetFallback:function(symbol){ return 'Aucune adresse de cette base ne respecte ce plafond. Voici les options Mametas les plus proches en ' + symbol + ', clairement signalées comme au-dessus du budget.'; },
+    none:'Aucune adresse Mametas disponible pour cette ville.',
+    budgetFallback:function(symbol){ return 'Aucune adresse de cette ville ne respecte ce plafond. Voici les options Mametas les plus proches en ' + symbol + ', clairement signalées comme au-dessus du budget.'; },
     closest:function(n){ return 'Aucune correspondance exacte. Voici ' + n + (n > 1 ? ' compromis Mametas les plus proches' : ' compromis Mametas le plus proche') + ', avec les critères qu’il faut accepter de relâcher.'; },
     count:function(n){ return n + (n > 1 ? ' adresses correspondent' : ' adresse correspond') + ' vraiment à vos choix.'; },
     bestFor:'Idéal pour',

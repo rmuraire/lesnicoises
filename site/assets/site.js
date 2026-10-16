@@ -502,7 +502,7 @@
     var fr=(document.documentElement.lang||'en').toLowerCase().indexOf('fr')===0;
     var items=fr
       ? [['/fr/planifier/','Préparer'],['/riviera-guide/','Destinations'],['/hotels/','Dormir'],['/explore/','Explorer'],['/pratique/','Pratique']]
-      : [['/plan/','Plan'],['/en/riviera-guide/','Places'],['/en/hotels/','Stay'],['/en/explore/','Explore'],['/en/practical/','Practical']];
+      : [['/plan/','Plan'],['/en/riviera-guide/','Destinations'],['/en/hotels/','Stay'],['/en/explore/','Explore'],['/en/practical/','Practical']];
     var path=location.pathname||'/';
     function activeIndex(){
       if(/\/(practical|pratique|good-finds|bons-plans)\//.test(path)) return 4;
