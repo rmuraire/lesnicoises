@@ -3056,3 +3056,24 @@ html body.rythme-test .data-entry-card--study .data-entry-copy strong { font-siz
   html body.rythme-test .explore-time .time-entry-number,
   html body.rythme-test .data-entry-card--study .data-entry-stats { justify-content:flex-start!important; justify-self:start!important; text-align:left!important; }
 }
+
+/* ESSAI CARTES LISIBLES - 2026-10-16 (accueil, Explore, Culture FR/EN)
+   Fond de page #FDFBF7 inchangé. Les unités de lecture redeviennent
+   lisibles : fond blanc pur, filet fin un peu plus marqué, ombre
+   imperceptible. Pas d'aplat pastel. Sélecteurs :where() pour que les
+   exceptions existantes (sections sans boîtes) gardent la main.
+   Retirer la classe cartes-test du <body> annule l'essai. */
+html body.cartes-test :where(
+  .home-experience-card, .stay-card, .home-profile-card, .phase4-plan-grid a,
+  .riviera-fit-home-demo, .hotel-fit-demo-card,
+  .travel-profile-card, .architecture-card, .data-entry-card,
+  .practical-feature-card--photo, .practical-agenda-card,
+  .culture-card, .card, .lgbtq-banner
+) {
+  background-color:#FFFFFF!important;
+  border:1px solid rgba(20,33,61,.22)!important;
+  box-shadow:0 1px 2px rgba(20,33,61,.035)!important;
+}
+html body.cartes-test :where(.home-experience-card, .stay-card, .home-profile-card, .travel-profile-card, .culture-card, .card):hover {
+  border-color:rgba(20,33,61,.38)!important;
+}
