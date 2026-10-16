@@ -3131,3 +3131,8 @@ html body .about-home-strip .wrap > div:last-child p { margin-bottom:14px; }
   html body .about-home-strip .about-home-portrait { width:96px; }
   html body .about-home-strip .wrap > div:last-child { margin-top:22px; }
 }
+
+/* Cartes texte de la grille Culture : contenu centré verticalement, sans vide en bas */
+html body .culture-grid .culture-card-text { justify-content:center; }
+html body .culture-grid .culture-card-text .culture-card-body { flex:0 0 auto; }
+html body .culture-grid .culture-card-text .more { margin-top:0; padding-top:18px; }
