@@ -2929,3 +2929,24 @@ html body.hotels-harmonised .hotel-fit-launch + .v3-section { padding-top:clamp(
   html body.hotels-harmonised .hotel-fit-launch { padding-top:18px!important; padding-bottom:12px!important; }
   html body.hotels-harmonised .hotel-fit-launch-grid { padding:20px 16px!important; }
 }
+
+/* PRATIQUE : urgences en rouge clair, petit lexique à côté - 2026-10-16
+   Couleurs existantes (--mametas-coral-soft, #ad492f, --paper-deep). */
+html body .practical-safety-entry { background:transparent!important; padding:clamp(40px,4.4vw,60px) 0!important; border-bottom:1px solid var(--line,rgba(20,33,61,.12))!important; }
+html body .practical-safety-pair { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:stretch; }
+html body .practical-safety-pair .practical-feature-card { display:flex!important; align-items:center; min-height:0!important; border-radius:0 12px 12px 0; text-decoration:none!important; }
+html body .practical-safety-entry .practical-feature-card--safety { background:var(--mametas-coral-soft,#f6e4dd)!important; border:0!important; border-left:4px solid #ad492f!important; color:var(--ink,#14213d)!important; }
+html body .practical-safety-pair .practical-feature-card--lexicon { background:var(--paper-deep,#e8dfcf)!important; border:0!important; border-left:4px solid var(--blue,#176f83)!important; color:var(--ink,#14213d)!important; }
+html body .practical-safety-pair .practical-feature-copy { display:block!important; padding:clamp(22px,2.4vw,30px) clamp(22px,2.6vw,32px)!important; }
+html body .practical-safety-entry .practical-feature-card--safety .practical-feature-copy small { color:#ad492f!important; }
+html body .practical-safety-pair .practical-feature-card--lexicon .practical-feature-copy small { color:#0d596c!important; font-size:10px; font-weight:700; letter-spacing:.14em; }
+html body .practical-safety-pair .practical-feature-copy strong { display:block; max-width:none!important; margin:8px 0 10px!important; color:var(--ink,#14213d)!important; font-family:"Fraunces",Georgia,serif; font-weight:500; font-size:clamp(23px,2vw,28px)!important; line-height:1.12!important; }
+html body .practical-safety-pair .practical-feature-copy p { margin:0 0 14px!important; color:var(--ink-soft,#3f4b63)!important; font-size:14px!important; line-height:1.55!important; }
+html body .practical-safety-entry .practical-feature-card--safety .practical-feature-copy b { color:#ad492f!important; }
+html body .practical-lexicon-words { display:flex; flex-wrap:wrap; gap:6px 14px; margin:0 0 14px; font-family:"Fraunces",Georgia,serif; font-size:18px; font-style:italic; }
+html body .practical-lexicon-words a { color:var(--ink,#14213d); }
+html body .practical-lexicon-cta { display:inline-block; color:#0d596c!important; font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; text-decoration:none!important; }
+@media (max-width:760px) {
+  html body .practical-safety-pair { grid-template-columns:1fr; gap:14px; }
+  html body .practical-safety-entry { padding:32px 0!important; }
+}
