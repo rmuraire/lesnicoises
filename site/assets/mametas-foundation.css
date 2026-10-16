@@ -2396,6 +2396,14 @@ body.mametas-culture-detail .culture-copy .sources li a {
   body.mametas-arrival-guide .article .fact-grid,
   body.mametas-safety-guide .article .emergency-grid {
     grid-template-columns:minmax(0,1fr)!important;
+    gap:10px!important;
+  }
+  body.mametas-safety-guide .article .emergency-grid > .emergency-card {
+    padding:16px 19px 18px!important;
+  }
+  body.mametas-safety-guide .article .emergency-card > strong {
+    font-size:29px!important;
+    margin:0 0 6px!important;
   }
   body.mametas-stats-guide .article .verdict.mametas-stats-traveller > p {
     display:flex!important;
