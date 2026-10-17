@@ -3186,76 +3186,83 @@ html body .mametas-share-menu button:hover, html body .mametas-share-menu button
 /* LES MAMETAS ONT LEUR MOT À DIRE - 2026-10-17
    Page de marque : portraits qui surgissent en alternance, sentences
    typographiques libres, citations en blocs à filet fin et coins arrondis,
-   confessions sur aplat corail ou bleu très pâles. Palette et typos du site. */
+   confessions sur aplat corail ou bleu très pâles. Palette et typos du site.
+   Échelle alignée sur les pages éditoriales (H1 55 px / chapô 21 px / texte
+   16 px) : seuls le titre et les sentences gardent un léger surcroît. */
 body.mametas-opinions { background:#FDFBF7; }
 body.mametas-opinions .mo-main { background:#FDFBF7; }
-.mo-page { box-sizing:border-box; max-width:1120px; margin:0 auto; padding:clamp(26px,4vw,52px) 24px clamp(72px,9vw,120px); color:#14213d; }
-.mo-head { max-width:780px; margin:0 0 clamp(44px,4.8vw,68px); }
-.mo-head .mametas-detail-back { display:inline-block; margin-bottom:22px; }
-.mo-eyebrow { margin:0 0 16px; color:#ad492f; font:700 11px/1.3 Inter,Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
-.mo-head h1 { margin:0 0 20px; color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(46px,7.2vw,100px); line-height:.96; letter-spacing:-.025em; }
-.mo-sub { margin:0 0 20px; color:#14213d; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(21px,2.4vw,29px); line-height:1.28; }
-.mo-intro { max-width:620px; margin:0; color:#3f4759; font:400 17px/1.68 Inter,Arial,sans-serif; }
+.mo-page { box-sizing:border-box; max-width:1000px; margin:0 auto; padding:clamp(24px,3.4vw,44px) 24px clamp(64px,7vw,96px); color:#14213d; }
+.mo-head { max-width:720px; margin:0 0 clamp(36px,4vw,52px); }
+.mo-head .mametas-detail-back { display:inline-block; margin-bottom:20px; }
+.mo-eyebrow { margin:0 0 14px; color:#ad492f; font:700 11px/1.3 Inter,Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
+.mo-head h1 { margin:0 0 16px; color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(40px,5.2vw,74px); line-height:1.02; letter-spacing:-.02em; }
+.mo-sub { margin:0 0 18px; color:#14213d; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(19px,1.6vw,22px); line-height:1.42; }
+.mo-intro { max-width:600px; margin:0; color:#3f4759; font:400 16px/1.68 Inter,Arial,sans-serif; }
 .mo-page blockquote { margin:0; }
 .mo-page blockquote p { margin:0; }
-.mo-by { display:flex; align-items:center; margin-top:14px; color:#ad492f; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(19px,1.7vw,22px); line-height:1.2; }
+.mo-by { display:flex; align-items:center; margin-top:12px; color:#ad492f; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(17px,1.4vw,19px); line-height:1.2; }
 .mo-page em { font-style:italic; color:#ad492f; }
 /* Scenes: portrait + words, alternating sides */
-.mo-scene { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(28px,4vw,56px); align-items:center; margin:clamp(48px,5.6vw,78px) 0; }
-.mo-scene--right { grid-template-columns:minmax(0,7fr) minmax(0,5fr); }
+.mo-scene { display:grid; grid-template-columns:minmax(0,320px) minmax(0,1fr); gap:clamp(28px,4vw,56px); align-items:center; margin:clamp(42px,4.8vw,64px) 0; }
+.mo-scene--right { grid-template-columns:minmax(0,1fr) minmax(0,320px); }
 .mo-scene--right .mo-portrait { order:2; }
-.mo-scene-text { display:grid; gap:clamp(18px,1.6vw,22px); }
-.mo-portrait { margin:0; max-width:400px; }
+.mo-scene-text { display:grid; gap:clamp(16px,1.4vw,20px); }
+.mo-portrait { margin:0; max-width:320px; }
 .mo-scene--right .mo-portrait { justify-self:end; }
-.mo-portrait img { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:18px; }
-.mo-portrait figcaption { display:grid; gap:4px; margin-top:14px; }
-.mo-name { color:#14213d; font-family:Fraunces,Georgia,serif; font-size:30px; font-weight:500; line-height:1.05; }
-.mo-trait { color:#5e5a54; font:400 14px/1.5 Inter,Arial,sans-serif; }
+.mo-portrait img { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:14px; }
+.mo-portrait figcaption { display:grid; gap:3px; margin-top:12px; }
+.mo-name { color:#14213d; font-family:Fraunces,Georgia,serif; font-size:24px; font-weight:500; line-height:1.1; }
+.mo-trait { color:#5e5a54; font:400 13.5px/1.5 Inter,Arial,sans-serif; }
 /* Typographic sentences, no frame */
-.mo-sentence p { color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(34px,4.6vw,62px); line-height:1.06; letter-spacing:-.018em; }
+.mo-sentence p { color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(30px,3.6vw,50px); line-height:1.1; letter-spacing:-.015em; }
 /* Framed quotes */
-.mo-quote { padding:clamp(22px,2.6vw,30px) clamp(22px,2.8vw,32px); background:#FFFFFF; border:1px solid rgba(20,33,61,.22); border-radius:14px; box-shadow:0 1px 2px rgba(20,33,61,.035); }
-.mo-quote p { color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(21px,2vw,26px); line-height:1.3; }
+.mo-quote { padding:clamp(20px,2vw,24px) clamp(20px,2.2vw,26px); background:#FFFFFF; border:1px solid rgba(20,33,61,.22); border-radius:12px; box-shadow:0 1px 2px rgba(20,33,61,.035); }
+.mo-quote p { color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(19px,1.6vw,22px); line-height:1.34; }
 /* Confessions, on a pale wash */
-.mo-confession { padding:clamp(26px,3.4vw,44px); background:#F6E9E2; border-radius:18px; }
+.mo-confession { padding:clamp(24px,2.8vw,34px); background:#F6E9E2; border-radius:14px; }
 .mo-confession--blue { background:#E8EFF0; }
-.mo-confession p { color:#14213d; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(23px,2.5vw,32px); line-height:1.32; }
+.mo-confession p { color:#14213d; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(21px,2vw,26px); line-height:1.36; }
 /* Pairs, deliberately offset */
-.mo-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,3vw,40px); align-items:start; max-width:940px; margin:clamp(28px,2.8vw,40px) 0 clamp(36px,3.8vw,54px) auto; }
-.mo-pair > :nth-child(2) { margin-top:clamp(28px,3.8vw,56px); }
+.mo-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,2.4vw,32px); align-items:start; max-width:820px; margin:clamp(24px,2.4vw,34px) 0 clamp(32px,3.2vw,46px) auto; }
+.mo-pair > :nth-child(2) { margin-top:clamp(24px,3.2vw,46px); }
 .mo-pair--left { margin-left:0; margin-right:auto; }
 .mo-pair--return { grid-template-columns:minmax(0,7fr) minmax(0,5fr); max-width:none; margin-left:0; }
 /* Breathing sentences */
-.mo-breath { max-width:900px; margin:clamp(64px,7.6vw,108px) auto; text-align:center; }
+.mo-breath { max-width:760px; margin:clamp(56px,6.2vw,88px) auto; text-align:center; }
 .mo-breath .mo-by { justify-content:center; }
-.mo-breath--offset { margin-left:clamp(0px,8vw,140px); text-align:left; }
+.mo-breath--offset { margin-left:clamp(0px,7vw,110px); text-align:left; }
 .mo-breath--offset .mo-by { justify-content:flex-start; }
-.mo-breath .mo-sentence p { font-size:clamp(38px,5.6vw,76px); }
+.mo-breath .mo-sentence p { font-size:clamp(34px,4.4vw,62px); }
 /* Finale */
-.mo-finale { max-width:860px; margin:clamp(80px,8.4vw,120px) auto 0; padding-top:clamp(40px,3.8vw,54px); border-top:1px solid rgba(20,33,61,.16); text-align:center; }
+.mo-finale { max-width:760px; margin:clamp(64px,7vw,96px) auto 0; padding-top:clamp(34px,3.2vw,46px); border-top:1px solid rgba(20,33,61,.16); text-align:center; }
 .mo-finale .mo-by { justify-content:center; }
-.mo-finale-text { max-width:520px; margin:clamp(26px,3.4vw,38px) auto 24px; color:#3f4759; font:400 17px/1.65 Inter,Arial,sans-serif; }
-.mo-finale-actions { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:14px 26px; margin:0; }
-.mo-cta { display:inline-flex; align-items:center; min-height:48px; padding:0 24px; background:#14213d; color:#FFFFFF!important; border-radius:999px; font:600 15px/1 Inter,Arial,sans-serif; text-decoration:none!important; }
+.mo-finale-text { max-width:480px; margin:clamp(22px,2.6vw,30px) auto 22px; color:#3f4759; font:400 16px/1.65 Inter,Arial,sans-serif; }
+.mo-finale-actions { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:12px 24px; margin:0; }
+.mo-cta { display:inline-flex; align-items:center; min-height:46px; padding:0 22px; background:#14213d; color:#FFFFFF!important; border-radius:999px; font:600 14.5px/1 Inter,Arial,sans-serif; text-decoration:none!important; }
 .mo-cta:hover, .mo-cta:focus-visible { background:#ad492f; }
-.mo-link { color:#14213d; font:600 15px/1.3 Inter,Arial,sans-serif; text-decoration:underline; text-decoration-color:#d86c4e; text-underline-offset:4px; }
+.mo-link { color:#14213d; font:600 14.5px/1.3 Inter,Arial,sans-serif; text-decoration:underline; text-decoration-color:#d86c4e; text-underline-offset:4px; }
 @media (max-width:760px) {
   .mo-page { padding-left:18px; padding-right:18px; }
-  .mo-head { margin-bottom:36px; }
-  .mo-scene, .mo-scene--right { grid-template-columns:1fr; gap:16px; margin:40px 0 28px; }
+  .mo-head { margin-bottom:32px; }
+  .mo-head h1 { font-size:clamp(36px,10vw,40px); line-height:1.05; }
+  .mo-sub { font-size:19px; }
+  .mo-scene, .mo-scene--right { grid-template-columns:1fr; gap:14px; margin:36px 0 24px; }
   .mo-scene--right .mo-portrait { order:0; justify-self:end; }
-  .mo-portrait { width:72%; }
-  .mo-portrait figcaption { margin-top:10px; }
+  .mo-portrait { width:62%; }
+  .mo-portrait figcaption { margin-top:8px; }
   .mo-scene--right .mo-portrait { margin-left:auto; }
-  .mo-name { font-size:26px; }
-  .mo-pair, .mo-pair--return { grid-template-columns:1fr; gap:14px; margin:24px 0 36px; max-width:none; }
-  .mo-pair > :nth-child(2) { margin-top:0; margin-left:12%; }
+  .mo-name { font-size:22px; }
+  .mo-pair, .mo-pair--return { grid-template-columns:1fr; gap:12px; margin:22px 0 32px; max-width:none; }
+  .mo-pair > :nth-child(2) { margin-top:0; margin-left:10%; }
   .mo-pair--return > :nth-child(2) { margin-left:0; }
-  .mo-breath, .mo-breath--offset { margin:48px 0; text-align:left; }
+  .mo-quote p { font-size:19px; }
+  .mo-confession { padding:22px; }
+  .mo-confession p { font-size:20px; }
+  .mo-breath, .mo-breath--offset { margin:42px 0; text-align:left; }
   .mo-breath .mo-by { justify-content:flex-start; }
-  .mo-sentence p { font-size:clamp(32px,9vw,44px); }
-  .mo-breath .mo-sentence p { font-size:clamp(36px,10.5vw,50px); }
-  .mo-finale { margin-top:56px; padding-top:36px; text-align:left; }
+  .mo-sentence p { font-size:clamp(27px,7.6vw,32px); }
+  .mo-breath .mo-sentence p { font-size:clamp(30px,8.6vw,36px); }
+  .mo-finale { margin-top:48px; padding-top:30px; text-align:left; }
   .mo-finale .mo-by { justify-content:flex-start; }
   .mo-finale-text { margin-left:0; }
   .mo-finale-actions { justify-content:flex-start; }
