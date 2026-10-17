@@ -3190,7 +3190,7 @@ html body .mametas-share-menu button:hover, html body .mametas-share-menu button
 body.mametas-opinions { background:#FDFBF7; }
 body.mametas-opinions .mo-main { background:#FDFBF7; }
 .mo-page { box-sizing:border-box; max-width:1120px; margin:0 auto; padding:clamp(26px,4vw,52px) 24px clamp(72px,9vw,120px); color:#14213d; }
-.mo-head { max-width:780px; margin:0 0 clamp(44px,6vw,84px); }
+.mo-head { max-width:780px; margin:0 0 clamp(44px,4.8vw,68px); }
 .mo-head .mametas-detail-back { display:inline-block; margin-bottom:22px; }
 .mo-eyebrow { margin:0 0 16px; color:#ad492f; font:700 11px/1.3 Inter,Arial,sans-serif; letter-spacing:.15em; text-transform:uppercase; }
 .mo-head h1 { margin:0 0 20px; color:#14213d; font-family:Fraunces,Georgia,serif; font-weight:500; font-size:clamp(46px,7.2vw,100px); line-height:.96; letter-spacing:-.025em; }
@@ -3201,11 +3201,11 @@ body.mametas-opinions .mo-main { background:#FDFBF7; }
 .mo-by { display:flex; align-items:center; margin-top:14px; color:#ad492f; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(19px,1.7vw,22px); line-height:1.2; }
 .mo-page em { font-style:italic; color:#ad492f; }
 /* Scenes: portrait + words, alternating sides */
-.mo-scene { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(28px,5.5vw,80px); align-items:center; margin:clamp(48px,7vw,96px) 0; }
+.mo-scene { display:grid; grid-template-columns:minmax(0,5fr) minmax(0,7fr); gap:clamp(28px,4vw,56px); align-items:center; margin:clamp(48px,5.6vw,78px) 0; }
 .mo-scene--right { grid-template-columns:minmax(0,7fr) minmax(0,5fr); }
 .mo-scene--right .mo-portrait { order:2; }
-.mo-scene-text { display:grid; gap:clamp(18px,2.4vw,28px); }
-.mo-portrait { margin:0; max-width:440px; }
+.mo-scene-text { display:grid; gap:clamp(18px,1.6vw,22px); }
+.mo-portrait { margin:0; max-width:400px; }
 .mo-scene--right .mo-portrait { justify-self:end; }
 .mo-portrait img { display:block; width:100%; height:auto; aspect-ratio:4/5; object-fit:cover; border-radius:18px; }
 .mo-portrait figcaption { display:grid; gap:4px; margin-top:14px; }
@@ -3221,18 +3221,18 @@ body.mametas-opinions .mo-main { background:#FDFBF7; }
 .mo-confession--blue { background:#E8EFF0; }
 .mo-confession p { color:#14213d; font-family:Fraunces,Georgia,serif; font-style:italic; font-weight:500; font-size:clamp(23px,2.5vw,32px); line-height:1.32; }
 /* Pairs, deliberately offset */
-.mo-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,3vw,40px); align-items:start; max-width:940px; margin:clamp(28px,4vw,52px) 0 clamp(36px,5vw,64px) auto; }
-.mo-pair > :nth-child(2) { margin-top:clamp(28px,4.5vw,72px); }
+.mo-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(18px,3vw,40px); align-items:start; max-width:940px; margin:clamp(28px,2.8vw,40px) 0 clamp(36px,3.8vw,54px) auto; }
+.mo-pair > :nth-child(2) { margin-top:clamp(28px,3.8vw,56px); }
 .mo-pair--left { margin-left:0; margin-right:auto; }
 .mo-pair--return { grid-template-columns:minmax(0,7fr) minmax(0,5fr); max-width:none; margin-left:0; }
 /* Breathing sentences */
-.mo-breath { max-width:900px; margin:clamp(64px,9vw,128px) auto; text-align:center; }
+.mo-breath { max-width:900px; margin:clamp(64px,7.6vw,108px) auto; text-align:center; }
 .mo-breath .mo-by { justify-content:center; }
 .mo-breath--offset { margin-left:clamp(0px,8vw,140px); text-align:left; }
 .mo-breath--offset .mo-by { justify-content:flex-start; }
 .mo-breath .mo-sentence p { font-size:clamp(38px,5.6vw,76px); }
 /* Finale */
-.mo-finale { max-width:860px; margin:clamp(80px,10vw,150px) auto 0; padding-top:clamp(40px,5vw,64px); border-top:1px solid rgba(20,33,61,.16); text-align:center; }
+.mo-finale { max-width:860px; margin:clamp(80px,8.4vw,120px) auto 0; padding-top:clamp(40px,3.8vw,54px); border-top:1px solid rgba(20,33,61,.16); text-align:center; }
 .mo-finale .mo-by { justify-content:center; }
 .mo-finale-text { max-width:520px; margin:clamp(26px,3.4vw,38px) auto 24px; color:#3f4759; font:400 17px/1.65 Inter,Arial,sans-serif; }
 .mo-finale-actions { display:flex; flex-wrap:wrap; justify-content:center; align-items:center; gap:14px 26px; margin:0; }
