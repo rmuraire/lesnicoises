@@ -9,7 +9,7 @@
 }
 .mametas-share-button{
   appearance:none;
-  border:1px solid rgba(20,33,61,.12);
+  border:1px solid rgba(21,58,101,.12);
   border-radius:999px;
   background:#e5e3df;
   color:#17365f;
@@ -26,7 +26,7 @@
 .mametas-share-button:hover,
 .mametas-share-button:focus-visible{
   background:#d9d7d2;
-  border-color:rgba(20,33,61,.22);
+  border-color:rgba(21,58,101,.22);
   transform:translateY(-1px);
 }
 .mametas-share-button:focus-visible{

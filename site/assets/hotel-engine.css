@@ -125,15 +125,15 @@
 .hotel-fit-demo{
   display:block;
   overflow:hidden;
-  border:1px solid rgba(20,33,61,.22);
+  border:1px solid rgba(21,58,101,.22);
   background:var(--ink);
   color:var(--white);
-  box-shadow:0 22px 48px rgba(20,33,61,.12);
+  box-shadow:0 22px 48px rgba(21,58,101,.12);
   transition:transform 180ms ease,box-shadow 180ms ease;
 }
 .hotel-fit-demo:hover,.hotel-fit-demo:focus-visible{
   transform:translateY(-4px);
-  box-shadow:0 28px 58px rgba(20,33,61,.18);
+  box-shadow:0 28px 58px rgba(21,58,101,.18);
 }
 .hotel-fit-demo-media{
   position:relative;
@@ -216,9 +216,9 @@
 }
 .hotel-fit-demo-panel{
   overflow:hidden;
-  border:1px solid rgba(20,33,61,.2);
+  border:1px solid rgba(21,58,101,.2);
   background:rgba(255,253,248,.82);
-  box-shadow:0 22px 48px rgba(20,33,61,.1);
+  box-shadow:0 22px 48px rgba(21,58,101,.1);
 }
 .hotel-fit-demo-priorities{
   padding:20px 22px 18px;
@@ -244,7 +244,7 @@
   align-items:center;
   min-height:28px;
   padding:5px 9px;
-  border:1px solid rgba(20,33,61,.16);
+  border:1px solid rgba(21,58,101,.16);
   background:var(--white);
   color:var(--ink);
   font-size:9px;
@@ -269,7 +269,7 @@
 }
 .hotel-fit-demo-card:hover,.hotel-fit-demo-card:focus-visible{
   transform:translateY(-3px);
-  box-shadow:0 16px 34px rgba(20,33,61,.16);
+  box-shadow:0 16px 34px rgba(21,58,101,.16);
 }
 .hotel-fit-demo-card .hotel-fit-demo-media{
   aspect-ratio:16/10;
@@ -317,7 +317,7 @@
 /* Hotel Fit light demo refinement 2026-09-25 */
 .hotel-fit-demo-panel{box-shadow:none}
 .hotel-fit-demo-card{
-  border-color:rgba(20,33,61,.16);
+  border-color:rgba(21,58,101,.16);
   background:var(--white);
   color:var(--ink);
 }
@@ -325,7 +325,7 @@
 .hotel-fit-demo-card .hotel-fit-demo-copy p{color:var(--ink-soft)!important}
 .hotel-fit-demo-card .hotel-fit-demo-copy strong{color:var(--ink)}
 .hotel-fit-demo-card .hotel-fit-demo-catch{border-top-color:var(--line)}
-.hotel-fit-demo-card:hover,.hotel-fit-demo-card:focus-visible{box-shadow:0 10px 24px rgba(20,33,61,.08)}
+.hotel-fit-demo-card:hover,.hotel-fit-demo-card:focus-visible{box-shadow:0 10px 24px rgba(21,58,101,.08)}
 .hotel-fit-demo-section-label{display:flex;align-items:center;gap:7px}
 
 
@@ -347,6 +347,6 @@
 
 /* Hotel Fit : l'outil dans une carte distincte sur les hubs hôtels - 2026-10-16 */
 .hotels-harmonised .hotel-fit-launch{border-top:0!important;background:transparent}
-.hotels-harmonised .hotel-fit-launch-grid{padding:clamp(26px,3.6vw,46px);border:1px solid rgba(20,33,61,.16);border-radius:20px;background:linear-gradient(135deg,#fffdf8,rgba(244,236,223,.72));box-shadow:0 18px 48px rgba(20,33,61,.08)}
+.hotels-harmonised .hotel-fit-launch-grid{padding:clamp(26px,3.6vw,46px);border:1px solid rgba(21,58,101,.16);border-radius:20px;background:linear-gradient(135deg,#fffdf8,rgba(244,236,223,.72));box-shadow:0 18px 48px rgba(21,58,101,.08)}
 .hotels-harmonised .hotel-fit-demo-panel{border-radius:14px;overflow:hidden}
 @media(max-width:760px){.hotels-harmonised .hotel-fit-launch-grid{padding:22px 18px;border-radius:16px}}
