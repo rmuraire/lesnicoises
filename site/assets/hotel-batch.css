@@ -57,3 +57,31 @@
 
 
 .hotel-choice-tags .hotel-price-band,.hotel-choice-copy>.hotel-price-band{font-weight:800;letter-spacing:.08em;color:#17365f;background:#f4ead8;border:1px solid rgba(23,54,95,.14);border-radius:999px;padding:3px 8px}
+/* Nice hotel hub: area picker (Step 1 · Choose the area), October 2026 */
+.area-picker .ap-head{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:clamp(24px,4vw,56px);align-items:end;margin-bottom:28px}
+.area-picker h2{margin:0;font-family:var(--serif);font-weight:500;font-size:clamp(28px,3vw,42px);line-height:1.06;letter-spacing:-.03em;color:var(--ink)}
+.area-picker .ap-head>p{margin:0;color:var(--ink-soft);font-size:15px;line-height:1.7}
+.area-picker .ap-map{max-width:1000px;margin:0 auto 32px}
+.area-picker .ap-map svg{width:100%;height:auto;display:block}
+.area-picker .ap-map-m{display:none}
+.area-picker .ap-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;column-gap:clamp(24px,4vw,56px);border-top:1px solid rgba(21,58,101,.18)}
+.area-picker .ap-item{display:grid;grid-template-columns:56px 1fr;gap:14px;padding:20px 0;border-bottom:1px solid rgba(21,58,101,.18)}
+.area-picker .ap-num{font-family:var(--serif);font-size:38px;font-weight:300;line-height:1;color:var(--ink)}
+.area-picker h3{margin:2px 0 6px;font-family:var(--serif);font-size:24px;font-weight:500;color:var(--ink)}
+.area-picker .ap-best{margin:0 0 8px;color:var(--ink);font-size:15px;line-height:1.5}
+.area-picker .ap-pm{display:flex;gap:10px;margin:0;color:var(--ink-soft);font-size:14px;line-height:1.6}
+.area-picker .ap-pm span{flex:0 0 12px;opacity:.7}
+.area-picker .ap-picks{margin:10px 0 0;font-size:13px;line-height:1.6;color:var(--ink-soft)}
+.area-picker .ap-picks span{display:block;margin-bottom:2px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--coral)}
+.area-picker .ap-picks a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(21,58,101,.35)}
+.area-picker .ap-verdict{margin-top:36px;padding:24px 28px;background:#E8EFF0;color:var(--ink);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px 32px;align-items:center}
+.area-picker .ap-verdict .eyebrow{margin-bottom:8px;color:var(--coral)}
+.area-picker .ap-verdict strong{display:block;font-family:var(--serif);font-weight:500;font-size:clamp(22px,2.2vw,30px);line-height:1.15;letter-spacing:-.02em}
+.area-picker .ap-verdict p{margin:8px 0 0;color:var(--ink-soft);font-size:14px;line-height:1.6}
+.area-picker .ap-actions{display:flex;flex-direction:column;gap:10px}
+@media (max-width:820px){
+.area-picker .ap-head,.area-picker .ap-list,.area-picker .ap-verdict{grid-template-columns:1fr}
+.area-picker .ap-map{margin:0 -8px 24px}
+.area-picker .ap-map-d{display:none}.area-picker .ap-map-m{display:block}
+.area-picker .ap-item{grid-template-columns:44px 1fr}.area-picker .ap-num{font-size:30px}
+}
