@@ -36,7 +36,8 @@ body .article .spot-logistics a:focus-visible {outline:2px solid #ad492f;outline
 body.mametas-compact-article .article > h1 {
   font-size:clamp(38px,4vw,55px)!important;line-height:1.12!important;
 }
-body.mametas-compact-article .article > h2 {
+body.mametas-compact-article .article > h2,
+body.mametas-compact-article .article > section > h2 {
   font-size:clamp(26px,2.55vw,31px)!important;line-height:1.24!important;
   margin-top:40px!important;
 }
@@ -49,7 +50,10 @@ body.mametas-compact-article .article > p:not(.standfirst):not(.back),
 body.mametas-compact-article .article > ul,
 body.mametas-compact-article .article > ol,
 body.mametas-compact-article .article .place > p,
-body.mametas-compact-article .article .route-step > p {
+body.mametas-compact-article .article .route-step > p,
+body.mametas-compact-article .article > section > p:not(.standfirst):not(.back),
+body.mametas-compact-article .article > section > ul,
+body.mametas-compact-article .article > section > ol {
   font-size:15.5px!important;line-height:1.7!important;
 }
 body.mametas-compact-article .article > .standfirst {
