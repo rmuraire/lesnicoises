@@ -20,6 +20,7 @@ pas inventée ni supprimée d'office.
 | Grand Prix de Monaco 2027 | `bons-plans/grand-prix-monaco/` | Programme ACM, billetterie, E-Prix et Grand Prix Historique, tarifs du train. |
 | Festival de Cannes 2027 | `bons-plans/festival-de-cannes/` | Dates officielles, Cinéma de la Plage, 3 jours à Cannes, Cannes Cinéphiles. |
 | Carnaval de Nice, MIPIM, Ironman | `bons-plans/carnaval-nice/`, `bons-plans/mipim-cannes/`, `bons-plans/ironman-nice/` | Dates, programme, billetterie. |
+| Rolex Monte-Carlo Masters 2027 | `bons-plans/monte-carlo-masters/` | Prix et disponibilité des billets et pass, halte TER provisoire Monte-Carlo Country Club, bus gratuits de Monaco, navettes et parkings 2027, ordre des matchs. |
 
 ## Transports
 
