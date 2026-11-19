@@ -16,6 +16,7 @@ pas inventée ni supprimée d'office.
 | Point | Pages | Ce qu'il faut vérifier |
 |---|---|---|
 | Page du mois en cours et du mois suivant | `bons-plans/<mois>-2026/`, `en/good-finds/<month>-2026/` | Dates d'événements, fermetures, travaux. Signaler si la page du mois suivant n'existe pas encore (ne pas la créer sans accord). |
+| Bloc agenda de l'accueil | `index.html`, `fr/index.html` | Le 1er du mois : « Ce mois-ci » pointe vers le mois en cours et « Le mois prochain » vers le suivant (titres, textes, liens, attribut `data-agenda-month`). |
 | Hub agenda | `bons-plans/`, `en/good-finds/` | Liens vers des événements passés, ordre des cartes. |
 | Grand Prix de Monaco 2027 | `bons-plans/grand-prix-monaco/` | Programme ACM, billetterie, E-Prix et Grand Prix Historique, tarifs du train. |
 | Festival de Cannes 2027 | `bons-plans/festival-de-cannes/` | Dates officielles, Cinéma de la Plage, 3 jours à Cannes, Cannes Cinéphiles. |
